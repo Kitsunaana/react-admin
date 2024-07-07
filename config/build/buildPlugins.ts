@@ -5,7 +5,7 @@ import {BuildPaths} from "./types/config";
 
 export const buildPlugins = (paths: BuildPaths) => {
     return [
-        new SimpleProgressWebpackPlugin({format: "expanded"}),
+        // new SimpleProgressWebpackPlugin({format: "expanded"}),
         new HtmlWebpackPlugin({template: path.resolve(paths.html)})
     ]
 }

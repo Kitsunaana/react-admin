@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack serve --env port=3001 open=false",
+    "build:dev": "webpack --env mode=development",
+    "build:prod": "webpack --env mode=production"
   },
   "keywords": [],
   "author": "",
@@ -12,12 +14,14 @@
   "devDependencies": {
     "@types/node": "^17.0.21",
     "@types/webpack": "^5.28.0",
+    "@types/webpack-dev-server": "^4.7.2",
     "html-webpack-plugin": "^5.5.0",
     "simple-progress-webpack-plugin": "^2.0.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3",
     "webpack": "^5.69.1",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
   }
 }
