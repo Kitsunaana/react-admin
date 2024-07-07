@@ -1,12 +1,6 @@
 import { createRoot } from "react-dom/client"
-import Loader from "./loader.svg"
+import { App } from "./app/App"
 
-const App = () => (
-  <div>
-    <Loader />
-    123
-  </div>
-)
 const container = document.getElementById("root")
 const root = createRoot(container)
 root.render(<App />)
