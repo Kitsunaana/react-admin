@@ -1,7 +1,7 @@
 import Loader from "./loader.svg"
 
 const App = () => {
-    return <div><Loader /></div>
+    return <div><Loader />123</div>
 }
 
 import { createRoot } from 'react-dom/client';
