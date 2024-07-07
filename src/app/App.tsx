@@ -1,5 +1,5 @@
 import { Box, CssBaseline, TextField } from "@mui/material"
-import { Sidebar } from "../widgets/Sidebar/ui/Sidebar"
+import { Sidebar } from "../widgets/Sidebar/Sidebar"
 
 export const App = () => {
   console.log("hw")
