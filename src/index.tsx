@@ -1,5 +1,7 @@
+import Loader from "./loader.svg"
+
 const App = () => {
-    return <div></div>
+    return <div><Loader /></div>
 }
 
 import { createRoot } from 'react-dom/client';
