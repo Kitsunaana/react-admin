@@ -7,6 +7,7 @@ interface BaseItem {
   id: number
   caption: string
   name: string
+  icon: string
 }
 
 interface BaseItemWithDisabled extends BaseItem {
@@ -24,7 +25,7 @@ interface MenuListProps extends BaseItem{
 
 export const MenuList = memo((props: MenuListProps) => {
   const {
-    id, caption, name, options, isActive, isExpanded, onClose, onExpand, open,
+    id, caption, name, options, isActive, isExpanded, onClose, onExpand, open, icon,
   } = props
 
   return (
@@ -36,6 +37,7 @@ export const MenuList = memo((props: MenuListProps) => {
         }}
       >
         <MenuItem
+          icon={icon}
           isActive={isActive}
           isExpanded={isExpanded}
           caption={caption}
@@ -62,6 +64,7 @@ export const MenuList = memo((props: MenuListProps) => {
       >
         {options.length > 0 && options.map((option) => (
           <MenuItem
+            icon={option.icon}
             key={option.id}
             isList={false}
             isActive={isActive}

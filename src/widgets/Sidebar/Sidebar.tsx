@@ -9,20 +9,20 @@ const menu = [
     id: 0,
     name: "catalog",
     caption: "Каталог",
-    icon: "",
+    icon: "catalog",
     sublist: [
       {
         id: 0,
         name: "goods",
         caption: "Товары",
-        icon: "",
+        icon: "goods",
       },
       {
         id: 1,
         name: "additions",
         caption: "Дополнения",
         disabled: true,
-        icon: "",
+        icon: "additional",
       },
     ],
   },
@@ -30,32 +30,32 @@ const menu = [
     id: 2,
     name: "order",
     caption: "Склады",
-    icon: "",
+    icon: "warehouses",
     sublist: [
       {
         id: 0,
         name: "new-order",
         caption: "Приход",
-        icon: "",
+        icon: "coming",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Размещение",
-        icon: "",
+        icon: "moving",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Расход",
-        icon: "",
+        icon: "consumption",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Документы",
         disabled: true,
-        icon: "",
+        icon: "document",
       },
     ],
   },
@@ -63,33 +63,33 @@ const menu = [
     id: 3,
     name: "order",
     caption: "Стоп-лист",
-    icon: "",
+    icon: "stopList",
   },
   {
     id: 4,
     name: "order",
     caption: "Ценообразование",
-    icon: "",
+    icon: "pricing",
     sublist: [
       {
         id: 0,
         name: "new-order",
         caption: "Прайс-лист",
         disabled: true,
-        icon: "",
+        icon: "priceList",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Прайс-лист доставки",
         disabled: true,
-        icon: "",
+        icon: "priceListDelivery",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Промокоды",
-        icon: "",
+        icon: "promoCode",
       },
     ],
   },
@@ -97,19 +97,19 @@ const menu = [
     id: 5,
     name: "order",
     caption: "Заказы",
-    icon: "",
+    icon: "orders",
     sublist: [
       {
         id: 0,
         name: "new-order",
         caption: "Новый заказ",
-        icon: "",
+        icon: "newOrder",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Документы",
-        icon: "",
+        icon: "document",
       },
     ],
   },
@@ -117,35 +117,35 @@ const menu = [
     id: 6,
     name: "order",
     caption: "Клиенты",
-    icon: "",
+    icon: "clients",
     sublist: [
       {
         id: 0,
         name: "new-order",
         caption: "Анализ",
         disabled: true,
-        icon: "",
+        icon: "analysis",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Чаты",
         disabled: true,
-        icon: "",
+        icon: "chat",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Избранное",
         disabled: true,
-        icon: "",
+        icon: "favorite",
       },
       {
         id: 0,
         name: "new-order",
         caption: "Адреса доставки",
         disabled: true,
-        icon: "",
+        icon: "deliveryAddresses",
       },
     ],
   },
@@ -153,20 +153,20 @@ const menu = [
     id: 7,
     name: "order",
     caption: "Бот",
-    icon: "",
+    icon: "bot",
   },
   {
     id: 8,
     name: "order",
     caption: "Отделы",
-    icon: "",
+    icon: "departments",
     sublist: [
       {
         id: 0,
         name: "new-order",
         caption: "Группы",
         disabled: true,
-        icon: "",
+        icon: "groups",
       },
     ],
   },
@@ -174,12 +174,12 @@ const menu = [
     id: 9,
     name: "order",
     caption: "Маркетинг",
-    icon: "",
+    icon: "marketing",
   },
 ]
 
 export const Sidebar = () => {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [sidebar, setSidebar] = useState({
     listActive: 0,
     sublistActive: null,
@@ -210,14 +210,20 @@ export const Sidebar = () => {
     })
   }, [])
 
-  const onOpen = () => {
+  const onToggle = () => {
     setOpen((prevState) => !prevState)
   }
 
   return (
     <Layout
       open={open}
-      header={<MenuItem open={open} caption="Магазин" />}
+      header={(
+        <MenuItem
+          icon=""
+          open={open}
+          caption="Магазин"
+        />
+      )}
       content={(
         <>
           {menu.map((list) => (
@@ -225,6 +231,7 @@ export const Sidebar = () => {
               open={open}
               key={list.id}
               id={list.id}
+              icon={list.icon}
               caption={list.caption}
               name={list.name}
               isActive={sidebar.listActive === list.id}
@@ -236,7 +243,14 @@ export const Sidebar = () => {
           ))}
         </>
       )}
-      footer={<MenuItem open={open} caption="Закрыть" onClick={onOpen} />}
+      footer={(
+        <MenuItem
+          icon=""
+          open={open}
+          caption="Закрыть"
+          onClick={onToggle}
+        />
+    )}
     />
   )
 }

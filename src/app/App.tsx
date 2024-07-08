@@ -1,4 +1,6 @@
-import { Box, CssBaseline, TextField } from "@mui/material"
+import {
+  Box, CssBaseline, Icon, TextField,
+} from "@mui/material"
 import { Sidebar } from "../widgets/Sidebar/Sidebar"
 
 export const App = () => {

@@ -20,7 +20,7 @@ export const Layout = (props: SidebarLayoutProps) => {
     <Box sx={{ p: 1, height: 1 }}>
       <Box sx={{
         transition: ".3s",
-        width: open ? 220 : 40,
+        width: open ? 220 : 38,
         backgroundSize: "cover",
         height: 1,
         borderRadius: 2,
