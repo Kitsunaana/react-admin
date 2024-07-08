@@ -17,9 +17,10 @@ export const Layout = (props: SidebarLayoutProps) => {
   } = props
 
   return (
-    <Box sx={{ p: 2, height: 1 }}>
+    <Box sx={{ p: 1, height: 1 }}>
       <Box sx={{
-        width: open ? 220 : 90,
+        transition: ".3s",
+        width: open ? 220 : 40,
         backgroundSize: "cover",
         height: 1,
         borderRadius: 2,
@@ -30,10 +31,10 @@ export const Layout = (props: SidebarLayoutProps) => {
         flexDirection: "column",
       }}
       >
-        <Box sx={{ mt: 1 }}>
+        <Box>
           {header}
         </Box>
-        <Divider sx={{ my: 1 }} />
+        <Divider />
         <List sx={{ p: 0, py: 0.5, flexGrow: 1 }}>
           {content}
         </List>
@@ -51,8 +52,8 @@ export const Layout = (props: SidebarLayoutProps) => {
               />
             </Box>
           </List>
-          <Divider sx={{ my: 1 }} />
-          <Box sx={{ my: 1 }}>
+          <Divider />
+          <Box>
             {footer}
           </Box>
         </Box>

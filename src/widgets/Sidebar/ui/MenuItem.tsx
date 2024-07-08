@@ -14,29 +14,51 @@ interface SidebarMenuItemProps {
   onClose?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
   isList?: boolean
   onClick?: () => void
+  open?: boolean
+  showExpandButton?: boolean
+  disabled?: boolean
 }
 
 export const MenuItem = memo((props: SidebarMenuItemProps) => {
   const {
-    isActive, isExpanded, caption, onClose, isList, onClick,
+    isActive, isExpanded, caption, onClose, isList, onClick, open, showExpandButton, disabled,
   } = props
 
   return (
     <ListItemButton
+      disabled={disabled}
       onClick={onClick}
       sx={{
         p: 0.5,
-        borderLeft: (isList && isActive) ? "4px solid rgb(3, 169, 244)" : "4px solid transparent",
+        transition: "height .3s",
         borderTopLeftRadius: 4,
         borderBottomLeftRadius: isExpanded ? 0 : 4,
+        height: (open || !showExpandButton) ? 40 : 20,
+        ...(open ? { borderLeft: (isList && isActive) ? "4px solid rgb(3, 169, 244)" : "4px solid transparent" } : {}),
       }}
     >
-      <ListItemIcon sx={{ minWidth: 30 }}>
-        <ShoppingBasketIcon />
-      </ListItemIcon>
-      <ListItemText primary={caption} />
+      {open && (
+        <>
+          <ListItemIcon sx={{
+            minWidth: 30,
+          }}
+          >
+            <ShoppingBasketIcon />
+          </ListItemIcon>
+          <ListItemText primary={caption} />
+        </>
+      )}
 
-      {isList && (
+      {!open && !showExpandButton && (
+        <ListItemIcon sx={{
+          minWidth: 30, display: "flex", justifyContent: "center", alignItems: "center",
+        }}
+        >
+          <ShoppingBasketIcon />
+        </ListItemIcon>
+      )}
+
+      {(showExpandButton) && (
         <Box
           onClick={onClose}
           sx={{

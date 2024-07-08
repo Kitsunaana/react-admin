@@ -21,20 +21,7 @@ const menu = [
         id: 1,
         name: "additions",
         caption: "Дополнения",
-        icon: "",
-      },
-    ],
-  },
-  {
-    id: 1,
-    name: "order",
-    caption: "Склады",
-    icon: "",
-    sublist: [
-      {
-        id: 0,
-        name: "new-order",
-        caption: "Новый заказ",
+        disabled: true,
         icon: "",
       },
     ],
@@ -42,13 +29,32 @@ const menu = [
   {
     id: 2,
     name: "order",
-    caption: "Заказы",
+    caption: "Склады",
     icon: "",
     sublist: [
       {
         id: 0,
         name: "new-order",
-        caption: "Новый заказ",
+        caption: "Приход",
+        icon: "",
+      },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Размещение",
+        icon: "",
+      },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Расход",
+        icon: "",
+      },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Документы",
+        disabled: true,
         icon: "",
       },
     ],
@@ -56,27 +62,33 @@ const menu = [
   {
     id: 3,
     name: "order",
-    caption: "Заказы",
+    caption: "Стоп-лист",
     icon: "",
-    sublist: [
-      {
-        id: 0,
-        name: "new-order",
-        caption: "Новый заказ",
-        icon: "",
-      },
-    ],
   },
   {
     id: 4,
     name: "order",
-    caption: "Заказы",
+    caption: "Ценообразование",
     icon: "",
     sublist: [
       {
         id: 0,
         name: "new-order",
-        caption: "Новый заказ",
+        caption: "Прайс-лист",
+        disabled: true,
+        icon: "",
+      },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Прайс-лист доставки",
+        disabled: true,
+        icon: "",
+      },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Промокоды",
         icon: "",
       },
     ],
@@ -93,18 +105,46 @@ const menu = [
         caption: "Новый заказ",
         icon: "",
       },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Документы",
+        icon: "",
+      },
     ],
   },
   {
     id: 6,
     name: "order",
-    caption: "Заказы",
+    caption: "Клиенты",
     icon: "",
     sublist: [
       {
         id: 0,
         name: "new-order",
-        caption: "Новый заказ",
+        caption: "Анализ",
+        disabled: true,
+        icon: "",
+      },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Чаты",
+        disabled: true,
+        icon: "",
+      },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Избранное",
+        disabled: true,
+        icon: "",
+      },
+      {
+        id: 0,
+        name: "new-order",
+        caption: "Адреса доставки",
+        disabled: true,
         icon: "",
       },
     ],
@@ -112,30 +152,29 @@ const menu = [
   {
     id: 7,
     name: "order",
-    caption: "Заказы",
+    caption: "Бот",
+    icon: "",
+  },
+  {
+    id: 8,
+    name: "order",
+    caption: "Отделы",
     icon: "",
     sublist: [
       {
         id: 0,
         name: "new-order",
-        caption: "Новый заказ",
+        caption: "Группы",
+        disabled: true,
         icon: "",
       },
     ],
   },
   {
-    id: 8,
+    id: 9,
     name: "order",
-    caption: "Заказы",
+    caption: "Маркетинг",
     icon: "",
-    sublist: [
-      {
-        id: 0,
-        name: "new-order",
-        caption: "Новый заказ",
-        icon: "",
-      },
-    ],
   },
 ]
 
@@ -178,11 +217,12 @@ export const Sidebar = () => {
   return (
     <Layout
       open={open}
-      header={<MenuItem caption="Магазин" />}
+      header={<MenuItem open={open} caption="Магазин" />}
       content={(
         <>
           {menu.map((list) => (
             <MenuList
+              open={open}
               key={list.id}
               id={list.id}
               caption={list.caption}
@@ -191,12 +231,12 @@ export const Sidebar = () => {
               isExpanded={sidebar.listsExpanded.includes(list.id)}
               onClose={onClose}
               onExpand={onExpand}
-              options={list.sublist}
+              options={list.sublist ?? []}
             />
           ))}
         </>
       )}
-      footer={<MenuItem caption="Закрыть" onClick={onOpen} />}
+      footer={<MenuItem open={open} caption="Закрыть" onClick={onOpen} />}
     />
   )
 }
