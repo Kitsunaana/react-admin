@@ -2,7 +2,7 @@ import * as React from "react"
 import Box from "@mui/material/Box"
 import List from "@mui/material/List"
 import { Divider } from "@mui/material"
-import { ReactNode } from "react"
+import { memo, ReactNode } from "react"
 
 interface SidebarLayoutProps {
   header?: ReactNode
@@ -11,12 +11,13 @@ interface SidebarLayoutProps {
   open: boolean
 }
 
-export const Layout = (props: SidebarLayoutProps) => {
+export const Layout = memo((props: SidebarLayoutProps) => {
   const {
     footer, header, content, open,
   } = props
 
   return (
+
     <Box sx={{ p: 1, height: 1 }}>
       <Box sx={{
         transition: ".3s",
@@ -25,19 +26,26 @@ export const Layout = (props: SidebarLayoutProps) => {
         height: 1,
         borderRadius: 2,
         boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
-        backgroundImage: ({ palette }) => palette.background.paper,
-        overflow: "hidden",
+        background: ({ background }) => background.sectionBackground,
         display: "flex",
         flexDirection: "column",
+        overflow: "hidden",
       }}
       >
         <Box>
           {header}
         </Box>
         <Divider />
-        <List sx={{ p: 0, py: 0.5, flexGrow: 1 }}>
-          {content}
-        </List>
+        <Box sx={{
+          overflowY: "auto",
+          overflowX: "hidden",
+          flexGrow: 1,
+        }}
+        >
+          <List sx={{ p: 0, py: 0.5 }}>
+            {content}
+          </List>
+        </Box>
         <Box>
           <List sx={{ p: 0, py: 0.5, flexGrow: 1 }}>
             <Box>
@@ -53,11 +61,9 @@ export const Layout = (props: SidebarLayoutProps) => {
             </Box>
           </List>
           <Divider />
-          <Box>
-            {footer}
-          </Box>
+          {footer}
         </Box>
       </Box>
     </Box>
   )
-}
+})
