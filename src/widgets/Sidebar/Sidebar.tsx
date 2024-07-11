@@ -1,53 +1,68 @@
 import * as React from "react"
-import { useCallback, useState } from "react"
+import { memo, useCallback, useState } from "react"
+import { useSelector } from "react-redux"
 import { Layout } from "./ui/Layout"
 import { MenuList } from "./ui/MenuList"
 import { SidebarHeader } from "./ui/SidebarHeader"
-import { menu, menuBottom } from "./constants"
+import { RootState } from "../../app/store"
+import { MenuList as IMenuList } from "./model/sidebarSlice"
+
+interface SidebarContentProps {
+  open: boolean
+}
+
+const shallowEqual = (prev, next) => {
+  const keysPrev = Object.keys(prev)
+  const keysNext = Object.keys(next)
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const key of keysPrev) {
+    if (prev[key] !== next[key]) {
+      console.log({ [`${key}-prev`]: prev[key], [`${key}-next`]: next[key] })
+
+      return false
+    }
+  }
+
+  return true
+}
+
+export const SidebarContent = memo((props: SidebarContentProps) => {
+  const {
+    open,
+  } = props
+  console.log(23)
+
+  const menu = useSelector((state: RootState) => state.sidebar.menu)
+  const listActive = useSelector((state: RootState) => state.sidebar.listActive)
+  // const listsExpanded = useSelector((state: RootState) => state.sidebar.listsExpanded)
+
+  return (
+    <>
+      {menu.map((list) => (
+        <MenuList
+          open={open}
+          key={list.id}
+          {...list}
+          isActive={listActive === list.id}
+          // isExpanded={listsExpanded.includes(list.id)}
+        />
+      ))}
+    </>
+  )
+})
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true)
-  const [sidebar, setSidebar] = useState({
-    listActive: 0,
-    sublistActive: null,
-    listsExpanded: [0],
-    menu,
-    menuBottom,
-  })
 
-  const onClose = useCallback(({ listId, sublistId }: { listId: number, sublistId?: number }) => {
-    setSidebar((prevState) => {
-      const newState = { ...prevState, listActive: listId, sublistActive: sublistId }
-
-      const find = sidebar.menu.find((list) => list.id === listId)
-
-      if (find !== undefined) {
-        const isExpandable = find?.sublist?.length > 0
-
-        if (isExpandable) newState.listsExpanded.push(listId)
-      }
-
-      return newState
-    })
-  }, [])
-
-  const onToggleExpand = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>, listId: number) => {
-    event.stopPropagation()
-
-    setSidebar((prevState) => {
-      const newState = { ...prevState }
-
-      const findListId = prevState.listsExpanded.find((id) => id === listId)
-      if (findListId !== undefined) newState.listsExpanded = newState.listsExpanded.filter((id) => id !== findListId)
-      else newState.listsExpanded.push(listId)
-
-      return newState
-    })
-  }, [])
+  // const menu = useSelector((state: RootState) => state.sidebar.menu)
+  // const menuBottom = useSelector((state: RootState) => state.sidebar.menuBottom)
 
   const onToggle = useCallback(() => {
     setOpen((prevState) => !prevState)
   }, [])
+
+  // const { listActive, listsExpanded } = useSelector((state: RootState) => state.sidebar)
 
   return (
     <Layout
@@ -58,40 +73,33 @@ export const Sidebar = () => {
           open={open}
         />
       )}
-      content={menu.map((list) => (
+      content={(
+        <SidebarContent
+          open={open}
+          // menu={menu}
+          // listActive={listActive}
+          // listsExpanded={listsExpanded}
+        />
+      )}
+      /* content={menu.map((list) => (
         <MenuList
           open={open}
           key={list.id}
-          id={list.id}
-          icon={list.icon}
-          caption={list.caption}
-          name={list.name}
-          isActive={sidebar.listActive === list.id}
-          isExpanded={sidebar.listsExpanded.includes(list.id)}
-          onClose={onClose}
-          onToggleExpand={onToggleExpand}
-          options={list.sublist ?? []}
-          listActive={sidebar.listActive}
-          sublistActive={sidebar.sublistActive}
+          {...list}
+          isActive={listActive === list.id}
+          isExpanded={listsExpanded.includes(list.id)}
         />
-      ))}
-      footer={sidebar.menuBottom.map((list) => (
+      ))} */
+      /* footer={menuBottom.map((list) => (
         <MenuList
           open={open}
           key={list.id}
-          id={list.id}
-          icon={list.icon}
-          caption={list.caption}
-          name={list.name}
-          isActive={sidebar.listActive === list.id}
-          isExpanded={sidebar.listsExpanded.includes(list.id)}
-          onClose={onClose}
-          onToggleExpand={onToggleExpand}
-          options={list.sublist ?? []}
-          listActive={sidebar.listActive}
-          sublistActive={sidebar.sublistActive}
+          {...list}
+          isActive={listActive === list.id}
+          isExpanded={listsExpanded.includes(list.id)}
         />
-      ))}
+      ))} */
+      footer={<div />}
     />
   )
 }

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import { Icon, IconProps } from "@mui/material"
 
 const iconData = {
@@ -33,7 +33,7 @@ interface DefaultIcon extends IconProps{
   name: string
 }
 
-const Default = (props: DefaultIcon) => {
+const Default = memo((props: DefaultIcon) => {
   const { name, ...other } = props
 
   const icon = iconData[name] ?? iconData.defIcon
@@ -46,6 +46,6 @@ const Default = (props: DefaultIcon) => {
       {icon}
     </Icon>
   )
-}
+})
 
 export { Default as Icon }
