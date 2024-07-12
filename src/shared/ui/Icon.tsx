@@ -27,6 +27,7 @@ const iconData = {
   departments: "diversity_3",
   groups: "groups",
   marketing: "cell_tower",
+  expand: "expand_more"
 }
 
 interface DefaultIcon extends IconProps{

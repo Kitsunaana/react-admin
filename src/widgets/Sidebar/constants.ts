@@ -55,7 +55,7 @@ export const menu = [
   },
   {
     id: 8,
-    name: "stopList",
+    name: "stop-ist",
     caption: "Стоп-лист",
     icon: "stopList",
   },
@@ -67,21 +67,21 @@ export const menu = [
     sublist: [
       {
         id: 10,
-        name: "priceList",
+        name: "price-list",
         caption: "Прайс-лист",
         disabled: true,
         icon: "priceList",
       },
       {
         id: 11,
-        name: "npriceListDelivery",
+        name: "price-list-delivery",
         caption: "Прайс-лист доставки",
         disabled: true,
         icon: "priceListDelivery",
       },
       {
         id: 12,
-        name: "promoCode",
+        name: "promo-code",
         caption: "Промокоды",
         icon: "promoCode",
       },
@@ -95,13 +95,13 @@ export const menu = [
     sublist: [
       {
         id: 14,
-        name: "newOrder",
+        name: "new-order",
         caption: "Новый заказ",
         icon: "newOrder",
       },
       {
         id: 15,
-        name: "documentOrder",
+        name: "document",
         caption: "Документы",
         icon: "document",
       },
@@ -109,7 +109,7 @@ export const menu = [
   },
   {
     id: 16,
-    name: "order",
+    name: "clients",
     caption: "Клиенты",
     icon: "clients",
     sublist: [
@@ -136,7 +136,7 @@ export const menu = [
       },
       {
         id: 20,
-        name: "deliveryAddresses",
+        name: "delivery-addresses",
         caption: "Адреса доставки",
         disabled: true,
         icon: "deliveryAddresses",
@@ -145,13 +145,13 @@ export const menu = [
   },
   {
     id: 21,
-    name: "order",
+    name: "bot",
     caption: "Бот",
     icon: "bot",
   },
   {
     id: 22,
-    name: "order",
+    name: "departments",
     caption: "Отделы",
     icon: "departments",
     sublist: [

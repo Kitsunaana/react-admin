@@ -2,13 +2,19 @@ import { createRoot } from "react-dom/client"
 import { App } from "./app/App"
 import { ThemeProvider } from "./app/providers/Theme"
 import { StoreProvider } from "./app/providers/Redux"
+import {
+  BrowserRouter,
+} from "react-router-dom"
+
 
 const container = document.getElementById("root")
 const root = createRoot(container)
 root.render(
   <StoreProvider>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </BrowserRouter>
   </StoreProvider>,
 )

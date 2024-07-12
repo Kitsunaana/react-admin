@@ -6,7 +6,7 @@ interface MenuButtonProps {
   open: boolean
 }
 
-export const MenuButton = (props: MenuButtonProps) => {
+export const MenuBurger = (props: MenuButtonProps) => {
   const { open, onClick } = props
 
   return (
