@@ -2,6 +2,7 @@ import { Box, ButtonBase, ButtonBaseProps } from "@mui/material"
 import * as React from "react"
 import { memo, MouseEvent } from "react"
 import { Icon } from "../../../shared/ui/Icon"
+import { shallowEqual } from "../../../shared/lib/utils"
 
 interface ExpandButtonProps {
   handleOnExpand: (event: MouseEvent<HTMLButtonElement>) => void

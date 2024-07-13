@@ -1,5 +1,5 @@
 import { ListItemButtonProps as MUIListItemButtonProps } from "@mui/material/ListItemButton/ListItemButton"
-import { memo } from "react"
+import { memo, useEffect, useState } from "react"
 import MUIListItemButton from "@mui/material/ListItemButton"
 import MUIListItemIcon, { ListItemIconProps } from "@mui/material/ListItemIcon"
 import MUIListItemText, { ListItemTextProps } from "@mui/material/ListItemText"
@@ -7,9 +7,12 @@ import * as React from "react"
 import { Tooltip } from "@mui/material"
 import { Icon } from "../../../shared/ui/Icon"
 import { shallowEqual } from "../../../shared/lib/utils"
+import { addEvent, dispatch } from "../../../shared/lib/event"
 
-export const ListItemIcon = memo((props: { icon: string; disabled: boolean } & ListItemIconProps) => {
-  const { icon, disabled, ...other } = props
+export const ListItemIcon = memo((props: { icon: string; disabled: boolean; open: boolean } & ListItemIconProps) => {
+  const {
+    icon, disabled, open, ...other
+  } = props
 
   return (
     <MUIListItemIcon
@@ -52,8 +55,10 @@ export type ListItemButtonProps = {
   icon: string
   path: string
   optionId?: number
+  listId?: number
   onSelectOption: (optionId?: number) => void
   open: boolean
+
   isSelected: boolean
 } & MUIListItemButtonProps
 
@@ -67,13 +72,21 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
     path,
     onSelectOption,
     optionId,
+    listId,
     open,
     isSelected,
     ...otherProps
   } = props
 
   const handleOnSelect = () => {
-    onSelectOption(optionId)
+    // onSelectOption(optionId)
+
+    // console.log({ listId, optionId })
+
+    dispatch("selected", { selectedId: listId, selectedOptionId: (disabled || !optionId) ? null : optionId } satisfies {
+      selectedId: number
+      selectedOptionId: number | null
+    })
   }
 
   return (
@@ -94,7 +107,7 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
       }}
       {...otherProps}
     >
-      <ListItemIcon icon={icon} disabled={disabled} />
+      <ListItemIcon open={open} icon={icon} disabled={disabled} />
       {open && <ListItemText caption={caption} disabled={disabled} />}
       {children}
     </MUIListItemButton>

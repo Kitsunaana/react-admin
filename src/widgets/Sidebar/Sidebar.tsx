@@ -1,11 +1,15 @@
 import { Box, Divider } from "@mui/material"
 import * as React from "react"
-import { ReactNode, useCallback, useState } from "react"
+import {
+  ReactNode, useCallback, useEffect, useMemo, useState,
+} from "react"
 import { List } from "./ui/List"
 import { menu } from "./constants"
 import { MenuBurger } from "./ui/MenuBurger"
+import { MenuList } from "./types"
+import { addEvent } from "../../shared/lib/event"
 
-export type TSelected = { optionSelected: number | null; listSelected: number }
+export type TSelected = { optionSelected: number | null; listSelected: number; menu?: MenuList[] }
 
 export type SidebarLayoutProps = {
   content: ReactNode
@@ -55,16 +59,52 @@ export const SidebarContent = ({ open }: { open: boolean }) => {
   })
 
   const handleOnSelect = useCallback((data: TSelected) => {
-    setSelected((prevState) => {
+    /* setSelected((prevState) => {
       if (prevState.listSelected !== data.listSelected || prevState.optionSelected !== data.optionSelected) {
         return { ...prevState, ...data }
       }
 
+      console.log(123)
       return prevState
+    }) */
+
+  }, [])
+
+  useEffect(() => {
+    addEvent("selected", (data: { selectedId: number; selectedOptionId: number | null }) => {
+      // setSelected((prevState) => ({ ...prevState, optionSelected: data.selectedOptionId, listSelected: data.selectedId }))
     })
   }, [])
 
-  return menu.map((list) => {
+  /* useEffect(() => {
+    addEvent("selected", ({ selectedId, selectedOptionId }: {
+      selectedId: number
+      selectedOptionId: number | null
+    }) => {
+      if (selected.optionSelected === selectedOptionId || selected.listSelected === selectedId) {
+        return
+      }
+
+      setSelected((prevState) => ({ ...prevState, listSelected: selectedId, optionSelected: selectedOptionId }))
+    })
+  }, []) */
+
+  return useMemo(() => menu.map((list) => {
+    const findOption = list?.sublist?.find((option) => option.id === selected.optionSelected)
+
+    return (
+      <List
+        key={list.id}
+        list={list}
+        // isSelected={selected.listSelected === list.id}
+        // selectedOptionId={findOption ? findOption.id : false}
+        onSelect={handleOnSelect}
+        open={open}
+      />
+    )
+  }), [selected.menu, selected.optionSelected, open])
+
+  /* return selected.menu.map((list) => {
     const findOption = list?.sublist?.find((option) => option.id === selected.optionSelected)
 
     return (
@@ -77,7 +117,7 @@ export const SidebarContent = ({ open }: { open: boolean }) => {
         open={open}
       />
     )
-  })
+  }) */
 }
 
 export const Sidebar = () => {

@@ -1,4 +1,4 @@
-import { memo, ReactNode } from "react"
+import { memo, ReactNode, useMemo } from "react"
 import MUIList from "@mui/material/List"
 import { Box, CollapseProps, MenuListProps } from "@mui/material"
 import MUICollapse from "@mui/material/Collapse"
@@ -31,7 +31,10 @@ export const ListLayout = memo((props: ListLayoutProps) => {
     open,
     caption,
     icon,
+    id,
   } = props
+
+  const sx = useMemo(() => ({ pl: open ? 2 : 0 }), [open])
 
   return (
     <List component="nav" disablePadding>
@@ -75,6 +78,7 @@ export const ListLayout = memo((props: ListLayoutProps) => {
               icon={icon}
               caption={caption}
               isSelected={isSelected}
+              listId={id}
             />
           )}
           {sublist && sublist.length > 0 && sublist.map((option) => {
@@ -83,10 +87,11 @@ export const ListLayout = memo((props: ListLayoutProps) => {
 
             return (
               <ListItemButton
+                listId={id}
                 open={open}
                 onSelectOption={onSelect}
                 path={path}
-                sx={{ pl: open ? 2 : 0 }}
+                sx={sx}
                 isSelected={isSelectedOption}
                 optionId={option.id}
                 key={option.id}

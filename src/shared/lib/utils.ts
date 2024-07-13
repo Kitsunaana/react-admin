@@ -7,7 +7,6 @@ export const shallowEqual = (prev, next) => {
       console.log({
         [`${key}-prev`]: prev[key],
         [`${key}-next`]: next[key],
-        name: prev.list.name,
       })
 
       // console.log(prev.sublist === next.sublist)
