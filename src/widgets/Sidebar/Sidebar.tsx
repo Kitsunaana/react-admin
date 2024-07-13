@@ -1,19 +1,16 @@
 import { Box, Divider } from "@mui/material"
 import * as React from "react"
 import {
-  ReactNode, useCallback, useEffect, useMemo, useState,
+  ReactNode, useMemo, useState,
 } from "react"
 import { List } from "./ui/List"
-import { menu } from "./constants"
+import { menu, menuBottom } from "./constants"
 import { MenuBurger } from "./ui/MenuBurger"
-import { MenuList } from "./types"
-import { addEvent } from "../../shared/lib/event"
-
-export type TSelected = { optionSelected: number | null; listSelected: number; menu?: MenuList[] }
 
 export type SidebarLayoutProps = {
   content: ReactNode
   header: ReactNode
+  bottom: ReactNode
 
   open: boolean
 }
@@ -23,6 +20,7 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
     content,
     header,
     open,
+    bottom,
   } = props
 
   return (
@@ -35,6 +33,8 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
       borderRadius: 2,
       transition: ".3s",
       overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
     }}
     >
       <Box sx={{
@@ -47,90 +47,49 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
         {header}
       </Box>
       <Divider />
-      {content}
+      <Box sx={{
+        flexGrow: 1,
+        overflowY: "auto",
+        overflowX: "hidden",
+      }}
+      >
+        {content}
+      </Box>
+      <Divider />
+      {bottom}
     </Box>
   )
 }
 
-export const SidebarContent = ({ open }: { open: boolean }) => {
-  const [selected, setSelected] = useState<TSelected>({
-    optionSelected: null,
-    listSelected: 0,
-  })
-
-  const handleOnSelect = useCallback((data: TSelected) => {
-    /* setSelected((prevState) => {
-      if (prevState.listSelected !== data.listSelected || prevState.optionSelected !== data.optionSelected) {
-        return { ...prevState, ...data }
-      }
-
-      console.log(123)
-      return prevState
-    }) */
-
-  }, [])
-
-  useEffect(() => {
-    addEvent("selected", (data: { selectedId: number; selectedOptionId: number | null }) => {
-      // setSelected((prevState) => ({ ...prevState, optionSelected: data.selectedOptionId, listSelected: data.selectedId }))
-    })
-  }, [])
-
-  /* useEffect(() => {
-    addEvent("selected", ({ selectedId, selectedOptionId }: {
-      selectedId: number
-      selectedOptionId: number | null
-    }) => {
-      if (selected.optionSelected === selectedOptionId || selected.listSelected === selectedId) {
-        return
-      }
-
-      setSelected((prevState) => ({ ...prevState, listSelected: selectedId, optionSelected: selectedOptionId }))
-    })
-  }, []) */
-
-  return useMemo(() => menu.map((list) => {
-    const findOption = list?.sublist?.find((option) => option.id === selected.optionSelected)
-
-    return (
-      <List
-        key={list.id}
-        list={list}
-        // isSelected={selected.listSelected === list.id}
-        // selectedOptionId={findOption ? findOption.id : false}
-        onSelect={handleOnSelect}
-        open={open}
-      />
-    )
-  }), [selected.menu, selected.optionSelected, open])
-
-  /* return selected.menu.map((list) => {
-    const findOption = list?.sublist?.find((option) => option.id === selected.optionSelected)
-
-    return (
-      <List
-        key={list.id}
-        list={list}
-        isSelected={selected.listSelected === list.id}
-        selectedOptionId={findOption ? findOption.id : false}
-        onSelect={handleOnSelect}
-        open={open}
-      />
-    )
-  }) */
-}
-
 export const Sidebar = () => {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
+
   const handleOnToggle = () => {
     setOpen((prevState) => !prevState)
   }
+
+  const memoizedContent = useMemo(() => menu.map((list) => (
+    <List
+      key={list.id}
+      list={list}
+      open={open}
+    />
+  )), [open])
+
+  const memoizedBottom = useMemo(() => menuBottom.map((list) => (
+    <List
+      key={list.id}
+      list={list}
+      open={open}
+    />
+  )), [open])
 
   return (
     <SidebarLayout
       open={open}
       header={<MenuBurger open={open} onClick={handleOnToggle} />}
-      content={<SidebarContent open={open} />}
+      content={memoizedContent}
+      bottom={memoizedBottom}
     />
   )
 }

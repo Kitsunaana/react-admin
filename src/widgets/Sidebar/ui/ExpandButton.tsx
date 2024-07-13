@@ -1,23 +1,36 @@
-import { Box, ButtonBase, ButtonBaseProps } from "@mui/material"
+import {
+  Box, ButtonBase, ButtonBaseProps, Tooltip,
+} from "@mui/material"
 import * as React from "react"
 import { memo, MouseEvent } from "react"
 import { Icon } from "../../../shared/ui/Icon"
-import { shallowEqual } from "../../../shared/lib/utils"
 
 interface ExpandButtonProps {
   handleOnExpand: (event: MouseEvent<HTMLButtonElement>) => void
   isExpanded: boolean
   buttonProps?: ButtonBaseProps
   divider?: boolean
+  tooltipCaption?: string
 }
 
 export const ExpandButton = memo((props: ExpandButtonProps) => {
   const {
-    handleOnExpand, isExpanded, buttonProps, divider,
+    handleOnExpand, isExpanded, buttonProps, divider, tooltipCaption,
   } = props
 
-  return (
-    <ButtonBase onClick={handleOnExpand} sx={{ width: 1, ...buttonProps?.sx }} {...buttonProps}>
+  const renderButton = (
+    <ButtonBase
+      onClick={handleOnExpand}
+      sx={{
+        width: 1,
+        "&:hover": {
+          backgroundColor: ({ palette }) => palette.grey["100"],
+          transition: ".3s",
+        },
+        ...buttonProps?.sx,
+      }}
+      {...buttonProps}
+    >
       <Box sx={{
         height: divider ? 20 : 35,
         ...(divider ? {
@@ -45,7 +58,7 @@ export const ExpandButton = memo((props: ExpandButtonProps) => {
           sx={{
             fontSize: 18,
             transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-            transition: ".3s",
+            transition: ".3s !important",
             width: 35,
             height: 1,
             display: "grid",
@@ -55,4 +68,18 @@ export const ExpandButton = memo((props: ExpandButtonProps) => {
       </Box>
     </ButtonBase>
   )
+
+  if (divider) {
+    return (
+      <Tooltip
+        placement="right"
+        arrow
+        title={isExpanded ? `Свернуть маршруты ${tooltipCaption}` : `Развернуть маршруты ${tooltipCaption}`}
+      >
+        {renderButton}
+      </Tooltip>
+    )
+  }
+
+  return renderButton
 })

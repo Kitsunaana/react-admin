@@ -1,14 +1,13 @@
 import {
-  memo, useCallback, useState, MouseEvent, useEffect, useRef, useReducer, useMemo,
+  memo, useCallback, useState, MouseEvent, useEffect, useRef, useMemo,
 } from "react"
 import * as React from "react"
+import { Tooltip } from "@mui/material"
 import { ListItemButton } from "./ListItemButton"
-import { TSelected } from "../Sidebar"
 import { ExpandButton } from "./ExpandButton"
 import { MenuList } from "../types"
 import { ListLayout } from "./ListLayout"
-import { shallowEqual } from "../../../shared/lib/utils"
-import { addEvent, dispatch } from "../../../shared/lib/event"
+import { addEvent } from "../../../shared/lib/event"
 
 const styles = {
   listItemButton: (isSelected: boolean, isExpanded: boolean, isEmptyOptions: boolean, open: boolean) => ({
@@ -30,53 +29,21 @@ const styles = {
 }
 
 export type ListProps = {
-  /* isSelected: boolean
-  selectedOptionId: boolean | number */
-  isSelected?: boolean
-  selectedOptionId?: boolean | number
-  onSelect: (data: TSelected) => void
   open: boolean
   list: MenuList
-
-  selected?: TSelected
 }
 
+export type TRef = { selectedId: number; selectedOptionId: number | null }
+
 export const List = memo((props: ListProps) => {
-  const {
-    // isSelected, selectedOptionId, onSelect, open, list,
-    onSelect, open, list,
-  } = props
-
-  const [isExpanded, setIsExpanded] = useState(list.id === 0)
-
-  const handleOnSelect = useCallback((optionId?: number) => {
-    setIsExpanded(true)
-
-    // setSelected((prevState) => ({ ...prevState, selectedId: list.id, selectedOptionId: optionId ?? null }))
-
-    /* dispatch("selected", { selectedId: list.id, selectedOptionId: optionId } satisfies {
-      selectedId: number
-      selectedOptionId: number | null
-    }) */
-
-    // dispatch("selected", { selectedId: list.id } satisfies { selectedId: number })
-  }, [list.id])
-
-  const handleOnExpand = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation()
-
-    setIsExpanded((prevState) => !prevState)
-  }, [])
+  const { open, list } = props
 
   const [, setReload] = useState(true)
-
-  const ref = useRef<{ selectedId: number; selectedOptionId: number | null }>({
-    selectedId: 0,
-    selectedOptionId: null,
-  })
+  const [isExpanded, setIsExpanded] = useState(list.id === 0)
+  const ref = useRef<TRef>({ selectedId: 0, selectedOptionId: null })
 
   useEffect(() => {
-    addEvent("selected", (data: { selectedId: number; selectedOptionId: number | null }) => {
+    addEvent("selected", (data: TRef) => {
       if (data.selectedId === list.id) setIsExpanded(true)
 
       if ((list.id === data.selectedId) || (ref.current.selectedId === list.id)) {
@@ -92,27 +59,31 @@ export const List = memo((props: ListProps) => {
     sx: { width: "auto" },
   }), [])
 
+  const handleOnExpand = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
+
+    setIsExpanded((prevState) => !prevState)
+  }, [])
+
   const isSelected = ref.current.selectedId === list.id
   const { selectedOptionId } = ref.current
 
   const listLayoutProps = {
     ...list,
-    sublist: list.sublist.length > 0 ? list.sublist : [],
-    onSelect: handleOnSelect,
-    name: list.name,
     isExpanded,
     isSelected,
     selectedOptionId,
     open,
+    sublist: list.sublist.length > 0 ? list.sublist : [],
+    name: list.name,
   }
 
   const listItemButtonProps = {
     open,
+    isSelected,
     path: list.name,
-    onSelectOption: handleOnSelect,
     icon: list.icon,
     caption: list.caption,
-    isSelected,
     listId: list.id,
   }
 
@@ -130,6 +101,7 @@ export const List = memo((props: ListProps) => {
         header={
           list.sublist.length > 0 ? (
             <ExpandButton
+              tooltipCaption={list.caption}
               isExpanded={isExpanded}
               handleOnExpand={handleOnExpand}
               divider

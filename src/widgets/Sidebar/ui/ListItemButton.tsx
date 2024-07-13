@@ -1,13 +1,15 @@
-import { ListItemButtonProps as MUIListItemButtonProps } from "@mui/material/ListItemButton/ListItemButton"
-import { memo, useEffect, useState } from "react"
-import MUIListItemButton from "@mui/material/ListItemButton"
-import MUIListItemIcon, { ListItemIconProps } from "@mui/material/ListItemIcon"
-import MUIListItemText, { ListItemTextProps } from "@mui/material/ListItemText"
+import { memo } from "react"
+import {
+  ListItemTextProps,
+  ListItemIconProps,
+  ListItemText as MUIListItemText,
+  ListItemIcon as MUIListItemIcon,
+  ListItemButton as MUIListItemButton,
+  ListItemButtonProps as MUIListItemButtonProps, Tooltip,
+} from "@mui/material"
 import * as React from "react"
-import { Tooltip } from "@mui/material"
 import { Icon } from "../../../shared/ui/Icon"
-import { shallowEqual } from "../../../shared/lib/utils"
-import { addEvent, dispatch } from "../../../shared/lib/event"
+import { dispatch } from "../../../shared/lib/event"
 
 export const ListItemIcon = memo((props: { icon: string; disabled: boolean; open: boolean } & ListItemIconProps) => {
   const {
@@ -56,7 +58,6 @@ export type ListItemButtonProps = {
   path: string
   optionId?: number
   listId?: number
-  onSelectOption: (optionId?: number) => void
   open: boolean
 
   isSelected: boolean
@@ -70,7 +71,6 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
     disabled,
     icon,
     path,
-    onSelectOption,
     optionId,
     listId,
     open,
@@ -79,18 +79,13 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
   } = props
 
   const handleOnSelect = () => {
-    // onSelectOption(optionId)
-
-    // console.log({ listId, optionId })
-
     dispatch("selected", { selectedId: listId, selectedOptionId: (disabled || !optionId) ? null : optionId } satisfies {
       selectedId: number
       selectedOptionId: number | null
     })
   }
 
-  return (
-  // <Tooltip title={(disabled || !open) && caption} placement="right" arrow>
+  const renderButton = (
     <MUIListItemButton
       onClick={handleOnSelect}
       sx={{
@@ -111,6 +106,19 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
       {open && <ListItemText caption={caption} disabled={disabled} />}
       {children}
     </MUIListItemButton>
-  // </Tooltip>
   )
+
+  if ((disabled || !open)) {
+    return (
+      <Tooltip
+        title={disabled ? "Доступно только при переходе из другого режима" : caption}
+        placement="right"
+        arrow
+      >
+        {renderButton}
+      </Tooltip>
+    )
+  }
+
+  return renderButton
 })

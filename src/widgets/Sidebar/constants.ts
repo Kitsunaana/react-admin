@@ -184,7 +184,7 @@ export const menuBottom = [
     sublist: [
       {
         id: 26,
-        name: "systemScripts",
+        name: "system-scripts",
         icon: "systemScripts",
         caption: "Системные скрипты",
       },

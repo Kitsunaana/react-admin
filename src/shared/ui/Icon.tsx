@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import { Icon, IconProps } from "@mui/material"
+import { Fade, Icon, IconProps } from "@mui/material"
 
 const iconData = {
   defIcon: "do_not_disturb_off",
@@ -27,7 +27,7 @@ const iconData = {
   departments: "diversity_3",
   groups: "groups",
   marketing: "cell_tower",
-  expand: "expand_more"
+  expand: "expand_more",
 }
 
 interface DefaultIcon extends IconProps{
