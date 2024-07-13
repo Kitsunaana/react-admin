@@ -1,19 +1,60 @@
 import { ListItemButtonProps as MUIListItemButtonProps } from "@mui/material/ListItemButton/ListItemButton"
 import { memo } from "react"
 import MUIListItemButton from "@mui/material/ListItemButton"
-import ListItemIcon from "@mui/material/ListItemIcon"
-import { Icon } from "../../../shared/ui/Icon"
-import ListItemText from "@mui/material/ListItemText"
+import MUIListItemIcon, { ListItemIconProps } from "@mui/material/ListItemIcon"
+import MUIListItemText, { ListItemTextProps } from "@mui/material/ListItemText"
 import * as React from "react"
-import { Link } from "../../../shared/ui/Link"
+import { Tooltip } from "@mui/material"
+import { Icon } from "../../../shared/ui/Icon"
+import { shallowEqual } from "../../../shared/lib/utils"
+
+export const ListItemIcon = memo((props: { icon: string; disabled: boolean } & ListItemIconProps) => {
+  const { icon, disabled, ...other } = props
+
+  return (
+    <MUIListItemIcon
+      {...other}
+      sx={{
+        minWidth: 0,
+        maxWidth: 24,
+        width: 1,
+        mr: open ? 1 : 0,
+        ...other?.sx,
+      }}
+    >
+      <Icon
+        name={icon}
+        sx={{ color: ({ palette }) => disabled && palette.text.disabled }}
+      />
+    </MUIListItemIcon>
+  )
+})
+
+export const ListItemText = memo((props: { caption: string; disabled: boolean } & ListItemTextProps) => {
+  const { caption, disabled } = props
+
+  return (
+    <MUIListItemText
+      primary={caption}
+      sx={{
+        color: ({ palette }) => disabled && palette.text.disabled,
+        width: 1,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      }}
+    />
+  )
+})
 
 export type ListItemButtonProps = {
-  caption: string;
-  icon: string;
-  path: string;
-  optionId?: number;
+  caption: string
+  icon: string
+  path: string
+  optionId?: number
   onSelectOption: (optionId?: number) => void
   open: boolean
+  isSelected: boolean
 } & MUIListItemButtonProps
 
 export const ListItemButton = memo((props: ListItemButtonProps) => {
@@ -27,6 +68,7 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
     onSelectOption,
     optionId,
     open,
+    isSelected,
     ...otherProps
   } = props
 
@@ -35,41 +77,27 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
   }
 
   return (
+  // <Tooltip title={(disabled || !open) && caption} placement="right" arrow>
     <MUIListItemButton
       onClick={handleOnSelect}
       sx={{
+        backgroundColor: isSelected ? "rgba(25, 118, 210, 0.08)" : null,
         height: 35,
         p: 0,
-        px: open ? 1: 0,
-        ...sx
-      }} {...otherProps}
+        px: open ? 1 : 0,
+        pr: 0,
+        display: "flex",
+        alignItems: "center",
+        width: "100%",
+        justifyContent: "center",
+        ...sx,
+      }}
+      {...otherProps}
     >
-      <Link to={path}>
-        <ListItemIcon
-          sx={{
-            minWidth: 0,
-            maxWidth: 24,
-            width: 1,
-            mr: open ? 1 : 0
-          }}
-        >
-          <Icon
-            name={icon}
-            sx={{ color: ({ palette }) => disabled && palette.text.disabled }}
-          />
-        </ListItemIcon>
-        {open && <ListItemText
-          primary={caption}
-          sx={{
-            color: ({ palette }) => disabled && palette.text.disabled,
-            width: 1,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        />}
-      </Link>
+      <ListItemIcon icon={icon} disabled={disabled} />
+      {open && <ListItemText caption={caption} disabled={disabled} />}
       {children}
     </MUIListItemButton>
+  // </Tooltip>
   )
 })

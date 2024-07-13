@@ -1,13 +1,13 @@
-import { menu } from "./constants"
-import { List } from "./ui/List"
 import { Box, Divider } from "@mui/material"
 import * as React from "react"
 import { ReactNode, useCallback, useState } from "react"
+import { List } from "./ui/List"
+import { menu } from "./constants"
 import { MenuBurger } from "./ui/MenuBurger"
 
 export type TSelected = { optionSelected: number | null; listSelected: number }
 
-export type  SidebarLayoutProps = {
+export type SidebarLayoutProps = {
   content: ReactNode
   header: ReactNode
 
@@ -15,7 +15,11 @@ export type  SidebarLayoutProps = {
 }
 
 export const SidebarLayout = (props: SidebarLayoutProps) => {
-  const { content, header, open } = props
+  const {
+    content,
+    header,
+    open,
+  } = props
 
   return (
     <Box sx={{
@@ -27,8 +31,15 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
       borderRadius: 2,
       transition: ".3s",
       overflow: "hidden",
-    }}>
-      <Box sx={{ maxWidth: 47, display: "flex", justifyContent: "center", alignItems: "center" }}>
+    }}
+    >
+      <Box sx={{
+        maxWidth: 47,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      >
         {header}
       </Box>
       <Divider />
@@ -37,61 +48,49 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
   )
 }
 
-export const Sidebar = () => {
-  const [open, setOpen] = useState(false)
+export const SidebarContent = ({ open }: { open: boolean }) => {
   const [selected, setSelected] = useState<TSelected>({
-    optionSelected: 0,
-    listSelected: 0
+    optionSelected: null,
+    listSelected: 0,
   })
 
   const handleOnSelect = useCallback((data: TSelected) => {
     setSelected((prevState) => {
-      return { ...prevState, ...data }
+      if (prevState.listSelected !== data.listSelected || prevState.optionSelected !== data.optionSelected) {
+        return { ...prevState, ...data }
+      }
+
+      return prevState
     })
   }, [])
 
+  return menu.map((list) => {
+    const findOption = list?.sublist?.find((option) => option.id === selected.optionSelected)
+
+    return (
+      <List
+        key={list.id}
+        list={list}
+        isSelected={selected.listSelected === list.id}
+        selectedOptionId={findOption ? findOption.id : false}
+        onSelect={handleOnSelect}
+        open={open}
+      />
+    )
+  })
+}
+
+export const Sidebar = () => {
+  const [open, setOpen] = useState(true)
   const handleOnToggle = () => {
-    setOpen(prevState => !prevState)
+    setOpen((prevState) => !prevState)
   }
 
   return (
     <SidebarLayout
       open={open}
       header={<MenuBurger open={open} onClick={handleOnToggle} />}
-
-      content={menu.map((list) => {
-        const findOption = list?.sublist?.find(option => option.id === selected.optionSelected)
-
-        return <List
-          key={list.id}
-          {...list}
-          isSelected={selected.listSelected === list.id}
-          selectedOptionId={findOption ? findOption.id : false}
-          onSelect={handleOnSelect}
-          open={open}
-        />
-      })}
+      content={<SidebarContent open={open} />}
     />
   )
-
- /*  return <Box sx={{
-    width: 1,
-    height: 1,
-    maxWidth: 240,
-    boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
-    background: ({ background }) => background.sectionBackground,
-    borderRadius: 2,
-  }}>
-    {menu.map((list) => {
-      const findOption = list?.sublist?.find(option => option.id === selected.optionSelected)
-
-      return <List
-        key={list.id}
-        {...list}
-        isSelected={selected.listSelected === list.id}
-        selectedOptionId={findOption ? findOption.id : false}
-        onSelect={handleOnSelect}
-      />
-    })}
-  </Box> */
 }

@@ -58,6 +58,7 @@ export const menu = [
     name: "stop-ist",
     caption: "Стоп-лист",
     icon: "stopList",
+    sublist: [],
   },
   {
     id: 9,
@@ -148,6 +149,7 @@ export const menu = [
     name: "bot",
     caption: "Бот",
     icon: "bot",
+    sublist: [],
   },
   {
     id: 22,
@@ -169,6 +171,7 @@ export const menu = [
     name: "marketing",
     caption: "Маркетинг",
     icon: "marketing",
+    sublist: [],
   },
 ]
 

@@ -1,324 +1,125 @@
-import { memo, ReactNode, useCallback, useState } from "react"
-import MUIList from "@mui/material/List"
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
-import Collapse from "@mui/material/Collapse"
+import {
+  memo, useCallback, useState, MouseEvent,
+} from "react"
 import * as React from "react"
 import { ListItemButton } from "./ListItemButton"
 import { TSelected } from "../Sidebar"
-import { Box, ButtonBase } from "@mui/material"
-import { Icon } from "../../../shared/ui/Icon"
+import { ExpandButton } from "./ExpandButton"
+import { MenuList } from "../types"
+import { ListLayout } from "./ListLayout"
+import { shallowEqual } from "../../../shared/lib/utils"
 
-export type MenuItemBase = {
-  id: number
-  name: string
-  caption: string
-  icon: string
+const styles = {
+  listItemButton: (isSelected: boolean, isExpanded: boolean, isEmptyOptions: boolean) => ({
+    position: "relative",
+    "&::before": {
+      content: "''",
+      position: "absolute",
+      width: 4,
+      height: 1,
+      top: 0,
+      left: 0,
+      borderLeft: "5px solid",
+      transition: ".2s",
+      borderTopLeftRadius: 4,
+      borderBottomLeftRadius: isEmptyOptions || (isSelected && !isExpanded) ? 4 : 0,
+      borderLeftColor: ({ palette }) => (isSelected ? palette.primary.light : "transparent"),
+    },
+  }),
 }
-
-export type MenuItem = { disabled?: boolean } & MenuItemBase
-
-export type MenuList = { sublist?: MenuItem[] } & MenuItemBase
 
 export type List = {
   isSelected: boolean
   selectedOptionId: boolean | number
   onSelect: (data: TSelected) => void
   open: boolean
-} & MenuList
-
-export type ListLayoutProps = {
-  header: ReactNode
-  isSelected: boolean
-  selectedOptionId: boolean | number
-  onSelect: (optionId?: number) => void
-  isExpanded: boolean
-  open: boolean
-} & MenuList
-
-export const ListLayout = (props: ListLayoutProps) => {
-  const {
-    header,
-    name,
-    isSelected,
-    onSelect,
-    selectedOptionId,
-    sublist,
-    isExpanded,
-    open,
-    caption, id, icon
-  } = props
-
-  return (
-    <MUIList component="nav" disablePadding>
-      <Box sx={{
-        display: "flex",
-        justifyContent: "center"
-      }}>
-        {header}
-      </Box>
-
-      <Collapse
-        in={isExpanded}
-        timeout={300}
-        unmountOnExit
-        sx={{
-          position: "relative",
-          "&::before": {
-            content: "''",
-            position: "absolute",
-            width: 1,
-            height: 1,
-            top: 0,
-            left: 0,
-            borderLeft: "5px solid",
-            borderBottomLeftRadius: 4,
-            borderLeftColor: ({ palette }) => (isExpanded && isSelected && open) ? palette.primary.light : "transparent",
-          }
-        }}
-      >
-        <MUIList component="div" disablePadding>
-          {!open && sublist?.length !== 0 && <ListItemButton
-            open={open}
-            path={name}
-            onSelectOption={onSelect}
-            icon={icon}
-            caption={caption}
-            sx={{
-              backgroundColor: isSelected ? "rgba(25, 118, 210, 0.08)" : null,
-            }}
-          />}
-          {sublist && sublist.length > 0 && sublist.map(option => (
-            <ListItemButton
-              path={option?.disabled ? name : `${name}/${option.name}`}
-              sx={{
-                backgroundColor: (selectedOptionId === option.id && !option.disabled)
-                  ? "rgba(25, 118, 210, 0.08)"
-                  : null,
-                pl: open ? 2 : 0,
-              }}
-              optionId={option.id}
-              key={option.id}
-              caption={option.caption}
-              icon={option.icon}
-              disabled={option?.disabled}
-              onSelectOption={onSelect}
-              open={open}
-            />
-          ))}
-        </MUIList>
-      </Collapse>
-    </MUIList>
-  )
+  list: MenuList
 }
 
 export const List = memo((props: List) => {
   const {
-    id,
-    caption,
-    name,
-    icon,
-    sublist,
-    isSelected,
-    selectedOptionId,
-    onSelect,
-    open
+    isSelected, selectedOptionId, onSelect, open, list,
   } = props
 
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(list.id === 0)
 
   const handleOnSelect = useCallback((optionId?: number) => {
     setIsExpanded(true)
 
     onSelect({
       optionSelected: optionId ?? null,
-      listSelected: id
+      listSelected: list.id,
     })
-  }, [onSelect, id])
+  }, [onSelect, list.id])
 
-  const handleOnExpand = (event: any) => {
+  const handleOnExpand = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation()
 
-    setIsExpanded(prevState => !prevState)
+    setIsExpanded((prevState) => !prevState)
+  }, [])
+
+  const listLayoutProps = {
+    sublist: list.sublist ? list.sublist : [],
+    onSelect: handleOnSelect,
+    name: list.name,
+    isExpanded,
+    isSelected,
+    selectedOptionId,
+    open,
+    ...list,
   }
+
+  const listItemButtonProps = {
+    open,
+    path: list.name,
+    onSelectOption: handleOnSelect,
+    icon: list.icon,
+    caption: list.caption,
+    isSelected,
+  }
+
+  const menuItemButtonStyle = styles.listItemButton(
+    isSelected,
+    isExpanded,
+    list.sublist === undefined,
+  )
 
   if (!open) {
-    return <ListLayout
-      icon={icon}
-      caption={caption}
-      id={id}
-      header={sublist ? (
-        <ButtonBase onClick={handleOnExpand} sx={{ width: 1, }}>
-          <Box sx={{
-            height: 20,
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-            "&::after, &::before": {
-              content: "''",
-              position: "absolute",
-              width: 1,
-              height: "1px",
-              top: "50%",
-              transform: "translate(0, -50%)",
-              backgroundColor: ({ palette }) => palette.grey["300"]
-            },
-            "&::after": {
-              right: -18,
-            },
-            "&::before": {
-              left: -18,
-            },
-          }}>
-            <Icon name="expand" sx={{
-              fontSize: 18,
-              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-              transition: ".3s",
-            }}/>
-          </Box>
-        </ButtonBase>
-      ) : <ListItemButton
-        open={open}
-        path={name}
-        onSelectOption={handleOnSelect}
-        icon={icon}
-        caption={caption}
-        sx={{
-          backgroundColor: isSelected ? "rgba(25, 118, 210, 0.08)" : null,
-        }}
-      />}
-      sublist={sublist ? sublist : []}
-      onSelect={handleOnSelect}
-      name={name}
-      isExpanded={isExpanded}
-      isSelected={isSelected}
-      selectedOptionId={selectedOptionId}
-      open={open}
-    />
+    return (
+      <ListLayout
+        {...listLayoutProps}
+        header={
+          list.sublist ? (
+            <ExpandButton
+              isExpanded={isExpanded}
+              handleOnExpand={handleOnExpand}
+              divider
+            />
+          ) : (
+            <ListItemButton {...listItemButtonProps} sx={menuItemButtonStyle} />
+          )
+        }
+      />
+    )
   }
 
-  return <ListLayout
-    icon={icon}
-    caption={caption}
-    id={id}
-    header={<ListItemButton
-      open={open}
-      path={name}
-      onSelectOption={handleOnSelect}
-      icon={icon}
-      caption={caption}
-      sx={{
-        backgroundColor: isSelected ? "rgba(25, 118, 210, 0.08)" : null,
-        position: "relative",
-        "&::before": {
-          content: "''",
-          position: "absolute",
-          width: 4,
-          height: 1,
-          top: 0,
-          left: 0,
-          borderLeft: "5px solid",
-          transition: ".2s",
-          borderTopLeftRadius: 4,
-          borderBottomLeftRadius: sublist?.length > 0 ? 0 : 4,
-          borderLeftColor: ({ palette }) => (isExpanded && isSelected) ? palette.primary.light : "transparent"
-        }
-      }}
-    >
-      {sublist && sublist.length > 0 && (
-        <Icon
-          name="expand"
-          onClick={handleOnExpand}
-          sx={{
-            fontSize: 18,
-            transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-            transition: ".3s",
-          }}
-        />
-      )}
-    </ListItemButton>}
-    sublist={[...(sublist ?? [])]}
-    onSelect={handleOnSelect}
-    name={name}
-    isExpanded={isExpanded}
-    isSelected={isSelected}
-    selectedOptionId={selectedOptionId}
-    open={open}
-  />
-
-  /* return (
-    <MUIList component="nav" disablePadding>
-      <ListItemButton
-        path={name}
-        onSelectOption={handleOnSelect}
-        icon={icon}
-        caption={caption}
-        sx={{
-          backgroundColor: isSelected ? "rgba(25, 118, 210, 0.08)" : null,
-          position: "relative",
-          "&::before": {
-            content: "''",
-            position: "absolute",
-            width: 4,
-            height: 1,
-            top: 0,
-            left: 0,
-            borderLeft: "5px solid",
-            transition: ".2s",
-            borderTopLeftRadius: 4,
-            borderBottomLeftRadius: sublist?.length > 0 ? 0 : 4,
-            borderLeftColor: ({ palette }) => (isExpanded && isSelected) ? palette.primary.light : "transparent"
-          }
-        }}
-      >
-        {sublist && sublist.length > 0 && (
-          <KeyboardArrowDownIcon
-            onClick={handleOnExpand}
-            sx={{
-              fontSize: 18,
-              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-              transition: ".3s",
-            }}
-          />
-        )}
-      </ListItemButton>
-      <Collapse
-        in={isExpanded}
-        timeout={300}
-        unmountOnExit
-        sx={{
-          position: "relative",
-          "&::before": {
-            content: "''",
-            position: "absolute",
-            width: 1,
-            height: 1,
-            top: 0,
-            left: 0,
-            borderLeft: "5px solid",
-            transition: ".2s",
-            borderBottomLeftRadius: 4,
-            borderLeftColor: ({ palette }) => (isExpanded && isSelected) ? palette.primary.light : "transparent"
-          }
-        }}
-      >
-        <MUIList component="div" disablePadding>
-          {sublist && sublist.length > 0 && sublist.map(option => (
-            <ListItemButton
-              path={option?.disabled ? name : `${name}/${option.name}`}
-              sx={{
-                backgroundColor: (selectedOptionId === option.id && !option.disabled) ? "rgba(25, 118, 210, 0.08)" : null,
-                pl: 2
+  return (
+    <ListLayout
+      {...listLayoutProps}
+      header={(
+        <ListItemButton {...listItemButtonProps} sx={menuItemButtonStyle}>
+          {list.sublist && list.sublist.length > 0 && (
+            <ExpandButton
+              buttonProps={{
+                disableRipple: true,
+                sx: { width: "auto" },
               }}
-              optionId={option.id}
-              key={option.id}
-              caption={option.caption}
-              icon={option.name}
-              disabled={option?.disabled}
-              onSelectOption={handleOnSelect}
+              handleOnExpand={handleOnExpand}
+              isExpanded={isExpanded}
             />
-          ))}
-        </MUIList>
-      </Collapse>
-    </MUIList>
-  ) */
-})
+          )}
+        </ListItemButton>
+      )}
+    />
+  )
+}, shallowEqual)
