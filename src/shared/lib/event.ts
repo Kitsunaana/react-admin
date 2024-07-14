@@ -1,4 +1,11 @@
-export const dispatch = <T>(name: string, data: T, object = document) => {
+interface IEvents {
+  selected: {
+    selectedId: number
+    selectedOptionId: number | null
+  },
+}
+
+export const dispatch = <Key extends keyof IEvents>(name: Key, data: IEvents[Key], object = document) => {
   const event = new CustomEvent(name, {
     bubbles: true,
     detail: data,
@@ -7,12 +14,16 @@ export const dispatch = <T>(name: string, data: T, object = document) => {
   object.dispatchEvent(event)
 }
 
-export const addEvent = <T>(name: string, event: (event: T) => void, object = document, ...args) => {
-  const localEvent = (data: CustomEvent<T>) => {
+export const addEvent = <Key extends keyof IEvents>(
+  name: Key, event: (data: IEvents[Key]) => void, object = document, ...args: any[]
+) => {
+  const localEvent = (data: CustomEvent<IEvents[Key]>) => {
     if (typeof event === "function") event(data.detail)
   }
 
+  // @ts-ignore
   object.addEventListener(name, localEvent, ...args)
 
+  // @ts-ignore
   return () => object.removeEventListener(name, localEvent)
 }

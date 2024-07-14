@@ -1,8 +1,9 @@
 import { memo, ReactNode, useMemo } from "react"
-import { Box, Collapse, List } from "@mui/material"
+import { Collapse, List } from "@mui/material"
 import * as React from "react"
 import { ListItemButton } from "./ListItemButton"
 import { MenuList } from "../types"
+import { Box } from "../../../shared/ui/Box"
 
 export type ListLayoutProps = {
   header: ReactNode
@@ -30,14 +31,7 @@ export const ListLayout = memo((props: ListLayoutProps) => {
 
   return (
     <List component="nav" disablePadding>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {header}
-      </Box>
+      <Box flex jc>{header}</Box>
 
       <Collapse
         in={isExpanded}

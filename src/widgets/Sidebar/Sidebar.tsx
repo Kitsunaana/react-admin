@@ -1,30 +1,29 @@
-import { Box, Divider } from "@mui/material"
+import { Divider } from "@mui/material"
 import * as React from "react"
-import {
-  ReactNode, useMemo, useState,
-} from "react"
+import { useState } from "react"
 import { List } from "./ui/List"
-import { menu, menuBottom } from "./constants"
 import { MenuBurger } from "./ui/MenuBurger"
+import { MenuList } from "./types"
+import { Box } from "../../shared/ui/Box"
 
-export type SidebarLayoutProps = {
-  content: ReactNode
-  header: ReactNode
-  bottom: ReactNode
+interface SidebarProps {
+  open?: boolean
 
-  open: boolean
+  menu: MenuList[],
+  menuBottom: MenuList[]
 }
 
-export const SidebarLayout = (props: SidebarLayoutProps) => {
-  const {
-    content,
-    header,
-    open,
-    bottom,
-  } = props
+export const Sidebar = (props: SidebarProps) => {
+  const { open: openProps, menuBottom, menu } = props
+
+  const [open, setOpen] = useState(openProps ?? true)
+
+  const handleOnToggle = () => {
+    setOpen((prevState) => !prevState)
+  }
 
   return (
-    <Box sx={{
+    <Box flex sx={{
       width: 1,
       height: 1,
       maxWidth: open ? 240 : 47,
@@ -33,63 +32,33 @@ export const SidebarLayout = (props: SidebarLayoutProps) => {
       borderRadius: 2,
       transition: ".3s",
       overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
     }}
     >
-      <Box sx={{
-        maxWidth: 47,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      >
-        {header}
+      <Box flex center sx={{ maxWidth: 47 }}>
+        <MenuBurger open={open} onClick={handleOnToggle} />
       </Box>
       <Divider />
-      <Box sx={{
-        flexGrow: 1,
+      <Box grow sx={{
         overflowY: "auto",
         overflowX: "hidden",
       }}
       >
-        {content}
+        {menu.map((list) => (
+          <List
+            key={list.id}
+            list={list}
+            open={open}
+          />
+        ))}
       </Box>
       <Divider />
-      {bottom}
+      {menuBottom.map((list) => (
+        <List
+          key={list.id}
+          list={list}
+          open={open}
+        />
+      ))}
     </Box>
-  )
-}
-
-export const Sidebar = () => {
-  const [open, setOpen] = useState(false)
-
-  const handleOnToggle = () => {
-    setOpen((prevState) => !prevState)
-  }
-
-  const memoizedContent = useMemo(() => menu.map((list) => (
-    <List
-      key={list.id}
-      list={list}
-      open={open}
-    />
-  )), [open])
-
-  const memoizedBottom = useMemo(() => menuBottom.map((list) => (
-    <List
-      key={list.id}
-      list={list}
-      open={open}
-    />
-  )), [open])
-
-  return (
-    <SidebarLayout
-      open={open}
-      header={<MenuBurger open={open} onClick={handleOnToggle} />}
-      content={memoizedContent}
-      bottom={memoizedBottom}
-    />
   )
 }

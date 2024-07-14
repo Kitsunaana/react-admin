@@ -1,7 +1,7 @@
 import { memo } from "react"
 import {
-  ListItemTextProps,
-  ListItemIconProps,
+  ListItemTextProps as MUIListItemTextProps,
+  ListItemIconProps as MUIListItemIconProps,
   ListItemText as MUIListItemText,
   ListItemIcon as MUIListItemIcon,
   ListItemButton as MUIListItemButton,
@@ -11,7 +11,13 @@ import * as React from "react"
 import { Icon } from "../../../shared/ui/Icon"
 import { dispatch } from "../../../shared/lib/event"
 
-export const ListItemIcon = memo((props: { icon: string; disabled: boolean; open: boolean } & ListItemIconProps) => {
+interface ListItemIconProps extends MUIListItemIconProps{
+  icon: string
+  disabled: boolean
+  open: boolean
+}
+
+export const ListItemIcon = memo((props: ListItemIconProps) => {
   const {
     icon, disabled, open, ...other
   } = props
@@ -29,20 +35,25 @@ export const ListItemIcon = memo((props: { icon: string; disabled: boolean; open
     >
       <Icon
         name={icon}
-        sx={{ color: ({ palette }) => disabled && palette.text.disabled }}
+        sx={{ color: ({ palette }) => disabled ? palette.text.disabled : null }}
       />
     </MUIListItemIcon>
   )
 })
 
-export const ListItemText = memo((props: { caption: string; disabled: boolean } & ListItemTextProps) => {
+interface ListItemTextProps extends MUIListItemTextProps {
+  caption: string
+  disabled: boolean
+}
+
+export const ListItemText = memo((props: ListItemTextProps) => {
   const { caption, disabled } = props
 
   return (
     <MUIListItemText
       primary={caption}
       sx={{
-        color: ({ palette }) => disabled && palette.text.disabled,
+        color: ({ palette }) => disabled ? palette.text.disabled : null,
         width: 1,
         overflow: "hidden",
         textOverflow: "ellipsis",
@@ -57,7 +68,7 @@ export type ListItemButtonProps = {
   icon: string
   path: string
   optionId?: number
-  listId?: number
+  listId: number
   open: boolean
 
   isSelected: boolean
@@ -79,9 +90,9 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
   } = props
 
   const handleOnSelect = () => {
-    dispatch("selected", { selectedId: listId, selectedOptionId: (disabled || !optionId) ? null : optionId } satisfies {
-      selectedId: number
-      selectedOptionId: number | null
+    dispatch("selected", {
+      selectedId: listId,
+      selectedOptionId: (disabled || !optionId) ? null : optionId
     })
   }
 
@@ -102,8 +113,8 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
       }}
       {...otherProps}
     >
-      <ListItemIcon open={open} icon={icon} disabled={disabled} />
-      {open && <ListItemText caption={caption} disabled={disabled} />}
+      <ListItemIcon open={open} icon={icon} disabled={disabled ?? false} />
+      {open && <ListItemText caption={caption} disabled={disabled ?? false} />}
       {children}
     </MUIListItemButton>
   )

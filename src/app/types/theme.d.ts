@@ -12,6 +12,4 @@ declare module "@mui/material/styles" {
       sectionBackground?: string
     }
   }
-
-  // export function createTheme(options?: ThemeOptions): Theme;
 }

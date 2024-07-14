@@ -1,5 +1,5 @@
-import { Box } from "@mui/material"
 import * as React from "react"
+import { Box } from "../../../shared/ui/Box"
 
 interface MenuButtonProps {
   onClick: () => void
@@ -11,13 +11,12 @@ export const MenuBurger = (props: MenuButtonProps) => {
 
   return (
 
-    <Box sx={{
-      height: 40,
-      width: 40,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    }}
+    <Box
+      flex center
+      sx={{
+        height: 40,
+        width: 40,
+      }}
     >
       <Box
         onClick={onClick}

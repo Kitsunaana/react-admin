@@ -2,11 +2,10 @@ import {
   memo, useCallback, useState, MouseEvent, useEffect, useRef, useMemo,
 } from "react"
 import * as React from "react"
-import { Tooltip } from "@mui/material"
 import { ListItemButton } from "./ListItemButton"
 import { ExpandButton } from "./ExpandButton"
 import { MenuList } from "../types"
-import { ListLayout } from "./ListLayout"
+import { ListLayout, ListLayoutProps } from "./ListLayout"
 import { addEvent } from "../../../shared/lib/event"
 
 const styles = {
@@ -43,7 +42,7 @@ export const List = memo((props: ListProps) => {
   const ref = useRef<TRef>({ selectedId: 0, selectedOptionId: null })
 
   useEffect(() => {
-    addEvent("selected", (data: TRef) => {
+    addEvent("selected", (data) => {
       if (data.selectedId === list.id) setIsExpanded(true)
 
       if ((list.id === data.selectedId) || (ref.current.selectedId === list.id)) {
@@ -68,13 +67,13 @@ export const List = memo((props: ListProps) => {
   const isSelected = ref.current.selectedId === list.id
   const { selectedOptionId } = ref.current
 
-  const listLayoutProps = {
+  const listLayoutProps: Omit<ListLayoutProps, "header"> = {
     ...list,
     isExpanded,
     isSelected,
-    selectedOptionId,
+    selectedOptionId: selectedOptionId ?? false,
     open,
-    sublist: list.sublist.length > 0 ? list.sublist : [],
+    sublist: list.sublist,
     name: list.name,
   }
 
@@ -131,3 +130,5 @@ export const List = memo((props: ListProps) => {
     />
   )
 })
+
+
