@@ -8,8 +8,8 @@ import {
   ListItemButtonProps as MUIListItemButtonProps, Tooltip,
 } from "@mui/material"
 import * as React from "react"
-import { Icon } from "../../../shared/ui/Icon"
-import { dispatch } from "../../../shared/lib/event"
+import { dispatch } from "shared/lib/event"
+import { Icon } from "shared/ui/Icon"
 
 interface ListItemIconProps extends MUIListItemIconProps{
   icon: string

@@ -3,8 +3,8 @@ import {
 } from "@mui/material"
 import * as React from "react"
 import { memo, MouseEvent } from "react"
-import { Icon } from "../../../shared/ui/Icon"
-import { Box } from "../../../shared/ui/Box"
+import { Box } from "shared/ui/Box"
+import { Icon } from "shared/ui/Icon"
 
 interface ExpandButtonProps {
   handleOnExpand: (event: MouseEvent<HTMLButtonElement>) => void

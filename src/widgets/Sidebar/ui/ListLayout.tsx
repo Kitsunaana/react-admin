@@ -3,7 +3,7 @@ import { Collapse, List } from "@mui/material"
 import * as React from "react"
 import { ListItemButton } from "./ListItemButton"
 import { MenuList } from "../types"
-import { Box } from "../../../shared/ui/Box"
+import { Box } from "shared/ui/Box"
 
 export type ListLayoutProps = {
   header: ReactNode

@@ -2,10 +2,9 @@ import {
   CssBaseline,
 } from "@mui/material"
 import * as React from "react"
-import { Sidebar } from "../widgets/Sidebar/Sidebar"
-import { menu, menuBottom } from "../widgets/Sidebar/constants"
-import { Box } from "../shared/ui/Box"
-import styles from "./app.module.scss"
+import { Box } from "shared/ui/Box"
+import { menu, menuBottom } from "widgets/Sidebar/constants"
+import { Sidebar } from "widgets/Sidebar/Sidebar"
 
 export const App = () => (
   <Box sx={{

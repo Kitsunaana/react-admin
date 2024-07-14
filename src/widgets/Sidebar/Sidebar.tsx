@@ -4,7 +4,7 @@ import { useState } from "react"
 import { List } from "./ui/List"
 import { MenuBurger } from "./ui/MenuBurger"
 import { MenuList } from "./types"
-import { Box } from "../../shared/ui/Box"
+import { Box } from "shared/ui/Box"
 
 interface SidebarProps {
   open?: boolean

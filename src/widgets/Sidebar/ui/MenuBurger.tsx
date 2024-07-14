@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Box } from "../../../shared/ui/Box"
+import { Box } from "shared/ui/Box"
 
 interface MenuButtonProps {
   onClick: () => void

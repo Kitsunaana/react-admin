@@ -6,7 +6,7 @@ import { ListItemButton } from "./ListItemButton"
 import { ExpandButton } from "./ExpandButton"
 import { MenuList } from "../types"
 import { ListLayout, ListLayoutProps } from "./ListLayout"
-import { addEvent } from "../../../shared/lib/event"
+import { addEvent } from "shared/lib/event"
 
 const styles = {
   listItemButton: (isSelected: boolean, isExpanded: boolean, isEmptyOptions: boolean, open: boolean) => ({

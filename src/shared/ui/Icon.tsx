@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import { Fade, Icon, IconProps } from "@mui/material"
+import { Icon, IconProps } from "@mui/material"
 
 const iconData = {
   defIcon: "do_not_disturb_off",
