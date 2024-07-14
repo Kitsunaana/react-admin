@@ -5,6 +5,7 @@ import * as React from "react"
 import { Sidebar } from "../widgets/Sidebar/Sidebar"
 import { menu, menuBottom } from "../widgets/Sidebar/constants"
 import { Box } from "../shared/ui/Box"
+import styles from "./app.module.scss"
 
 export const App = () => (
   <Box sx={{
