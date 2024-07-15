@@ -4,7 +4,6 @@ import i18n from "i18next"
 export type Themes = "dark" | "light" | "system"
 
 export interface SettingsState {
-  panelOpen: boolean
   weightIcon: number
   fillIcon: number
   language: string
@@ -31,7 +30,6 @@ const initialState: SettingsState = {
   theme: (["dark", "light"].includes(readMode as string) ? readMode : "system") as Themes,
   weightIcon: Number(localStorage.getItem("weightIcon") ?? 200),
   fillIcon: Number(localStorage.getItem("fillIcon") ?? 0),
-  panelOpen: true,
 }
 
 export const settingsSlice = createSlice({
@@ -50,7 +48,7 @@ export const settingsSlice = createSlice({
 
       i18n.changeLanguage(language)
 
-      localStorage.setItem("language", language)
+      localStorage.setItem("lngAdmin", language)
     },
 
     changeIconSettings: (state, action: PayloadAction<ChangeIconSettings>) => {

@@ -22,7 +22,9 @@ const styles = {
       transition: ".2s",
       borderTopLeftRadius: 4,
       borderBottomLeftRadius: isEmptyOptions || (isSelected && !isExpanded) ? 4 : 0,
-      borderLeftColor: ({ palette }) => (isSelected && open ? palette.primary.light : "transparent"),
+      borderLeftColor: ({ palette }) => (isSelected && open
+        ? (palette.mode === "light" ? palette.primary.light : palette.primary.dark)
+        : "transparent"),
     },
   }),
 }
@@ -105,7 +107,7 @@ export const List = memo((props: ListProps) => {
         header={
           list.sublist.length > 0 ? (
             <ExpandButton
-              tooltipCaption={list.caption}
+              name={list.name}
               isExpanded={isExpanded}
               handleOnExpand={handleOnExpand}
               divider
@@ -125,6 +127,7 @@ export const List = memo((props: ListProps) => {
         <ListItemButton {...listItemButtonProps} sx={menuItemButtonStyle}>
           {list.sublist && list.sublist.length > 0 && (
             <ExpandButton
+              name={list.name}
               buttonProps={buttonProps}
               handleOnExpand={handleOnExpand}
               isExpanded={isExpanded}

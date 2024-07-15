@@ -8,7 +8,6 @@ import { Sidebar } from "widgets/Sidebar/ui/Sidebar"
 import { Suspense, useEffect, useState } from "react"
 import { addEvent } from "shared/lib/event"
 import { routeConfig } from "shared/config/routeConfig"
-import i18n from "i18next"
 import { LangContext } from "shared/context/Lang"
 
 export const Pages = () => {
@@ -51,7 +50,9 @@ export const App = () => (
   >
     <CssBaseline />
 
-    <Sidebar open menu={menu} menuBottom={menuBottom} />
+    <LangContext lang="sidebar">
+      <Sidebar menu={menu} menuBottom={menuBottom} />
+    </LangContext>
 
     <Pages />
   </Box>
