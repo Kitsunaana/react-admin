@@ -6,10 +6,18 @@ interface IEvents {
   hashchange: HashChangeEvent,
   route: {
     route: string
+  },
+  changeLanguage: {
+    language: "en" | "ru"
+  }
+  theme: string
+  changeIconsSettings: {
+    fill?: number
+    weight?: number
   }
 }
 
-export const dispatch = <Key extends keyof IEvents>(name: Key, data: IEvents[Key], object = document) => {
+export const dispatch = <Key extends keyof IEvents>(name: Key, data?: IEvents[Key], object = document) => {
   const event = new CustomEvent(name, {
     bubbles: true,
     detail: data,
