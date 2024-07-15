@@ -1,6 +1,11 @@
 import { Typography, TypographyProps } from "@mui/material"
 import { Trans, useTranslation } from "react-i18next"
 import { useLang } from "shared/context/Lang"
+import { useEffect, useState } from "react"
+import { addEvent } from "shared/lib/event"
+import i18n from "i18next"
+import { useAppSelector } from "shared/lib/hooks"
+import { RootState } from "app/providers/Store"
 
 interface TextProps extends TypographyProps {
   name?: string
@@ -16,7 +21,8 @@ export const Text = (props: TextProps) => {
     name, caption, sx, values, value, langBase: langBaseProps, onlyText, ...other
   } = props
 
-  const { t } = useTranslation()
+  useTranslation()
+  useAppSelector((state: RootState) => state.settings.language)
 
   const lang = useLang()
   const langBase = langBaseProps ?? lang?.lang

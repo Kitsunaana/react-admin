@@ -2,7 +2,7 @@ import * as React from "react"
 import { Box } from "shared/ui/Box"
 
 interface MenuButtonProps {
-  onClick: () => void
+  onClick: (open: boolean) => void
   open: boolean
 }
 
@@ -12,14 +12,15 @@ export const MenuBurger = (props: MenuButtonProps) => {
   return (
 
     <Box
-      flex center
+      flex
+      center
       sx={{
         height: 40,
         width: 40,
       }}
     >
       <Box
-        onClick={onClick}
+        onClick={() => onClick(!open)}
         sx={{
           height: 15,
           width: 20,

@@ -1,10 +1,12 @@
 import { memo } from "react"
 import {
+  alpha,
   ListItemButton as MUIListItemButton,
   ListItemButtonProps as MUIListItemButtonProps, Tooltip,
 } from "@mui/material"
 import * as React from "react"
 import { dispatch } from "shared/lib/event"
+import { Text } from "shared/ui/Text"
 import { ListItemText } from "./ListItemText"
 import { ListItemIcon } from "./ListItemIcon"
 
@@ -49,7 +51,7 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
     <MUIListItemButton
       onClick={handleOnSelect}
       sx={{
-        backgroundColor: isSelected ? "rgba(25, 118, 210, 0.08)" : null,
+        backgroundColor: ({ palette }) => (isSelected ? alpha(palette.primary.dark, 0.10) : undefined),
         height: 35,
         p: 0,
         px: open ? 1 : 0,
@@ -58,6 +60,9 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
         alignItems: "center",
         width: "100%",
         justifyContent: "center",
+        "&:hover": {
+          backgroundColor: ({ palette }) => (isSelected ? alpha(palette.primary.dark, 0.15) : undefined),
+        },
         ...sx,
       }}
       {...otherProps}
@@ -71,7 +76,7 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
   if ((disabled || !open)) {
     return (
       <Tooltip
-        title={disabled ? "Доступно только при переходе из другого режима" : caption}
+        title={disabled ? <Text name="not-available" onlyText /> : <Text name={name} onlyText />}
         placement="right"
         arrow
       >

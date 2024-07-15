@@ -1,10 +1,13 @@
 import * as React from "react"
-import { useEffect, useState } from "react"
 import { Box } from "shared/ui/Box"
 import { Divider } from "shared/ui/Divider"
-import { List } from "./List/List"
-import { MenuBurger } from "./MenuBurger"
+import { useAppSelector } from "shared/lib/hooks"
+import { RootState } from "app/providers/Store"
+import { useDispatch } from "react-redux"
+import { toggle } from "widgets/Sidebar/model/SidebarSlice"
 import { MenuList } from "../types"
+import { MenuBurger } from "./MenuBurger"
+import { List } from "./List/List"
 
 interface SidebarProps {
   open?: boolean
@@ -16,11 +19,10 @@ interface SidebarProps {
 export const Sidebar = (props: SidebarProps) => {
   const { open: openProps, menuBottom, menu } = props
 
-  const [open, setOpen] = useState(openProps ?? true)
+  const open = openProps ?? useAppSelector((state: RootState) => state.sidebar.open)
+  const dispatch = useDispatch()
 
-  const handleOnToggle = () => {
-    setOpen((prevState) => !prevState)
-  }
+  const onToggle = (open: boolean) => dispatch(toggle({ open }))
 
   return (
     <Box
@@ -32,12 +34,12 @@ export const Sidebar = (props: SidebarProps) => {
         boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
         background: ({ background }) => background.sectionBackground,
         borderRadius: 2,
-        transition: ".3s",
+        transition: "max-width .3s",
         overflow: "hidden",
       }}
     >
       <Box flex center sx={{ maxWidth: 47 }}>
-        <MenuBurger open={open} onClick={handleOnToggle} />
+        <MenuBurger open={open} onClick={onToggle} />
       </Box>
       <Divider />
       <Box

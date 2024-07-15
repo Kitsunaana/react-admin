@@ -1,25 +1,30 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles"
-import { useMemo } from "react"
-
-type TypeTheme = "light" | "dark"
+import { useEffect, useMemo, useState } from "react"
+import { PaletteMode, useMediaQuery } from "@mui/material"
+import { addEvent } from "shared/lib/event"
+import { useAppSelector } from "shared/lib/hooks"
+import { RootState } from "app/providers/Store"
 
 const Theme = (props) => {
-  const theme = useMemo(() => {
-    const defTheme = createTheme({
-      palette: { mode: "light" },
-    })
+  const prefersDarkMode = useMediaQuery("(prefers-color-schemas: dark)")
 
-    const theme: TypeTheme = "light"
+  const mode = useAppSelector((state: RootState) => state.settings.theme)
+
+  const theme = useMemo(() => {
+    const calcMode = mode === "system" ? (prefersDarkMode ? "dark" : "light") : mode
+
+    const defTheme = createTheme({
+      palette: { mode: calcMode as PaletteMode },
+    })
 
     return createTheme({
       background: {
-        // @ts-ignore
-        sectionBackground: theme === "dark"
+        sectionBackground: calcMode === "dark"
           ? "linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16))"
           : "#fff",
       },
       palette: {
-        mode: theme,
+        mode: calcMode as PaletteMode,
         background: {
           /* sectionBackground: theme === "dark"
             ? "linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16))"
@@ -51,7 +56,7 @@ const Theme = (props) => {
         },
       },
     })
-  }, [])
+  }, [prefersDarkMode, mode])
 
   return <ThemeProvider theme={theme} {...props} />
 }

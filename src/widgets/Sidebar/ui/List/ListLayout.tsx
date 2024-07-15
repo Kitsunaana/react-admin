@@ -30,7 +30,7 @@ export const ListLayout = memo((props: ListLayoutProps) => {
   const sx = useMemo(() => ({ pl: open ? 2 : 0 }), [open])
 
   return (
-    <List component="nav" disablePadding>
+    <List component="nav" disablePadding sx={{ width: open ? 240 : 47, transition: !open ? "width .3s" : null }}>
       <Box flex jc>{header}</Box>
 
       <Collapse
@@ -50,7 +50,7 @@ export const ListLayout = memo((props: ListLayoutProps) => {
             transition: ".2s",
             borderBottomLeftRadius: 4,
             borderLeftColor: ({ palette }) => (isExpanded && isSelected && open
-              ? palette.primary.light
+              ? (palette.mode === "light" ? palette.primary.light : palette.primary.dark)
               : "transparent"),
           },
         }}

@@ -8,6 +8,7 @@ import { Sidebar } from "widgets/Sidebar/ui/Sidebar"
 import { Suspense, useEffect, useState } from "react"
 import { addEvent } from "shared/lib/event"
 import { routeConfig } from "shared/config/routeConfig"
+import { LangContext } from "shared/context/Lang"
 
 export const Pages = () => {
   const [path, setPath] = useState(window.location.pathname)
@@ -25,11 +26,14 @@ export const Pages = () => {
       boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
       background: ({ background }) => background.sectionBackground,
       borderRadius: 2,
+      p: 1,
     }}
     >
       <Suspense fallback={<div>loader</div>}>
         {Object.entries(routeConfig).map(([key, route]) => (
-          <Box key={key}>{route.path === path && route.element}</Box>
+          <LangContext lang={key} key={key}>
+            {route.path === path && route.element}
+          </LangContext>
         ))}
       </Suspense>
     </Box>
@@ -46,7 +50,9 @@ export const App = () => (
   >
     <CssBaseline />
 
-    <Sidebar open menu={menu} menuBottom={menuBottom} />
+    <LangContext lang="sidebar">
+      <Sidebar menu={menu} menuBottom={menuBottom} />
+    </LangContext>
 
     <Pages />
   </Box>
