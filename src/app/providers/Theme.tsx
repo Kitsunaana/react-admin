@@ -2,16 +2,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { useEffect, useMemo, useState } from "react"
 import { PaletteMode, useMediaQuery } from "@mui/material"
 import { addEvent } from "shared/lib/event"
+import { useAppSelector } from "shared/lib/hooks"
+import { RootState } from "app/providers/Store"
 
 const Theme = (props) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-schemas: dark)")
 
-  const readMode = localStorage.getItem("theme")
-  const [mode, setMode] = useState(["dark", "light"].includes(readMode as string) ? readMode : "system")
-
-  useEffect(() => addEvent("theme", (value) => {
-    setMode(value)
-  }), [])
+  const mode = useAppSelector((state: RootState) => state.settings.theme)
 
   const theme = useMemo(() => {
     const calcMode = mode === "system" ? (prefersDarkMode ? "dark" : "light") : mode

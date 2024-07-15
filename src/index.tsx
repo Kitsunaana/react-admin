@@ -3,16 +3,17 @@ import { ThemeProvider } from "app/providers/Theme"
 import { App } from "app/App"
 import { ErrorBoundary } from "app/providers/ErrorBoundary"
 import "shared/config/translate"
-import { BrowserRouter } from "react-router-dom"
+import { Provider } from "react-redux"
+import { store } from "app/providers/Store"
 
 const container = document.getElementById("root")
 const root = createRoot(container as HTMLElement)
 root.render(
   <ErrorBoundary>
-    <BrowserRouter>
+    <Provider store={store}>
       <ThemeProvider>
         <App />
       </ThemeProvider>
-    </BrowserRouter>
+    </Provider>
   </ErrorBoundary>,
 )

@@ -1,6 +1,7 @@
-import React, { memo, useEffect, useState } from "react"
+import React, { memo } from "react"
 import { Icon, IconProps } from "@mui/material"
-import { addEvent } from "shared/lib/event"
+import { useAppSelector } from "shared/lib/hooks"
+import { RootState } from "app/providers/Store"
 
 const iconData = {
   defIcon: "do_not_disturb_off",
@@ -41,14 +42,8 @@ interface DefaultIcon extends IconProps{
 const Default = memo((props: DefaultIcon) => {
   const { name, ...other } = props
 
-  const [font, setFont] = useState({
-    weight: 300,
-    fill: 0,
-  })
-
-  useEffect(() => addEvent("changeIconsSettings", (data) => {
-    setFont((prevState) => ({ ...prevState, ...data }))
-  }), [])
+  const weight = useAppSelector((state: RootState) => state.settings.weightIcon)
+  const fill = useAppSelector((state: RootState) => state.settings.fillIcon)
 
   const icon = iconData[name] ?? iconData.defIcon
 
@@ -56,7 +51,7 @@ const Default = memo((props: DefaultIcon) => {
     <Icon
       className="material-symbols-outlined"
       style={{
-        fontVariationSettings: `'FILL' ${font.fill}, 'wght' ${font.weight}, 'GRAD' 0, 'opsz' 24`,
+        fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' 0, 'opsz' 24`,
       }}
       {...other}
     >

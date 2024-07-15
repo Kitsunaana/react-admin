@@ -32,12 +32,13 @@ i18n
       escapeValue: false,
     },
     parseMissingKeyHandler: (key) => {
-      console.log(
+      /* console.log(
         `%c KEY NOT FOUND -> %c${key} `,
         "color: red",
         "color: #bada55",
-      )
+      ) */
 
+      console.log()
       return key
     },
     backend: backendOptions,
