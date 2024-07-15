@@ -1,10 +1,10 @@
-import { Divider } from "@mui/material"
 import * as React from "react"
 import { useEffect, useState } from "react"
 import { Box } from "shared/ui/Box"
-import { List } from "./ui/List"
-import { MenuBurger } from "./ui/MenuBurger"
-import { MenuList } from "./types"
+import { Divider } from "shared/ui/Divider"
+import { List } from "./List/List"
+import { MenuBurger } from "./MenuBurger"
+import { MenuList } from "../types"
 
 interface SidebarProps {
   open?: boolean

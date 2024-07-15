@@ -3,6 +3,10 @@ interface IEvents {
     selectedId: number
     selectedOptionId: number | null
   },
+  hashchange: HashChangeEvent,
+  route: {
+    route: string
+  }
 }
 
 export const dispatch = <Key extends keyof IEvents>(name: Key, data: IEvents[Key], object = document) => {
@@ -15,7 +19,10 @@ export const dispatch = <Key extends keyof IEvents>(name: Key, data: IEvents[Key
 }
 
 export const addEvent = <Key extends keyof IEvents>(
-  name: Key, event: (data: IEvents[Key]) => void, object = document, ...args: any[]
+  name: Key,
+  event: (data: IEvents[Key]) => void,
+  object: Document | Window = document,
+  ...args: any[]
 ) => {
   const localEvent = (data: CustomEvent<IEvents[Key]>) => {
     if (typeof event === "function") event(data.detail)

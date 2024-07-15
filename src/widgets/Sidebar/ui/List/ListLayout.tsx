@@ -1,9 +1,9 @@
 import { memo, ReactNode, useMemo } from "react"
 import { Collapse, List } from "@mui/material"
 import * as React from "react"
-import { ListItemButton } from "./ListItemButton"
-import { MenuList } from "../types"
 import { Box } from "shared/ui/Box"
+import { ListItemButton } from "./ListItemButton"
+import { MenuList } from "../../types"
 
 export type ListLayoutProps = {
   header: ReactNode
@@ -58,6 +58,7 @@ export const ListLayout = memo((props: ListLayoutProps) => {
         <List component="div" disablePadding>
           {!open && sublist?.length !== 0 && (
             <ListItemButton
+              name={name}
               open={open}
               path={name}
               icon={icon}
@@ -72,6 +73,7 @@ export const ListLayout = memo((props: ListLayoutProps) => {
 
             return (
               <ListItemButton
+                name={option.name}
                 listId={id}
                 open={open}
                 path={path}

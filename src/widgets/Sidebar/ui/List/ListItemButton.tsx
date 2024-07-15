@@ -1,67 +1,12 @@
 import { memo } from "react"
 import {
-  ListItemTextProps as MUIListItemTextProps,
-  ListItemIconProps as MUIListItemIconProps,
-  ListItemText as MUIListItemText,
-  ListItemIcon as MUIListItemIcon,
   ListItemButton as MUIListItemButton,
   ListItemButtonProps as MUIListItemButtonProps, Tooltip,
 } from "@mui/material"
 import * as React from "react"
 import { dispatch } from "shared/lib/event"
-import { Icon } from "shared/ui/Icon"
-
-interface ListItemIconProps extends MUIListItemIconProps{
-  icon: string
-  disabled: boolean
-  open: boolean
-}
-
-export const ListItemIcon = memo((props: ListItemIconProps) => {
-  const {
-    icon, disabled, open, ...other
-  } = props
-
-  return (
-    <MUIListItemIcon
-      {...other}
-      sx={{
-        minWidth: 0,
-        maxWidth: 24,
-        width: 1,
-        mr: open ? 1 : 0,
-        ...other?.sx,
-      }}
-    >
-      <Icon
-        name={icon}
-        sx={{ color: ({ palette }) => disabled ? palette.text.disabled : null }}
-      />
-    </MUIListItemIcon>
-  )
-})
-
-interface ListItemTextProps extends MUIListItemTextProps {
-  caption: string
-  disabled: boolean
-}
-
-export const ListItemText = memo((props: ListItemTextProps) => {
-  const { caption, disabled } = props
-
-  return (
-    <MUIListItemText
-      primary={caption}
-      sx={{
-        color: ({ palette }) => disabled ? palette.text.disabled : null,
-        width: 1,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      }}
-    />
-  )
-})
+import { ListItemText } from "./ListItemText"
+import { ListItemIcon } from "./ListItemIcon"
 
 export type ListItemButtonProps = {
   caption: string
@@ -70,6 +15,7 @@ export type ListItemButtonProps = {
   optionId?: number
   listId: number
   open: boolean
+  name: string
 
   isSelected: boolean
 } & MUIListItemButtonProps
@@ -86,14 +32,17 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
     listId,
     open,
     isSelected,
+    name,
     ...otherProps
   } = props
 
   const handleOnSelect = () => {
     dispatch("selected", {
       selectedId: listId,
-      selectedOptionId: (disabled || !optionId) ? null : optionId
+      selectedOptionId: (disabled || !optionId) ? null : optionId,
     })
+
+    dispatch("route", { route: path })
   }
 
   const renderButton = (
@@ -114,7 +63,7 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
       {...otherProps}
     >
       <ListItemIcon open={open} icon={icon} disabled={disabled ?? false} />
-      {open && <ListItemText caption={caption} disabled={disabled ?? false} />}
+      {open && <ListItemText disabled={disabled ?? false} name={name} />}
       {children}
     </MUIListItemButton>
   )

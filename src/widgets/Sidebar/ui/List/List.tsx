@@ -2,11 +2,11 @@ import {
   memo, useCallback, useState, MouseEvent, useEffect, useRef, useMemo,
 } from "react"
 import * as React from "react"
-import { ListItemButton } from "./ListItemButton"
-import { ExpandButton } from "./ExpandButton"
-import { MenuList } from "../types"
-import { ListLayout, ListLayoutProps } from "./ListLayout"
 import { addEvent } from "shared/lib/event"
+import { ListItemButton } from "./ListItemButton"
+import { ExpandButton } from "../ExpandButton"
+import { MenuList } from "../../types"
+import { ListLayout, ListLayoutProps } from "./ListLayout"
 
 const styles = {
   listItemButton: (isSelected: boolean, isExpanded: boolean, isEmptyOptions: boolean, open: boolean) => ({
@@ -32,14 +32,20 @@ export type ListProps = {
   list: MenuList
 }
 
-export type TRef = { selectedId: number; selectedOptionId: number | null }
+export type TRef = { selectedId: number | null; selectedOptionId: number | null }
 
 export const List = memo((props: ListProps) => {
   const { open, list } = props
 
+  const [selected, selectedOption] = window.location.pathname.replace("/", "").split("/")
+  const findSelectedOptions = list.sublist.find((option) => option.name === selectedOption)
+
   const [, setReload] = useState(true)
-  const [isExpanded, setIsExpanded] = useState(list.id === 0)
-  const ref = useRef<TRef>({ selectedId: 0, selectedOptionId: null })
+  const [isExpanded, setIsExpanded] = useState(selected === list.name)
+  const ref = useRef<TRef>({
+    selectedId: selected === list.name ? list.id : null,
+    selectedOptionId: findSelectedOptions ? findSelectedOptions.id : null,
+  })
 
   useEffect(() => {
     addEvent("selected", (data) => {
@@ -73,13 +79,12 @@ export const List = memo((props: ListProps) => {
     isSelected,
     selectedOptionId: selectedOptionId ?? false,
     open,
-    sublist: list.sublist,
-    name: list.name,
   }
 
   const listItemButtonProps = {
     open,
     isSelected,
+    name: list.name,
     path: list.name,
     icon: list.icon,
     caption: list.caption,
@@ -130,5 +135,3 @@ export const List = memo((props: ListProps) => {
     />
   )
 })
-
-

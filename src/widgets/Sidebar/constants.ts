@@ -21,41 +21,8 @@ export const menu = [
     ],
   },
   {
-    id: 3,
-    name: "warehouses",
-    caption: "Склады",
-    icon: "warehouses",
-    sublist: [
-      {
-        id: 4,
-        name: "coming",
-        caption: "Приход",
-        icon: "coming",
-      },
-      {
-        id: 5,
-        name: "moving",
-        caption: "Размещение",
-        icon: "moving",
-      },
-      {
-        id: 6,
-        name: "consumption",
-        caption: "Расход",
-        icon: "consumption",
-      },
-      {
-        id: 7,
-        name: "document",
-        caption: "Документы",
-        disabled: true,
-        icon: "document",
-      },
-    ],
-  },
-  {
     id: 8,
-    name: "stop-ist",
+    name: "stop-list",
     caption: "Стоп-лист",
     icon: "stopList",
     sublist: [],
@@ -72,13 +39,6 @@ export const menu = [
         caption: "Прайс-лист",
         disabled: true,
         icon: "priceList",
-      },
-      {
-        id: 11,
-        name: "price-list-delivery",
-        caption: "Прайс-лист доставки",
-        disabled: true,
-        icon: "priceListDelivery",
       },
       {
         id: 12,
@@ -99,12 +59,6 @@ export const menu = [
         name: "new-order",
         caption: "Новый заказ",
         icon: "newOrder",
-      },
-      {
-        id: 15,
-        name: "document",
-        caption: "Документы",
-        icon: "document",
       },
     ],
   },
@@ -135,79 +89,11 @@ export const menu = [
         disabled: true,
         icon: "favorite",
       },
-      {
-        id: 20,
-        name: "delivery-addresses",
-        caption: "Адреса доставки",
-        disabled: true,
-        icon: "deliveryAddresses",
-      },
     ],
-  },
-  {
-    id: 21,
-    name: "bot",
-    caption: "Бот",
-    icon: "bot",
-    sublist: [],
-  },
-  {
-    id: 22,
-    name: "departments",
-    caption: "Отделы",
-    icon: "departments",
-    sublist: [
-      {
-        id: 23,
-        name: "groups",
-        caption: "Группы",
-        disabled: true,
-        icon: "groups",
-      },
-    ],
-  },
-  {
-    id: 24,
-    name: "marketing",
-    caption: "Маркетинг",
-    icon: "marketing",
-    sublist: [],
   },
 ]
 
 export const menuBottom = [
-  {
-    id: 25,
-    name: "service",
-    icon: "service",
-    caption: "Сервис",
-    sublist: [
-      {
-        id: 26,
-        name: "system-scripts",
-        icon: "systemScripts",
-        caption: "Системные скрипты",
-      },
-      {
-        id: 27,
-        name: "location",
-        icon: "location",
-        caption: "Локация",
-      },
-      {
-        id: 28,
-        name: "import",
-        icon: "import",
-        caption: "Испорт",
-      },
-      {
-        id: 29,
-        name: "updates",
-        icon: "updates",
-        caption: "Обновления",
-      },
-    ],
-  },
   {
     id: 30,
     name: "users",
