@@ -24,6 +24,9 @@ const iconData = {
   dark: "nightlight",
   users: "admin_panel_settings",
   settings: "format_paint",
+  clear: "close",
+  typeGood: "fastfood",
+  consumable: "texture_add",
 }
 
 interface DefaultIcon extends IconProps{

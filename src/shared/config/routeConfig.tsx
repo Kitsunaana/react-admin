@@ -1,5 +1,7 @@
-import { RouteProps } from "react-router-dom"
+// import { RouteProps } from "react-router-dom"
 import { SettingsPage } from "pages/SettingsPage"
+import GoodsPage from "pages/Goods/GoodsPage"
+import { ReactNode } from "react"
 
 export enum AppRoutes {
   CATALOG = "catalog",
@@ -13,7 +15,7 @@ export const RoutePath: Record<AppRoutes, string> = {
   [AppRoutes.SETTINGS]: "/users/settings",
 }
 
-export const routeConfig: Record<AppRoutes, RouteProps> = {
+export const routeConfig: Record<AppRoutes, { path: string, element: ReactNode }> = {
   [AppRoutes.CATALOG]: {
     path: RoutePath.catalog,
     element: <div>catalog</div>,
@@ -24,6 +26,6 @@ export const routeConfig: Record<AppRoutes, RouteProps> = {
   },
   [AppRoutes.GOODS]: {
     path: RoutePath.goods,
-    element: <div>goods</div>,
+    element: <GoodsPage />,
   },
 }

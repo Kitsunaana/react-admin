@@ -22,7 +22,7 @@ const styles = {
       transition: ".2s",
       borderTopLeftRadius: 4,
       borderBottomLeftRadius: isEmptyOptions || (isSelected && !isExpanded) ? 4 : 0,
-      borderLeftColor: ({ palette }) => (isSelected && open
+      borderLeftColor: ({ palette }) => ((isSelected && open)
         ? (palette.mode === "light" ? palette.primary.light : palette.primary.dark)
         : "transparent"),
     },
