@@ -1,17 +1,16 @@
 import { alpha, IconButton, TextFieldProps } from "@mui/material"
-import React, { useEffect, useRef, useState } from "react"
+import React, {
+  FocusEvent,
+  forwardRef, useEffect, useRef, useState,
+} from "react"
 import { listenForOutsideClicks } from "shared/lib/hooks"
 import { Input } from "shared/ui/Input"
 import { Icon } from "shared/ui/Icon"
 import { Box } from "shared/ui/Box"
-
-interface SelectProps<T> {
-  options: T[],
-  inputProps: TextFieldProps
-
-  startAdornmentIcon?: string
-  clear?: boolean
-}
+import {
+  ChangeHandler, FieldValues, RefCallBack, UseFormRegister, UseFormSetValue,
+} from "react-hook-form"
+import { UseFormProps } from "pages/Goods/GoodsPage"
 
 interface Option {
   id?: number
@@ -20,20 +19,35 @@ interface Option {
   default?: boolean
 }
 
-export function Select<T extends Option>(props: SelectProps<T>) {
+interface SelectProps {
+  options: Option[],
+  inputProps: TextFieldProps
+
+  clear?: boolean
+  setValue: UseFormSetValue<UseFormProps>
+  value: Option,
+
+  name: keyof UseFormProps
+  onChange: ChangeHandler
+  onBlur: ChangeHandler
+  ref: RefCallBack
+}
+
+export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
   const {
-    options, inputProps, clear,
+    options, inputProps, clear, setValue, value, name,
   } = props
+
+  const {
+    onChange: onChangeInputProps,
+    onFocus: onFocusInputProps,
+    ...otherInputProps
+  } = inputProps
 
   const menuRef = useRef(null)
 
   const [listening, setListening] = useState(false)
   const [visible, setVisible] = useState(false)
-
-  const findDefaultOption = options.find((option) => option.default)
-  const [option, setOption] = useState<Option>(findDefaultOption ?? {
-    value: "",
-  })
 
   useEffect(listenForOutsideClicks({
     setIsOpen: setVisible,
@@ -43,27 +57,47 @@ export function Select<T extends Option>(props: SelectProps<T>) {
   }))
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setOption((prevState) => ({ ...prevState, value: event.target.value }))
+    setValue(name, { ...value, value: event.target.value })
+
+    if (typeof onChangeInputProps === "function") onChangeInputProps(event)
+  }
+
+  const handleOnFocus = (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setVisible(true)
+
+    if (typeof onFocusInputProps === "function") onFocusInputProps(event)
   }
 
   return (
-    <div style={{ position: "relative", width: "100%" }} ref={menuRef}>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+      }}
+      ref={menuRef}
+    >
       <Input
+        ref={ref}
         fullWidth
-        value={option.value}
+        value={value.value}
         onChange={handleOnChange}
-        onFocus={() => setVisible(true)}
+        onFocus={handleOnFocus}
         InputProps={{
-          startAdornment: ((option.value !== "" && option.icon) && (
+          startAdornment: ((value.value !== "" && value.icon) && (
             <Icon
-              name={option.icon}
+              name={value.icon}
               sx={{ fontSize: 20 }}
             />
           )),
           endAdornment: (
             <>
-              {(option.value !== "" && clear) && (
-                <IconButton sx={{ p: 0.25 }} onClick={() => setOption((prevState) => ({ ...prevState, value: "" }))}>
+              {(value.value !== "" && clear) && (
+                <IconButton
+                  sx={{ p: 0.25 }}
+                  onClick={() => {
+                    setValue(name, { ...value, value: "" })
+                  }}
+                >
                   <Icon sx={{ fontSize: 20 }} name="clear" />
                 </IconButton>
               )}
@@ -80,7 +114,7 @@ export function Select<T extends Option>(props: SelectProps<T>) {
             </>
           ),
         }}
-        {...inputProps}
+        {...otherInputProps}
       />
       <Box sx={{
         position: "absolute",
@@ -116,7 +150,7 @@ export function Select<T extends Option>(props: SelectProps<T>) {
               jc_sp
               onMouseDown={() => {
                 setVisible(false)
-                setOption(item)
+                setValue(name, item)
               }}
               key={item.id}
               sx={{
@@ -131,7 +165,7 @@ export function Select<T extends Option>(props: SelectProps<T>) {
                   backgroundColor: ({ palette }) => alpha(palette.grey["600"], 0.25),
                   border: ({ palette }) => `1px solid ${alpha(palette.grey["300"], 0.25)}`,
                 },
-                ...(option.value === item.value ? {
+                ...(value.value === item.value ? {
                   backgroundColor: ({ palette }) => alpha(palette.primary.main, 0.25),
                   border: ({ palette }) => `1px solid ${alpha(palette.grey["300"], 0.25)}`,
                 } : {}),
@@ -145,4 +179,4 @@ export function Select<T extends Option>(props: SelectProps<T>) {
       </Box>
     </div>
   )
-}
+})
