@@ -77,7 +77,6 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
       ref={menuRef}
     >
       <Input
-        ref={ref}
         fullWidth
         value={value.value}
         onChange={handleOnChange}
@@ -123,6 +122,8 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
         top: 38,
         right: 0,
         overflow: "hidden",
+        zIndex: 100000000000000000,
+        visibility: visible ? "visible" : "hidden",
       }}
       >
         <Box

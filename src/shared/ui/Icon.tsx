@@ -27,6 +27,9 @@ const iconData = {
   clear: "close",
   typeGood: "fastfood",
   consumable: "texture_add",
+  actions: "more_vert",
+  image: "image",
+  folder: "folder_open",
 }
 
 interface DefaultIcon extends IconProps{

@@ -7,7 +7,7 @@ import { ChangeIconSettingWeight } from "features/settings/ui/ChangeIconSettingW
 import { ChangeIconSettingFill } from "features/settings/ui/ChangeIconSettingFill"
 
 const SettingsPage = () => (
-  <Box flex gap={2}>
+  <Box flex gap={2} sx={{ p: 1 }}>
     <ChangeLanguage />
 
     <ChangeTheme />

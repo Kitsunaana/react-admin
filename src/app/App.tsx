@@ -26,7 +26,6 @@ export const Pages = () => {
       boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
       background: ({ background }) => background.sectionBackground,
       borderRadius: 2,
-      p: 1,
     }}
     >
       <Suspense fallback={<div>loader</div>}>
