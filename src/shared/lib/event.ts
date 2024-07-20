@@ -15,6 +15,9 @@ interface IEvents {
     fill?: number
     weight?: number
   }
+  backdrop: {
+    isActive: boolean
+  }
 }
 
 export const dispatch = <Key extends keyof IEvents>(name: Key, data?: IEvents[Key], object = document) => {

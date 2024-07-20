@@ -8,9 +8,8 @@ import { Input } from "shared/ui/Input"
 import { Icon } from "shared/ui/Icon"
 import { Box } from "shared/ui/Box"
 import {
-  ChangeHandler, FieldValues, RefCallBack, UseFormRegister, UseFormSetValue,
+  ChangeHandler, RefCallBack, UseFormSetValue,
 } from "react-hook-form"
-import { UseFormProps } from "pages/Goods/GoodsPage"
 
 interface Option {
   id?: number
@@ -24,10 +23,10 @@ interface SelectProps {
   inputProps: TextFieldProps
 
   clear?: boolean
-  setValue: UseFormSetValue<UseFormProps>
+  setValue: UseFormSetValue<{}>
   value: Option,
 
-  name: keyof UseFormProps
+  name: string
   onChange: ChangeHandler
   onBlur: ChangeHandler
   ref: RefCallBack
@@ -57,6 +56,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
   }))
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // @ts-ignore
     setValue(name, { ...value, value: event.target.value })
 
     if (typeof onChangeInputProps === "function") onChangeInputProps(event)
@@ -94,6 +94,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
                 <IconButton
                   sx={{ p: 0.25 }}
                   onClick={() => {
+                    // @ts-ignore
                     setValue(name, { ...value, value: "" })
                   }}
                 >
@@ -151,6 +152,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
               jc_sp
               onMouseDown={() => {
                 setVisible(false)
+                // @ts-ignore
                 setValue(name, item)
               }}
               key={item.id}

@@ -1,63 +1,115 @@
-import { Box } from "shared/ui/Box"
 import {
-  alpha, Fade, Grow,
-  IconButton, Pagination, Zoom,
+  IconButton, Menu, MenuItem,
 } from "@mui/material"
 import { Icon } from "shared/ui/Icon"
 import React, {
-  useEffect,
+  MouseEvent,
 } from "react"
-import { Input } from "shared/ui/Input"
-import { Select } from "shared/ui/Select"
-import { useForm } from "react-hook-form"
 import { Text } from "shared/ui/Text"
 
-import Accordion from "@mui/material/Accordion"
-import AccordionActions from "@mui/material/AccordionActions"
-import AccordionSummary from "@mui/material/AccordionSummary"
-import AccordionDetails from "@mui/material/AccordionDetails"
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import Button from "@mui/material/Button"
-import { TransitionGroup } from "react-transition-group"
-import { Divider, Vertical } from "shared/ui/Divider"
+import { Divider } from "shared/ui/Divider"
+import { CardProduct } from "entities/CardProduct"
+import { dispatch } from "shared/lib/event"
+import { Backdrop } from "shared/ui/Backdrop"
+import { Bottom } from "pages/Goods/ui/Bottom"
+import { Header } from "pages/Goods/ui/Header"
+import { Table } from "shared/ui/Table"
 
-interface Option {
-  id?: number
-  value: string
-  icon?: string
-  default?: boolean
-}
+export const ActionButton = () => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
-export interface UseFormProps {
-  filterByCategory: Option
-  filterByTypeGood: Option
-  search: string
-}
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
 
-const GoodsPage = () => {
-  const {
-    register, handleSubmit, watch, setValue, formState: { errors }, getValues,
-  } = useForm<UseFormProps>({
-    defaultValues: {
-      filterByCategory: { value: "" },
-      filterByTypeGood: { value: "" },
-      search: "",
-    },
-  })
+    dispatch("backdrop", { isActive: open })
+  }
+  const handleClose = (event: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLLIElement>) => {
+    event.stopPropagation()
 
-  const onSubmit = (data: UseFormProps) => {
-    // console.log(data)
+    setAnchorEl(null)
+
+    dispatch("backdrop", { isActive: open })
   }
 
-  const search = watch("search")
-  const filterByCategory = watch("filterByCategory")
-  const filterByTypeGood = watch("filterByTypeGood")
-
-  useEffect(() => {
-    handleSubmit(onSubmit)()
-  }, [search, filterByCategory, filterByTypeGood])
+  const menu = [
+    { type: "action", caption: "Редактировать", icon: "edit" },
+    { type: "divider" },
+    { type: "action", caption: "Дополнения", icon: "additional" },
+    { type: "action", caption: "Сделать копию товара", icon: "copy" },
+    { type: "action", caption: "Добавить в стоп-лист", icon: "stopList" },
+    { type: "divider" },
+    { type: "action", caption: "Удалить", icon: "delete" },
+  ]
 
   return (
+    <div>
+      <IconButton
+        sx={{ p: 0.25, borderRadius: 1 }}
+        onClick={(event) => {
+          event.stopPropagation()
+
+          handleClick(event)
+        }}
+      >
+        <Icon
+          sx={{ fontSize: 28, color: ({ palette }) => palette.primary.main }}
+          name="actions"
+        />
+      </IconButton>
+      <Menu
+        sx={{
+          "& .MuiList-root": {
+            mx: 1,
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        {menu.map((action, index) => {
+          if (action.type === "divider") return <Divider key={index} />
+
+          if (action.type === "action") {
+            return (
+              <MenuItem
+                key={index}
+                onClick={handleClose}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 1,
+                  borderRadius: 1,
+                }}
+              >
+                <Text caption={action.caption} />
+                <Icon name={action.icon ?? ""} sx={{ color: ({ palette }) => palette.primary.main, fontSize: 20 }} />
+              </MenuItem>
+            )
+          }
+        })}
+      </Menu>
+    </div>
+  )
+}
+
+const GoodsPage = () => (
+  <>
+    <Table
+      header={<Header />}
+      content={new Array(20).fill(20).map((_, index) => index).map((item, index) => (
+        <CardProduct key={index} />
+      ))}
+      bottom={<Bottom />}
+    />
+    <Backdrop />
+  </>
+)
+
+/* return (
     <Box flex jc_sp sx={{ height: 1 }}>
       <Box flex gap sx={{ p: 1 }}>
         <Box flex row ai gap>
@@ -118,167 +170,8 @@ const GoodsPage = () => {
           overflowX: "hidden",
         }}
       >
-        {new Array(100).fill(100).map((_, index) => index).map((item) => (
-
-          <Accordion
-            defaultExpanded={item === 0}
-            key={item}
-            sx={{
-              border: ({ palette }) => `1px solid ${palette.grey["600"]}`,
-              backgroundImage: ({ background }) => background.sectionBackground,
-              boxShadow: "0px 0px 0px rgba(0,0,0,0)",
-              "&.Mui-expanded": {
-                my: 1,
-                borderRadius: 1,
-              },
-            }}
-          >
-            <AccordionSummary
-              sx={{
-                px: 1,
-                "& .MuiAccordionSummary-content": {
-                  my: 0,
-                  py: 0.5,
-
-                  "&.Mui-expanded": {
-                    my: 0,
-                  },
-                },
-                "&.Mui-expanded": {
-                  minHeight: "unset",
-                },
-              }}
-            >
-              <Box flex row jc_sp ai sx={{ width: 1 }}>
-                <Box>
-                  <Text caption="Ананас" />
-                  <Text
-                    sx={{
-                      fontSize: 12,
-                    }}
-                    langBase="goods.table.row"
-                    name="category"
-                    value="Экзотические фрукты"
-                    translateOptions={{
-                      components: {
-                        strong: <strong
-                          style={{
-                            fontWeight: "unset",
-                            backgroundColor: "rgba(255, 255, 255, 0.12)",
-                            padding: "2px 8px",
-                            display: "inline-flex",
-                            borderRadius: "4px",
-                          }}
-                        />,
-                      },
-                    }}
-                  />
-                </Box>
-                <Box flex ai row sx={{ height: 1 }}>
-                  <Text
-                    sx={{ mr: 1, fontSize: 14 }}
-                    caption={(
-                      <strong
-                        style={{
-                          fontWeight: "unset",
-                          backgroundColor: "rgba(255, 255, 255, 0.12)",
-                          padding: "2px 8px",
-                          display: "inline-flex",
-                          borderRadius: "4px",
-                        }}
-                      >
-                        new
-                      </strong>
-                    )}
-                  />
-                  <Text
-                    sx={{ mr: 1, fontSize: 14 }}
-                    caption={(
-                      <strong
-                        style={{
-                          fontWeight: "unset",
-                          backgroundColor: "rgba(255, 255, 255, 0.12)",
-                          padding: "2px 8px",
-                          display: "inline-flex",
-                          borderRadius: "4px",
-                        }}
-                      >
-                        hot
-                      </strong>
-                    )}
-                  />
-                  <IconButton sx={{ p: 0.5 }} onClick={(event) => event.stopPropagation()}>
-                    <Icon
-                      sx={{
-                        fontSize: 20,
-                        color: ({ palette }) => palette.secondary.main,
-                      }}
-                      name="image"
-                    />
-                  </IconButton>
-                  <Vertical sx={{ mx: 0.75 }} />
-                  <IconButton
-                    sx={{
-                      p: 0.5,
-                      mr: 1,
-                    }}
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    <Icon sx={{ fontSize: 20 }} name="stopList" />
-                  </IconButton>
-                  <IconButton sx={{ p: 0.5 }} onClick={(event) => event.stopPropagation()}>
-                    <Icon sx={{ fontSize: 20 }} name="additional" />
-                  </IconButton>
-                  <Vertical sx={{ mx: 0.75 }} />
-                  <Box sx={{ mx: 0.25 }}>
-                    26
-                  </Box>
-                  <Vertical sx={{ mx: 0.75 }} />
-                  <IconButton sx={{ p: 0.25, borderRadius: 1 }} onClick={(event) => event.stopPropagation()}>
-                    <Icon sx={{ fontSize: 28, color: ({ palette }) => palette.primary.main }} name="actions" />
-                  </IconButton>
-                  <Vertical sx={{ mx: 0.75 }} />
-                  <IconButton sx={{ p: 0.5 }}>
-                    <Icon sx={{ fontSize: 20 }} name="expand" />
-                  </IconButton>
-                </Box>
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Divider textAlign="right">Прайс-лист</Divider>
-              <Box
-                flex
-                row
-                ai
-                gap
-                sx={{
-                  borderRadius: 0.5,
-                  borderLeft: ({ palette }) => `5px solid ${palette.success.main}`,
-                  pl: 1,
-                }}
-              >
-                <Icon sx={{ fontSize: 20 }} name="folder" />
-                <Text
-                  langBase="goods.table.row"
-                  name="price"
-                  value="Основной прайс"
-                  translateOptions={{
-                    components: {
-                      strong: <strong
-                        style={{
-                          fontWeight: "unset",
-                          backgroundColor: "rgba(255, 255, 255, 0.12)",
-                          padding: "2px 8px",
-                          display: "inline-flex",
-                          borderRadius: "4px",
-                        }}
-                      />,
-                    },
-                  }}
-                />
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+        {new Array(20).fill(20).map((_, index) => index).map((item, index) => (
+          <CardProduct key={index} />
         ))}
       </Box>
       <Box
@@ -315,8 +208,9 @@ const GoodsPage = () => {
           />
         </Box>
       </Box>
+
+      <Backdrop open={backdropActive} />
     </Box>
-  )
-}
+  ) */
 
 export default GoodsPage

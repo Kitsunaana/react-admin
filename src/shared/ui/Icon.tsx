@@ -30,6 +30,9 @@ const iconData = {
   actions: "more_vert",
   image: "image",
   folder: "folder_open",
+  edit: "edit",
+  copy: "content_copy",
+  delete: "delete",
 }
 
 interface DefaultIcon extends IconProps{

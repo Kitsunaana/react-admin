@@ -11,7 +11,7 @@ export const Vertical = (props: DividerProps) => {
     <Divider
       orientation="vertical"
       flexItem
-      sx={{ mr: 0.5, my: 0.5, ...sx }}
+      sx={{ mx: 0.75, ...sx }}
       {...other}
     />
   )
