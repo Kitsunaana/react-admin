@@ -23,7 +23,7 @@ export const Text = (props: TextProps) => {
     name, caption, sx, values, value, langBase: langBaseProps, onlyText, translateOptions, ...other
   } = props
 
-  useTranslation()
+  const { t } = useTranslation()
   useAppSelector((state: RootState) => state.settings.language)
 
   const lang = useLang()

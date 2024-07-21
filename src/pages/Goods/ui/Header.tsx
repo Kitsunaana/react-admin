@@ -1,12 +1,14 @@
 import { useForm } from "react-hook-form"
-import React, { useEffect } from "react"
+import React, { memo, useEffect } from "react"
 import { Box } from "shared/ui/Box"
 import { Input } from "shared/ui/Input"
-import { IconButton } from "@mui/material"
+import {
+  IconButton,
+} from "@mui/material"
 import { Icon } from "shared/ui/Icon"
 import { Select } from "shared/ui/Select"
 
-interface Option {
+export interface Option {
   id?: number
   value: string
   icon?: string
@@ -38,24 +40,42 @@ const filterList: Array<{ name: keyof UseFormProps; caption: string; options: Op
   { name: "typeGood", caption: "Тип товара", options: typeGoodList },
 ]
 
-export const Header = () => {
+const getParams = () => window.location.search
+  .replace("?", "")
+  .split("&")
+  .map((search) => search.split("="))
+  .reduce((prev, current) => {
+    prev[current[0]] = current[1]
+    return prev
+  }, {})
+
+export const Header = memo(() => {
+  const params = getParams()
+
+  const findCategory = categoryList.find((filter) => filter.value === (params as any).category)
+  const findTypeGood = typeGoodList.find((filter) => filter.value === (params as any).typeGood)
+
   const {
-    register, handleSubmit, watch, setValue, formState: { errors }, getValues,
+    register, handleSubmit, watch, setValue, getValues,
   } = useForm<UseFormProps>({
     defaultValues: {
-      category: { value: "" },
-      typeGood: typeGoodList[1],
-      search: "",
+      category: findCategory ?? { value: "" },
+      typeGood: findTypeGood ?? typeGoodList[1],
+      search: (params as any).search ?? "",
     },
   })
 
   const onSubmit = (data: UseFormProps) => {
-    console.log(data)
+    // console.log(data)
   }
 
   const search = watch("search")
   const filterByCategory = watch("category")
   const filterByTypeGood = watch("typeGood")
+
+  useEffect(() => window.addEventListener("popstate", (...data) => {
+    console.log(data)
+  }), [])
 
   useEffect(() => {
     handleSubmit(onSubmit)()
@@ -71,11 +91,15 @@ export const Header = () => {
           label="Поиск"
         />
         <Box flex row>
-          {[1, 2, 3].map((icon) => (
-            <IconButton key={icon} sx={{ p: 0.5 }}>
-              <Icon name="" sx={{ fontSize: 20 }} />
-            </IconButton>
-          ))}
+          <IconButton sx={{ p: 0.5 }}>
+            <Icon name="reload" sx={{ fontSize: 20, color: ({ palette }) => palette.primary.main }} />
+          </IconButton>
+          <IconButton sx={{ p: 0.5 }}>
+            <Icon name="add" sx={{ fontSize: 20, color: ({ palette }) => palette.success.light }} />
+          </IconButton>
+          <IconButton sx={{ p: 0.5 }}>
+            <Icon name="back" sx={{ fontSize: 20, color: ({ palette }) => palette.warning.main }} />
+          </IconButton>
         </Box>
       </Box>
       <Box ai flex row gap>
@@ -84,7 +108,6 @@ export const Header = () => {
             key={filter.name}
             clear
             value={getValues(filter.name) as Option}
-            // @ts-ignore
             setValue={setValue}
             options={filter.options}
             inputProps={{ size: "small", label: filter.caption }}
@@ -94,4 +117,4 @@ export const Header = () => {
       </Box>
     </>
   )
-}
+})

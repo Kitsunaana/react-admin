@@ -33,6 +33,11 @@ const iconData = {
   edit: "edit",
   copy: "content_copy",
   delete: "delete",
+  reload: "sync",
+  back: "undo",
+  add: "post_add",
+  fullscreenOpen: "fullscreen",
+  fullscreenClose: "fullscreen_exit",
 }
 
 interface DefaultIcon extends IconProps{

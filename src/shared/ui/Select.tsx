@@ -1,4 +1,6 @@
-import { alpha, IconButton, TextFieldProps } from "@mui/material"
+import {
+  alpha, IconButton, SxProps, TextFieldProps,
+} from "@mui/material"
 import React, {
   FocusEvent,
   forwardRef, useEffect, useRef, useState,
@@ -23,7 +25,7 @@ interface SelectProps {
   inputProps: TextFieldProps
 
   clear?: boolean
-  setValue: UseFormSetValue<{}>
+  setValue: UseFormSetValue<any>
   value: Option,
 
   name: string
@@ -34,7 +36,7 @@ interface SelectProps {
 
 export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
   const {
-    options, inputProps, clear, setValue, value, name,
+    options, inputProps, clear, setValue, value, name, ...other
   } = props
 
   const {
@@ -56,7 +58,6 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
   }))
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // @ts-ignore
     setValue(name, { ...value, value: event.target.value })
 
     if (typeof onChangeInputProps === "function") onChangeInputProps(event)
@@ -77,6 +78,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
       ref={menuRef}
     >
       <Input
+        {...other}
         fullWidth
         value={value.value}
         onChange={handleOnChange}
@@ -94,7 +96,6 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
                 <IconButton
                   sx={{ p: 0.25 }}
                   onClick={() => {
-                    // @ts-ignore
                     setValue(name, { ...value, value: "" })
                   }}
                 >
@@ -152,7 +153,6 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
               jc_sp
               onMouseDown={() => {
                 setVisible(false)
-                // @ts-ignore
                 setValue(name, item)
               }}
               key={item.id}

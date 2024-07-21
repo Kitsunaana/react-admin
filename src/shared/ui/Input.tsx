@@ -2,6 +2,7 @@ import {
   IconButton, styled, TextField, TextFieldProps,
 } from "@mui/material"
 import { forwardRef } from "react"
+import { ChangeHandler, RefCallBack } from "react-hook-form"
 
 export const CustomInput = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -72,8 +73,9 @@ export const CustomInput = styled(TextField)(({ theme }) => ({
 
 type InputProps = {
   clear?: boolean
-  name?: string
   setValue?: (name: string, value: string) => void
+
+  name?: string
 } & TextFieldProps
 
 export const Input = forwardRef<HTMLDivElement, InputProps>((props, ref) => {
@@ -97,6 +99,6 @@ export const Input = forwardRef<HTMLDivElement, InputProps>((props, ref) => {
   ) */
 
   return (
-    <CustomInput ref={ref} {...other} />
+    <CustomInput ref={ref} name={name} {...other} />
   )
 })

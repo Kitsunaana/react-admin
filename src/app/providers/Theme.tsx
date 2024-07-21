@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { useEffect, useMemo, useState } from "react"
-import { PaletteMode, useMediaQuery } from "@mui/material"
+import { alpha, PaletteMode, useMediaQuery } from "@mui/material"
 import { addEvent } from "shared/lib/event"
 import { useAppSelector } from "shared/lib/hooks"
 import { RootState } from "app/providers/Store"
@@ -22,6 +22,13 @@ const Theme = (props) => {
         sectionBackground: calcMode === "dark"
           ? "linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16))"
           : "#fff",
+        gradient: {
+          primary: `linear-gradient(180deg, ${alpha(defTheme.palette.primary.main, 0.1)} 20%, ${alpha("#000", 0)} 100%)`,
+        },
+        hatch: {
+          warning: `linear-gradient(315deg, #0000 48%, ${
+            alpha(defTheme.palette.warning.main, 0.35)} 50%, #0000 52%)`,
+        },
       },
       palette: {
         mode: calcMode as PaletteMode,
