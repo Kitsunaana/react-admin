@@ -61,6 +61,15 @@ const Theme = (props) => {
             },
           },
         },
+        MuiAutocomplete: {
+          styleOverrides: {
+            paper: {
+              backgroundImage: calcMode === "dark"
+                ? "linear-gradient(rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.13))"
+                : "#fff",
+            },
+          },
+        },
       },
     })
   }, [prefersDarkMode, mode])

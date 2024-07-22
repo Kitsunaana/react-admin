@@ -3,10 +3,13 @@ import React, { memo, useEffect } from "react"
 import { Box } from "shared/ui/Box"
 import { Input } from "shared/ui/Input"
 import {
-  IconButton,
+  IconButton, Select,
+  FormControl, InputLabel, MenuItem,
 } from "@mui/material"
 import { Icon } from "shared/ui/Icon"
-import { Select } from "shared/ui/Select"
+// import { Select } from "shared/ui/Select"
+import Autocomplete from "@mui/material/Autocomplete"
+import TextField from "@mui/material/TextField"
 
 export interface Option {
   id?: number
@@ -84,36 +87,63 @@ export const Header = memo(() => {
   return (
     <>
       <Box flex row ai gap>
-        <Input
+        {/* <Input
           {...register("search")}
           sx={{ flexGrow: 1 }}
           size="small"
           label="Поиск"
-        />
+        /> */}
+        {/* <Autocomplete
+          options={["Option 1", "Option 2", "Option 3"]}
+          fullWidth
+          size="small"
+          renderInput={(params) => <TextField {...params} fullWidth label="Choose an option" />}
+        /> */}
         <Box flex row>
           <IconButton sx={{ p: 0.5 }}>
-            <Icon name="reload" sx={{ fontSize: 20, color: ({ palette }) => palette.primary.main }} />
+            <Icon
+              name="reload"
+              sx={{
+                fontSize: 20,
+                color: ({ palette }) => palette.primary.main,
+              }}
+            />
           </IconButton>
           <IconButton sx={{ p: 0.5 }}>
-            <Icon name="add" sx={{ fontSize: 20, color: ({ palette }) => palette.success.light }} />
+            <Icon
+              name="add"
+              sx={{
+                fontSize: 20,
+                color: ({ palette }) => palette.success.light,
+              }}
+            />
           </IconButton>
           <IconButton sx={{ p: 0.5 }}>
-            <Icon name="back" sx={{ fontSize: 20, color: ({ palette }) => palette.warning.main }} />
+            <Icon
+              name="back"
+              sx={{
+                fontSize: 20,
+                color: ({ palette }) => palette.warning.main,
+              }}
+            />
           </IconButton>
         </Box>
       </Box>
       <Box ai flex row gap>
-        {filterList.map((filter) => (
+        {/* {filterList.map((filter) => (
           <Select
             key={filter.name}
             clear
             value={getValues(filter.name) as Option}
             setValue={setValue}
             options={filter.options}
-            inputProps={{ size: "small", label: filter.caption }}
+            inputProps={{
+              size: "small",
+              label: filter.caption
+            }}
             {...register(filter.name)}
           />
-        ))}
+        ))} */}
       </Box>
     </>
   )
