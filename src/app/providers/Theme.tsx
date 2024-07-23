@@ -24,6 +24,7 @@ const Theme = (props) => {
           : "#fff",
         gradient: {
           primary: `linear-gradient(180deg, ${alpha(defTheme.palette.primary.main, 0.1)} 20%, ${alpha("#000", 0)} 100%)`,
+          warning: `linear-gradient(180deg, ${alpha(defTheme.palette.warning.main, 0.1)} 20%, ${alpha("#000", 0)} 100%)`,
         },
         hatch: {
           warning: `linear-gradient(315deg, #0000 48%, ${

@@ -6,6 +6,7 @@ declare module "@mui/material/styles" {
       sectionBackground: string
       gradient: {
         primary: string
+        warning: string
       }
       hatch: {
         warning: string
@@ -18,6 +19,7 @@ declare module "@mui/material/styles" {
       sectionBackground?: string
       gradient?: {
         primary?: string
+        warning?: string
       }
       hatch?: {
         warning?: string

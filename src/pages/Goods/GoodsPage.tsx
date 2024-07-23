@@ -14,7 +14,7 @@ import { Backdrop } from "shared/ui/Backdrop"
 import { Bottom } from "pages/Goods/ui/Bottom"
 import { Header } from "pages/Goods/ui/Header"
 import { Table } from "shared/ui/Table"
-import { Dialog } from "pages/Goods/ui/Dialog"
+import { Dialog } from "pages/Goods/ui/Dialog/Dialog"
 
 export const ActionButton = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)

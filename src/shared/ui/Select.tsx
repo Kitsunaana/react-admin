@@ -1,3 +1,4 @@
+/*
 import {
   alpha, IconButton, SxProps, TextFieldProps,
 } from "@mui/material"
@@ -181,5 +182,132 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
         </Box>
       </Box>
     </div>
+  )
+})
+*/
+
+import Autocomplete from "@mui/material/Autocomplete"
+import { Icon } from "shared/ui/Icon"
+import {
+  alpha, MenuItem, TextField, AutocompleteProps,
+} from "@mui/material"
+import { Text } from "shared/ui/Text"
+import { ChangeHandler, Controller, FieldError } from "react-hook-form"
+import * as React from "react"
+import { forwardRef } from "react"
+
+/* interface SelectProps {
+  options: Option[],
+  inputProps: TextFieldProps
+
+  clear?: boolean
+  setValue: UseFormSetValue<any>
+  value: Option,
+
+  name: string
+  onChange: ChangeHandler
+  onBlur: ChangeHandler
+  ref: RefCallBack
+} */
+
+interface Option {
+  value: string
+  icon?: string
+}
+
+interface SelectProps extends Omit<AutocompleteProps<any, any, any, any>, "renderInput">{
+  value: Option
+  onChange: (...event: any[]) => void
+  error?: FieldError | undefined
+}
+
+export const Select = forwardRef((props: SelectProps, ref) => {
+  const {
+    options, value, onChange, error, sx, ...other
+  } = props
+
+  return (
+    <Autocomplete
+      {...other}
+      sx={sx}
+      // value={value !== null ? value : { value: "" }}
+      value={value}
+      // onChange={(event, value) => onChange(value)}
+      onChange={onChange}
+      // isOptionEqualToValue={(option, value) => option.value === value.value}
+      // isOptionEqualToValue={(option, value) => value === value}
+      options={options}
+      // getOptionLabel={(option) => (typeof option !== "string" ? option?.value : option)}
+      size="small"
+      renderInput={(params) =>
+      // if (typeof value === "object" && value !== null) {
+      //   params.InputProps.startAdornment = value.icon
+      //     ? (<Icon sx={{ fontSize: 20 }} name={value.icon ?? ""} />)
+      //     : undefined
+      // }
+
+        (
+          <TextField
+            {...params}
+            sx={{
+              "& .MuiFormLabel-root": {
+                fontSize: 12,
+              },
+
+              "& .MuiFormLabel-root[data-shrink='true']": {
+                top: 3,
+              },
+
+              "& .MuiInputBase-input": {
+                py: "0px !important",
+              },
+
+              "& legend": {
+                fontSize: "9px",
+              },
+            }}
+            error={!!error}
+            helperText={<Text onlyText langBase="global.message" name={error?.message} />}
+            fullWidth
+            label="Категория"
+          />
+        )}
+      renderOption={(props, option, state) => {
+        const { key, ...other } = props
+
+        // if (!option.value) return null
+
+        return (
+          <MenuItem
+            key={key}
+            {...other}
+            sx={{
+              mx: 1,
+              my: 0.25,
+              px: "4px !important",
+              py: "4px !important",
+              display: "flex",
+              justifyContent: "space-between !important",
+              alignItems: "center",
+              borderRadius: 1.5,
+              border: "1px solid transparent",
+              transition: ".2s",
+              "&:hover": {
+                backgroundColor: ({ palette }) => alpha(palette.grey["600"], 0.25),
+                border: ({ palette }) => `1px solid ${alpha(palette.grey["300"], 0.25)}`,
+              },
+
+              "&[aria-selected='true']": {
+                backgroundColor: ({ palette }) => alpha(palette.grey["600"], 0.25),
+                border: ({ palette }) => `1px solid ${alpha(palette.grey["300"], 0.25)}`,
+              },
+            }}
+          >
+            {/* {option.icon ? <Icon name={option.icon} /> : <div />} */}
+            {option}
+          </MenuItem>
+        )
+      }}
+    />
   )
 })
