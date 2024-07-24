@@ -12,6 +12,7 @@ interface DialogHeaderProps {
 
 export const DialogHeader = memo((props: DialogHeaderProps) => {
   const { fullScreen, setFullScreen } = props
+  console.log(1)
 
   return (
     <Box

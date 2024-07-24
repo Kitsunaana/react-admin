@@ -1,9 +1,10 @@
-import { ReactNode } from "react"
+import { memo, ReactNode } from "react"
 import MUIDialog from "@mui/material/Dialog"
 import { Box } from "shared/ui/Box"
 import MUIDialogContent from "@mui/material/DialogContent"
 import MUIDialogActions from "@mui/material/DialogActions"
 import * as React from "react"
+import { shallowEqual } from "shared/lib/utils"
 
 interface DialogLayoutProps {
   fullScreen: boolean
@@ -14,7 +15,7 @@ interface DialogLayoutProps {
   actions?: ReactNode
 }
 
-export const DialogLayout = (props: DialogLayoutProps) => {
+export const DialogLayout = memo((props: DialogLayoutProps) => {
   const {
     fullScreen, actions, open, header, content, tabs,
   } = props
@@ -47,4 +48,4 @@ export const DialogLayout = (props: DialogLayoutProps) => {
       </MUIDialogActions>
     </MUIDialog>
   )
-}
+})

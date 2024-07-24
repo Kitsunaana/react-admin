@@ -189,12 +189,13 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
 import Autocomplete from "@mui/material/Autocomplete"
 import { Icon } from "shared/ui/Icon"
 import {
-  alpha, MenuItem, TextField, AutocompleteProps,
+  alpha, MenuItem, TextField, AutocompleteProps, TextFieldProps,
 } from "@mui/material"
 import { Text } from "shared/ui/Text"
 import { ChangeHandler, Controller, FieldError } from "react-hook-form"
 import * as React from "react"
 import { forwardRef } from "react"
+import { Input } from "shared/ui/Input"
 
 /* interface SelectProps {
   options: Option[],
@@ -216,66 +217,52 @@ interface Option {
 }
 
 interface SelectProps extends Omit<AutocompleteProps<any, any, any, any>, "renderInput">{
-  value: Option
+  value: string | null
   onChange: (...event: any[]) => void
   error?: FieldError | undefined
+  InputProps?: TextFieldProps
 }
 
 export const Select = forwardRef((props: SelectProps, ref) => {
   const {
-    options, value, onChange, error, sx, ...other
+    options, value, onChange, error, InputProps, sx, ...other
   } = props
 
   return (
     <Autocomplete
       {...other}
       sx={sx}
-      // value={value !== null ? value : { value: "" }}
       value={value}
-      // onChange={(event, value) => onChange(value)}
       onChange={onChange}
-      // isOptionEqualToValue={(option, value) => option.value === value.value}
-      // isOptionEqualToValue={(option, value) => value === value}
-      options={options}
-      // getOptionLabel={(option) => (typeof option !== "string" ? option?.value : option)}
+      options={options.map((option) => (typeof option === "object" && option !== null ? option.value : option))}
       size="small"
-      renderInput={(params) =>
-      // if (typeof value === "object" && value !== null) {
-      //   params.InputProps.startAdornment = value.icon
-      //     ? (<Icon sx={{ fontSize: 20 }} name={value.icon ?? ""} />)
-      //     : undefined
-      // }
+      renderInput={(params) => {
+        const extendedParams = { ...params, ...InputProps }
 
-        (
-          <TextField
-            {...params}
-            sx={{
-              "& .MuiFormLabel-root": {
-                fontSize: 12,
-              },
+        if (value !== null) {
+          const findOption = options
+            .find((option) => (typeof option === "object" ? option.value === value : option === value))
 
-              "& .MuiFormLabel-root[data-shrink='true']": {
-                top: 3,
-              },
+          params.InputProps.startAdornment = findOption.icon
+            ? (<Icon sx={{ fontSize: 20 }} name={findOption.icon ?? ""} />)
+            : undefined
+        }
 
-              "& .MuiInputBase-input": {
-                py: "0px !important",
-              },
-
-              "& legend": {
-                fontSize: "9px",
-              },
-            }}
-            error={!!error}
-            helperText={<Text onlyText langBase="global.message" name={error?.message} />}
-            fullWidth
-            label="Категория"
+        return (
+          <Input
+            {...extendedParams}
+            // error={!!error}
+            // helperText={<Text onlyText langBase="global.message" name={error?.message} />}
+            // fullWidth
+            // label="Категория"
           />
-        )}
-      renderOption={(props, option, state) => {
+        )
+      }}
+      renderOption={(props, option) => {
         const { key, ...other } = props
 
-        // if (!option.value) return null
+        const findOption = options
+          .find((item) => (typeof item === "object" && item.value === option))
 
         return (
           <MenuItem
@@ -303,7 +290,7 @@ export const Select = forwardRef((props: SelectProps, ref) => {
               },
             }}
           >
-            {/* {option.icon ? <Icon name={option.icon} /> : <div />} */}
+            {findOption.icon ? <Icon name={findOption.icon} /> : <div />}
             {option}
           </MenuItem>
         )

@@ -1,16 +1,16 @@
 import * as React from "react"
 import {
-  useCallback, useEffect, useLayoutEffect, useState,
+  useCallback, useMemo, useState,
 } from "react"
 import { DialogLayout } from "pages/Goods/ui/Dialog/DialogLayout"
 import { DialogHeader } from "pages/Goods/ui/Dialog/DialogHeader"
-import { Tabs } from "shared/ui/Tabs"
 import { DialogContent } from "pages/Goods/ui/Dialog/DialogContent"
 import { DialogActions } from "pages/Goods/ui/Dialog/DialogActions"
-import { useForm, useFormState } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
+import { Tabs } from "pages/Goods/ui/Dialog/Tabs"
 
 export interface Option {
-  value: string
+  value: string | null
   icon?: string
   tab?: number
 }
@@ -30,58 +30,42 @@ export const Dialog = () => {
     setTab(newValue)
   }, [])
 
-  const {
-    setValue, register, watch, getValues, trigger, handleSubmit, control, formState: { errors, isValid }, getFieldState,
-  } = useForm<UseFormProps>({
+  const methods = useForm<UseFormProps>({
     defaultValues: {
-      category: { value: null as any, tab: 0 },
+      category: { value: null, tab: 0 },
       caption: { value: "", tab: 0 },
       description: "",
     },
-    mode: "onChange",
   })
 
-  const caption = watch("caption")
-  const category = watch("category")
-  const description = watch("description")
+  const memoizedDialogHeader = useMemo(() => (
+    <DialogHeader
+      fullScreen={fullScreen}
+      setFullScreen={setFullScreen}
+    />
+  ), [fullScreen, setFullScreen])
 
-  useEffect(() => {
-    trigger(["category", "caption"])
-    handleSubmit(console.log)()
-  }, [category, caption, description])
+  const memoizedTabs = useMemo(() => (
+    <Tabs
+      tab={tab}
+      onChange={handleChange}
+    />
+  ), [tab, handleChange])
+
+  const memoizedDialogContent = useMemo(() => <DialogContent tab={tab} />, [tab])
+
+  const memoizedDialogActions = useMemo(() => <DialogActions isValid={false} onClose={setOpen} />, [setOpen])
 
   return (
-    <DialogLayout
-      open={open}
-      fullScreen={fullScreen}
-      header={(
-        <DialogHeader
-          fullScreen={fullScreen}
-          setFullScreen={setFullScreen}
-        />
-      )}
-      tabs={(
-        <Tabs
-          control={control}
-          getValues={getValues}
-          errors={errors}
-          tab={tab}
-          getFieldState={getFieldState}
-          onChange={handleChange}
-        />
-      )}
-      content={(
-        <DialogContent
-          register={register}
-          watch={watch}
-          control={control}
-          errors={errors}
-          setValue={setValue}
-          getValues={getValues}
-          tab={tab}
-        />
-      )}
-      actions={(<DialogActions isValid={false} onClose={setOpen} />)}
-    />
+    <FormProvider {...methods}>
+      <DialogLayout
+        open={open}
+        fullScreen={fullScreen}
+        header={memoizedDialogHeader}
+        tabs={memoizedTabs}
+        content={memoizedDialogContent}
+        actions={memoizedDialogActions}
+      />
+    </FormProvider>
   )
 }

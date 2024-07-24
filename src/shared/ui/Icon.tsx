@@ -38,6 +38,9 @@ const iconData = {
   add: "post_add",
   fullscreenOpen: "fullscreen",
   fullscreenClose: "fullscreen_exit",
+  done: "done",
+  warning: "warning",
+  description: "speaker_notes",
 }
 
 interface DefaultIcon extends IconProps{
