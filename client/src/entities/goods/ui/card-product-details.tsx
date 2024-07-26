@@ -1,8 +1,8 @@
-import { Box } from "shared/ui/Box"
-import { Icon } from "shared/ui/Icon"
-import { Text } from "shared/ui/Text"
+import { Box } from "shared/ui/box"
+import { Icon } from "shared/ui/icon"
+import { Text } from "shared/ui/text"
 import React from "react"
-import { Mark } from "shared/ui/Mark"
+import { Mark } from "shared/ui/mark"
 
 export const CardProductDetails = () => (
   <Box

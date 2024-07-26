@@ -1,10 +1,10 @@
-import { Box } from "shared/ui/Box"
+import { Box } from "shared/ui/box"
 import { alpha, IconButton, Pagination } from "@mui/material"
-import { Icon } from "shared/ui/Icon"
-import { Text } from "shared/ui/Text"
+import { Icon } from "shared/ui/icon"
+import { Text } from "shared/ui/text"
 import React from "react"
 
-export const Bottom = () => (
+export const BottomPage = () => (
   <>
     <Box>
       <IconButton>

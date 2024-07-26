@@ -2,19 +2,28 @@ import {
   CssBaseline,
 } from "@mui/material"
 import * as React from "react"
-import { Box } from "shared/ui/Box"
+import { Box } from "shared/ui/box"
 import { menu, menuBottom } from "widgets/Sidebar/constants"
-import { Sidebar } from "widgets/Sidebar/ui/Sidebar"
+import { Sidebar } from "widgets/Sidebar/ui/sidebar"
 import { Suspense, useEffect, useState } from "react"
-import { addEvent } from "shared/lib/event"
-import { routeConfig } from "shared/config/routeConfig"
+import { addEvent, dispatch } from "shared/lib/event"
+import { routeConfig } from "shared/config/route-config"
 import { LangContext } from "shared/context/Lang"
+import { actionParams } from "shared/lib/params"
 
 export const Pages = () => {
   const [path, setPath] = useState(window.location.pathname)
 
   useEffect(() => addEvent("route", (data) => {
-    window.history.replaceState({}, "", `/${data.route}`)
+    actionParams.replace(data.route)
+
+    setPath(window.location.pathname)
+  }), [])
+
+  useEffect(() => window.addEventListener("popstate", (event) => {
+    // console.log(event.state)
+    if (event.state?.name) dispatch(event.state.name, { params: event.state?.params })
+    // actionParams.replace(event.state?.name)
 
     setPath(window.location.pathname)
   }), [])

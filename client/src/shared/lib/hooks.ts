@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "app/providers/Store"
+import { AppDispatch, RootState } from "app/providers/store"
 import { MutableRefObject } from "react"
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>()

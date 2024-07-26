@@ -1,8 +1,8 @@
 import * as React from "react"
 import { memo } from "react"
 import { TabPanel } from "shared/ui/tab-panel"
-import { ControllerSelect } from "features/goods/filters/ui/category-select"
-import { CaptionInput, CategorySelect } from "./parameters"
+import { ControllerSelect } from "shared/ui/controller-select"
+import { CaptionInput } from "./parameters"
 import { Description } from "./description"
 
 const categoryList = [{ id: 1, value: "Option 1" }, { id: 2, value: "Option 2" }]
@@ -18,7 +18,10 @@ export const DialogContent = memo((props: DialogContentProps) => {
     <>
       <TabPanel value={tab} index={0}>
         <>
-          <ControllerSelect options={categoryList} />
+          <ControllerSelect
+            name="category"
+            options={categoryList}
+          />
           <CaptionInput />
         </>
       </TabPanel>
