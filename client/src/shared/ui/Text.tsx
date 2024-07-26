@@ -1,9 +1,7 @@
 import { Typography, TypographyProps } from "@mui/material"
 import { Trans, TransProps, useTranslation } from "react-i18next"
 import { useLang } from "shared/context/Lang"
-import { ReactNode, useEffect, useState } from "react"
-import { addEvent } from "shared/lib/event"
-import i18n from "i18next"
+import { ReactNode } from "react"
 import { useAppSelector } from "shared/lib/hooks"
 import { RootState } from "app/providers/Store"
 
@@ -23,7 +21,7 @@ export const Text = (props: TextProps) => {
     name, caption, sx, values, value, langBase: langBaseProps, onlyText, translateOptions, ...other
   } = props
 
-  const { t } = useTranslation()
+  useTranslation()
   useAppSelector((state: RootState) => state.settings.language)
 
   const lang = useLang()
@@ -37,7 +35,9 @@ export const Text = (props: TextProps) => {
     />
   )
 
-  if (onlyText) return translate
+  if (onlyText && translate) {
+    return translate
+  }
 
   return (
     <Typography sx={{ ...sx }} {...other}>

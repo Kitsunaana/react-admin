@@ -243,20 +243,12 @@ export const Select = forwardRef((props: SelectProps, ref) => {
           const findOption = options
             .find((option) => (typeof option === "object" ? option.value === value : option === value))
 
-          params.InputProps.startAdornment = findOption.icon
+          params.InputProps.startAdornment = findOption?.icon
             ? (<Icon sx={{ fontSize: 20 }} name={findOption.icon ?? ""} />)
             : undefined
         }
 
-        return (
-          <Input
-            {...extendedParams}
-            // error={!!error}
-            // helperText={<Text onlyText langBase="global.message" name={error?.message} />}
-            // fullWidth
-            // label="Категория"
-          />
-        )
+        return (<Input {...extendedParams} />)
       }}
       renderOption={(props, option) => {
         const { key, ...other } = props

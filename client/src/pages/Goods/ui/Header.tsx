@@ -1,19 +1,20 @@
-import { useForm } from "react-hook-form"
+import {
+  Controller, FormProvider, useForm, useFormContext,
+} from "react-hook-form"
 import React, { memo, useEffect } from "react"
 import { Box } from "shared/ui/Box"
 import { Input } from "shared/ui/Input"
 import {
-  IconButton, Select,
-  FormControl, InputLabel, MenuItem,
+  IconButton,
 } from "@mui/material"
 import { Icon } from "shared/ui/Icon"
-// import { Select } from "shared/ui/Select"
-import Autocomplete from "@mui/material/Autocomplete"
-import TextField from "@mui/material/TextField"
+import { useTranslation } from "react-i18next"
+import { Select } from "shared/ui/Select"
+import { dispatch } from "shared/lib/event"
 
 export interface Option {
   id?: number
-  value: string
+  value: string | null
   icon?: string
   default?: boolean
 }
@@ -38,10 +39,6 @@ const typeGoodList = [
     default: true,
   },
 ]
-const filterList: Array<{ name: keyof UseFormProps; caption: string; options: Option[] }> = [
-  { name: "category", caption: "Категория", options: categoryList },
-  { name: "typeGood", caption: "Тип товара", options: typeGoodList },
-]
 
 const getParams = () => window.location.search
   .replace("?", "")
@@ -52,53 +49,77 @@ const getParams = () => window.location.search
     return prev
   }, {})
 
+export const CategorySelect = () => {
+  const { control } = useFormContext<UseFormProps>()
+
+  return (
+    <Controller
+      name="category.value"
+      control={control}
+      render={({ field: { value, onChange, ...other } }) => (
+        <Select
+          {...other}
+          value={value ?? null}
+          onChange={(_, value) => { onChange(value) }}
+          options={categoryList}
+          sx={{ width: 1 }}
+          InputProps={{
+            fullWidth: true,
+            label: "Категория",
+          }}
+        />
+      )}
+    />
+  )
+}
+
+export const TypeGoodSelect = () => {
+  const { control } = useFormContext<UseFormProps>()
+
+  return (
+    <Controller
+      name="typeGood.value"
+      control={control}
+      render={({ field: { value, onChange, ...other } }) => (
+        <Select
+          {...other}
+          value={value ?? null}
+          onChange={(_, value) => { onChange(value) }}
+          options={typeGoodList}
+          sx={{ width: 1 }}
+          InputProps={{
+            fullWidth: true,
+            label: "Тип товара",
+          }}
+        />
+      )}
+    />
+  )
+}
+
 export const Header = memo(() => {
   const params = getParams()
 
   const findCategory = categoryList.find((filter) => filter.value === (params as any).category)
   const findTypeGood = typeGoodList.find((filter) => filter.value === (params as any).typeGood)
 
-  const {
-    register, handleSubmit, watch, setValue, getValues,
-  } = useForm<UseFormProps>({
+  const methods = useForm<UseFormProps>({
     defaultValues: {
-      category: findCategory ?? { value: "" },
+      category: findCategory ?? { value: null },
       typeGood: findTypeGood ?? typeGoodList[1],
       search: (params as any).search ?? "",
     },
   })
 
-  const onSubmit = (data: UseFormProps) => {
-    // console.log(data)
-  }
-
-  const search = watch("search")
-  const filterByCategory = watch("category")
-  const filterByTypeGood = watch("typeGood")
-
-  useEffect(() => window.addEventListener("popstate", (...data) => {
-    console.log(data)
-  }), [])
-
-  useEffect(() => {
-    handleSubmit(onSubmit)()
-  }, [search, filterByCategory, filterByTypeGood])
-
   return (
-    <>
+    <FormProvider {...methods}>
       <Box flex row ai gap>
-        {/* <Input
-          {...register("search")}
+        <Input
+          {...methods.register("search")}
           sx={{ flexGrow: 1 }}
           size="small"
           label="Поиск"
-        /> */}
-        {/* <Autocomplete
-          options={["Option 1", "Option 2", "Option 3"]}
-          fullWidth
-          size="small"
-          renderInput={(params) => <TextField {...params} fullWidth label="Choose an option" />}
-        /> */}
+        />
         <Box flex row>
           <IconButton sx={{ p: 0.5 }}>
             <Icon
@@ -109,7 +130,12 @@ export const Header = memo(() => {
               }}
             />
           </IconButton>
-          <IconButton sx={{ p: 0.5 }}>
+          <IconButton
+            sx={{ p: 0.5 }}
+            onClick={() => {
+              dispatch("dialog.goods.create" as any)
+            }}
+          >
             <Icon
               name="add"
               sx={{
@@ -129,22 +155,10 @@ export const Header = memo(() => {
           </IconButton>
         </Box>
       </Box>
-      <Box ai flex row gap>
-        {/* {filterList.map((filter) => (
-          <Select
-            key={filter.name}
-            clear
-            value={getValues(filter.name) as Option}
-            setValue={setValue}
-            options={filter.options}
-            inputProps={{
-              size: "small",
-              label: filter.caption
-            }}
-            {...register(filter.name)}
-          />
-        ))} */}
+      <Box ai flex row gap grow sx={{ width: 1 }}>
+        <CategorySelect />
+        <TypeGoodSelect />
       </Box>
-    </>
+    </FormProvider>
   )
 })

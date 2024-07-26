@@ -6,5 +6,5 @@ export const buildResolvers = ({ paths }: BuildOptions): webpack.ResolveOptions 
   preferAbsolute: true,
   modules: [paths.src, "node_modules"],
   mainFiles: ["index"],
-  alias: {}
+  alias: {},
 })

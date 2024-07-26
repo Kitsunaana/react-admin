@@ -3,8 +3,8 @@ import {
 } from "react-hook-form"
 import { Select } from "shared/ui/Select"
 import { Input } from "shared/ui/Input"
-import { Text } from "shared/ui/Text"
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 
 export interface Option {
   value: string
@@ -33,6 +33,8 @@ export const categoryList = [
 export const CategorySelect = () => {
   const { control, trigger } = useFormContext<UseFormProps>()
 
+  const { t } = useTranslation("translation", { keyPrefix: "global.message" })
+
   return (
     <Controller
       name="category.value"
@@ -53,7 +55,7 @@ export const CategorySelect = () => {
             fullWidth: true,
             label: "Категория",
             error: !!error,
-            helperText: <Text onlyText langBase="global.message" name={error?.message} />,
+            helperText: error?.message ? t(error.message, { value: 3 }) : "",
           }}
         />
       )}
@@ -63,6 +65,8 @@ export const CategorySelect = () => {
 
 export const CaptionInput = () => {
   const { control, trigger } = useFormContext<UseFormProps>()
+
+  const { t } = useTranslation("translation", { keyPrefix: "global.message" })
 
   return (
     <Controller
@@ -82,14 +86,7 @@ export const CaptionInput = () => {
           size="small"
           fullWidth
           error={!!error}
-          helperText={(
-            <Text
-              onlyText
-              langBase="global.message"
-              name={error?.message}
-              value="3"
-            />
-          )}
+          helperText={error?.message ? t(error.message, { value: 3 }) : ""}
         />
       )}
     />

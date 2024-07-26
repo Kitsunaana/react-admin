@@ -8,13 +8,14 @@ import React, {
 import { Text } from "shared/ui/Text"
 
 import { Divider } from "shared/ui/Divider"
-import { CardProduct } from "entities/CardProduct"
+import { CardProduct } from "entities/goods"
 import { dispatch } from "shared/lib/event"
 import { Backdrop } from "shared/ui/Backdrop"
 import { Bottom } from "pages/Goods/ui/Bottom"
 import { Header } from "pages/Goods/ui/Header"
 import { Table } from "shared/ui/Table"
-import { Dialog } from "pages/Goods/ui/Dialog/Dialog"
+import { DialogCreate } from "features/goods/create/ui/DialogCreate"
+import { DialogEdit } from "features/goods/edit/ui/DialogEdit"
 
 export const ActionButton = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -25,6 +26,7 @@ export const ActionButton = () => {
 
     dispatch("backdrop", { isActive: open })
   }
+
   const handleClose = (event: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLLIElement>) => {
     event.stopPropagation()
 
@@ -34,7 +36,7 @@ export const ActionButton = () => {
   }
 
   const menu = [
-    { type: "action", caption: "Редактировать", icon: "edit" },
+    // { type: "action", caption: "Редактировать", icon: "edit" },
     { type: "divider" },
     { type: "action", caption: "Дополнения", icon: "additional" },
     { type: "action", caption: "Сделать копию товара", icon: "copy" },
@@ -70,6 +72,23 @@ export const ActionButton = () => {
         open={open}
         onClose={handleClose}
       >
+        <MenuItem
+          onClick={(event) => {
+            handleClose(event)
+
+            dispatch("dialog.goods.edit" as any, { id: 123 })
+          }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 1,
+            borderRadius: 1,
+          }}
+        >
+          <Text caption="Редактировать" />
+          <Icon name="edit" sx={{ color: ({ palette }) => palette.primary.main, fontSize: 20 }} />
+        </MenuItem>
         {menu.map((action, index) => {
           if (action.type === "divider") return <Divider key={index} />
 
@@ -97,21 +116,19 @@ export const ActionButton = () => {
   )
 }
 
-const GoodsPage = () => {
-  console.log("GOODS_PAGE")
-  return (
-    <>
-      <Table
-        header={<Header />}
-        content={new Array(20).fill(20).map((_, index) => index).map((item) => (
-          <CardProduct key={item} />
-        ))}
-        bottom={<Bottom />}
-      />
-      <Backdrop />
-      <Dialog />
-    </>
-  )
-}
+const GoodsPage = () => (
+  <>
+    <Table
+      header={<Header />}
+      content={new Array(20).fill(20).map((_, index) => index).map((item) => (
+        <CardProduct key={item} />
+      ))}
+      bottom={<Bottom />}
+    />
+    <Backdrop />
+    <DialogCreate />
+    <DialogEdit />
+  </>
+)
 
 export default GoodsPage
