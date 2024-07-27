@@ -43,6 +43,8 @@ export const TabsContainer = memo((props: TabsProps) => {
 
   const { errors } = useFormState({ control })
 
+  console.log(errors)
+
   const tabWithErrors = useMemo(() => Object
     .keys(getValues())
     .filter((property) => errors[property])

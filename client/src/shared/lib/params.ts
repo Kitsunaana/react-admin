@@ -13,17 +13,23 @@ export const actionParams: IActionParams = {
   index: 0,
 
   push(name: string, value: number | string) {
-    const queries = queryString.parseUrl(window.location.href).query
+    const { location } = window
+
+    const queries = queryString.parseUrl(location.href).query
 
     if (value === null) delete queries[name]
     else queries[name] = String(value)
 
-    const path = window.location.pathname.replace("/", "")
+    const path = location.pathname.replace("/", "")
     const stringified = queryString.stringify(queries)
 
-    window.history.pushState({ page: this.index, name: path, params: stringified }, path, `?${stringified}`)
+    const { origin } = location
+    const data = { page: this.index, name: path, params: stringified }
+    const url = stringified ? `?${stringified}` : `${origin}/${path}`
 
-    this.history.push(window.location.href)
+    window.history.pushState(data, path, url)
+
+    this.history.push(location.href)
     this.index += 1
 
     return this
@@ -41,7 +47,6 @@ export const actionParams: IActionParams = {
   back() {
     if (this.history[this.index - 1]) {
       window.history.pushState({}, "", this.history[this.index - 1])
-      // console.log(this.history[this.index - 1])
       this.index -= 1
     }
   },

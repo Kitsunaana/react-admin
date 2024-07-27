@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --env port=3001 open=false",
+    "start": "webpack serve --env port=3002 open=false",
     "build:dev": "webpack --env mode=development",
     "build:prod": "webpack --env mode=production",
     "lint:ts": " eslint \"**/*.{ts,tsx}\"",

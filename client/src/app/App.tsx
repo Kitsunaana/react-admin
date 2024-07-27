@@ -21,9 +21,7 @@ export const Pages = () => {
   }), [])
 
   useEffect(() => window.addEventListener("popstate", (event) => {
-    // console.log(event.state)
     if (event.state?.name) dispatch(event.state.name, { params: event.state?.params })
-    // actionParams.replace(event.state?.name)
 
     setPath(window.location.pathname)
   }), [])

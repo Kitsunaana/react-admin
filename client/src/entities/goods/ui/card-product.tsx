@@ -2,11 +2,12 @@ import { Accordion } from "shared/ui/accordion"
 import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
 import { Box } from "shared/ui/box"
-import React from "react"
-import { ActionButton } from "pages/Goods/goods-page"
+import React, { useEffect, useRef } from "react"
+// import { ActionButton } from "pages/Goods/goods-page"
 import { Mark } from "shared/ui/mark"
 import { Tag } from "shared/ui/tag"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
+import { ActionButton } from "entities/goods/ui/action-button"
 import { StopListButton } from "./stop-list-button"
 import { AdditionalButton } from "./additional-button"
 import { CardProductDetails } from "./card-product-details"
@@ -26,14 +27,14 @@ export const CardProduct = () => (
           },
         }}
       />
-      )}
+        )}
     tags={(
       <>
         <Tag caption="-18 шт." variant="warning" />
         <Tag caption="new" />
         <Tag caption="hot" />
       </>
-      )}
+        )}
     actions={(
       <>
         <TooltipImageView />
@@ -47,7 +48,7 @@ export const CardProduct = () => (
         <Vertical />
         <ActionButton />
       </>
-      )}
+        )}
     contentTitle="Прайс-лист"
     details={<CardProductDetails />}
   />

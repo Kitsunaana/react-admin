@@ -4,7 +4,9 @@ import { Accordion as MUIAccordion, IconButton } from "@mui/material"
 import { Icon } from "shared/ui/icon"
 import { Divider, Vertical } from "shared/ui/divider"
 import AccordionDetails from "@mui/material/AccordionDetails"
-import React, { ReactNode } from "react"
+import React, {
+  forwardRef, ReactNode, useCallback, useState,
+} from "react"
 
 export type AccordionProps = {
   caption?: ReactNode
@@ -13,15 +15,17 @@ export type AccordionProps = {
   actions?: ReactNode
   contentTitle?: ReactNode | string
   details?: ReactNode
+  expanded?: boolean
 }
 
-export const Accordion = (props: AccordionProps) => {
+export const Accordion = forwardRef<HTMLDivElement, AccordionProps>((props, ref) => {
   const {
     caption, description, tags, actions, contentTitle, details,
   } = props
 
   return (
     <MUIAccordion
+      ref={ref}
       sx={{
         border: ({ palette }) => `1px solid ${palette.grey["600"]}`,
         backgroundImage: ({ background }) => background.sectionBackground,
@@ -69,4 +73,4 @@ export const Accordion = (props: AccordionProps) => {
       </AccordionDetails>
     </MUIAccordion>
   )
-}
+})
