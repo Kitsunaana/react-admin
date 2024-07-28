@@ -8,6 +8,7 @@ import { Mark } from "shared/ui/mark"
 import { Tag } from "shared/ui/tag"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
 import { ActionButton } from "entities/goods/ui/action-button"
+import { MIKU } from "shared/config/constants"
 import { StopListButton } from "./stop-list-button"
 import { AdditionalButton } from "./additional-button"
 import { CardProductDetails } from "./card-product-details"
@@ -37,7 +38,7 @@ export const CardProduct = () => (
         )}
     actions={(
       <>
-        <TooltipImageView />
+        <TooltipImageView images={[MIKU[0]]} />
         <Vertical />
         <StopListButton />
         <AdditionalButton />

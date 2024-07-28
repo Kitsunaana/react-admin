@@ -2,7 +2,7 @@ import queryString from "query-string"
 
 interface IActionParams {
   history: string[]
-  push(name: string, value: number | string): this
+  push(name: string, value: number | string | null): this
   replace(path: string): this
   back(): void
   index: number

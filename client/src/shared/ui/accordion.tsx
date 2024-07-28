@@ -1,12 +1,15 @@
-import AccordionSummary from "@mui/material/AccordionSummary"
+import AccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary"
 import { Box } from "shared/ui/box"
-import { Accordion as MUIAccordion, IconButton } from "@mui/material"
+import {
+  Accordion as MUIAccordion, IconButton, Theme, useTheme,
+} from "@mui/material"
 import { Icon } from "shared/ui/icon"
 import { Divider, Vertical } from "shared/ui/divider"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import React, {
-  forwardRef, ReactNode, useCallback, useState,
+  forwardRef, ReactNode,
 } from "react"
+import styled from "styled-components"
 
 export type AccordionProps = {
   caption?: ReactNode
@@ -18,40 +21,16 @@ export type AccordionProps = {
   expanded?: boolean
 }
 
-export const Accordion = forwardRef<HTMLDivElement, AccordionProps>((props, ref) => {
+export const Accordion = (props: AccordionProps) => {
   const {
-    caption, description, tags, actions, contentTitle, details,
+    caption, description, tags, actions, contentTitle, details, ...other
   } = props
 
-  return (
-    <MUIAccordion
-      ref={ref}
-      sx={{
-        border: ({ palette }) => `1px solid ${palette.grey["600"]}`,
-        backgroundImage: ({ background }) => background.sectionBackground,
-        boxShadow: "0px 0px 0px rgba(0,0,0,0)",
-        "&.Mui-expanded": {
-          my: 1,
-          borderRadius: 1,
-        },
-      }}
-    >
-      <AccordionSummary
-        sx={{
-          px: 1,
-          "& .MuiAccordionSummary-content": {
-            my: 0,
-            py: 0.5,
+  const theme = useTheme()
 
-            "&.Mui-expanded": {
-              my: 0,
-            },
-          },
-          "&.Mui-expanded": {
-            minHeight: "unset",
-          },
-        }}
-      >
+  return (
+    <AccordionContainer theme={theme} {...other}>
+      <Summary theme={theme}>
         <Box flex row jc_sp ai sx={{ width: 1 }}>
           <Box>
             {caption}
@@ -66,11 +45,45 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>((props, ref)
             </IconButton>
           </Box>
         </Box>
-      </AccordionSummary>
+      </Summary>
       <AccordionDetails>
         <Divider textAlign="right">{contentTitle}</Divider>
         {details}
       </AccordionDetails>
-    </MUIAccordion>
+    </AccordionContainer>
   )
-})
+}
+
+export const AccordionContainer = styled(MUIAccordion)`
+    box-shadow: 0px 0px 0px rgba(0,0,0,0);
+    border: ${({ theme }) => `1px solid ${theme.palette.grey["600"]}`};
+    background-image: ${({ theme }) => `${theme.background.sectionBackground} !important`};
+    
+    &.Mui-expanded {
+        margin-top: ${({ theme }) => `${theme.spacing(0.5)} !important`};
+        margin-bottom: ${({ theme }) => `${theme.spacing(0.5)} !important`};
+        border-radius: ${({ theme }) => theme.spacing(0.5)};
+    }
+`
+
+export const Summary = styled(AccordionSummary)<AccordionSummaryProps & { theme: Theme }>`
+    padding-left: ${({ theme }) => `${theme.spacing(1)} !important`};
+    padding-right: ${({ theme }) => `${theme.spacing(1)} !important`};
+    
+    & .MuiAccordionSummary-content {
+        margin-top: 0;
+        margin-bottom: 0;
+
+        padding-top: ${({ theme }) => theme.spacing(0.5)};
+        padding-bottom: ${({ theme }) => theme.spacing(0.5)};
+        
+        &.Mui-expanded {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+
+    &.Mui-expanded {
+        min-height: unset !important;
+    }
+`

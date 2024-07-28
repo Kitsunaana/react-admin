@@ -1,104 +1,68 @@
 import {
-  IconButton, styled, TextField, TextFieldProps,
+  TextField, TextFieldProps,
 } from "@mui/material"
-import { forwardRef } from "react"
-import { ChangeHandler, RefCallBack } from "react-hook-form"
+import { ChangeEvent, forwardRef } from "react"
+import styled from "styled-components"
+import { IconButton } from "shared/ui/icon-button"
 
-export const CustomInput = styled(TextField)(({ theme }) => ({
-  "& .MuiInputBase-input": {
-    padding: "8.5px 12px 8.5px 4px",
-    height: 18,
-  },
-  "& .MuiFormLabel-root": {
-    fontSize: 12,
-  },
-  "& .MuiFormLabel-root[data-shrink='true']": {
-    transform: "translate(16px, -6px) scale(0.75)",
-  },
-  "& legend": {
-    fontSize: 10,
-  },
-  "& .MuiInputBase-root": {
-    paddingRight: 4,
-    paddingLeft: 4,
-  },
-}))
-
-/**
- * <Input
- *         fullWidth
- *         value={option.value}
- *         onChange={handleOnChange}
- *         onFocus={() => setVisible(true)}
- *         InputProps={{
- *           startAdornment: ((option.value !== "" && option.icon) && (
- *           <Icon
- *             name={option.icon}
- *             sx={{ fontSize: 20 }}
- *           />
- *           )),
- *           endAdornment: (
- *             <>
- *               {(option.value !== "" && clear) && (
- *               <IconButton
- *                 sx={{ p: 0.25 }}
- *                 onClick={() => {
- *                   setValue(name, "")
- *                   setOption((prevState) => ({
- *                     ...prevState,
- *                     value: "",
- *                   }))
- *                 }}
- *               >
- *                 <Icon sx={{ fontSize: 20 }} name="clear" />
- *               </IconButton>
- *               )}
- *               <IconButton sx={{ p: 0.25 }} onClick={() => setVisible((prevState) => !prevState)}>
- *                 <Icon
- *                   sx={{
- *                     fontSize: 20,
- *                     transition: ".3s",
- *                     transform: `rotate(${visible ? 180 : 0}deg)`,
- *                   }}
- *                   name="expand"
- *                 />
- *               </IconButton>
- *             </>
- *           ),
- *         }}
- *         {...otherInputProps}
- *         {...otherRegister}
- *       />
- */
+export const StyledInput = styled(TextField)<TextFieldProps>`
+    & .MuiInputBase-input {
+        padding: 8.5px 12px 8.5px 4px;
+        height: 18px;
+    }
+    
+    & .MuiFormLabel-root {
+        font-size: 12px;
+    }
+    
+    & .MuiFormLabel-root[data-shrink='true'] {
+        transform: translate(16px, -6px) scale(0.75);
+    }
+    
+    & legend {
+        font-size: 9px;
+    }
+    
+    & .MuiInputBase-root {
+        padding-right: 4px;
+        padding-left: 4px;
+    }
+`
 
 type InputProps = {
   clear?: boolean
-  setValue?: (name: string, value: string) => void
+  setValue?: (name: any, value: any) => void
+  onClear?: () => void
 
   name?: string
 } & TextFieldProps
 
 export const Input = forwardRef<HTMLDivElement, InputProps>((props, ref) => {
   const {
-    clear, name, setValue, ...other
+    clear = true, name, onClear, setValue, onChange, InputProps, value, ...other
   } = props
 
-  /* const clearButton = clear && (
+  const clearButton = (clear && value) ? (
     <IconButton
-      sx={{ p: 0.25 }}
+      fontSize={20}
+      name="clear"
       onClick={() => {
-        if (typeof setValue === "function") setValue(name, "")
-        setOption((prevState) => ({
-          ...prevState,
-          value: "",
-        }))
+        if (onClear) onClear()
+        if (name && onChange) {
+          onChange({ target: { value: "" } } as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
+        }
       }}
-    >
-      <Icon sx={{ fontSize: 20 }} name="clear" />
-    </IconButton>
-  ) */
+    />
+  ) : null
 
   return (
-    <CustomInput ref={ref} name={name} {...other} />
+    <StyledInput
+      InputProps={{ endAdornment: clearButton, ...InputProps }}
+      ref={ref}
+      onChange={onChange}
+      value={value}
+      name={name}
+      {...other}
+    />
   )
 })

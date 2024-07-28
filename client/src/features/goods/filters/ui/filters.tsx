@@ -96,6 +96,10 @@ export const Filters = memo((props: FiltersProps) => {
           render={({ field }) => (
             <Input
               {...field}
+              setValue={methods.setValue}
+              onClear={() => {
+                actionParams.push("search", null)
+              }}
               sx={{ flexGrow: 1 }}
               size="small"
               label="Поиск"

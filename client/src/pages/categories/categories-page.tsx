@@ -5,14 +5,20 @@ import {
 } from "react-hook-form"
 import { Input } from "shared/ui/input"
 import { BackButton } from "shared/ui/back-button"
-import React, { ReactNode } from "react"
+import React, { ReactNode, useState } from "react"
 import { IconButton } from "shared/ui/icon-button"
-import { alpha, Badge, MenuItem } from "@mui/material"
+import {
+  alpha, Badge, MenuItem, Pagination,
+} from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
 import { ActionButton } from "shared/ui/action-button"
 import { Backdrop } from "shared/ui/backdrop"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
+import { MIKU } from "shared/config/constants"
+import { Position } from "shared/ui/position-counter"
+import { DialogCreate } from "features/categories/create"
+import { dispatch } from "shared/lib/event"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -26,6 +32,7 @@ export const SearchInput = () => {
           {...field}
           sx={{ width: 1 }}
           label="Поиск"
+          size="small"
           InputProps={{
             fullWidth: true,
           }}
@@ -44,7 +51,7 @@ const CategoryHeader = (props: CategoryHeaderProps) => {
 
   const methods = useForm({
     defaultValues: {
-      search: { value: "qew" },
+      search: { value: "" },
     },
   })
 
@@ -71,6 +78,9 @@ export const CreateButton = () => (
     name="add"
     color="success"
     fontSize={20}
+    onClick={() => {
+      dispatch("dialog.catalog.create" as any)
+    }}
   />
 )
 
@@ -88,7 +98,7 @@ export const CategoryItem = () => (
         borderBottomLeftRadius: 4,
         borderBottomRightRadius: 4,
       },
-      "&:first-child": {
+      "&:first-of-type": {
         borderTopLeftRadius: 4,
         borderTopRightRadius: 4,
       },
@@ -96,7 +106,7 @@ export const CategoryItem = () => (
   >
     <Text caption="Экзотические фрукты" />
     <Box row flex ai>
-      <TooltipImageView />
+      <TooltipImageView images={MIKU} />
       <Vertical />
       <Badge
         badgeContent={9}
@@ -112,9 +122,7 @@ export const CategoryItem = () => (
         <IconButton name="goods" fontSize={20} />
       </Badge>
       <Vertical />
-      <Box sx={{ mx: 0.25 }}>
-        26
-      </Box>
+      <Position count={17345} />
       <Vertical />
       <IconButton name="stopList" fontSize={20} />
       <Vertical />
@@ -130,13 +138,25 @@ const CategoriesPage = () => (
   <>
     <Table
       header={<CategoryHeader createButton={<CreateButton />} />}
-      bottom={<div>bottom</div>}
+      bottom={(
+        <Box sx={{ mr: 0, ml: "auto" }}>
+          <Pagination
+            count={3}
+            variant="outlined"
+            shape="rounded"
+            onChange={(event, page) => {
+              console.log(page)
+            }}
+          />
+        </Box>
+      )}
       content={new Array(20).fill(1).map((_, index) => index).map((id) => (
         <CategoryItem
           key={id}
         />
       ))}
     />
+    <DialogCreate />
     <Backdrop />
   </>
 )

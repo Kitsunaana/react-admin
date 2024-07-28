@@ -70,6 +70,7 @@
     "react-hook-form": "^7.52.1",
     "react-i18next": "^14.1.2",
     "react-redux": "^9.1.2",
+    "styled-components": "^6.1.12",
     "typescript-eslint": "^7.17.0",
     "zod": "^3.23.8"
   }
