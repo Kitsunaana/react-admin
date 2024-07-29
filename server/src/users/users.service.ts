@@ -6,6 +6,7 @@ import { User } from '../entities/user.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { RolesService } from '../roles/roles.service';
 import { Role } from '../entities/role.entity';
+import { BanUserDto } from './dto/ban-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -45,6 +46,23 @@ export class UsersService {
       const role = await this.rolesRepository.findOneOrFail({ where: { id: dto.roleId } });
 
       return this.usersRepository.save({ ...user, roles: [...user.roles, role] });
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        throw new HttpException({ name: 'notFoundEntity' }, HttpStatus.NOT_FOUND);
+      }
+
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async ban(dto: BanUserDto) {
+    try {
+      const user = await this.usersRepository.findOneByOrFail({ id: dto.userId });
+
+      user.banned = true;
+      user.banReason = dto.banReason;
+
+      return await this.usersRepository.save(user);
     } catch (error) {
       if (error instanceof EntityNotFoundError) {
         throw new HttpException({ name: 'notFoundEntity' }, HttpStatus.NOT_FOUND);
