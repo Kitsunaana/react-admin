@@ -10,29 +10,29 @@ import { AddRoleDto } from './dto/add-role.dto';
 @ApiTags('Пользователи')
 @Controller('users')
 export class UsersController {
-  // constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Создание пользователя' })
   @Post()
   create(@Body() userDto: CreateUserDto) {
-    // return this.usersService.createUser(userDto);
+    return this.usersService.createUser(userDto);
   }
 
   @ApiOperation({ summary: 'Получение списка всех пользователей' })
-  // @UseGuards(JwtAuthGuard)
-  // @Roles('admin')
-  // @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  @Roles('admin')
+  @UseGuards(RolesGuard)
   @Get()
   getAll() {
-    // return this.usersService.getAllUsers();
+    return this.usersService.getAllUsers();
   }
 
   @ApiOperation({ summary: 'Выдать роль' })
   @ApiResponse({ status: 200 })
-  // @Roles('admin')
-  // @UseGuards(RolesGuard)
+  @Roles('admin')
+  @UseGuards(RolesGuard)
   @Get('/role')
   addRole(@Body() dto: AddRoleDto) {
-    // return this.usersService.addRole(dto);
+    return this.usersService.addRole(dto);
   }
 }

@@ -8,7 +8,6 @@ export class RolesController {
 
   @Post()
   create(@Body() dto: CreateRoleDto) {
-    console.log(dto);
     return this.roleService.createRole(dto);
   }
 

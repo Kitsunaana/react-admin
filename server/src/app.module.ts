@@ -4,9 +4,17 @@ import { ConfigModule } from '@nestjs/config';
 import * as process from 'process';
 import { TypeormModule } from './typeorm/typeorm.module';
 import { DataSource } from 'typeorm';
+import { RolesModule } from './roles/roles.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TypeormModule, ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env` }), UsersModule],
+  imports: [
+    TypeormModule,
+    ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env` }),
+    UsersModule,
+    RolesModule,
+    AuthModule,
+  ],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

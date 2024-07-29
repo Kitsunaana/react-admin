@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Role } from '../entities/role.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RolesService {
-  // constructor(private db: DbService) {}
+  constructor(@InjectRepository(Role) private roleRepository: Repository<Role>) {}
 
   createRole(dto: CreateRoleDto) {
-    // return this.db.role.create({ data: dto });
+    return this.roleRepository.save(dto);
   }
 
   getRoleByValue(value: string) {
-    // return this.db.role.findFirst({ where: { value } });
+    return this.roleRepository.findOne({ where: { name: value } });
   }
 }
