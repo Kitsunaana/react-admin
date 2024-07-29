@@ -14,7 +14,7 @@ import { User } from '@prisma/client';
 export class AuthService {
   constructor(
     private userService: UsersService,
-    private jwt: JwtService,
+    private jwtService: JwtService,
   ) {}
 
   async login(userDto: CreateUserDto) {
@@ -44,7 +44,7 @@ export class AuthService {
 
   private async generateToken(user: User) {
     return {
-      token: this.jwt.sign(user),
+      token: this.jwtService.sign(user),
     };
   }
 
