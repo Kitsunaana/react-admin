@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from './roles-auth.decorator';
-import { Role } from '@prisma/client';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -43,9 +42,7 @@ export class RolesGuard implements CanActivate {
       const user = this.jwtService.verify(token);
       request.user = user;
 
-      return user.roles.some((role: { Role: Role }) =>
-        requiredRoles.includes(role.Role.value),
-      );
+      return user.roles.some((role) => requiredRoles.includes(role.Role.value));
     } catch (error) {
       throw new HttpException('Нет доступа', HttpStatus.FORBIDDEN);
     }

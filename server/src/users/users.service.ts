@@ -1,18 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { DbService } from '../db/db.service';
-import { RolesService } from '../roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private db: DbService,
-    private roleService: RolesService,
-  ) {}
+  constructor() {}
 
   async createUser(dto: CreateUserDto) {
-    const role = await this.roleService.getRoleByValue('admin');
+    /* const role = await this.roleService.getRoleByValue('admin');
     const user = await this.db.user.create({
       data: {
         ...dto,
@@ -31,24 +26,24 @@ export class UsersService {
       },
     });
 
-    return user;
+    return user;*/
   }
 
   getAllUsers() {
-    return this.db.user.findMany({
+    /*return this.db.user.findMany({
       include: { roles: { include: { Role: true } } },
-    });
+    });*/
   }
 
   getUserByEmail(email: string) {
-    return this.db.user.findFirst({
+    /*return this.db.user.findFirst({
       where: { email },
       include: { roles: { include: { Role: true } } },
-    });
+    });*/
   }
 
   async addRole(dto: AddRoleDto) {
-    return this.db.user.update({
+    /*return this.db.user.update({
       where: { id: dto.userId },
       data: {
         roles: {
@@ -57,6 +52,6 @@ export class UsersService {
           },
         },
       },
-    });
+    });*/
   }
 }
