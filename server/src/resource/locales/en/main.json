@@ -1,0 +1,35 @@
+{
+  "main": {},
+  "sidebar": {
+    "catalog": "Catalog",
+    "goods": "Goods",
+    "additions": "Additions",
+    "users": "Users",
+    "settings": "Settings",
+    "stop-list": "Stop-list",
+    "pricing": "Pricing",
+    "price-list": "Price list",
+    "promo-code": "Promo code",
+    "order": "Order",
+    "new-order": "New order",
+    "clients": "Clients",
+    "analysis": "Analysis",
+    "chat": "Chat",
+    "favorite": "Favorite",
+    "expand-routes": "Expand routes",
+    "collapse-routes": "Collapse routes",
+    "not-available": "Available only when switching from another mode"
+  },
+  "settings": {
+    "change-language": "Choose language",
+    "change-theme": "Color theme",
+    "themes": {
+      "dark": "Dark",
+      "light": "Light",
+      "system": "System"
+    },
+    "icons": "Icon settings",
+    "icon-thickness": "Icon thickness",
+    "fill-icons": "Filling icons"
+  }
+}

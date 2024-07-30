@@ -19,6 +19,7 @@ const options = (): DataSourceOptions => {
     entities: [join(process.cwd(), 'dist', 'entities', '**', '*.entity.{ts,js}')],
     migrations: [join(process.cwd(), 'migrations', 'js', '*migration.js')],
     migrationsRun: true,
+    synchronize: true,
     migrationsTableName: 'migrations',
   };
 };

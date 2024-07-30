@@ -44,6 +44,7 @@ export const TooltipImageView = (props: TooltipImageViewProps) => {
           "& .MuiBadge-badge": {
             px: 0.25,
             top: -1,
+            zIndex: 0,
           },
         }}
       >

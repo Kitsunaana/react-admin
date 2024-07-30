@@ -7,6 +7,11 @@ import { addEvent } from "shared/lib/event"
 import { Dialog as BaseDialog } from "shared/ui/dialog"
 import { DialogHeader } from "shared/ui/dialog-header"
 import Button from "@mui/material/Button"
+import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
+import { z } from "zod"
+import { queryClient } from "app/providers/query-client"
+import { useCreateCategory } from "features/categories/create/model/use-create-category"
 import { DialogContent } from "./dialog-content"
 import { TabsContainer } from "./tabs-container"
 
@@ -17,7 +22,6 @@ export interface Option {
 }
 
 interface UseFormProps {
-  category: Option;
   caption: Option;
   description: string;
 }
@@ -33,9 +37,11 @@ const tabs = [
 ]
 
 export const DialogCreate = () => {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [fullScreen, setFullScreen] = useState(false)
   const [tab, setTab] = useState<number>(0)
+
+  const { createCategory } = useCreateCategory()
 
   useEffect(() => addEvent("dialog.catalog.create" as any, () => {
     setOpen(true)
@@ -51,6 +57,17 @@ export const DialogCreate = () => {
       description: "",
     },
   })
+
+  const handleSubmit = () => {
+    methods.handleSubmit((data) => {
+      createCategory({
+        caption: data.caption.value as string,
+        description: data.description,
+      })
+    })()
+    methods.reset()
+    setOpen(false)
+  }
 
   const memoizedDialogHeader = useMemo(
     () => (
@@ -77,7 +94,7 @@ export const DialogCreate = () => {
       <>
         <Button
           disabled={!methods.formState.isValid}
-          onClick={() => setOpen(false)}
+          onClick={handleSubmit}
           color="primary"
           variant="outlined"
         >

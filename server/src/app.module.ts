@@ -6,6 +6,9 @@ import { TypeormModule } from './typeorm/typeorm.module';
 import { DataSource } from 'typeorm';
 import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
+import { FilesModule } from './files/files.module';
+import { CategoriesModule } from './categories/categories.module';
+import { LocalesModule } from './locales/locales.module';
 
 @Module({
   imports: [
@@ -14,6 +17,9 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     RolesModule,
     AuthModule,
+    FilesModule,
+    CategoriesModule,
+    LocalesModule,
   ],
 })
 export class AppModule {

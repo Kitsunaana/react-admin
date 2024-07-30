@@ -53,6 +53,7 @@ const options = (): DataSourceOptions => {
     entities: ENTITIES,
     migrationsRun: true,
     migrationsTableName: 'migrations',
+    synchronize: true,
   };
 };
 

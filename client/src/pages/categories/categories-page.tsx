@@ -19,6 +19,13 @@ import { MIKU } from "shared/config/constants"
 import { Position } from "shared/ui/position-counter"
 import { DialogCreate } from "features/categories/create"
 import { dispatch } from "shared/lib/event"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import { z } from "zod"
+import { useCategories } from "features/categories/create/model/use-categories"
+import { categoriesSchema, categorySchema } from "features/categories/create/model/schemas"
+import { CategoryItem } from "entities/category/ui/category-row"
+import { CreateButton } from "shared/ui/create-button"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -73,92 +80,45 @@ const CategoryHeader = (props: CategoryHeaderProps) => {
   )
 }
 
-export const CreateButton = () => (
-  <IconButton
-    name="add"
-    color="success"
-    fontSize={20}
-    onClick={() => {
-      dispatch("dialog.catalog.create" as any)
-    }}
-  />
-)
+const CategoriesPage = () => {
+  const { data: categoriesData, isSuccess, isLoading } = useCategories()
 
-export const CategoryItem = () => (
-  <Box
-    flex
-    ai
-    row
-    jc_sp
-    sx={{
-      px: 1,
-      height: 48,
-      border: ({ palette }) => `1px solid ${alpha(palette.grey["600"], 0.75)}`,
-      "&:last-child": {
-        borderBottomLeftRadius: 4,
-        borderBottomRightRadius: 4,
-      },
-      "&:first-of-type": {
-        borderTopLeftRadius: 4,
-        borderTopRightRadius: 4,
-      },
-    }}
-  >
-    <Text caption="Экзотические фрукты" />
-    <Box row flex ai>
-      <TooltipImageView images={MIKU} />
-      <Vertical />
-      <Badge
-        badgeContent={9}
-        color="warning"
-        sx={{
-          "& .MuiBadge-badge": {
-            px: 0.25,
-            top: 3,
-            right: 3,
-          },
-        }}
-      >
-        <IconButton name="goods" fontSize={20} />
-      </Badge>
-      <Vertical />
-      <Position count={17345} />
-      <Vertical />
-      <IconButton name="stopList" fontSize={20} />
-      <Vertical />
-      <ActionButton renderActions={(onClose) => (
-        <MenuItem onClick={onClose}>123</MenuItem>
-      )}
+  const renderContent = () => {
+    const { data, success } = categoriesSchema.safeParse(categoriesData)
+
+    if (!(isSuccess && success)) return <div />
+
+    return data.map((category: z.infer<typeof categorySchema>) => (
+      <CategoryItem
+        key={category.id}
+        caption={category.caption}
+        id={category.id}
       />
-    </Box>
-  </Box>
-)
+    ))
+  }
 
-const CategoriesPage = () => (
-  <>
-    <Table
-      header={<CategoryHeader createButton={<CreateButton />} />}
-      bottom={(
-        <Box sx={{ mr: 0, ml: "auto" }}>
-          <Pagination
-            count={3}
-            variant="outlined"
-            shape="rounded"
-            onChange={(event, page) => {
-              console.log(page)
-            }}
-          />
-        </Box>
-      )}
-      content={new Array(20).fill(1).map((_, index) => index).map((id) => (
-        <CategoryItem
-          key={id}
-        />
-      ))}
-    />
-    <DialogCreate />
-    <Backdrop />
-  </>
-)
+  return (
+    <>
+      <Table
+        header={<CategoryHeader createButton={<CreateButton actionName="dialog.catalog.create" />} />}
+        bottom={(
+          <Box sx={{ mr: 0, ml: "auto" }}>
+            <Pagination
+              count={3}
+              variant="outlined"
+              shape="rounded"
+              onChange={(event, page) => {
+                console.log(page)
+              }}
+            />
+          </Box>
+        )}
+        content={renderContent()}
+      />
+      <DialogCreate />
+      <Backdrop />
+    </>
+  )
+}
 
 export default CategoriesPage

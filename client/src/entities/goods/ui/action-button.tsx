@@ -103,7 +103,6 @@ export const ActionButton = () => {
 
     dispatch("backdrop", { isActive: open })
 
-    console.log(document.body.offsetHeight, event.clientY)
     if (event.clientY + 250 >= document.body.offsetHeight) {
       setPosition({ transformOrigin: "bottom", anchorOrigin: "top" })
     }

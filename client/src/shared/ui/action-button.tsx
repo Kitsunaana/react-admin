@@ -6,6 +6,7 @@ import { IconButton, Menu, MenuItem } from "@mui/material"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import { Divider } from "shared/ui/divider"
+import { Mark } from "shared/ui/mark"
 
 const menu = [
   { id: 0, type: "divider" },
@@ -26,10 +27,11 @@ const menu = [
 
 interface ActionButtonProps {
   renderActions?: (onClose: (event: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLLIElement>) => void) => ReactNode
+  id: number
 }
 
 export const ActionButton = (props: ActionButtonProps) => {
-  const { renderActions } = props
+  const { renderActions, id } = props
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -64,7 +66,7 @@ export const ActionButton = (props: ActionButtonProps) => {
       <Menu
         sx={{
           "& .MuiList-root": {
-            mx: 1,
+            mx: 0,
           },
         }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
@@ -74,6 +76,15 @@ export const ActionButton = (props: ActionButtonProps) => {
         onClose={handleClose}
       >
         {renderActions?.(handleClose)}
+        <Text
+          sx={{ fontSize: 12, textAlign: "center" }}
+          caption={(
+            <>
+              ID
+              <Mark style={{ marginLeft: 4 }}>{id}</Mark>
+            </>
+          )}
+        />
       </Menu>
     </div>
   )

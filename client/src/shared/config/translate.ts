@@ -12,7 +12,7 @@ const detectionOptions = {
 }
 
 const backendOptions = {
-  loadPath: "http://localhost:3000/api/locales/{{lng}}",
+  loadPath: "http://localhost:3333/api/locales/{{lng}}",
 
   customHeaders: {
     "Access-Control-Allow-Origin": "*",

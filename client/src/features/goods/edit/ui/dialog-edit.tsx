@@ -38,8 +38,6 @@ export const DialogEdit = () => {
 
   useEffect(() => addEvent("dialog.goods.edit" as any, (data: { id: number }) => {
     setOpen(true)
-
-    console.log(data)
   }), [])
 
   const handleChange = useCallback(
