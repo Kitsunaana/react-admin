@@ -25,7 +25,7 @@ module.exports = {
     indent: 2,
     quotes: ["error", "double"],
     semi: ["error", "never"],
-    "max-len": ["error", { code: 100, ignorePattern: "^\\s*\\{" }],
+    "max-len": ["error", { code: 110, ignorePattern: "^\\s*\\{" }],
     "react/jsx-filename-extension": [2, { extensions: [".js", ".jsx", ".tsx"] }],
     "import/no-unresolved": "off",
     "import/prefer-default-export": "off",

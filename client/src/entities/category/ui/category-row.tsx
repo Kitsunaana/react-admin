@@ -9,7 +9,9 @@ import { Divider, Vertical } from "shared/ui/divider"
 import { IconButton } from "shared/ui/icon-button"
 import { Position } from "shared/ui/position-counter"
 import { ActionButton } from "shared/ui/action-button"
-import React, { memo, useCallback } from "react"
+import React, {
+  memo, useCallback, useRef, useState,
+} from "react"
 import { Icon } from "shared/ui/icon"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
@@ -17,6 +19,7 @@ import { $axios } from "shared/config/axios"
 import { queryClient } from "app/providers/query-client"
 import { z } from "zod"
 import { categoriesSchema, categorySchema } from "features/categories/create/model/schemas"
+import { useContextMenu } from "shared/hooks/use-context-menu"
 
 interface CategoryItemProps {
   caption: string
@@ -123,13 +126,13 @@ const menu = [
 export const CategoryItem = memo((props: CategoryItemProps) => {
   const { caption, id } = props
 
+  const [menuItems, setMenuItems] = useState([])
+  const menu = useContextMenu(menuItems)
+  // console.log(menu)
+
   return (
     <Box
-      onContextMenu={(event) => {
-        event.preventDefault()
-
-        console.log({ x: event.pageX, y: event.pageY })
-      }}
+      onContextMenu={menu.open as any}
       flex
       ai
       row
@@ -148,6 +151,26 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
         },
       }}
     >
+      {menu.isOpen && (
+        <div
+          style={{
+            zIndex: 10,
+            position: "absolute",
+            backgroundColor: "red",
+            padding: 8,
+            display: "flex",
+            flexDirection: "column",
+          }}
+          ref={menu.ref}
+        >
+          <div>hellohellohellohello</div>
+          <div>hellohellohellohello</div>
+          <div>hellohellohellohello</div>
+          <div>hellohellohellohello</div>
+          <div>hellohellohellohello</div>
+          <div>hellohellohellohello</div>
+        </div>
+      )}
       <Text caption={caption} />
       <Box row flex ai>
         <TooltipImageView images={MIKU} />
@@ -171,9 +194,10 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
         <Vertical />
         <IconButton name="stopList" fontSize={20} />
         <Vertical />
-        <ActionButton
+        <IconButton name="stopList" fontSize={20} onClick={menu.open as any} />
+        {/* <ActionButton
           id={id}
-          /* renderActions={(onClose) => menu.map((action) => {
+          renderActions={(onClose) => menu.map((action) => {
             if (action.type === "divider") return <Divider sx={{ py: 0 }} />
 
             return (
@@ -185,14 +209,14 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
                 variantText={action.variantText as VariantTheme}
               />
             )
-          })} */
+          })}
           renderActions={(onClose) => (
             <Box>
               <DeleteAction id={id} />
               <Divider sx={{ py: 0 }} />
             </Box>
           )}
-        />
+        /> */}
       </Box>
     </Box>
   )
