@@ -12,9 +12,11 @@ const Theme = (props) => {
   const theme = useMemo(() => {
     const calcMode = mode === "system" ? (prefersDarkMode ? "dark" : "light") : mode
 
-    const defTheme = createTheme({
+    const { palette } = createTheme({
       palette: { mode: calcMode as PaletteMode },
     })
+
+    const { primary, warning } = palette
 
     return createTheme({
       background: {
@@ -22,27 +24,16 @@ const Theme = (props) => {
           ? "linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16))"
           : "#fff",
         gradient: {
-          primary: `linear-gradient(180deg, ${alpha(defTheme.palette.primary.main, 0.1)} 20%, ${alpha("#000", 0)} 100%)`,
-          warning: `linear-gradient(180deg, ${alpha(defTheme.palette.warning.main, 0.1)} 20%, ${alpha("#000", 0)} 100%)`,
+          primary: `linear-gradient(180deg, ${alpha(primary.main, 0.1)} 20%, ${alpha("#000", 0)} 100%)`,
+          warning: `linear-gradient(180deg, ${alpha(warning.main, 0.1)} 20%, ${alpha("#000", 0)} 100%)`,
         },
         hatch: {
-          warning: `linear-gradient(315deg, #0000 48%, ${
-            alpha(defTheme.palette.warning.main, 0.35)} 50%, #0000 52%)`,
+          warning: `linear-gradient(315deg, #0000 48%, ${alpha(warning.main, 0.35)} 50%, #0000 52%)`,
+          primary: `linear-gradient(315deg, #0000 48%, ${alpha(primary.main, 0.35)} 50%, #0000 52%)`,
         },
       },
       palette: {
         mode: calcMode as PaletteMode,
-        background: {
-          /* sectionBackground: theme === "dark"
-            ? "linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16))"
-            : "#fff", */
-          /* strong: theme === "dark"
-            ? "rgba(255, 255, 255, 0.3)"
-            : "rgba(0, 0, 0, 0.26)",
-          gradient: {
-            primary: `linear-gradient(180deg, ${defTheme.palette.primary.main} 0%, ${defTheme.palette.primary.light} 100%)`,
-          }, */
-        },
       },
       typography: {
         fontFamily: "'Nunito Sans', sans-serif",

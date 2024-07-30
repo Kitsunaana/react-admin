@@ -3,12 +3,12 @@ import { useContextMenuPosition } from "shared/hooks/use-context-menu-position"
 import { useClickAway } from "shared/hooks/use-click-away"
 import { useEvent } from "shared/hooks/use-event"
 
-export const useContextMenu = (items) => {
+export const useContextMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
   const ref = useRef<HTMLDivElement | null>(null)
   const move = useContextMenuPosition(ref, isOpen)
 
-  const open = (event: MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const open = (event: MouseEvent) => {
     event.preventDefault()
 
     move(event.clientX, event.clientY)
@@ -33,6 +33,5 @@ export const useContextMenu = (items) => {
     open,
     close,
     isOpen,
-    items,
   }
 }

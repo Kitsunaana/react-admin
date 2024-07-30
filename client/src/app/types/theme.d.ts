@@ -10,6 +10,7 @@ declare module "@mui/material/styles" {
       }
       hatch: {
         warning: string
+        primary: string
       }
     }
   }
@@ -23,6 +24,7 @@ declare module "@mui/material/styles" {
       }
       hatch?: {
         warning?: string
+        primary?: string
       }
     }
   }

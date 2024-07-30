@@ -1,7 +1,7 @@
 import {
   Box as MUIBox, BoxProps as MUIBoxProps, Tooltip, TooltipProps,
 } from "@mui/material"
-import { CSSProperties } from "react"
+import { CSSProperties, forwardRef } from "react"
 import { StandardLonghandProperties } from "csstype"
 
 export interface BoxProps extends Omit<MUIBoxProps, "gap" | "flex"> {
@@ -18,7 +18,7 @@ export interface BoxProps extends Omit<MUIBoxProps, "gap" | "flex"> {
   help?: TooltipProps,
 }
 
-export const Box = (props: BoxProps) => {
+export const Box = forwardRef((props: BoxProps, ref) => {
   const {
     flex, grid, ai, jc, jc_sp, center, row, gap, grow, strong, help, sx, ...other
   } = props
@@ -70,11 +70,11 @@ export const Box = (props: BoxProps) => {
     newSx.cursor = "pointer"
   }
 
-  const renderBox = <MUIBox sx={{ ...newSx, ...sx }} {...other} />
+  const renderBox = <MUIBox ref={ref} sx={{ ...newSx, ...sx }} {...other} />
 
   if (help) {
     return <Tooltip {...help}>{renderBox}</Tooltip>
   }
 
   return renderBox
-}
+})
