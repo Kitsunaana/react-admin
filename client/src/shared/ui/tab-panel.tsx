@@ -22,7 +22,7 @@ export const TabPanel = (props: TabPanelProps) => {
       hidden={value !== index}
       {...other}
     >
-      {value === index && (children)}
+      {children}
     </div>
   )
 }

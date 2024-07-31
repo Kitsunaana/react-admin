@@ -7,10 +7,6 @@ import { addEvent } from "shared/lib/event"
 import { Dialog as BaseDialog } from "shared/ui/dialog"
 import { DialogHeader } from "shared/ui/dialog-header"
 import Button from "@mui/material/Button"
-import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
-import { z } from "zod"
-import { queryClient } from "app/providers/query-client"
 import { useCreateCategory } from "features/categories/create/model/use-create-category"
 import { DialogContent } from "./dialog-content"
 import { TabsContainer } from "./tabs-container"
@@ -21,9 +17,16 @@ export interface Option {
   tab?: number;
 }
 
-interface UseFormProps {
+export interface UseFormProps {
   caption: Option;
   description: string;
+  images: {
+    caption: string,
+    data: File,
+    type: string,
+    id: string,
+    deleted?: boolean
+  }[]
 }
 
 const tabs = [
@@ -37,11 +40,18 @@ const tabs = [
 ]
 
 export const DialogCreate = () => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   const [fullScreen, setFullScreen] = useState(false)
-  const [tab, setTab] = useState<number>(0)
+  const [tab, setTab] = useState<number>(1)
 
   const { createCategory } = useCreateCategory()
+
+  const methods = useForm<UseFormProps>({
+    defaultValues: {
+      caption: { value: "", tab: 0 },
+      description: "",
+    },
+  })
 
   useEffect(() => addEvent("dialog.catalog.create" as any, () => {
     setOpen(true)
@@ -51,19 +61,13 @@ export const DialogCreate = () => {
     setTab(newValue)
   }, [])
 
-  const methods = useForm<UseFormProps>({
-    defaultValues: {
-      caption: { value: "", tab: 0 },
-      description: "",
-    },
-  })
-
   const handleSubmit = () => {
     methods.handleSubmit((data) => {
       createCategory({
         caption: data.caption.value as string,
         description: data.description,
-      })
+        images: data.images,
+      } as any)
     })()
     methods.reset()
     setOpen(false)
@@ -118,7 +122,7 @@ export const DialogCreate = () => {
         fullScreen={fullScreen}
         open={open}
         header={memoizedDialogHeader}
-        tabs={memoizedTabs}
+        tabs={<TabsContainer tabs={tabs} tab={tab} onChange={handleChange} />}
         content={memoizedDialogContent}
         actions={memoizedDialogActions}
       />

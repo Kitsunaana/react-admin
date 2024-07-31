@@ -1,5 +1,5 @@
 import { Icon } from "shared/ui/icon"
-import React from "react"
+import React, { memo } from "react"
 import {
   IconButton as MUIIconButton, IconButtonProps as MUIIconButtonProps, Theme,
 } from "@mui/material"
@@ -11,9 +11,8 @@ interface IconButtonProps extends MUIIconButtonProps {
   fontSize?: number
 }
 
-export const IconButton = (props: IconButtonProps) => {
+export const IconButton = memo((props: IconButtonProps) => {
   const {
-    // variant, sx, sxIcon, name, ...otherProps
     sx, name, sxIcon, fontSize, ...otherProps
   } = props
 
@@ -28,4 +27,4 @@ export const IconButton = (props: IconButtonProps) => {
       />
     </MUIIconButton>
   )
-}
+})

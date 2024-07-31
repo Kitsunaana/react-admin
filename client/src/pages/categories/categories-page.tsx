@@ -5,27 +5,18 @@ import {
 } from "react-hook-form"
 import { Input } from "shared/ui/input"
 import { BackButton } from "shared/ui/back-button"
-import React, { ReactNode, useState } from "react"
+import React, { ReactNode } from "react"
 import { IconButton } from "shared/ui/icon-button"
 import {
-  alpha, Badge, MenuItem, Pagination,
+  Pagination,
 } from "@mui/material"
-import { Text } from "shared/ui/text"
-import { Vertical } from "shared/ui/divider"
-import { ActionButton } from "shared/ui/action-button"
 import { Backdrop } from "shared/ui/backdrop"
-import { TooltipImageView } from "shared/ui/tooltip-image-view"
-import { MIKU } from "shared/config/constants"
-import { Position } from "shared/ui/position-counter"
 import { DialogCreate } from "features/categories/create"
-import { dispatch } from "shared/lib/event"
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
 import { z } from "zod"
 import { useCategories } from "features/categories/create/model/use-categories"
 import { categoriesSchema, categorySchema } from "features/categories/create/model/schemas"
-import { CategoryItem } from "entities/category/ui/category-row"
 import { CreateButton } from "shared/ui/create-button"
+import { CategoryRow } from "widgets/category-row/ui/category-row"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -89,7 +80,7 @@ const CategoriesPage = () => {
     if (!(isSuccess && success)) return <div />
 
     return data.map((category: z.infer<typeof categorySchema>) => (
-      <CategoryItem
+      <CategoryRow
         key={category.id}
         caption={category.caption}
         id={category.id}
@@ -100,7 +91,11 @@ const CategoriesPage = () => {
   return (
     <>
       <Table
-        header={<CategoryHeader createButton={<CreateButton actionName="dialog.catalog.create" />} />}
+        header={(
+          <CategoryHeader
+            createButton={<CreateButton actionName="dialog.catalog.create" />}
+          />
+        )}
         bottom={(
           <Box sx={{ mr: 0, ml: "auto" }}>
             <Pagination

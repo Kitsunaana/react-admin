@@ -1,9 +1,17 @@
 import { ContextMenuItem } from "shared/ui/context-menu-item"
-import React from "react"
+import React, { memo } from "react"
 
-export const GoodsCategoryLink = ({ id }: { id: number }) => (
-  <ContextMenuItem
-    caption="Товары категории"
-    icon="goods"
-  />
-)
+interface GoodsCategoryLinkProps {
+  id: number
+}
+
+export const GoodsCategoryLink = (props: GoodsCategoryLinkProps) => {
+  const { id } = props
+
+  return (
+    <ContextMenuItem
+      caption="Товары категории"
+      icon="goods"
+    />
+  )
+}

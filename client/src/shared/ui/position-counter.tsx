@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, memo, useState } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { IconButton } from "shared/ui/icon-button"
 import { SxProps, Theme } from "@mui/material"
@@ -46,7 +46,7 @@ interface PositionProps {
   sx?: SxProps<Theme>
 }
 
-export const Position = (props: PositionProps) => {
+export const Position = memo((props: PositionProps) => {
   const { count, sx } = props
 
   const [open, setOpen] = useState(false)
@@ -77,4 +77,4 @@ export const Position = (props: PositionProps) => {
 
     </Container>
   )
-}
+})

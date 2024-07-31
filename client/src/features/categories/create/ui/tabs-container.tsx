@@ -34,14 +34,12 @@ export const TabsContainer = memo((props: TabsProps) => {
   const { tab, onChange, tabs } = props
 
   const {
-    getValues, control, trigger,
+    getValues, control, handleSubmit,
   } = useFormContext<UseFormProps>()
 
-  useEffect(() => {
-    trigger()
-  }, [])
-
   const { errors } = useFormState({ control })
+
+  useEffect(() => { handleSubmit(() => {})() }, [])
 
   const tabWithErrors = useMemo(() => Object
     .keys(getValues())

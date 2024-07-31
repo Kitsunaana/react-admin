@@ -9,10 +9,14 @@ import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { CategoriesModule } from './categories/categories.module';
 import { LocalesModule } from './locales/locales.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     TypeormModule,
+    MulterModule.register({
+      dest: './uploads',
+    }),
     ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env` }),
     UsersModule,
     RolesModule,

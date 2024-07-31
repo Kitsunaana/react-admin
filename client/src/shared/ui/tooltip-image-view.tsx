@@ -1,13 +1,13 @@
 import { Badge, Tooltip } from "@mui/material"
 import { Icon } from "shared/ui/icon"
-import React from "react"
+import React, { memo } from "react"
 import { Box } from "shared/ui/box"
 
 interface TooltipImageViewProps {
   images: string[]
 }
 
-export const TooltipImageView = (props: TooltipImageViewProps) => {
+export const TooltipImageView = memo((props: TooltipImageViewProps) => {
   const { images } = props
 
   return (
@@ -66,4 +66,4 @@ export const TooltipImageView = (props: TooltipImageViewProps) => {
       </Badge>
     </Tooltip>
   )
-}
+})
