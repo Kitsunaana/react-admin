@@ -91,7 +91,6 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
         },
       }}
     >
-      {/* <Box theme={theme} isOpen={menu.isOpen}>  */}
       {menu.isOpen && (
       <ContextMenu
         ref={menu.ref}

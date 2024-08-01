@@ -4,7 +4,10 @@ import React, { memo } from "react"
 import { Box } from "shared/ui/box"
 
 interface TooltipImageViewProps {
-  images: string[]
+  images: {
+    id: number,
+    path: string
+  }[]
 }
 
 export const TooltipImageView = memo((props: TooltipImageViewProps) => {
@@ -22,10 +25,11 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
             gridTemplateColumns: "repeat(2, 1fr)",
           }}
         >
-          {images.map((image, index) => (
+          {images.map((image) => (
             <img
-              key={index}
-              src={image}
+              alt=""
+              key={image.id}
+              src={`http://localhost:3333/${image.path}`}
               style={{
                 width: 110,
                 height: 70,
@@ -48,7 +52,7 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
           },
         }}
       >
-        <div
+        <Box
           onClick={(event) => event.stopPropagation()}
           style={{
             display: "flex",
@@ -62,7 +66,7 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
             }}
             name="image"
           />
-        </div>
+        </Box>
       </Badge>
     </Tooltip>
   )

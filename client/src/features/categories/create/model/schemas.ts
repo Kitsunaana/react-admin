@@ -11,11 +11,17 @@ export const formSchema = z.object({
   })),
 })
 
+export const imageSchema = z.object({
+  id: z.number(),
+  path: z.string(),
+})
+
 export const categorySchema = z.object({
   id: z.number(),
   caption: z.string(),
   description: z.string().optional(),
   deletedAt: z.date().nullable(),
+  images: z.array(imageSchema),
 })
 
 export const categoriesSchema = z.array(categorySchema)

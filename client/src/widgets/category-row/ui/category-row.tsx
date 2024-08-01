@@ -12,10 +12,13 @@ import { IconButton } from "shared/ui/icon-button"
 import { Position } from "shared/ui/position-counter"
 import React, { memo, useMemo } from "react"
 import styled from "styled-components"
+import { z } from "zod"
+import { imageSchema } from "features/categories/create/model/schemas"
 
 interface CategoryRowProps {
   id: number
   caption: string
+  images: z.infer<typeof imageSchema>[]
 }
 
 const Badge = styled(MUIBadge)`
@@ -34,9 +37,7 @@ export const CategoryGoodsLinkAdditional = memo(() => (
 ))
 
 export const CategoryRow = (props: CategoryRowProps) => {
-  const { caption, id } = props
-
-  const images = useMemo(() => MIKU, [])
+  const { caption, id, images } = props
 
   const renderVertical = useMemo(() => <Vertical />, [])
 

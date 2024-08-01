@@ -5,6 +5,7 @@ import { Text } from "shared/ui/text"
 import * as React from "react"
 import { SxProps, Tab as MUITab, useTheme } from "@mui/material"
 import { TabProps as BaseTabProps } from "@mui/material/Tab/Tab"
+import { dispatch } from "shared/lib/event"
 
 interface TabLabelProps {
   icon: string
@@ -47,6 +48,7 @@ export const Tab = memo((props: TabProps) => {
 
   return (
     <MUITab
+      onClick={() => dispatch("dialog.catalog.changeTab" as any, { tab: id })}
       {...other}
       value={id}
       key={id}

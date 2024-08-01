@@ -9,14 +9,13 @@ import { useFormContext } from "react-hook-form"
 
 interface TabsProps {
   tab: number
-  onChange: (event: React.SyntheticEvent, newValue: number) => void
   hasError: boolean
   tabs: ReactNode
 }
 
 export const Tabs = memo((props: TabsProps) => {
   const {
-    tab, onChange, hasError, tabs,
+    tab, hasError, tabs,
   } = props
 
   const { palette } = useTheme()
@@ -24,7 +23,6 @@ export const Tabs = memo((props: TabsProps) => {
   return (
     <MUITabs
       value={tab}
-      onChange={onChange}
       variant="scrollable"
       scrollButtons="auto"
       TabIndicatorProps={{

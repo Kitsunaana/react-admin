@@ -1,7 +1,7 @@
 import { Typography, TypographyProps } from "@mui/material"
 import { Trans, TransProps, useTranslation } from "react-i18next"
 import { useLang } from "shared/context/Lang"
-import { ReactNode } from "react"
+import { memo, ReactNode } from "react"
 import { useAppSelector } from "shared/lib/hooks"
 import { RootState } from "app/providers/store"
 
@@ -16,7 +16,7 @@ interface TextProps extends TypographyProps {
   translateOptions?: TransProps<string>
 }
 
-export const Text = (props: TextProps) => {
+export const Text = memo((props: TextProps) => {
   const {
     name, caption, sx, values, value, langBase: langBaseProps, onlyText, translateOptions, ...other
   } = props
@@ -45,4 +45,4 @@ export const Text = (props: TextProps) => {
       {translate}
     </Typography>
   )
-}
+})

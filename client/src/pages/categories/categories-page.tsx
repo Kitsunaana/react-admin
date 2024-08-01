@@ -13,10 +13,12 @@ import {
 import { Backdrop } from "shared/ui/backdrop"
 import { DialogCreate } from "features/categories/create"
 import { z } from "zod"
-import { useCategories } from "features/categories/create/model/use-categories"
 import { categoriesSchema, categorySchema } from "features/categories/create/model/schemas"
 import { CreateButton } from "shared/ui/create-button"
 import { CategoryRow } from "widgets/category-row/ui/category-row"
+import { useCategories } from "features/categories/create/api/use-categories"
+import { dark } from "@mui/material/styles/createPalette"
+import { DialogEdit } from "features/categories/edit/ui/dialog-edit"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -84,6 +86,7 @@ const CategoriesPage = () => {
         key={category.id}
         caption={category.caption}
         id={category.id}
+        images={category.images}
       />
     ))
   }
@@ -111,6 +114,7 @@ const CategoriesPage = () => {
         content={renderContent()}
       />
       <DialogCreate />
+      <DialogEdit />
       <Backdrop />
     </>
   )

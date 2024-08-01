@@ -12,7 +12,6 @@ export const useCreateCategory = () => {
     mutationKey: ["categories"],
     mutationFn: (data: z.infer<typeof categorySchema>) => {
       const formData = createMultipart(data, ["images"])
-      formData.append("caption", data.caption)
 
       return $axios.post("/categories", formData, {
         headers: {

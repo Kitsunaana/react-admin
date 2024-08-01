@@ -1,7 +1,6 @@
 import {
   Controller, useFormContext,
 } from "react-hook-form"
-import { Select } from "shared/ui/select"
 import { Input } from "shared/ui/input"
 import * as React from "react"
 import { useTranslation } from "react-i18next"

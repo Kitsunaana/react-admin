@@ -4,6 +4,7 @@ import { Box } from "shared/ui/box"
 import MUIDialogContent from "@mui/material/DialogContent"
 import MUIDialogActions from "@mui/material/DialogActions"
 import * as React from "react"
+import { shallowEqual } from "shared/lib/utils"
 
 interface DialogLayoutProps {
   fullScreen: boolean

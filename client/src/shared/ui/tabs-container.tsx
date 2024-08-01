@@ -1,10 +1,11 @@
 import * as React from "react"
 import {
-  memo, useEffect, useMemo,
+  memo, useEffect, useMemo, useState,
 } from "react"
 import { Tabs } from "shared/ui/tabs"
 import { useFormContext, useFormState } from "react-hook-form"
 import { Tab } from "shared/ui/tab"
+import { addEvent } from "shared/lib/event"
 
 export interface ITab {
   id: number
@@ -26,12 +27,18 @@ interface UseFormProps {
 
 interface TabsProps {
   tab: number
-  onChange: (event: React.SyntheticEvent, newValue: number) => void
   tabs: ITab[]
+  requiredFields?: string[]
 }
 
 export const TabsContainer = memo((props: TabsProps) => {
-  const { tab, onChange, tabs } = props
+  const { tabs, tab: tabProps, requiredFields = [] } = props
+
+  const [tab, setTab] = useState(tabProps)
+
+  useEffect(() => addEvent("dialog.catalog.changeTab" as any, ({ tab }: { tab: number }) => {
+    setTab(tab)
+  }), [])
 
   const {
     getValues, control, handleSubmit,
@@ -41,10 +48,12 @@ export const TabsContainer = memo((props: TabsProps) => {
 
   useEffect(() => { handleSubmit(() => {})() }, [])
 
+  const requiredFieldsDeps = requiredFields.map((field) => errors[field])
+
   const tabWithErrors = useMemo(() => Object
     .keys(getValues())
     .filter((property) => errors[property])
-    .map((property) => getValues()[property]?.tab), [errors.caption, errors.category, getValues])
+    .map((property) => getValues()[property]?.tab), [...requiredFieldsDeps, getValues])
 
   const memoizedTabArray = useMemo(() => tabs.map((tab) => {
     const isError = tabWithErrors.includes(tab.id)
@@ -61,7 +70,6 @@ export const TabsContainer = memo((props: TabsProps) => {
   return (
     <Tabs
       tab={tab}
-      onChange={onChange}
       hasError={tabWithErrors.includes(tab)}
       tabs={memoizedTabArray}
     />

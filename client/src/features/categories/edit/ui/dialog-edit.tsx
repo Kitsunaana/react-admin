@@ -9,9 +9,9 @@ import { DialogHeader } from "shared/ui/dialog-header"
 import Button from "@mui/material/Button"
 import { Text } from "shared/ui/text"
 import { TabsContainer } from "shared/ui/tabs-container"
-import { useCreateCategory } from "../api/use-create-category"
+import { UseFormProps } from "features/categories/create/model/types"
+import { useCreateCategory } from "features/categories/create/api/use-create-category"
 import { DialogContent } from "./dialog-content"
-import { UseFormProps, Option } from "../model/types"
 
 const tabs = [
   { id: 0, caption: "Общие параметры", icon: "done" },
@@ -54,7 +54,7 @@ export const CancelCategoryButton = (props: { onClick: () => void }) => {
   )
 }
 
-export const DialogCreate = () => {
+export const DialogEdit = () => {
   const [open, setOpen] = useState(false)
   const [fullScreen, setFullScreen] = useState(false)
 
@@ -67,8 +67,9 @@ export const DialogCreate = () => {
     },
   })
 
-  useEffect(() => addEvent("dialog.catalog.create" as any, () => {
+  useEffect(() => addEvent("dialog.catalog.edit" as any, ({ id }: { id: number }) => {
     setOpen(true)
+    console.log(id)
   }), [])
 
   const handleSubmit = () => {
