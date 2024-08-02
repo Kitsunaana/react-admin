@@ -12,6 +12,7 @@ import { LocalesModule } from './locales/locales.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { SequelizeModule } from './sequelize/sequelize.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { join } from 'path';
     FilesModule,
     CategoriesModule,
     LocalesModule,
+    SequelizeModule,
   ],
 })
 export class AppModule {

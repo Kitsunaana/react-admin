@@ -10,6 +10,7 @@ import {
   Injectable,
   NestMiddleware,
   Param,
+  Patch,
   Post,
   UploadedFile,
   UploadedFiles,
@@ -19,6 +20,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -47,6 +49,16 @@ export class CategoriesController {
   @Get()
   getAll() {
     return this.categoryService.getAll();
+  }
+
+  @Get('/:id')
+  getById(@Param('id') id: number) {
+    return this.categoryService.getById(id);
+  }
+
+  @Patch('/:id')
+  update(@Param('id') id: number, @Body() dto: UpdateCategoryDto) {
+    return this.categoryService.update(id, dto);
   }
 
   @Delete('/:id')
