@@ -11,10 +11,9 @@ import { useFormContext } from "react-hook-form"
 import {
   InputProps,
 } from "@mui/material"
-import { Image } from "features/categories/create/ui/image"
 import { addEvent } from "shared/lib/event"
-import { UseFormProps } from "features/categories/create/model/types"
-import { CaptionInput } from "./parameters"
+import { CaptionInput } from "features/categories/create-and-edit/dialog"
+import { Image } from "features/categories/create-and-edit/image"
 
 const uuid = () => "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, () => {
   const random = (Math.random() * 16) | 0
@@ -123,7 +122,7 @@ export const DialogContent = memo((props: DialogContentProps) => {
 
   const {
     setValue, watch,
-  } = useFormContext<UseFormProps>()
+  } = useFormContext()
 
   const watchImages = watch("images")
 

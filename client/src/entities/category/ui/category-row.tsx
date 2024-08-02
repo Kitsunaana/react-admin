@@ -1,13 +1,10 @@
 import { Box, BoxProps } from "shared/ui/box"
 import {
-  alpha, Badge, Theme, useTheme,
+  alpha, Theme,
 } from "@mui/material"
 import { Text } from "shared/ui/text"
-import { TooltipImageView } from "shared/ui/tooltip-image-view"
-import { MIKU } from "shared/config/constants"
-import { Divider, Vertical } from "shared/ui/divider"
+import { Vertical } from "shared/ui/divider"
 import { IconButton } from "shared/ui/icon-button"
-import { Position } from "shared/ui/position-counter"
 import React, {
   memo, ReactNode, useMemo,
 } from "react"
@@ -19,7 +16,7 @@ import { dispatch } from "shared/lib/event"
 interface CategoryItemProps {
   caption: string
   id: number
-  renderMenuActions: (id: number) => ReactNode
+  renderMenuActions: (id: number, close: () => void) => ReactNode
   renderAdditionalActions: ReactNode
 }
 
@@ -61,13 +58,11 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
 
   const renderCaption = useMemo(() => <Text caption={caption} />, [caption])
 
-  const theme = useTheme()
-
   return (
     <Box
       onContextMenu={menu.open}
       onDoubleClick={() => {
-        dispatch("dialog.catalog.edit" as any)
+        dispatch("catalog.dialog.edit" as any, { id })
       }}
       flex
       ai
@@ -92,11 +87,11 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
       }}
     >
       {menu.isOpen && (
-      <ContextMenu
-        ref={menu.ref}
-        id={id}
-        actionsList={renderMenuActions(id)}
-      />
+        <ContextMenu
+          ref={menu.ref}
+          id={id}
+          actionsList={renderMenuActions(id, menu.close)}
+        />
       )}
       {renderCaption}
       <Box row flex ai>

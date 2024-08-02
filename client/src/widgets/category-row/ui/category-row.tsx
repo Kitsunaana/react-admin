@@ -1,19 +1,18 @@
 import { CategoryItem } from "entities/category/ui/category-row"
-import { EditButton } from "features/categories/edit"
 import { Divider, Vertical } from "shared/ui/divider"
 import { GoodsCategoryLink } from "features/categories/goods-category-link"
 import { AdditionalCategoryLink } from "features/categories/additional-category-link"
 import { StopListButton } from "features/categories/add-stop-list"
-import { DeleteButton } from "features/categories/delete"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
-import { MIKU } from "shared/config/constants"
 import { Badge as MUIBadge } from "@mui/material"
 import { IconButton } from "shared/ui/icon-button"
 import { Position } from "shared/ui/position-counter"
 import React, { memo, useMemo } from "react"
 import styled from "styled-components"
 import { z } from "zod"
-import { imageSchema } from "features/categories/create/model/schemas"
+import { DeleteButton } from "features/categories/delete/delete"
+import { EditButton } from "features/categories/create-and-edit/ui/edit-button"
+import { imageSchema } from "features/categories/create-and-edit/model/schemas"
 
 interface CategoryRowProps {
   id: number
@@ -45,9 +44,9 @@ export const CategoryRow = (props: CategoryRowProps) => {
     <CategoryItem
       id={id}
       caption={caption}
-      renderMenuActions={(id) => (
+      renderMenuActions={(id, close) => (
         <>
-          <EditButton id={id} />
+          <EditButton id={id} close={close} />
           <Divider />
           <GoodsCategoryLink id={id} />
           <AdditionalCategoryLink id={id} />
@@ -59,7 +58,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
       )}
       renderAdditionalActions={(
         <>
-          <TooltipImageView images={images} />
+          {images && images.length !== 0 && <TooltipImageView images={images} />}
           {renderVertical}
           <CategoryGoodsLinkAdditional />
           {renderVertical}

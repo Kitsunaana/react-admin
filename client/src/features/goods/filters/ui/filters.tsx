@@ -2,17 +2,16 @@ import {
   Controller, FormProvider, useForm,
 } from "react-hook-form"
 import React, {
-  memo, ReactNode, useEffect, useState,
+  memo, ReactNode, useEffect,
 } from "react"
 import { Box } from "shared/ui/box"
 import { Input } from "shared/ui/input"
-import { addEvent, dispatch } from "shared/lib/event"
+import { addEvent } from "shared/lib/event"
 import { actionParams } from "shared/lib/params"
 import queryString from "query-string"
 import { z } from "zod"
 import { Select } from "shared/ui/select"
 import { IconButton } from "shared/ui/icon-button"
-import { CreateButton } from "features/goods/create/ui/create-button"
 import { BackButton } from "shared/ui/back-button"
 
 export interface Option {

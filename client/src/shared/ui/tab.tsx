@@ -6,6 +6,7 @@ import * as React from "react"
 import { SxProps, Tab as MUITab, useTheme } from "@mui/material"
 import { TabProps as BaseTabProps } from "@mui/material/Tab/Tab"
 import { dispatch } from "shared/lib/event"
+import { useLang } from "shared/context/Lang"
 
 interface TabLabelProps {
   icon: string
@@ -33,12 +34,16 @@ interface TabProps extends Omit<BaseTabProps, "id"> {
   caption: string
   icon?: string
   id: number
+  langBase?: string
 }
 
 export const Tab = memo((props: TabProps) => {
   const {
-    id, isError, icon, caption, ...other
+    id, isError, icon, caption, langBase: langBaseProps, ...other
   } = props
+
+  const lang = useLang()
+  const langBase = langBaseProps ?? lang?.lang
 
   const { palette, background: { gradient: { warning, primary } } } = useTheme()
 
@@ -48,7 +53,7 @@ export const Tab = memo((props: TabProps) => {
 
   return (
     <MUITab
-      onClick={() => dispatch("dialog.catalog.changeTab" as any, { tab: id })}
+      onClick={() => dispatch(`${langBase}.changeTab` as any, { tab: id })}
       {...other}
       value={id}
       key={id}
@@ -65,7 +70,7 @@ export const Tab = memo((props: TabProps) => {
       label={(
         <TabLabel
           icon={isError ? "warning" : icon ?? ""}
-          caption={caption}
+          caption={`${langBase ?? "global"}.${caption}`}
           sxIcon={memoizedIconSx}
         />
       )}

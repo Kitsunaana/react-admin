@@ -11,14 +11,12 @@ import {
   Pagination,
 } from "@mui/material"
 import { Backdrop } from "shared/ui/backdrop"
-import { DialogCreate } from "features/categories/create"
 import { z } from "zod"
-import { categoriesSchema, categorySchema } from "features/categories/create/model/schemas"
 import { CreateButton } from "shared/ui/create-button"
 import { CategoryRow } from "widgets/category-row/ui/category-row"
-import { useCategories } from "features/categories/create/api/use-categories"
-import { dark } from "@mui/material/styles/createPalette"
-import { DialogEdit } from "features/categories/edit/ui/dialog-edit"
+import { categoriesSchema, categorySchema } from "features/categories/create-and-edit/model/schemas"
+import { useCategories } from "entities/category/queries/use-categories"
+import { Dialog } from "features/categories/create-and-edit/ui/dialog"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -49,6 +47,8 @@ interface CategoryHeaderProps {
 const CategoryHeader = (props: CategoryHeaderProps) => {
   const { createButton } = props
 
+  const { refetch } = useCategories()
+
   const methods = useForm({
     defaultValues: {
       search: { value: "" },
@@ -61,6 +61,7 @@ const CategoryHeader = (props: CategoryHeaderProps) => {
         <SearchInput />
         <Box flex ai row>
           <IconButton
+            onClick={() => refetch()}
             name="reload"
             color="primary"
             fontSize={20}
@@ -86,7 +87,8 @@ const CategoriesPage = () => {
         key={category.id}
         caption={category.caption}
         id={category.id}
-        images={category.images}
+        // images={category.images}
+        images={[]}
       />
     ))
   }
@@ -96,7 +98,7 @@ const CategoriesPage = () => {
       <Table
         header={(
           <CategoryHeader
-            createButton={<CreateButton actionName="dialog.catalog.create" />}
+            createButton={<CreateButton langBase="catalog" />}
           />
         )}
         bottom={(
@@ -113,8 +115,7 @@ const CategoriesPage = () => {
         )}
         content={renderContent()}
       />
-      <DialogCreate />
-      <DialogEdit />
+      <Dialog />
       <Backdrop />
     </>
   )

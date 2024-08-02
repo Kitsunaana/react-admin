@@ -11,66 +11,70 @@ export interface ITab {
   id: number
   caption: string
   icon?: string
-}
-
-export interface IOption {
-  value: string
-  icon?: string
-  tab?: number
-}
-
-interface UseFormProps {
-  category: IOption
-  caption: IOption
-  description: string
+  content?: string[]
 }
 
 interface TabsProps {
   tab: number
   tabs: ITab[]
   requiredFields?: string[]
+  langBase: string
 }
 
-export const TabsContainer = memo((props: TabsProps) => {
-  const { tabs, tab: tabProps, requiredFields = [] } = props
-
-  const [tab, setTab] = useState(tabProps)
-
-  useEffect(() => addEvent("dialog.catalog.changeTab" as any, ({ tab }: { tab: number }) => {
-    setTab(tab)
-  }), [])
-
-  const {
-    getValues, control, handleSubmit,
-  } = useFormContext<UseFormProps>()
-
+export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
+  const { getValues, control } = useFormContext()
   const { errors } = useFormState({ control })
-
-  useEffect(() => { handleSubmit(() => {})() }, [])
 
   const requiredFieldsDeps = requiredFields.map((field) => errors[field])
 
-  const tabWithErrors = useMemo(() => Object
+  const tabWithWarning = useMemo(() => Object
     .keys(getValues())
     .filter((property) => errors[property])
-    .map((property) => getValues()[property]?.tab), [...requiredFieldsDeps, getValues])
+    .map((property) => {
+      const findTabWithWarning = tabs.find((tab) => tab?.content?.includes(property))
+
+      return findTabWithWarning && findTabWithWarning.id
+    }), [...requiredFieldsDeps, getValues])
+
+  return {
+    tabWithWarning,
+  }
+}
+
+export const TabsContainer = memo((props: TabsProps) => {
+  const {
+    tabs, tab: tabProps, langBase, requiredFields = [],
+  } = props
+
+  const [tab, setTab] = useState(tabProps)
+  const { tabWithWarning } = useTabsWarning(tabs, requiredFields)
+  const { handleSubmit } = useFormContext()
+
+  useEffect(() => { handleSubmit(() => {})() }, [])
+
+  useEffect(() => addEvent(`${langBase}.changeTab` as any, ({ tab }: { tab: number }) => {
+    setTab(tab)
+  }), [])
 
   const memoizedTabArray = useMemo(() => tabs.map((tab) => {
-    const isError = tabWithErrors.includes(tab.id)
+    const isError = tabWithWarning.includes(tab.id)
 
     return (
       <Tab
+        langBase={langBase}
         key={tab.id}
         isError={isError}
-        {...tab}
+        caption={tab.caption}
+        id={tab.id}
+        icon={tab.icon}
       />
     )
-  }), [tabWithErrors])
+  }), [tabWithWarning])
 
   return (
     <Tabs
       tab={tab}
-      hasError={tabWithErrors.includes(tab)}
+      hasError={tabWithWarning.includes(tab)}
       tabs={memoizedTabArray}
     />
   )

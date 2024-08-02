@@ -5,7 +5,7 @@ export interface Option {
 }
 
 export interface UseFormProps {
-  caption: Option;
+  caption: string;
   description: string;
   images: {
     caption: string,

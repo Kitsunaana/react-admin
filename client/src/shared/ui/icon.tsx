@@ -41,6 +41,7 @@ const iconData = {
   done: "done",
   warning: "warning",
   description: "speaker_notes",
+  paste: "content_paste",
 }
 
 interface DefaultIcon extends IconProps{

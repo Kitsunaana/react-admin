@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
 import { queryClient } from "app/providers/query-client"
-import { categoriesSchema } from "features/categories/create/model/schemas"
 import React, { useCallback } from "react"
 import { ContextMenuItem } from "shared/ui/context-menu-item"
+import { categoriesSchema } from "features/categories/create-and-edit/model/schemas"
 
 export const DeleteButton = ({ id }: { id: number }) => {
   const { mutate } = useMutation({

@@ -4,8 +4,8 @@ import { alpha } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
 import * as React from "react"
-import { IFile } from "features/categories/create/ui/dialog-content"
 import { useFormContext } from "react-hook-form"
+import { IFile } from "features/categories/create-and-edit/dialog-content"
 
 interface ImageProps {
   src?: string

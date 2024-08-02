@@ -20,8 +20,7 @@ export const categorySchema = z.object({
   id: z.number(),
   caption: z.string(),
   description: z.string().optional(),
-  deletedAt: z.date().nullable(),
-  images: z.array(imageSchema),
+  // images: z.array(imageSchema),
 })
 
 export const categoriesSchema = z.array(categorySchema)

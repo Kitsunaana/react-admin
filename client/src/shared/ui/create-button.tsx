@@ -3,11 +3,11 @@ import { IconButton } from "shared/ui/icon-button"
 import React from "react"
 
 interface CreateButtonProps {
-  actionName: string
+  langBase: string
 }
 
 export const CreateButton = (props: CreateButtonProps) => {
-  const { actionName } = props
+  const { langBase } = props
 
   return (
     <IconButton
@@ -15,7 +15,7 @@ export const CreateButton = (props: CreateButtonProps) => {
       color="success"
       fontSize={20}
       onClick={() => {
-        dispatch(actionName as any)
+        dispatch(`${langBase}.dialog.edit` as any)
       }}
     />
   )

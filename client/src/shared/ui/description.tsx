@@ -5,6 +5,7 @@ import { Input } from "shared/ui/input"
 import { Text } from "shared/ui/text"
 import { alpha } from "@mui/material"
 import * as React from "react"
+import { useLang } from "shared/context/Lang"
 
 export const Preview = () => {
   const { watch } = useFormContext()
@@ -27,11 +28,13 @@ export const Preview = () => {
 export const DescriptionInput = () => {
   const { register } = useFormContext()
 
+  const langBase = useLang()?.lang
+
   return (
     <Input
       {...register("description")}
       fullWidth
-      label="Описание"
+      label={`${langBase}.description`}
       multiline
       rows="10"
       sx={{

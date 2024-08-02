@@ -45,3 +45,11 @@ export const addEvent = <Key extends keyof IEvents>(
   // @ts-ignore
   return () => object.removeEventListener(name, localEvent)
 }
+
+export const dispatchEdit = <Key extends keyof IEvents>(langBase: string, data: IEvents[Key]) => {
+  dispatch(`${langBase}.dialog.edit` as any, data)
+}
+
+export const dispatchDelete = <Key extends keyof IEvents>(langBase: string, data: IEvents[Key]) => {
+  dispatch(`${langBase}.dialog.delete` as any, data)
+}

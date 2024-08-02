@@ -2,8 +2,7 @@ import { Accordion } from "shared/ui/accordion"
 import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
 import { Box } from "shared/ui/box"
-import React, { useEffect, useRef } from "react"
-// import { ActionButton } from "pages/Goods/goods-page"
+import React from "react"
 import { Mark } from "shared/ui/mark"
 import { Tag } from "shared/ui/tag"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
@@ -38,7 +37,7 @@ export const CardProduct = () => (
         )}
     actions={(
       <>
-        <TooltipImageView images={[MIKU[0]]} />
+        <TooltipImageView images={[]} />
         <Vertical />
         <StopListButton />
         <AdditionalButton />
