@@ -12,10 +12,13 @@ interface DialogHeaderProps {
   fullScreen: boolean
   setFullScreen: Dispatch<SetStateAction<boolean>>
   title: string
+  hideActions?: boolean
 }
 
 export const DialogHeader = memo((props: DialogHeaderProps) => {
-  const { fullScreen, setFullScreen, title } = props
+  const {
+    fullScreen, setFullScreen, title, hideActions = false,
+  } = props
 
   return (
     <Box
@@ -34,29 +37,33 @@ export const DialogHeader = memo((props: DialogHeaderProps) => {
       }}
     >
       <Text sx={{ display: "flex", justifyContent: "center", width: 1 }} caption={title} />
-      <Tooltip
-        arrow
-        disableInteractive
-        title="Скопировать данные для переноса"
-      >
-        <div>
-          <IconButton
-            name="copy"
-          />
-        </div>
-      </Tooltip>
-      <Vertical sx={{ m: 0 }} />
-      <Tooltip
-        disableInteractive
-        arrow
-        title="Загрузить скопированные данные"
-      >
-        <div>
-          <IconButton
-            name="paste"
-          />
-        </div>
-      </Tooltip>
+      {!hideActions && (
+        <>
+          <Tooltip
+            arrow
+            disableInteractive
+            title="Скопировать данные для переноса"
+          >
+            <div>
+              <IconButton
+                name="copy"
+              />
+            </div>
+          </Tooltip>
+          <Vertical sx={{ m: 0 }} />
+          <Tooltip
+            disableInteractive
+            arrow
+            title="Загрузить скопированные данные"
+          >
+            <div>
+              <IconButton
+                name="paste"
+              />
+            </div>
+          </Tooltip>
+        </>
+      )}
       <Vertical sx={{ m: 0 }} />
       <Tooltip
         arrow

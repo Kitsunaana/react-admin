@@ -14,6 +14,7 @@ import { DeleteButton } from "features/categories/delete/delete"
 import { EditButton } from "features/categories/create-and-edit/ui/edit-button"
 import { imageSchema } from "features/categories/create-and-edit/model/schemas"
 import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
+import { dispatchDelete } from "shared/lib/event"
 
 interface CategoryRowProps {
   id: number
@@ -66,7 +67,10 @@ export const CategoryRow = (props: CategoryRowProps) => {
           <AdditionalCategoryLink id={id} />
           <StopListButton id={id} />
           <Divider />
-          <DeleteButton id={id} />
+          <DeleteButton
+            close={close}
+            onClick={() => dispatchDelete("catalog", { id, caption } as any)}
+          />
           <Divider />
         </>
       )}

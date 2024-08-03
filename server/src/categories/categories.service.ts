@@ -65,7 +65,7 @@ export class CategoriesService {
   }
 
   async delete(id: number) {
-    // return await this.unstable_categoryRepository.softRemove({ id });
+    return await this.categoryRepository.destroy({ where: { id } });
   }
 
   async getById(id: number) {

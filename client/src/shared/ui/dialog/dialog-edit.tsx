@@ -23,9 +23,7 @@ export const useApplyFields = (data: Record<string, any>) => {
 
     if (keys.length === 0) return
 
-    keys.forEach((key) => {
-      setValue(key, data[key])
-    })
+    keys.forEach((key) => setValue(key, data[key]))
 
     trigger()
       .then((r) => r)

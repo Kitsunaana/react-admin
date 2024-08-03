@@ -1,5 +1,5 @@
 import React, {
-  FC, memo, useCallback, useState,
+  memo, useState,
 } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { IconButton } from "shared/ui/icon-button"
@@ -7,8 +7,6 @@ import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
 import { useMutation } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
-import { queryClient } from "app/providers/query-client"
-import { useSearchParams } from "react-router-dom"
 
 interface ContainerProps extends BoxProps {
   width: number
@@ -96,7 +94,6 @@ export const Position = memo((props: PositionProps) => {
       <ArrowDownButton open={open}>
         {renderIconButton(-1)}
       </ArrowDownButton>
-
     </Container>
   )
 })

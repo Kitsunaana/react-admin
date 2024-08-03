@@ -22,6 +22,7 @@ import { useEvent } from "shared/hooks/use-event"
 import { useSearchParams } from "react-router-dom"
 import { Text } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
+import { DialogDelete } from "features/categories/delete/ui/dialog"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -158,6 +159,7 @@ const CategoriesPage = () => {
         content={renderContent()}
       />
       <Dialog />
+      <DialogDelete />
       <Backdrop />
     </>
   )
