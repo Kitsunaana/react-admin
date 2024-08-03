@@ -53,16 +53,13 @@ export class CategoriesService {
           }
         : {},
       order: ['createdAt'],
+      limit: 2,
+      ...(query?.page
+        ? {
+            offset: (query.page - 1) * 2,
+          }
+        : {}),
     });
-    /* return await this.unstable_categoryRepository.find({
-      relations: { images: true },
-      select: {
-        images: {
-          path: true,
-          id: true,
-        },
-      },
-    });*/
   }
 
   async delete(id: number) {

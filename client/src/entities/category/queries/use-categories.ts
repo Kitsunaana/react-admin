@@ -3,7 +3,7 @@ import { $axios } from "shared/config/axios"
 
 interface UseCategoriesOptions {
   search?: string | null
-  page?: string | null
+  page?: number | null | string
 }
 
 const stringifiedParams = <TParams extends object>(data: TParams) => {

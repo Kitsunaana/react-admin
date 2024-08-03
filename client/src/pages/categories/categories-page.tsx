@@ -87,7 +87,7 @@ const CategoryHeader = (props: CategoryHeaderProps) => {
 }
 
 const CategoriesPage = () => {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const methods = useForm({
     defaultValues: {
       search: searchParams.get("search") ?? "",
@@ -96,6 +96,7 @@ const CategoriesPage = () => {
 
   const { data: categoriesData, isSuccess } = useCategories({
     search: searchParams.get("search"),
+    page: searchParams.get("page") ?? 1,
   })
 
   const renderContent = () => {
@@ -131,7 +132,10 @@ const CategoriesPage = () => {
               variant="outlined"
               shape="rounded"
               onChange={(event, page) => {
-                console.log(page)
+                setSearchParams((prev) => {
+                  prev.set("page", String(page))
+                  return prev
+                })
               }}
             />
           </Box>

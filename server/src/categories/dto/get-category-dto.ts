@@ -1,4 +1,4 @@
 export class GetCategoryDto {
   readonly page?: number;
-  readonly search?: number;
+  readonly search?: string;
 }
