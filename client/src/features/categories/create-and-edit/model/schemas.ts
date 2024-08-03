@@ -20,6 +20,7 @@ export const categorySchema = z.object({
   id: z.number(),
   caption: z.string(),
   description: z.string().optional(),
+  order: z.number(),
   // images: z.array(imageSchema),
 })
 

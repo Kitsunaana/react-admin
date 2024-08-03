@@ -1,14 +1,15 @@
-import { Column, DataType, HasMany, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
 import { Media } from './media.entity';
 
 interface CategoryCreationAttrs {
   caption: string;
   description: string;
+  order?: number;
 }
 
 @Table({ timestamps: true })
-export class Category extends Model<Category> {
+export class Category extends Model<Category, CategoryCreationAttrs> {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER, unique: true })
   id: number;
 
@@ -17,6 +18,9 @@ export class Category extends Model<Category> {
 
   @Column
   caption: string;
+
+  @Column({ defaultValue: -1, type: DataType.INTEGER })
+  order: number;
 
   @HasMany(() => Media)
   images: Media[];

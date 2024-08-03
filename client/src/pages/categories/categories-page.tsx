@@ -20,6 +20,8 @@ import { useCategories } from "entities/category/queries/use-categories"
 import { Dialog } from "features/categories/create-and-edit/ui/dialog"
 import { useEvent } from "shared/hooks/use-event"
 import { useSearchParams } from "react-router-dom"
+import { Text } from "shared/ui/text"
+import { Mark } from "shared/ui/mark"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -50,10 +52,11 @@ export const SearchInput = () => {
 
 interface CategoryHeaderProps {
   createButton: ReactNode
+  refetch: () => void
 }
 
 const CategoryHeader = (props: CategoryHeaderProps) => {
-  const { createButton } = props
+  const { createButton, refetch } = props
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -75,6 +78,7 @@ const CategoryHeader = (props: CategoryHeaderProps) => {
       <SearchInput />
       <Box flex ai row>
         <IconButton
+          onClick={refetch}
           name="reload"
           color="primary"
           fontSize={20}
@@ -94,13 +98,13 @@ const CategoriesPage = () => {
     },
   })
 
-  const { data: categoriesData, isSuccess } = useCategories({
+  const { data: categoriesData, isSuccess, refetch } = useCategories({
     search: searchParams.get("search"),
     page: searchParams.get("page") ?? 1,
   })
 
   const renderContent = () => {
-    const { data, success } = categoriesSchema.safeParse(categoriesData)
+    const { data, success } = categoriesSchema.safeParse(categoriesData?.rows)
 
     if (!(isSuccess && success)) return <div />
 
@@ -109,6 +113,7 @@ const CategoriesPage = () => {
         key={category.id}
         caption={category.caption}
         id={category.id}
+        order={category.order}
         // images={category.images}
         images={[]}
       />
@@ -121,14 +126,24 @@ const CategoriesPage = () => {
         header={(
           <FormProvider {...methods}>
             <CategoryHeader
+              refetch={refetch}
               createButton={<CreateButton langBase="catalog" />}
             />
           </FormProvider>
         )}
         bottom={(
-          <Box sx={{ mr: 0, ml: "auto" }}>
+          <Box flex ai row gap sx={{ mr: 0, ml: "auto" }}>
+            <Text
+              name="rows.count"
+              value={categoriesData?.count ?? 0}
+              translateOptions={{
+                components: {
+                  strong: <Mark />,
+                },
+              }}
+            />
             <Pagination
-              count={3}
+              count={Math.ceil((categoriesData?.count ?? 0) / 25)}
               variant="outlined"
               shape="rounded"
               onChange={(event, page) => {

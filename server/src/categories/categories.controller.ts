@@ -17,6 +17,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { GetCategoryDto } from './dto/get-category-dto';
+import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -50,6 +51,11 @@ export class CategoriesController {
   @Get('/:id')
   getById(@Param('id') id: number) {
     return this.categoryService.getById(id);
+  }
+
+  @Patch('/order')
+  updateOrder(@Body() dto: UpdateOrderCategoryDto) {
+    return this.categoryService.updateOrder(dto);
   }
 
   @Patch('/:id')

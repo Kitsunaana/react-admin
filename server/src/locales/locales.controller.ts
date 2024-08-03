@@ -4,6 +4,6 @@ import { Controller, Get, Param } from '@nestjs/common';
 export class LocalesController {
   @Get('/:ru')
   getLanguage(@Param() value: string) {
-    console.log();
+    return { catalog: { rows: { count: 'Всего <strong>{{value}}</strong> элементов' } } };
   }
 }

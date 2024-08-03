@@ -1,8 +1,14 @@
-import React, { FC, memo, useState } from "react"
+import React, {
+  FC, memo, useCallback, useState,
+} from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { IconButton } from "shared/ui/icon-button"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
+import { useMutation } from "@tanstack/react-query"
+import { $axios } from "shared/config/axios"
+import { queryClient } from "app/providers/query-client"
+import { useSearchParams } from "react-router-dom"
 
 interface ContainerProps extends BoxProps {
   width: number
@@ -38,41 +44,57 @@ const Container = styled((props: ContainerProps) => <Box flex ai row gap jc {...
     transition: .3s;
     margin: 0 4px;
     position: relative;
-    min-width: ${({ open, width }) => (open ? `${width * 10 + 60}px` : `${width * 10}px`)};
+    min-width: ${({ open, width }) => (open ? `${width * 10 + 60}px` : "24px")};
 `
 
 interface PositionProps {
-  count: number
+  order: number
   sx?: SxProps<Theme>
+  id: number
 }
 
 export const Position = memo((props: PositionProps) => {
-  const { count, sx } = props
+  const { order: orderProps, sx, id } = props
 
   const [open, setOpen] = useState(false)
+  const [order, setOrder] = useState(orderProps)
+  const [direction, setDirection] = useState(1)
 
   const onToggle = () => {
     setOpen((prevState) => !prevState)
   }
 
-  const width = String(count).split("").length
+  const width = String(order).split("").length
+
+  const { isPending, mutate } = useMutation({
+    mutationKey: ["categories"],
+    mutationFn: (order: number) => $axios.patch("/categories/order", { order, id }),
+    onSuccess: (data) => {
+      setOrder((prevState) => prevState + direction)
+    },
+  })
+
+  const renderIconButton = (direction: number) => (
+    <IconButton
+      disabled={isPending}
+      name="expand"
+      color="primary"
+      fontSize={20}
+      onClick={() => {
+        setDirection(direction)
+        mutate(order + direction)
+      }}
+    />
+  )
 
   return (
     <Container width={width} open={open} sx={sx}>
       <ArrowUpButton open={open}>
-        <IconButton
-          name="expand"
-          color="primary"
-          fontSize={20}
-        />
+        {renderIconButton(1)}
       </ArrowUpButton>
-      <Count onClick={onToggle}>{count}</Count>
+      <Count onClick={onToggle}>{order}</Count>
       <ArrowDownButton open={open}>
-        <IconButton
-          name="expand"
-          color="primary"
-          fontSize={20}
-        />
+        {renderIconButton(-1)}
       </ArrowDownButton>
 
     </Container>

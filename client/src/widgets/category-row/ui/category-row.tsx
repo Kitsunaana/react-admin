@@ -19,6 +19,7 @@ interface CategoryRowProps {
   id: number
   caption: string
   images: z.infer<typeof imageSchema>[]
+  order: number
 }
 
 const Badge = styled(MUIBadge)`
@@ -47,7 +48,9 @@ export const CategoryGoodsAdditional = memo((props: {caption: string }) => {
 })
 
 export const CategoryRow = (props: CategoryRowProps) => {
-  const { caption, id, images } = props
+  const {
+    caption, id, images, order,
+  } = props
 
   const renderVertical = useMemo(() => <Vertical />, [])
 
@@ -73,7 +76,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
           {renderVertical}
           <CategoryGoodsAdditional caption={caption} />
           {renderVertical}
-          <Position count={12} />
+          <Position order={order} id={id} />
           {renderVertical}
           <IconButton
             name="stopList"

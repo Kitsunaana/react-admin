@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Category } from '../entities-sequelize/category.entity';
 import { GetCategoryDto } from './dto/get-category-dto';
 import { Op } from 'sequelize';
+import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -40,7 +41,8 @@ export class CategoriesService {
   }
 
   async getAll(query: GetCategoryDto) {
-    return await this.categoryRepository.findAll({
+    const limit = 10;
+    return await this.categoryRepository.findAndCountAll({
       attributes: {
         exclude: ['createdAt', 'updatedAt'],
       },
@@ -52,11 +54,11 @@ export class CategoriesService {
             ],
           }
         : {},
-      order: ['createdAt'],
-      limit: 2,
+      order: [['order', 'desc'], 'createdAt'],
+      limit,
       ...(query?.page
         ? {
-            offset: (query.page - 1) * 2,
+            offset: (query.page - 1) * limit,
           }
         : {}),
     });
@@ -80,5 +82,9 @@ export class CategoriesService {
         },
       },
     });*/
+  }
+
+  async updateOrder(dto: UpdateOrderCategoryDto) {
+    return await this.categoryRepository.update({ order: dto.order }, { where: { id: dto.id } });
   }
 }
