@@ -4,6 +4,8 @@ import { FilesService } from '../files/files.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Category } from '../entities-sequelize/category.entity';
+import { GetCategoryDto } from './dto/get-category-dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class CategoriesService {
@@ -37,11 +39,19 @@ export class CategoriesService {
     return this.categoryRepository.update(dto, { where: { id } });
   }
 
-  async getAll() {
+  async getAll(query: GetCategoryDto) {
     return await this.categoryRepository.findAll({
       attributes: {
         exclude: ['createdAt', 'updatedAt'],
       },
+      where: query?.search
+        ? {
+            [Op.or]: [
+              { caption: { [Op.like]: `%${query.search}%` } },
+              { description: { [Op.like]: `%${query.search}%` } },
+            ],
+          }
+        : {},
       order: ['createdAt'],
     });
     /* return await this.unstable_categoryRepository.find({

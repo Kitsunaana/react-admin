@@ -1,18 +1,13 @@
 import {
   Body,
   Controller,
-  createParamDecorator,
   Delete,
-  ExecutionContext,
   Get,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NestMiddleware,
   Param,
   Patch,
   Post,
-  UploadedFile,
+  Query,
+  Search,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,6 +16,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { GetCategoryDto } from './dto/get-category-dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -47,8 +43,8 @@ export class CategoriesController {
   }
 
   @Get()
-  getAll() {
-    return this.categoryService.getAll();
+  getAll(@Query() query: GetCategoryDto) {
+    return this.categoryService.getAll(query);
   }
 
   @Get('/:id')
