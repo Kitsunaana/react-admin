@@ -7,9 +7,20 @@ import {
 import * as React from "react"
 import { dispatch } from "shared/lib/event"
 import { Text } from "shared/ui/text"
-import { actionParams } from "shared/lib/params"
+import { Link, LinkProps } from "react-router-dom"
+import { shallowEqual } from "shared/lib/utils"
+import { TRef } from "widgets/sidebar/ui/list/list"
 import { ListItemText } from "./list-item-text"
 import { ListItemIcon } from "./list-item-icon"
+
+export const CustomLink = memo((props: LinkProps) => (
+  <Link
+    {...props}
+    style={{
+      display: "flex", width: "100%", textDecoration: "none", color: "inherit", justifyContent: "center",
+    }}
+  />
+))
 
 export type ListItemButtonProps = {
   caption: string
@@ -19,7 +30,6 @@ export type ListItemButtonProps = {
   listId: number
   open: boolean
   name: string
-
   isSelected: boolean
 } & MUIListItemButtonProps
 
@@ -39,18 +49,16 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
     ...otherProps
   } = props
 
-  const handleOnSelect = () => {
+  const onSelect = () => {
     dispatch("selected", {
       selectedId: listId,
       selectedOptionId: (disabled || !optionId) ? null : optionId,
     })
-
-    dispatch("route", { route: path })
   }
 
   const renderButton = (
     <MUIListItemButton
-      onClick={handleOnSelect}
+      onClick={onSelect}
       sx={{
         backgroundColor: ({ palette }) => (isSelected ? alpha(palette.primary.dark, 0.10) : undefined),
         height: 35,
@@ -68,13 +76,15 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
       }}
       {...otherProps}
     >
-      <ListItemIcon open={open} icon={icon} disabled={disabled ?? false} />
-      {open && <ListItemText disabled={disabled ?? false} name={name} />}
+      <CustomLink to={path}>
+        <ListItemIcon open={open} icon={icon} disabled={disabled ?? false} />
+        {open && <ListItemText disabled={disabled ?? false} name={name} />}
+      </CustomLink>
       {children}
     </MUIListItemButton>
   )
 
-  if ((disabled || !open)) {
+  if (disabled || !open) {
     return (
       <Tooltip
         title={disabled ? <Text name="not-available" onlyText /> : <Text name={name} onlyText />}

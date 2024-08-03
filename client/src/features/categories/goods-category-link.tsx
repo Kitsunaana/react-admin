@@ -1,17 +1,21 @@
 import { ContextMenuItem } from "shared/ui/context-menu-item"
-import React, { memo } from "react"
+import React from "react"
+import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 
 interface GoodsCategoryLinkProps {
-  id: number
+  caption: string
 }
 
 export const GoodsCategoryLink = (props: GoodsCategoryLinkProps) => {
-  const { id } = props
+  const { caption } = props
+
+  const navigate = useNavigateGoods(caption)
 
   return (
     <ContextMenuItem
       caption="Товары категории"
       icon="goods"
+      onClick={navigate}
     />
   )
 }

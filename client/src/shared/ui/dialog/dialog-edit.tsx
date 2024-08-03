@@ -11,12 +11,9 @@ import * as React from "react"
 import {
   useMutation, UseMutationOptions, useQuery, UseQueryOptions,
 } from "@tanstack/react-query"
-import { $axios } from "shared/config/axios"
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
-import { createMultipart } from "shared/lib/multipart"
-import { queryClient } from "app/providers/query-client"
 
 export const useApplyFields = (data: Record<string, any>) => {
   const { setValue, trigger } = useFormContext()

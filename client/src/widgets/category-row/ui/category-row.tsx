@@ -13,6 +13,7 @@ import { z } from "zod"
 import { DeleteButton } from "features/categories/delete/delete"
 import { EditButton } from "features/categories/create-and-edit/ui/edit-button"
 import { imageSchema } from "features/categories/create-and-edit/model/schemas"
+import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 
 interface CategoryRowProps {
   id: number
@@ -29,11 +30,21 @@ const Badge = styled(MUIBadge)`
   }
 `
 
-export const CategoryGoodsLinkAdditional = memo(() => (
-  <Badge badgeContent={9} color="warning">
-    <IconButton name="goods" fontSize={20} />
-  </Badge>
-))
+export const CategoryGoodsAdditional = memo((props: {caption: string }) => {
+  const { caption } = props
+
+  const navigate = useNavigateGoods(caption)
+
+  return (
+    <Badge badgeContent={9} color="warning">
+      <IconButton
+        name="goods"
+        fontSize={20}
+        onClick={navigate}
+      />
+    </Badge>
+  )
+})
 
 export const CategoryRow = (props: CategoryRowProps) => {
   const { caption, id, images } = props
@@ -48,7 +59,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
         <>
           <EditButton id={id} close={close} />
           <Divider />
-          <GoodsCategoryLink id={id} />
+          <GoodsCategoryLink caption={caption} />
           <AdditionalCategoryLink id={id} />
           <StopListButton id={id} />
           <Divider />
@@ -60,7 +71,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
         <>
           {images && images.length !== 0 && <TooltipImageView images={images} />}
           {renderVertical}
-          <CategoryGoodsLinkAdditional />
+          <CategoryGoodsAdditional caption={caption} />
           {renderVertical}
           <Position count={12} />
           {renderVertical}

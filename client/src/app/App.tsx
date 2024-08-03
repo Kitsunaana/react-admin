@@ -5,46 +5,37 @@ import * as React from "react"
 import { Box } from "shared/ui/box"
 import { menu, menuBottom } from "widgets/Sidebar/constants"
 import { Sidebar } from "widgets/Sidebar/ui/sidebar"
-import { Suspense, useEffect, useState } from "react"
-import { addEvent, dispatch } from "shared/lib/event"
+import { Suspense } from "react"
 import { routeConfig } from "shared/config/route-config"
 import { LangContext } from "shared/context/Lang"
-import { actionParams } from "shared/lib/params"
+import { Route, Routes } from "react-router-dom"
 
-export const Pages = () => {
-  const [path, setPath] = useState(window.location.pathname)
-
-  useEffect(() => addEvent("route", (data) => {
-    actionParams.replace(data.route)
-
-    setPath(window.location.pathname)
-  }), [])
-
-  useEffect(() => window.addEventListener("popstate", (event) => {
-    if (event.state?.name) dispatch(event.state.name, { params: event.state?.params })
-
-    setPath(window.location.pathname)
-  }), [])
-
-  return (
-    <Box sx={{
-      width: 1,
-      height: 1,
-      boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
-      background: ({ background }) => background.sectionBackground,
-      borderRadius: 2,
-    }}
-    >
-      <Suspense fallback={<div>loader</div>}>
-        {Object.entries(routeConfig).map(([key, route]) => (
-          <LangContext lang={key} key={key}>
-            {route.path === path && route.element}
-          </LangContext>
-        ))}
-      </Suspense>
-    </Box>
-  )
-}
+export const Pages = () => (
+  <Box sx={{
+    width: 1,
+    height: 1,
+    boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
+    background: ({ background }) => background.sectionBackground,
+    borderRadius: 2,
+  }}
+  >
+    <Routes>
+      {Object.entries(routeConfig).map(([key, route]) => (
+        <Route
+          key={key}
+          path={route.path}
+          element={(
+            <Suspense fallback="Загрузка">
+              <LangContext lang={key}>
+                {route.element}
+              </LangContext>
+            </Suspense>
+            )}
+        />
+      ))}
+    </Routes>
+  </Box>
+)
 
 export const App = () => (
   <Box sx={{

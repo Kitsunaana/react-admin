@@ -61,9 +61,6 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
   return (
     <Box
       onContextMenu={menu.open}
-      onDoubleClick={() => {
-        dispatch("catalog.dialog.edit" as any, { id })
-      }}
       flex
       ai
       row

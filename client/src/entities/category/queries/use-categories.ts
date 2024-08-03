@@ -1,12 +1,29 @@
 import { useQuery } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
 
-export const useCategories = () => {
+interface UseCategoriesOptions {
+  search?: string | null
+  page?: string | null
+}
+
+const stringifiedParams = <TParams extends object>(data: TParams) => {
+  const newData = Object.entries(data).reduce((prev, [key, value]) => {
+    if (value) prev[key] = value
+    return prev
+  }, {})
+
+  const searchParams = (new URLSearchParams(newData)).toString()
+  return searchParams && `?${searchParams}`
+}
+
+export const useCategories = (options: UseCategoriesOptions) => {
+  const { search, page } = options
+
   const {
     isLoading, data, error, isError, isFetching, isSuccess, refetch,
   } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => $axios.get("/categories").then(({ data }) => data),
+    queryKey: ["categories", search, page],
+    queryFn: () => $axios.get(`/categories${stringifiedParams(options)}`).then(({ data }) => data),
   })
 
   return {

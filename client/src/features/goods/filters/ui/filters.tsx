@@ -75,17 +75,23 @@ export const Filters = memo((props: FiltersProps) => {
   }), [])
 
   const onSubmit = (data: UseFormProps) => {
-    console.log(data)
+    // console.log(data)
   }
 
-  useEffect(() => window.addEventListener("keydown", (event) => {
-    if (event.code === "Enter") {
-      const search = methods.getValues("search")
-      if (search?.value) actionParams.push("search", search.value)
+  useEffect(() => {
+    const event = (event) => {
+      if (event.code === "Enter") {
+        const search = methods.getValues("search")
+        if (search?.value) actionParams.push("search", search.value)
 
-      methods.handleSubmit(onSubmit)()
+        methods.handleSubmit(onSubmit)()
+      }
     }
-  }), [])
+
+    window.addEventListener("keydown", event)
+
+    return () => window.removeEventListener("keydown", event)
+  }, [])
 
   return (
     <FormProvider {...methods}>

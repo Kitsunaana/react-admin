@@ -7,6 +7,7 @@ import { memo, MouseEvent } from "react"
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
+import { TRef } from "widgets/sidebar/ui/list/list"
 
 interface ExpandButtonProps {
   handleOnExpand: (event: MouseEvent<HTMLButtonElement>) => void

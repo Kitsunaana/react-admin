@@ -1,3 +1,5 @@
+import { boolean } from "zod"
+
 interface IEvents {
   selected: {
     selectedId: number
@@ -6,6 +8,7 @@ interface IEvents {
   hashchange: HashChangeEvent,
   route: {
     route: string
+    searchParams?: string
   },
   changeLanguage: {
     language: "en" | "ru"

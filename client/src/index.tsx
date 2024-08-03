@@ -7,17 +7,20 @@ import { Provider } from "react-redux"
 import { store } from "app/providers/store"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "app/providers/query-client"
+import { BrowserRouter } from "react-router-dom"
 
 const container = document.getElementById("root")
 const root = createRoot(container as HTMLElement)
 root.render(
   <ErrorBoundary>
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </QueryClientProvider>
-    </Provider>
+    <BrowserRouter>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
+        </QueryClientProvider>
+      </Provider>
+    </BrowserRouter>
   </ErrorBoundary>,
 )

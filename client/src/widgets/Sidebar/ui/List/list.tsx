@@ -3,6 +3,7 @@ import {
 } from "react"
 import * as React from "react"
 import { addEvent } from "shared/lib/event"
+import { useLocation } from "react-router-dom"
 import { ListItemButton } from "./list-item-button"
 import { ExpandButton } from "../expand-button"
 import { MenuList } from "../../types"
@@ -39,7 +40,9 @@ export type TRef = { selectedId: number | null; selectedOptionId: number | null 
 export const List = memo((props: ListProps) => {
   const { open, list } = props
 
-  const [selected, selectedOption] = window.location.pathname.replace("/", "").split("/")
+  const { pathname } = useLocation()
+
+  const [selected, selectedOption] = pathname.replace("/", "").split("/")
   const findSelectedOptions = list.sublist.find((option) => option.name === selectedOption)
 
   const [, setReload] = useState(true)
@@ -60,6 +63,19 @@ export const List = memo((props: ListProps) => {
       }
     })
   }, [])
+
+  useEffect(() => {
+    if (list.name === selected) {
+      setIsExpanded(true)
+    }
+
+    ref.current = {
+      selectedId: selected === list.name ? list.id : null,
+      selectedOptionId: findSelectedOptions?.id ?? null,
+    }
+
+    setReload((prevState) => !prevState)
+  }, [pathname])
 
   const buttonProps = useMemo(() => ({
     disableRipple: true,
@@ -93,12 +109,21 @@ export const List = memo((props: ListProps) => {
     listId: list.id,
   }
 
-  const menuItemButtonStyle = styles.listItemButton(
+  const menuItemButtonStyle = useMemo(() => styles.listItemButton(
     isSelected,
     isExpanded,
     list.sublist.length < 1,
     open,
-  )
+  ), [isSelected, isExpanded, open])
+
+  const memoizedExpandButton = useMemo(() => (
+    <ExpandButton
+      name={list.name}
+      buttonProps={buttonProps}
+      handleOnExpand={handleOnExpand}
+      isExpanded={isExpanded}
+    />
+  ), [isExpanded, list.name, handleOnExpand, buttonProps])
 
   if (!open) {
     return (
@@ -126,12 +151,13 @@ export const List = memo((props: ListProps) => {
       header={(
         <ListItemButton {...listItemButtonProps} sx={menuItemButtonStyle}>
           {list.sublist && list.sublist.length > 0 && (
-            <ExpandButton
+            /* <ExpandButton
               name={list.name}
               buttonProps={buttonProps}
               handleOnExpand={handleOnExpand}
               isExpanded={isExpanded}
-            />
+            /> */
+            memoizedExpandButton
           )}
         </ListItemButton>
       )}
