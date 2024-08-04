@@ -1,17 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Media } from '../entities/media.entity';
-import { Repository } from 'typeorm';
-import { Category } from '../entities/category.entity';
+import { InjectModel } from '@nestjs/sequelize';
+import { Category } from '../entities-sequelize/category.entity';
+import { Media } from '../entities-sequelize/media.entity';
 
 @Injectable()
 export class FilesService {
-  constructor(@InjectRepository(Media) private mediaRepository: Repository<Media>) {}
+  constructor(@InjectModel(Media) private mediaRepository: typeof Media) {}
 
-  async saveMedia(media: Array<Express.Multer.File>, category: Category): Promise<Media[]> {
+  async saveMedia(media: Array<Express.Multer.File>, category: Category) {
     return await Promise.all(
       media.map(async (file) => {
-        return await this.mediaRepository.save({ ...file, category });
+        // return await this.mediaRepository.create({ ...file });
+        return await this.mediaRepository.create({
+          filename: file.filename,
+          size: file.size,
+          mimetype: file.mimetype,
+          path: file.path,
+          categoryId: category.id,
+        });
       }),
     );
   }

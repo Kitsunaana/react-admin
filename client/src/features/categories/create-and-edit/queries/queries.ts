@@ -1,8 +1,8 @@
 import { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query"
 import { z } from "zod"
-import { createMultipart } from "shared/lib/multipart"
 import { $axios } from "shared/config/axios"
 import { queryClient } from "app/providers/query-client"
+import { categoriesApi } from "features/categories/create-and-edit/api/categories-api"
 import { categorySchema } from "../model/schemas"
 
 type UpdateUseCategoryOptions = UseMutationOptions<unknown, unknown, z.infer<typeof categorySchema>>
@@ -10,10 +10,7 @@ type CreateUseCategoryOptions = {} & UpdateUseCategoryOptions
 
 export const updateCategoryOptions = (id: number | null): UpdateUseCategoryOptions => ({
   mutationKey: ["category", id],
-  mutationFn: (data: z.infer<typeof categorySchema>) => {
-    const formData = createMultipart(data)
-    return $axios.patch(`/categories/${id}`, data).then(({ data }) => data)
-  },
+  mutationFn: (data) => categoriesApi.patch(id, data),
   onSuccess: () => {
     queryClient.invalidateQueries({
       queryKey: ["categories"],
@@ -23,15 +20,7 @@ export const updateCategoryOptions = (id: number | null): UpdateUseCategoryOptio
 
 export const createCategoryOptions = (): CreateUseCategoryOptions => ({
   mutationKey: ["category"],
-  mutationFn: (data: Record<string, any>) => {
-    const formData = createMultipart(data, ["images"])
-
-    return $axios.post("/categories", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then(({ data }) => data)
-      .catch((error) => console.log(error))
-  },
+  mutationFn: (data) => categoriesApi.post(data),
   onSuccess: () => {
     queryClient.invalidateQueries({
       queryKey: ["categories"],

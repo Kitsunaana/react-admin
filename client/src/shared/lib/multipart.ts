@@ -5,7 +5,7 @@ export const createMultipart = (data: Record<string, any>, arrFile: string[] = [
     if (arrFile.includes(item)) {
       if (Array.isArray(data[item])) {
         data[item].forEach((item) => {
-          if (item.data instanceof File) {
+          if (item.data instanceof File || item.type.startsWith("image")) {
             result.append("images", item.data)
           }
         })

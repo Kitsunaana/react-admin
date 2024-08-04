@@ -22,6 +22,6 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
   @Column({ defaultValue: -1, type: DataType.INTEGER })
   order: number;
 
-  @HasMany(() => Media)
+  @HasMany(() => Media, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   images: Media[];
 }

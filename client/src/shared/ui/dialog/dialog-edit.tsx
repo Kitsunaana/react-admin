@@ -33,7 +33,7 @@ export const useApplyFields = (data: Record<string, any>) => {
 interface DialogProps {
   langBase?: string
   title?: string
-  container: ReactNode
+  container: (fullScreen: boolean) => ReactNode
   onUpdateOptions: (id: number | null) => UseMutationOptions<any, any, any, any>
   onCreateOptions: () => UseMutationOptions<any, any, any, any>
   onGetByIdOptions: (id: number | null) => UseQueryOptions
@@ -77,8 +77,8 @@ export const DialogEdit = (props: DialogProps) => {
     if (isEdit) onUpdate(data)
     else onCreate(data)
 
-    reset()
-    setOpen(false)
+    // reset()
+    // setOpen(false)
   }
 
   return (
@@ -87,11 +87,13 @@ export const DialogEdit = (props: DialogProps) => {
       open={open}
       PaperProps={{
         sx: {
+          display: "flex",
           borderRadius: 4,
           ...(fullScreen ? {} : {
             maxWidth: 900,
             width: 1,
             height: 580,
+            overflow: "hidden",
           }),
         },
       }}
@@ -103,10 +105,10 @@ export const DialogEdit = (props: DialogProps) => {
           setFullScreen={setFullScreen}
         />
       </Box>
-      <MUIDialogContent sx={{ height: 1, p: 1, pt: 0 }}>
-        {container}
-      </MUIDialogContent>
-      <MUIDialogActions>
+      <Box grow sx={{ height: 450, p: 1, pt: 0 }}>
+        {container(fullScreen)}
+      </Box>
+      <Box flex ai row gap sx={{ alignSelf: "flex-end", p: 1 }}>
         <SaveButton onClick={handleSubmit(onSubmit)} />
         <CancelButton
           onClick={() => {
@@ -114,7 +116,7 @@ export const DialogEdit = (props: DialogProps) => {
             setOpen(false)
           }}
         />
-      </MUIDialogActions>
+      </Box>
     </MUIDialog>
   )
 }

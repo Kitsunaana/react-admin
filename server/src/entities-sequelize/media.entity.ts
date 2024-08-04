@@ -1,13 +1,16 @@
-import { BelongsTo, Column, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Category } from './category.entity';
 
 @Table
 export class Media extends Model<Media> {
+  @Column({ unique: true, autoIncrement: true, primaryKey: true, type: DataType.INTEGER })
+  id: number;
+
   @Column
   filename: string;
 
   @Column
-  size: string;
+  size: number;
 
   @Column
   mimetype: string;
@@ -19,6 +22,6 @@ export class Media extends Model<Media> {
   @ForeignKey(() => Category)
   categoryId: number;
 
-  @BelongsTo(() => Category)
+  @BelongsTo(() => Category, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   category: Category;
 }

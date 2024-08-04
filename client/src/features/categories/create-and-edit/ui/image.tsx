@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { Box } from "shared/ui/box"
-import { alpha } from "@mui/material"
+import { alpha, Button } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
 import * as React from "react"
 import { useFormContext } from "react-hook-form"
-import { IFile } from "features/categories/create-and-edit/dialog-content"
+import { IFile } from "features/categories/create-and-edit/ui/tabs/photos"
+import { Icon } from "shared/ui/icon"
 
 interface ImageProps {
   src?: string
@@ -14,11 +15,12 @@ interface ImageProps {
   local?: string
   id: string
   file: File
+  className?: string
 }
 
 export const Image = (props: ImageProps) => {
   const {
-    url, name, local, src: srcProps, file, id,
+    url, name, local, src: srcProps, file, id, className,
   } = props
 
   const { getValues, setValue } = useFormContext()
@@ -40,11 +42,27 @@ export const Image = (props: ImageProps) => {
 
   return (
     <Box
+      id={id}
+      className={className}
       sx={{
         position: "relative",
+        height: 170,
+        overflow: "hidden",
+        borderRadius: 2,
+        "&:hover .wrapper-filename": {
+          top: 0,
+        },
+        "&:hover img": {
+          filter: "blur(4px)",
+        },
+        "&:hover .button-delete": {
+          opacity: 1,
+          visibility: "visible",
+        },
       }}
     >
       <Box
+        className="wrapper-filename"
         flex
         ai
         jc_sp
@@ -56,24 +74,58 @@ export const Image = (props: ImageProps) => {
           p: 1,
           py: 0.5,
           backgroundColor: ({ palette }) => alpha(palette.grey["900"], 0.75),
+          borderTopLeftRadius: 8,
+          borderTopRightRadius: 8,
+          top: "-40px",
+          transition: ".2s",
+          zIndex: 100,
         }}
       >
-        <Text caption={name} />
-        <IconButton
-          name="clear"
+        <Text sx={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }} caption={name} />
+      </Box>
+      <Box sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        zIndex: 100,
+      }}
+      >
+        <Button
+          className="button-delete"
+          sx={{
+            transition: ".2s",
+            opacity: 0,
+            visibility: "hidden",
+            p: 0.5,
+            minWidth: "unset",
+            borderRadius: "50%",
+          }}
+          color="warning"
+          variant="contained"
           onClick={() => {
             const images = getValues("images").filter((image: IFile) => image.id !== id)
 
             setValue("images", images)
           }}
-        />
+        >
+          <Icon
+            sx={{
+              color: ({ palette }) => palette.grey["900"],
+            }}
+            name="delete"
+          />
+        </Button>
       </Box>
       <img
         src={src}
         alt=""
         style={{
+          transition: ".2s",
+          borderRadius: 8,
           width: "100%",
           height: "170px",
+          objectFit: "cover",
         }}
       />
     </Box>

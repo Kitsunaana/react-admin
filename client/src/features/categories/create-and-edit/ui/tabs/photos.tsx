@@ -1,9 +1,7 @@
 import * as React from "react"
 import {
-  ChangeEvent, memo, useEffect, useRef, useState,
+  memo, useCallback, useEffect, useRef, useState,
 } from "react"
-import { TabPanel } from "shared/ui/tab-panel"
-import { DescriptionInput } from "shared/ui/description"
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
@@ -11,9 +9,8 @@ import { useFormContext } from "react-hook-form"
 import {
   InputProps,
 } from "@mui/material"
-import { addEvent } from "shared/lib/event"
-import { CaptionInput } from "features/categories/create-and-edit/dialog"
-import { Image } from "features/categories/create-and-edit/image"
+import { Image } from "features/categories/create-and-edit/ui/image"
+import { ReactSortable } from "react-sortablejs"
 
 const uuid = () => "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, () => {
   const random = (Math.random() * 16) | 0
@@ -26,6 +23,7 @@ export interface IFile {
   type: string,
   id: string,
   deleted?: boolean
+  index?: number
 }
 
 interface InputFileProps extends Omit<InputProps, "onChange"> {
@@ -33,8 +31,8 @@ interface InputFileProps extends Omit<InputProps, "onChange"> {
   caption: string
   multiple: boolean
   value?: {
-   value: IFile[],
-   tab?: number
+    value: IFile[],
+    tab?: number
   },
   name: string
   clear: boolean
@@ -107,69 +105,95 @@ const InputFile = (props: InputFileProps) => {
   )
 }
 
-interface DialogContentProps {
-  tab: number
+interface PhotosTabProps {
+  fullScreen: boolean
 }
 
-export const DialogContent = memo((props: DialogContentProps) => {
-  const { tab: tabProps } = props
+export const PhotosTab = memo((props: PhotosTabProps) => {
+  const { fullScreen } = props
 
-  const [tab, setTab] = useState(tabProps)
-
-  useEffect(() => addEvent("dialog.catalog.changeTab" as any, ({ tab }: { tab: number }) => {
-    setTab(tab)
-  }), [])
-
-  const {
-    setValue, watch,
-  } = useFormContext()
+  const { setValue, watch } = useFormContext()
 
   const watchImages = watch("images")
 
+  const [state, setState] = useState<any[]>(watchImages ?? [])
+
+  useEffect(() => {
+    setState(watchImages)
+  }, [watchImages])
+
   return (
     <>
-      <TabPanel value={tab} index={0}>
-        <>
-          <CaptionInput sx={{ mb: 1 }} />
-          <DescriptionInput />
-        </>
-      </TabPanel>
-      <TabPanel value={tab} index={1}>
-        <InputFile
-          sx={{
-            mb: 1,
-          }}
-          caption=""
-          name="images"
-          multiple
-          clear={false}
-          accept="image/*"
-          disabled={false}
-          onChange={(data) => {
-            const setImages = Array.isArray(watchImages)
-              ? [...watchImages, ...data]
-              : data
+      <InputFile
+        sx={{
+          mb: 1,
+        }}
+        caption=""
+        name="images"
+        multiple
+        clear={false}
+        accept="image/!*"
+        disabled={false}
+        onChange={(data) => {
+          const setImages = Array.isArray(watchImages)
+            ? [...watchImages, ...data]
+            : data
 
-            setValue("images", setImages)
-          }}
-        />
+          setValue("images", setImages)
+        }}
+      />
+      <ReactSortable
+        onChange={(event) => {
+          const imageIds = Array.prototype.map.call(event.target.children, (element) => element.id)
 
-        <Box sx={{
+          const newState = state.map((image) => {
+            image.index = imageIds.findIndex((id) => id === image.id)
+            return image
+          })
+
+          setValue("images", newState)
+        }}
+        filter=".addImageButtonContainer"
+        dragClass="sortableDrag"
+        animation={200}
+        easing="ease-out"
+        list={state}
+        setList={setState}
+        style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 1,
+          gap: 8,
+          overflowY: "scroll",
+          height: fullScreen ? undefined : 380,
         }}
-        >
-          {watchImages && watchImages.map((img) => (
-            <Image
-              key={img.id}
-              id={img.id}
-              name={img.caption}
-              file={img.data}
-            />
-          ))}
-        </Box>
-      </TabPanel>
+      >
+        {state && state.map((item) => (
+          <Image
+            className="draggableItem"
+            key={item.id}
+            id={item.id}
+            name={item.caption}
+            file={item.data}
+          />
+        ))}
+      </ReactSortable>
     </>
   )
+
+  // const [list, setList] = useState<any[]>(draggableList)
+
+  /* return (
+    <ReactSortable
+      filter=".addImageButtonContainer"
+      dragClass="sortableDrag"
+      list={list}
+      setList={setList}
+      animation={200}
+      easing="ease-out"
+    >
+      {list.map((item) => (
+        <div className="draggableItem">{item.name}</div>
+      ))}
+    </ReactSortable>
+  ) */
 })

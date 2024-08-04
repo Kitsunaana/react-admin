@@ -1,13 +1,14 @@
 import { z } from "zod"
 
-export const formSchema = z.object({
+export const categoryFormSchema = z.object({
   description: z.string().optional(),
   caption: z.string(),
   images: z.array(z.object({
     caption: z.string(),
-    data: z.object({
-      lastModified: z.number().optional(),
-    }),
+    data: z.record(z.unknown()),
+    index: z.number().optional(),
+    id: z.string(),
+    type: z.string(),
   })),
 })
 

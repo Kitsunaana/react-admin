@@ -1,4 +1,6 @@
-export const tabs = [
+import { ITab } from "./types"
+
+export const tabs: ITab[] = [
   {
     id: 0,
     caption: "common",

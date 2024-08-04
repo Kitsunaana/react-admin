@@ -7,6 +7,8 @@ import { Category } from '../entities-sequelize/category.entity';
 import { GetCategoryDto } from './dto/get-category-dto';
 import { Op } from 'sequelize';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
+import { HasMany } from 'sequelize-typescript';
+import { Media } from '../entities-sequelize/media.entity';
 
 @Injectable()
 export class CategoriesService {
@@ -33,7 +35,10 @@ export class CategoriesService {
   }*/
 
   async create(dto: CreateCategoryDto, files: Array<Express.Multer.File>) {
-    return this.categoryRepository.create(dto);
+    const category = await this.categoryRepository.create(dto);
+    const images = await this.filesService.saveMedia(files, category);
+
+    return category;
   }
 
   async update(id: number, dto: UpdateCategoryDto) {
@@ -41,10 +46,18 @@ export class CategoriesService {
   }
 
   async getAll(query: GetCategoryDto) {
-    const limit = 10;
+    const limit = 25;
     return await this.categoryRepository.findAndCountAll({
+      include: [
+        {
+          model: Media,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'mimetype', 'size', 'categoryId'],
+          },
+        },
+      ],
       attributes: {
-        exclude: ['createdAt', 'updatedAt'],
+        exclude: ['updatedAt'],
       },
       where: query?.search
         ? {

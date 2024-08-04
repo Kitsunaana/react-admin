@@ -7,11 +7,11 @@ export interface Option {
 export interface UseFormProps {
   caption: string;
   description: string;
-  images: {
-    caption: string,
-    data: File,
-    type: string,
-    id: string,
-    deleted?: boolean
-  }[]
+}
+
+export interface ITab {
+  id: number
+  caption: string
+  icon: string
+  content?: string[]
 }
