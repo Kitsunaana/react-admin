@@ -12,9 +12,9 @@ interface ImageProps {
   src?: string
   url?: string
   name?: string
-  local?: string
+  local?: boolean
   id: string
-  file: File
+  file?: File
   className?: string
 }
 
@@ -25,7 +25,7 @@ export const Image = (props: ImageProps) => {
 
   const { getValues, setValue } = useFormContext()
 
-  const [src, setSrc] = useState(srcProps)
+  const [src, setSrc] = useState(srcProps ?? url)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
@@ -104,9 +104,17 @@ export const Image = (props: ImageProps) => {
           color="warning"
           variant="contained"
           onClick={() => {
-            const images = getValues("images").filter((image: IFile) => image.id !== id)
+            if (local) {
+              const images = getValues("images").filter((image: IFile) => image.id !== id)
+              setValue("images", images)
+            }
 
-            setValue("images", images)
+            const media = getValues("media") ?? []
+            const newMedia = media.map((media) => {
+              if (media.id === id) media.deleted = true
+              return media
+            })
+            setValue("media", newMedia)
           }}
         >
           <Icon

@@ -1,20 +1,18 @@
 import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
-import { categoryFormSchema } from "features/categories/create-and-edit/model/schemas"
+import { createCategorySchema } from "features/categories/create-and-edit/model/schemas"
 import { createMultipart } from "shared/lib/multipart"
 import { z } from "zod"
 
 const URL = "/categories"
 
 export const categoriesApi = {
-  patch: async (id: number | null, data: z.infer<typeof categoryFormSchema>) => {
+  post: async (data: z.infer<typeof createCategorySchema>) => {
     try {
-      if (!id) throw new Error("Не указан id для катеогрии в запросе на удаление")
+      validation(createCategorySchema, data)
 
-      const validatedData = validation(categoryFormSchema, data)
-      const formData = createMultipart(validatedData, ["images"])
-
-      const response = await $axios.patch(`${URL}/${id}`, formData, {
+      const formData = createMultipart(data, ["images"])
+      const response = await $axios.post(URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
 
@@ -24,13 +22,15 @@ export const categoriesApi = {
     }
   },
 
-  post: async (data: z.infer<typeof categoryFormSchema>) => {
+  patch: async (id: number | null, data: z.infer<typeof createCategorySchema>) => {
     try {
-      validation(categoryFormSchema, data)
+      if (!id) throw new Error("Не указан id для катеогрии в запросе на удаление")
 
+      console.log(data)
+      validation(createCategorySchema, data)
       const formData = createMultipart(data, ["images"])
 
-      const response = await $axios.post(URL, formData, {
+      const response = await $axios.patch(`${URL}/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
 

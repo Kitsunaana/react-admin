@@ -74,11 +74,12 @@ export const DialogEdit = (props: DialogProps) => {
   const isEdit = id !== null
 
   const onSubmit = (data: any) => {
+    console.log(data)
     if (isEdit) onUpdate(data)
     else onCreate(data)
 
-    // reset()
-    // setOpen(false)
+    reset()
+    setOpen(false)
   }
 
   return (

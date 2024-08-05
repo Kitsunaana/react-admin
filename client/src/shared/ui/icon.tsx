@@ -42,6 +42,7 @@ const iconData = {
   warning: "warning",
   description: "speaker_notes",
   paste: "content_paste",
+  empty: "wb_iridescent",
 }
 
 interface DefaultIcon extends IconProps{

@@ -1,17 +1,17 @@
 export const createMultipart = (data: Record<string, any>, arrFile: string[] = []) => {
   const result = new FormData()
 
-  Object.keys(data).forEach((item) => {
-    if (arrFile.includes(item)) {
-      if (Array.isArray(data[item])) {
-        data[item].forEach((item) => {
-          if (item.data instanceof File || item.type.startsWith("image")) {
+  Object.keys(data).forEach((key) => {
+    if (arrFile.includes(key)) {
+      if (Array.isArray(data[key])) {
+        data[key].forEach((item) => {
+          if (item.data instanceof File) {
             result.append("images", item.data)
           }
         })
       }
     } else {
-      result.append(item, data[item])
+      result.append(key, typeof data[key] === "object" ? JSON.stringify(data[key]) : data[key])
     }
   })
 

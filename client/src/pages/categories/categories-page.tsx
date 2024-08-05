@@ -23,6 +23,8 @@ import { useSearchParams } from "react-router-dom"
 import { Text } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
 import { DialogDelete } from "features/categories/delete/ui/dialog"
+import { Icon } from "shared/ui/icon"
+import { validation } from "shared/lib/validation"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -105,9 +107,18 @@ const CategoriesPage = () => {
   })
 
   const renderContent = () => {
-    const { data, success } = categoriesSchema.safeParse(categoriesData?.rows)
+    if (!isSuccess) return
 
-    if (!(isSuccess && success)) return <div />
+    const data = validation(categoriesSchema, categoriesData)
+
+    if (data?.length === 0) {
+      return (
+        <Box ai flex jc sx={{ height: 1 }}>
+          <Icon color="warning" name="empty" sx={{ fontSize: 80 }} />
+          <Text langBase="global" name="listEmpty" />
+        </Box>
+      )
+    }
 
     return data.map((category: z.infer<typeof categorySchema>) => (
       <CategoryRow
@@ -115,8 +126,7 @@ const CategoriesPage = () => {
         caption={category.caption}
         id={category.id}
         order={category.order}
-        // images={category.images}
-        images={[]}
+        images={category.media ?? []}
       />
     ))
   }

@@ -10,7 +10,6 @@ import {
   InputProps,
 } from "@mui/material"
 import { Image } from "features/categories/create-and-edit/ui/image"
-import { ReactSortable } from "react-sortablejs"
 
 const uuid = () => "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, () => {
   const random = (Math.random() * 16) | 0
@@ -22,8 +21,7 @@ export interface IFile {
   data: File,
   type: string,
   id: string,
-  deleted?: boolean
-  index?: number
+  order?: number
 }
 
 interface InputFileProps extends Omit<InputProps, "onChange"> {
@@ -112,15 +110,16 @@ interface PhotosTabProps {
 export const PhotosTab = memo((props: PhotosTabProps) => {
   const { fullScreen } = props
 
-  const { setValue, watch } = useFormContext()
+  const { setValue, watch, getValues } = useFormContext()
 
   const watchImages = watch("images")
-
-  const [state, setState] = useState<any[]>(watchImages ?? [])
+  const watchMedia = watch("media")
 
   useEffect(() => {
-    setState(watchImages)
   }, [watchImages])
+
+  useEffect(() => {
+  }, [watchMedia])
 
   return (
     <>
@@ -142,33 +141,28 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
           setValue("images", setImages)
         }}
       />
-      <ReactSortable
-        onChange={(event) => {
-          const imageIds = Array.prototype.map.call(event.target.children, (element) => element.id)
-
-          const newState = state.map((image) => {
-            image.index = imageIds.findIndex((id) => id === image.id)
-            return image
-          })
-
-          setValue("images", newState)
-        }}
-        filter=".addImageButtonContainer"
-        dragClass="sortableDrag"
-        animation={200}
-        easing="ease-out"
-        list={state}
-        setList={setState}
-        style={{
+      <Box
+        sx={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 8,
+          gridTemplateRows: "170px",
+          gap: 1,
           overflowY: "scroll",
           height: fullScreen ? undefined : 380,
         }}
       >
-        {state && state.map((item) => (
+        {watchMedia && watchMedia.filter((media) => !media.deleted).map((item) => (
           <Image
+            url={`http://localhost:3333/${item.path}`}
+            className="draggableItem"
+            key={item.id}
+            id={item.id}
+            name={item.filename}
+          />
+        ))}
+        {watchImages && watchImages.map((item) => (
+          <Image
+            local
             className="draggableItem"
             key={item.id}
             id={item.id}
@@ -176,24 +170,7 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
             file={item.data}
           />
         ))}
-      </ReactSortable>
+      </Box>
     </>
   )
-
-  // const [list, setList] = useState<any[]>(draggableList)
-
-  /* return (
-    <ReactSortable
-      filter=".addImageButtonContainer"
-      dragClass="sortableDrag"
-      list={list}
-      setList={setList}
-      animation={200}
-      easing="ease-out"
-    >
-      {list.map((item) => (
-        <div className="draggableItem">{item.name}</div>
-      ))}
-    </ReactSortable>
-  ) */
 })

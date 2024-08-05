@@ -3,9 +3,9 @@ import { z } from "zod"
 import { $axios } from "shared/config/axios"
 import { queryClient } from "app/providers/query-client"
 import { categoriesApi } from "features/categories/create-and-edit/api/categories-api"
-import { categorySchema } from "../model/schemas"
+import { createCategorySchema } from "../model/schemas"
 
-type UpdateUseCategoryOptions = UseMutationOptions<unknown, unknown, z.infer<typeof categorySchema>>
+type UpdateUseCategoryOptions = UseMutationOptions<unknown, unknown, z.infer<typeof createCategorySchema>>
 type CreateUseCategoryOptions = {} & UpdateUseCategoryOptions
 
 export const updateCategoryOptions = (id: number | null): UpdateUseCategoryOptions => ({

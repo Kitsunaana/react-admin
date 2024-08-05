@@ -34,6 +34,7 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
                 width: 110,
                 height: 70,
                 objectFit: "cover",
+                borderRadius: 4,
               }}
             />
           ))}

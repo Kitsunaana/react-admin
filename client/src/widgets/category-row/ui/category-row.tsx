@@ -12,14 +12,14 @@ import styled from "styled-components"
 import { z } from "zod"
 import { DeleteButton } from "features/categories/delete/delete"
 import { EditButton } from "features/categories/create-and-edit/ui/edit-button"
-import { imageSchema } from "features/categories/create-and-edit/model/schemas"
 import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 import { dispatchDelete } from "shared/lib/event"
+import { mediaSchema } from "features/categories/create-and-edit/model/schemas"
 
 interface CategoryRowProps {
   id: number
   caption: string
-  images: z.infer<typeof imageSchema>[]
+  images: z.infer<typeof mediaSchema>[]
   order: number
 }
 
