@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { FilesService } from '../files/files.service';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { TransformedUpdateCategoryDto, UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Category } from '../entities-sequelize/category.entity';
 import { GetCategoryDto } from './dto/get-category-dto';
 import { Op } from 'sequelize';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
-import { HasMany } from 'sequelize-typescript';
 import { Media } from '../entities-sequelize/media.entity';
 
 @Injectable()
@@ -17,40 +16,34 @@ export class CategoriesService {
     private filesService: FilesService,
   ) {}
 
-  /*async create(dto: CreateCategoryDto, files: Array<Express.Multer.File>) {
-    const category = await this.categoryRepository.save(dto);
-
-    await this.filesService.saveMedia(files, category);
-
-    return await this.categoryRepository.findOne({
-      where: { id: category.id },
-      relations: { images: true },
-      select: {
-        images: {
-          path: true,
-          id: true,
-        },
-      },
-    });
-  }*/
-
   async create(dto: CreateCategoryDto, files: Array<Express.Multer.File>) {
     const category = await this.categoryRepository.create(dto);
-    const images = await this.filesService.saveMedia(files, category);
+    await this.filesService.saveMedia(files, category.id);
 
     return category;
   }
 
-  async update(id: number, dto: UpdateCategoryDto) {
-    return this.categoryRepository.update(dto, { where: { id } });
+  async update(id: number, dto: TransformedUpdateCategoryDto, files: Array<Express.Multer.File>) {
+    const values = Object.entries(dto).reduce((prev, [key, value]) => {
+      if (!['media'].includes(key)) prev[key] = value;
+
+      return prev;
+    }, {});
+
+    await this.filesService.saveMedia(files, id);
+    await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
+
+    return this.categoryRepository.update(values, { where: { id } });
   }
 
   async getAll(query: GetCategoryDto) {
     const limit = 25;
-    return await this.categoryRepository.findAndCountAll({
+
+    return await this.categoryRepository.findAll({
       include: [
         {
           model: Media,
+          separate: true,
           attributes: {
             exclude: ['createdAt', 'updatedAt', 'mimetype', 'size', 'categoryId'],
           },
@@ -67,22 +60,23 @@ export class CategoriesService {
             ],
           }
         : {},
-      order: [['order', 'desc'], 'createdAt'],
       limit,
-      ...(query?.page
-        ? {
-            offset: (query.page - 1) * limit,
-          }
-        : {}),
+      ...(query?.page ? { offset: (query.page - 1) * limit } : {}),
+      order: [['order', 'DESC']],
     });
   }
 
   async delete(id: number) {
-    return await this.categoryRepository.destroy({ where: { id } });
+    const category = await this.categoryRepository.findOne({
+      where: { id },
+      include: [{ model: Media }],
+    });
+    await this.filesService.deleteMedia(category.media);
+    return await category.destroy();
   }
 
   async getById(id: number) {
-    return await this.categoryRepository.findOne({ where: { id } });
+    return await this.categoryRepository.findOne({ where: { id }, include: [{ model: Media }] });
     /*return await this.unstable_categoryRepository.findOne({
       where: { id },
       relations: {

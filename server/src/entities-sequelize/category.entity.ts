@@ -23,5 +23,5 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
   order: number;
 
   @HasMany(() => Media, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  images: Media[];
+  media: Media[];
 }
