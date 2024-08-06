@@ -1,11 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import * as process from 'process';
-import { TypeormModule } from './typeorm/typeorm.module';
-import { DataSource } from 'typeorm';
-import { RolesModule } from './roles/roles.module';
-import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { CategoriesModule } from './categories/categories.module';
 import { LocalesModule } from './locales/locales.module';
@@ -16,7 +11,6 @@ import { SequelizeModule } from './sequelize/sequelize.module';
 
 @Module({
   imports: [
-    TypeormModule,
     MulterModule.register({
       dest: './uploads',
     }),
@@ -25,9 +19,6 @@ import { SequelizeModule } from './sequelize/sequelize.module';
       rootPath: join(__dirname, '..', 'uploads'),
     }),
     ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env` }),
-    UsersModule,
-    RolesModule,
-    AuthModule,
     FilesModule,
     CategoriesModule,
     LocalesModule,
@@ -35,5 +26,4 @@ import { SequelizeModule } from './sequelize/sequelize.module';
   ],
 })
 export class AppModule {
-  constructor(private dataSource: DataSource) {}
 }

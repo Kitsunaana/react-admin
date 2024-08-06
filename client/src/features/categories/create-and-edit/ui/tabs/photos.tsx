@@ -10,6 +10,7 @@ import {
   InputProps,
 } from "@mui/material"
 import { Image } from "features/categories/create-and-edit/ui/image"
+import { dispatch } from "shared/lib/event"
 
 const uuid = () => "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, () => {
   const random = (Math.random() * 16) | 0
@@ -110,7 +111,7 @@ interface PhotosTabProps {
 export const PhotosTab = memo((props: PhotosTabProps) => {
   const { fullScreen } = props
 
-  const { setValue, watch, getValues } = useFormContext()
+  const { setValue, watch } = useFormContext()
 
   const watchImages = watch("images")
   const watchMedia = watch("media")
@@ -120,6 +121,10 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
 
   useEffect(() => {
   }, [watchMedia])
+
+  const openSlider = () => {
+    dispatch("backdrop", { isActive: true })
+  }
 
   return (
     <>
@@ -153,6 +158,7 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
       >
         {watchMedia && watchMedia.filter((media) => !media.deleted).map((item) => (
           <Image
+            onClick={openSlider}
             url={`http://localhost:3333/${item.path}`}
             className="draggableItem"
             key={item.id}

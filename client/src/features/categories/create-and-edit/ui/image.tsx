@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Box } from "shared/ui/box"
+import {Box, BoxProps} from "shared/ui/box"
 import { alpha, Button } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
@@ -8,19 +8,18 @@ import { useFormContext } from "react-hook-form"
 import { IFile } from "features/categories/create-and-edit/ui/tabs/photos"
 import { Icon } from "shared/ui/icon"
 
-interface ImageProps {
+interface ImageProps extends BoxProps {
   src?: string
   url?: string
   name?: string
   local?: boolean
   id: string
   file?: File
-  className?: string
 }
 
 export const Image = (props: ImageProps) => {
   const {
-    url, name, local, src: srcProps, file, id, className,
+    url, name, local, src: srcProps, file, id, ...other
   } = props
 
   const { getValues, setValue } = useFormContext()
@@ -42,8 +41,8 @@ export const Image = (props: ImageProps) => {
 
   return (
     <Box
+      {...other}
       id={id}
-      className={className}
       sx={{
         position: "relative",
         height: 170,
