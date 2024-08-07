@@ -25,6 +25,7 @@ import { Mark } from "shared/ui/mark"
 import { DialogDelete } from "features/categories/delete/ui/dialog"
 import { Icon } from "shared/ui/icon"
 import { validation } from "shared/lib/validation"
+import { Gallery } from "widgets/galerry"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -170,6 +171,7 @@ const CategoriesPage = () => {
       />
       <Dialog />
       <DialogDelete />
+      <Gallery />
       <Backdrop />
     </>
   )

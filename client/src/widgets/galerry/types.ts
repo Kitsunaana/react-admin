@@ -1,5 +1,6 @@
-export interface Photo {
+export interface Image {
   id: number | string
   src?: File
-  url?: string
+  path?: string
+  caption: string
 }

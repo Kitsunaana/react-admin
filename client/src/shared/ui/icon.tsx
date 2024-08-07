@@ -43,6 +43,8 @@ const iconData = {
   description: "speaker_notes",
   paste: "content_paste",
   empty: "wb_iridescent",
+  prev: "arrow_back_ios",
+  next: "arrow_forward_ios",
 }
 
 interface DefaultIcon extends IconProps{

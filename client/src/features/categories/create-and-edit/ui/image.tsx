@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import {Box, BoxProps} from "shared/ui/box"
+import { Box, BoxProps } from "shared/ui/box"
 import { alpha, Button } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
@@ -102,7 +102,9 @@ export const Image = (props: ImageProps) => {
           }}
           color="warning"
           variant="contained"
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation()
+
             if (local) {
               const images = getValues("images").filter((image: IFile) => image.id !== id)
               setValue("images", images)

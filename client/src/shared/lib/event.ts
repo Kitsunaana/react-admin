@@ -1,5 +1,3 @@
-import { boolean } from "zod"
-
 interface IEvents {
   selected: {
     selectedId: number
@@ -20,6 +18,14 @@ interface IEvents {
   }
   backdrop: {
     isActive: boolean
+  }
+  gallery: {
+    images: {
+      id: number | string
+      data: File
+      caption: string
+    }[]
+    index?: number
   }
 }
 

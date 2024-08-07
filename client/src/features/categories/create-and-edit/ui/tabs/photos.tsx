@@ -122,8 +122,9 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
   useEffect(() => {
   }, [watchMedia])
 
-  const openSlider = () => {
-    dispatch("backdrop", { isActive: true })
+  const onOpenGallery = (id: number) => {
+    const findIndex = watchMedia.findIndex((media) => media.id === id)
+    dispatch("gallery", { images: watchMedia, index: findIndex })
   }
 
   return (
@@ -158,7 +159,7 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
       >
         {watchMedia && watchMedia.filter((media) => !media.deleted).map((item) => (
           <Image
-            onClick={openSlider}
+            onClick={() => onOpenGallery(item.id)}
             url={`http://localhost:3333/${item.path}`}
             className="draggableItem"
             key={item.id}
