@@ -3,14 +3,6 @@ interface IEvents {
     selectedId: number
     selectedOptionId: number | null
   },
-  hashchange: HashChangeEvent,
-  route: {
-    route: string
-    searchParams?: string
-  },
-  changeLanguage: {
-    language: "en" | "ru"
-  }
   theme: string
   changeIconsSettings: {
     fill?: number
@@ -20,11 +12,15 @@ interface IEvents {
     isActive: boolean
   }
   gallery: {
-    images: {
-      id: number | string
+    images: ({
+      id: string
       data: File
       caption: string
-    }[]
+    } | {
+      filename: string
+      id: number
+      path: string
+    })[]
     index?: number
   }
 }

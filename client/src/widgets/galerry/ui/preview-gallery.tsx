@@ -1,13 +1,40 @@
-import { Image } from "widgets/galerry/types"
+import { Image, Media } from "widgets/galerry/types"
 import {
   Dispatch, SetStateAction, useEffect, useMemo, useRef,
 } from "react"
 import { Box } from "shared/ui/box"
 import { ButtonBase } from "@mui/material"
+import { useImage } from "widgets/galerry/model/use-image"
+
+interface CustomImageProps {
+  caption: string
+  path?: string
+  file?: File
+}
+
+export const CustomImage = (props: CustomImageProps) => {
+  const { caption, path, file } = props
+
+  const src = useImage(path ?? file)
+
+  return (
+    <img
+      src={src}
+      alt={caption}
+      style={{
+        display: "block",
+        height: 80,
+        width: "100%",
+        borderRadius: 1,
+        objectFit: "cover",
+      }}
+    />
+  )
+}
 
 interface PreviewGalleryProps {
   activeImageIndex: number
-  images: Image[]
+  images: Array<Media | Image>
   setNextPhoto: Dispatch<SetStateAction<number>>
 }
 
@@ -56,17 +83,17 @@ export const PreviewGallery = (props: PreviewGalleryProps) => {
                   overflow: "hidden",
                 }}
               >
-                <img
-                  src={`http://localhost:3333/${image.path}`}
-                  alt={image.caption}
-                  style={{
-                    display: "block",
-                    height: 80,
-                    width: "100%",
-                    borderRadius: 1,
-                    objectFit: "cover",
-                  }}
-                />
+                {image.caption ? (
+                  <CustomImage
+                    caption={image.caption}
+                    file={image.data}
+                  />
+                ) : (
+                  <CustomImage
+                    caption={image.filename ?? ""}
+                    path={`http://localhost:3333/${image.path}`}
+                  />
+                )}
               </ButtonBase>
             </Box>
           ))}

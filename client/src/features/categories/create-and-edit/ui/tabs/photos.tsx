@@ -116,15 +116,12 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
   const watchImages = watch("images")
   const watchMedia = watch("media")
 
-  useEffect(() => {
-  }, [watchImages])
-
-  useEffect(() => {
-  }, [watchMedia])
-
   const onOpenGallery = (id: number) => {
-    const findIndex = watchMedia.findIndex((media) => media.id === id)
-    dispatch("gallery", { images: watchMedia, index: findIndex })
+    const filteredMedia = watchMedia?.filter((media) => !media.deleted)
+    const mergedImages = [...(filteredMedia ?? []), ...(watchImages ?? [])]
+
+    const findIndex = mergedImages.findIndex((media) => media.id === id)
+    dispatch("gallery", { images: mergedImages, index: findIndex })
   }
 
   return (
@@ -170,6 +167,7 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
         {watchImages && watchImages.map((item) => (
           <Image
             local
+            onClick={() => onOpenGallery(item.id)}
             className="draggableItem"
             key={item.id}
             id={item.id}

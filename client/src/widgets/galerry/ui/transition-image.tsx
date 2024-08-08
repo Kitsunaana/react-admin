@@ -1,35 +1,12 @@
-import { Image } from "widgets/galerry/types"
+import { Image, Media } from "widgets/galerry/types"
 import {
-  MutableRefObject, useLayoutEffect, useMemo, useRef, useState,
+  DetailedHTMLProps,
+  ImgHTMLAttributes,
+  MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef, useState,
 } from "react"
 import { Box } from "shared/ui/box"
 import styled from "styled-components"
-
-interface TransitionImageProps {
-  images: Image[]
-  indexActiveImage: number
-}
-
-type RefT = MutableRefObject<HTMLDivElement | null>
-
-const getPhotoByRef = (ref: RefT, index: number): HTMLElement | null => (
-    ref.current!.querySelector(`img:nth-of-type(${index + 1})`)
-)
-
-const hidePhoto = (element: HTMLElement | null) => {
-  if (!element) return
-
-  element.dataset.active = "false"
-  if (element.previousSibling) {
-    // @ts-ignore
-    element.previousSibling.dataset.active = "false"
-  }
-
-  if (element.nextSibling) {
-    // @ts-ignore
-    element.nextSibling.dataset.active = "false"
-  }
-}
+import { useImage } from "widgets/galerry/model/use-image"
 
 const TransitionImageContainer = styled(Box)`
   position: relative;
@@ -64,6 +41,32 @@ const CustomImage = styled.img`
   }
 `
 
+interface TransitionImageProps {
+  images: (Media | Image)[]
+  indexActiveImage: number
+}
+
+type RefT = MutableRefObject<HTMLDivElement | null>
+
+const getPhotoByRef = (ref: RefT, index: number): HTMLElement | null => (
+  ref.current!.querySelector(`img:nth-of-type(${index + 1})`)
+)
+
+const hidePhoto = (element: HTMLElement | null) => {
+  if (!element) return
+
+  element.dataset.active = "false"
+  if (element.previousSibling) {
+    // @ts-ignore
+    element.previousSibling.dataset.active = "false"
+  }
+
+  if (element.nextSibling) {
+    // @ts-ignore
+    element.nextSibling.dataset.active = "false"
+  }
+}
+
 const showPhoto = (element: HTMLElement | null) => {
   if (!element) return
 
@@ -77,6 +80,30 @@ const showPhoto = (element: HTMLElement | null) => {
     // @ts-ignore
     element.nextSibling.dataset.active = "prepared"
   }
+}
+
+interface ImageComponentProps extends
+  DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+{
+  file?: File
+  caption: string
+  path?: string
+}
+
+export const ImageComponent = (props: ImageComponentProps) => {
+  const {
+    path, file, caption, ...other
+  } = props
+
+  const src = useImage(path ?? file)
+
+  return (
+    <CustomImage
+      src={src}
+      alt={caption}
+      {...other}
+    />
+  )
 }
 
 export const TransitionImage = (props: TransitionImageProps) => {
@@ -103,15 +130,32 @@ export const TransitionImage = (props: TransitionImageProps) => {
 
   return useMemo(() => (
     <TransitionImageContainer ref={containerRef}>
-      {images.map((image) => (
-        <CustomImage
-          key={image.id}
-          src={`http://localhost:3333/${image.path}`}
-          alt={image.caption}
-          loading="lazy"
-          data-active={image.id === prevActiveIndexImage}
-        />
-      ))}
+      {images.map((image) => {
+        if (!image) return null
+
+        if (image.filename) {
+          return (
+            <ImageComponent
+              caption={image.filename}
+              key={image.id}
+              path={`http://localhost:3333/${image.path}`}
+              data-active={image.id === prevActiveIndexImage}
+            />
+          )
+        }
+
+        if (image.caption) {
+          return (
+            <ImageComponent
+              caption={image.caption}
+              key={image.id}
+              data-active={image.id === String(prevActiveIndexImage)}
+              file={image.data}
+            />
+          )
+        }
+        return null
+      })}
     </TransitionImageContainer>
   ), [])
 }

@@ -5,13 +5,11 @@ import { Box } from "shared/ui/box"
 import { TransitionImage } from "widgets/galerry/ui/transition-image"
 import { Navigation } from "widgets/galerry/ui/navigation"
 import { PreviewGallery } from "widgets/galerry/ui/preview-gallery"
+import { Image, Media } from "widgets/galerry/types"
 
 interface IData {
-  images: {
-    id: number | string
-    data: File
-    caption: string
-  }[]
+  index?: number
+  images: (Media | Image)[]
 }
 
 export const Gallery = () => {
@@ -44,7 +42,6 @@ export const Gallery = () => {
           backgroundColor: "transparent",
           backgroundImage: "unset",
           boxShadow: "unset",
-          // maxWidth: "calc(100% - 64px)",
           maxWidth: 750,
           width: 1,
         },
