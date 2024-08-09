@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 
 export const useImage = (data?: string | File) => {
-  const [src, setSrc] = useState(typeof data === "string" ? data : "")
+  const [src, setSrc] = useState(typeof data === "string"
+    ? `http://localhost:3333/${data}`
+    : "")
 
   if (data === undefined) return
 

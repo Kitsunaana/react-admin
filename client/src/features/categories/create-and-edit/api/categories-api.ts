@@ -26,7 +26,6 @@ export const categoriesApi = {
     try {
       if (!id) throw new Error("Не указан id для катеогрии в запросе на удаление")
 
-      console.log(data)
       validation(createCategorySchema, data)
       const formData = createMultipart(data, ["images"])
 

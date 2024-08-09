@@ -36,9 +36,7 @@ export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
       return findTabWithWarning && findTabWithWarning.id
     }), [...requiredFieldsDeps, getValues])
 
-  return {
-    tabWithWarning,
-  }
+  return tabWithWarning
 }
 
 export const TabsContainer = memo((props: TabsProps) => {
@@ -47,7 +45,7 @@ export const TabsContainer = memo((props: TabsProps) => {
   } = props
 
   const [tab, setTab] = useState(tabProps)
-  const { tabWithWarning } = useTabsWarning(tabs, requiredFields)
+  const tabsWithWarning = useTabsWarning(tabs, requiredFields)
   const { handleSubmit } = useFormContext()
 
   useEffect(() => { handleSubmit(() => {})() }, [])
@@ -56,26 +54,28 @@ export const TabsContainer = memo((props: TabsProps) => {
     setTab(tab)
   }), [])
 
-  const memoizedTabArray = useMemo(() => tabs.map((tab) => {
-    const isError = tabWithWarning.includes(tab.id)
+  const memoizedTabsArray = useMemo(() => tabs.map((item) => {
+    const isError = tabsWithWarning.includes(item.id)
 
+    console.log(tab, item.id)
     return (
       <Tab
+        isActive={tab === item.id}
         langBase={langBase}
-        key={tab.id}
+        key={item.id}
         isError={isError}
-        caption={tab.caption}
-        id={tab.id}
-        icon={tab.icon}
+        caption={item.caption}
+        id={item.id}
+        icon={item.icon}
       />
     )
-  }), [tabWithWarning])
+  }), [tabsWithWarning, tab])
 
   return (
     <Tabs
       tab={tab}
-      hasError={tabWithWarning.includes(tab)}
-      tabs={memoizedTabArray}
+      hasError={tabsWithWarning.includes(tab)}
+      tabs={memoizedTabsArray}
     />
   )
 })

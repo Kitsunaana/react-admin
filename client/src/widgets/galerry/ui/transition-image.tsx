@@ -6,7 +6,7 @@ import {
 } from "react"
 import { Box } from "shared/ui/box"
 import styled from "styled-components"
-import { useImage } from "widgets/galerry/model/use-image"
+import { useImage } from "shared/hooks/use-image"
 import { observer } from "mobx-react-lite"
 import { galleryStore } from "widgets/galerry/model/gallery-store"
 
@@ -152,7 +152,7 @@ export const TransitionImage = (props: TransitionImageProps) => {
             <ImageComponent
               caption={image.filename}
               key={image.id}
-              path={`http://localhost:3333/${image.path}`}
+              path={image.path}
               data-active={image.id === prevActiveIndexImage}
             />
           )

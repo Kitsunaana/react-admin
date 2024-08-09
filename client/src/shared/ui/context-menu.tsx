@@ -23,7 +23,7 @@ export const ContextMenu = forwardRef<
           zIndex: 10,
           position: "absolute",
           py: 1,
-          borderRadius: 1,
+          borderRadius: 3,
           backgroundColor: ({ palette }) => palette.grey["900"],
           backgroundImage: ({ background }) => background.sectionBackground,
           boxShadow: ({ shadows }) => shadows["6"],

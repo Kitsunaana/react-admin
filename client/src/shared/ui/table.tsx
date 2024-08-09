@@ -20,7 +20,7 @@ export const Table = (props: TableProps) => {
           height: 1,
           mx: 1,
           borderRadius: 1,
-          overflowY: "scroll",
+          overflowY: "auto",
           overflowX: "hidden",
         }}
       >

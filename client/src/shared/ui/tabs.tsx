@@ -1,13 +1,12 @@
 import * as React from "react"
 import {
-  memo, ReactNode, useEffect, useState,
+  memo, ReactNode,
 } from "react"
 import {
-  Tabs as MUITabs, useTheme,
+  Tabs as MUITabs, useTheme, TabsProps as BaseTabsProps,
 } from "@mui/material"
-import { useFormContext } from "react-hook-form"
 
-interface TabsProps {
+interface TabsProps extends BaseTabsProps {
   tab: number
   hasError: boolean
   tabs: ReactNode
@@ -15,13 +14,14 @@ interface TabsProps {
 
 export const Tabs = memo((props: TabsProps) => {
   const {
-    tab, hasError, tabs,
+    tab, hasError, tabs, ...other
   } = props
 
   const { palette } = useTheme()
 
   return (
     <MUITabs
+      {...other}
       value={tab}
       variant="scrollable"
       scrollButtons="auto"
@@ -33,6 +33,7 @@ export const Tabs = memo((props: TabsProps) => {
           ...(hasError ? {
             backgroundColor: palette.warning.main,
           } : {}),
+          display: "none",
         },
       }}
       sx={{

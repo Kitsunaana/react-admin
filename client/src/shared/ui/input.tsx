@@ -26,6 +26,7 @@ export const StyledInput = styled(TextField)<TextFieldProps>`
     & .MuiInputBase-root {
         padding-right: 4px;
         padding-left: 4px;
+      border-radius: 8px;
     }
 `
 

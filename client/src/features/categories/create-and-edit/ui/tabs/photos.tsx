@@ -54,7 +54,7 @@ const InputFile = (props: InputFileProps) => {
       jc="space-between"
       sx={{
         minHeight: 40,
-        borderRadius: 1,
+        borderRadius: 2,
         px: 0.5,
         cursor: "pointer",
         border: ({ palette }) => `1px solid ${palette.action.disabled}`,

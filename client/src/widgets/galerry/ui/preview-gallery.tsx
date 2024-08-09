@@ -4,7 +4,7 @@ import {
 } from "react"
 import { Box } from "shared/ui/box"
 import { alpha, ButtonBase } from "@mui/material"
-import { useImage } from "widgets/galerry/model/use-image"
+import { useImage } from "shared/hooks/use-image"
 
 interface CustomImageProps {
   caption: string
@@ -94,7 +94,7 @@ export const PreviewGallery = (props: PreviewGalleryProps) => {
                 ) : (
                   <CustomImage
                     caption={image.filename ?? ""}
-                    path={`http://localhost:3333/${image.path}`}
+                    path={image.path}
                   />
                 )}
               </ButtonBase>

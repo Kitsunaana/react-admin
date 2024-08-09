@@ -26,7 +26,7 @@ export const ContextMenuItem = memo((props: MenuActionItemProps) => {
         justifyContent: "space-between",
         alignItems: "center",
         gap: 2,
-        borderRadius: 1,
+        borderRadius: 2,
         mx: 1,
       }}
     >

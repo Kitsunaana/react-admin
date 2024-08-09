@@ -74,12 +74,12 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
           backgroundSize: "8px 8px",
         } : {}),
         "&:last-child": {
-          borderBottomLeftRadius: 4,
-          borderBottomRightRadius: 4,
+          borderBottomLeftRadius: 8,
+          borderBottomRightRadius: 8,
         },
         "&:first-of-type": {
-          borderTopLeftRadius: 4,
-          borderTopRightRadius: 4,
+          borderTopLeftRadius: 8,
+          borderTopRightRadius: 8,
         },
       }}
     >
