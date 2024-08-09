@@ -12,7 +12,6 @@ const TransitionImageContainer = styled(Box)`
   position: relative;
   width: 750px;
   height: 450px;
-  padding-bottom: 50%;
   background-color: #97a9b2;
   border-radius: 12px;
 `

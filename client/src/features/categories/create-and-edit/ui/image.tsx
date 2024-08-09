@@ -48,16 +48,6 @@ export const Image = (props: ImageProps) => {
         height: 170,
         overflow: "hidden",
         borderRadius: 2,
-        "&:hover .wrapper-filename": {
-          top: 0,
-        },
-        "&:hover img": {
-          filter: "blur(4px)",
-        },
-        "&:hover .button-delete": {
-          opacity: 1,
-          visibility: "visible",
-        },
       }}
     >
       <Box
@@ -75,12 +65,36 @@ export const Image = (props: ImageProps) => {
           backgroundColor: ({ palette }) => alpha(palette.grey["900"], 0.75),
           borderTopLeftRadius: 8,
           borderTopRightRadius: 8,
-          top: "-40px",
-          transition: ".2s",
           zIndex: 100,
         }}
       >
         <Text sx={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }} caption={name} />
+        <IconButton
+          sx={{
+            p: 0.5,
+            minWidth: "unset",
+            borderRadius: "50%",
+          }}
+          sxIcon={{
+            fontSize: 20,
+          }}
+          name="delete"
+          onClick={(event) => {
+            event.stopPropagation()
+
+            if (local) {
+              const images = getValues("images").filter((image: IFile) => image.id !== id)
+              setValue("images", images)
+            }
+
+            const media = getValues("media") ?? []
+            const newMedia = media.map((media) => {
+              if (media.id === id) media.deleted = true
+              return media
+            })
+            setValue("media", newMedia)
+          }}
+        />
       </Box>
       <Box sx={{
         position: "absolute",
@@ -90,12 +104,8 @@ export const Image = (props: ImageProps) => {
         zIndex: 100,
       }}
       >
-        <Button
-          className="button-delete"
+        {/* <Button
           sx={{
-            transition: ".2s",
-            opacity: 0,
-            visibility: "hidden",
             p: 0.5,
             minWidth: "unset",
             borderRadius: "50%",
@@ -124,7 +134,7 @@ export const Image = (props: ImageProps) => {
             }}
             name="delete"
           />
-        </Button>
+        </Button> */}
       </Box>
       <img
         src={src}

@@ -1,13 +1,13 @@
 import * as React from "react"
 import {
-  memo, useCallback, useEffect, useRef, useState,
+  memo, useRef,
 } from "react"
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import { useFormContext } from "react-hook-form"
 import {
-  InputProps,
+  InputProps, useMediaQuery, useTheme,
 } from "@mui/material"
 import { Image } from "features/categories/create-and-edit/ui/image"
 import { dispatch } from "shared/lib/event"
@@ -108,9 +108,19 @@ interface PhotosTabProps {
   fullScreen: boolean
 }
 
+export const useGetCountColumns = (fullScreen: boolean) => {
+  const { breakpoints } = useTheme()
+  const matchesXl = useMediaQuery(breakpoints.up("xl")) && fullScreen
+  const matchesLg = useMediaQuery(breakpoints.up("lg")) && fullScreen
+  const matchesMd = useMediaQuery(breakpoints.up("md")) && fullScreen
+
+  return matchesXl ? 6 : matchesLg ? 5 : matchesMd ? 4 : 3
+}
+
 export const PhotosTab = memo((props: PhotosTabProps) => {
   const { fullScreen } = props
 
+  const countColumns = useGetCountColumns(fullScreen)
   const { setValue, watch } = useFormContext()
 
   const watchImages = watch("images")
@@ -147,7 +157,7 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateColumns: `repeat(${countColumns}, 1fr)`,
           gridTemplateRows: "170px",
           gap: 1,
           overflowY: "scroll",
@@ -161,7 +171,7 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
             className="draggableItem"
             key={item.id}
             id={item.id}
-            name={item.filename}
+            name={item.originalName}
           />
         ))}
         {watchImages && watchImages.map((item) => (

@@ -10,6 +10,9 @@ export class Media extends Model<Media> {
   filename: string;
 
   @Column
+  originalName: string;
+
+  @Column
   size: number;
 
   @Column

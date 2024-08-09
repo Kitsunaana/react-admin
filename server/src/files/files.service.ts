@@ -16,6 +16,7 @@ export class FilesService {
           mimetype: file.mimetype,
           path: file.path,
           categoryId: categoryId,
+          originalName: file.originalname,
         });
       }),
     );
