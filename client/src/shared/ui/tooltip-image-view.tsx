@@ -1,35 +1,48 @@
 import { Badge, Tooltip } from "@mui/material"
 import { Icon } from "shared/ui/icon"
-import React, { memo } from "react"
+import React, { memo, useState } from "react"
 import { Box } from "shared/ui/box"
+import { dispatch } from "shared/lib/event"
 
 interface TooltipImageViewProps {
   images: {
     id: number,
-    path: string
+    path: string,
+    filename: string
   }[]
 }
 
 export const TooltipImageView = memo((props: TooltipImageViewProps) => {
   const { images } = props
 
+  const [open, setOpen] = useState(false)
+
+  const newImages = images.length >= 14 ? [...images].splice(0, 14) : images
+
   return (
     <Tooltip
       placement="top"
       arrow
+      open={open}
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
       title={(
         <Box
           gap
           sx={{
             display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
+            gridTemplateColumns: `repeat(${images.length === 1 ? 1 : 2}, 1fr)`,
           }}
         >
-          {images.map((image) => (
+          {newImages.map((image, index) => (
             <img
-              alt=""
+              alt={image.filename}
               key={image.id}
               src={`http://localhost:3333/${image.path}`}
+              onClick={() => {
+                setOpen(false)
+                dispatch("gallery", { images, index })
+              }}
               style={{
                 width: 110,
                 height: 70,

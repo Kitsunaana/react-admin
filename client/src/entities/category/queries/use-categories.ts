@@ -19,6 +19,7 @@ const stringifiedParams = <TParams extends object>(data: TParams) => {
 export const useCategories = (options: UseCategoriesOptions) => {
   const { search, page } = options
 
+  console.log(["categories", search, page])
   const {
     isLoading, data, error, isError, isFetching, isSuccess, refetch,
   } = useQuery({
