@@ -2,32 +2,42 @@ import { Image, Media } from "widgets/galerry/types"
 import {
   DetailedHTMLProps,
   ImgHTMLAttributes,
-  MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef, useState,
+  MutableRefObject, useLayoutEffect, useMemo, useRef, useState,
 } from "react"
 import { Box } from "shared/ui/box"
 import styled from "styled-components"
 import { useImage } from "widgets/galerry/model/use-image"
+import { observer } from "mobx-react-lite"
+import { galleryStore } from "widgets/galerry/model/gallery-store"
 
 const TransitionImageContainer = styled(Box)`
-  position: relative;
-  width: 750px;
-  height: 450px;
-  background-color: #97a9b2;
-  border-radius: 12px;
 `
 
-const CustomImage = styled.img`
+interface CustomImageProps extends
+  DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+{
+  transform: {
+    scale: number,
+    rotate: number
+  }
+}
+
+const CustomImage = styled.img<CustomImageProps>`
+  user-select: none;
   position: absolute;
-  top: 0px;
-  left: 0px;
   display: none;
-  width: 100%;
-  height: 100%;
   object-fit: cover;
   z-index: 2;
   border-radius: 12px;
   opacity: 0;
-  transition: opacity 0.5s;
+  transition: opacity 0.5s, transform 0.3s;
+  max-height: calc(100% - 248px);
+  max-width: 1000px;
+  top: 50%;
+  left: 50%;
+  transform: ${({ transform }) => (
+    `translate(-50%, -50%) scale(${transform.scale}) rotate(${transform.rotate}deg)`
+  )};
   
   &[data-active=true] {
     display: block;
@@ -89,21 +99,26 @@ interface ImageComponentProps extends
   path?: string
 }
 
-export const ImageComponent = (props: ImageComponentProps) => {
+export const ImageComponent = observer((props:ImageComponentProps) => {
   const {
     path, file, caption, ...other
   } = props
 
   const src = useImage(path ?? file)
+  const transform = {
+    scale: galleryStore.scale,
+    rotate: galleryStore.rotate,
+  }
 
   return (
     <CustomImage
+      transform={transform}
       src={src}
       alt={caption}
       {...other}
     />
   )
-}
+})
 
 export const TransitionImage = (props: TransitionImageProps) => {
   const { images, indexActiveImage } = props

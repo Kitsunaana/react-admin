@@ -3,7 +3,7 @@ import {
   Dispatch, SetStateAction, useEffect, useMemo, useRef,
 } from "react"
 import { Box } from "shared/ui/box"
-import { ButtonBase } from "@mui/material"
+import { alpha, ButtonBase } from "@mui/material"
 import { useImage } from "widgets/galerry/model/use-image"
 
 interface CustomImageProps {
@@ -56,6 +56,9 @@ export const PreviewGallery = (props: PreviewGalleryProps) => {
         overflow: "hidden",
         position: "relative",
         margin: "0 auto",
+        zIndex: 45,
+        boxShadow: ({ shadows }) => shadows[4],
+        borderRadius: 1,
       }}
     >
       {useMemo(() => (
@@ -101,20 +104,21 @@ export const PreviewGallery = (props: PreviewGalleryProps) => {
       ), [])}
       <Box
         sx={{
-          height: 1,
+          height: "calc(100% - 10px)",
           position: "absolute",
           zIndex: 33,
-          width: 164,
-          backgroundColor: "rgba(255,255,255,.7)",
+          width: 154,
+          backgroundColor: "rgba(0,0,0,.7)",
           left: "50%",
-          top: 0,
+          top: 5,
           transform: "translate(-50%, 0)",
           borderRadius: 1,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "black",
+          color: "white",
           fontSize: 24,
+          userSelect: "none",
         }}
       >
         {activeImageIndex + 1}

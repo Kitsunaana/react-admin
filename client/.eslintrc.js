@@ -40,6 +40,7 @@ module.exports = {
     "no-underscore-dangle": "off",
     "no-param-reassign": "off",
     "consistent-return": "off",
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "lines-between-class-members": "off",
   },
 }

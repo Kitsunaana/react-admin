@@ -96,47 +96,10 @@ export const Image = (props: ImageProps) => {
           }}
         />
       </Box>
-      <Box sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        zIndex: 100,
-      }}
-      >
-        {/* <Button
-          sx={{
-            p: 0.5,
-            minWidth: "unset",
-            borderRadius: "50%",
-          }}
-          color="warning"
-          variant="contained"
-          onClick={(event) => {
-            event.stopPropagation()
-
-            if (local) {
-              const images = getValues("images").filter((image: IFile) => image.id !== id)
-              setValue("images", images)
-            }
-
-            const media = getValues("media") ?? []
-            const newMedia = media.map((media) => {
-              if (media.id === id) media.deleted = true
-              return media
-            })
-            setValue("media", newMedia)
-          }}
-        >
-          <Icon
-            sx={{
-              color: ({ palette }) => palette.grey["900"],
-            }}
-            name="delete"
-          />
-        </Button> */}
-      </Box>
       <img
+        onLoad={() => {
+          console.log(1)
+        }}
         src={src}
         alt=""
         style={{

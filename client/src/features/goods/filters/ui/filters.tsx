@@ -7,8 +7,6 @@ import React, {
 import { Box } from "shared/ui/box"
 import { Input } from "shared/ui/input"
 import { addEvent } from "shared/lib/event"
-import { actionParams } from "shared/lib/params"
-import queryString from "query-string"
 import { z } from "zod"
 import { Select } from "shared/ui/select"
 import { IconButton } from "shared/ui/icon-button"
@@ -54,7 +52,7 @@ const paramsSchema = z.object({
 export const Filters = memo((props: FiltersProps) => {
   const { createButton } = props
 
-  const readParams = paramsSchema.parse(queryString.parseUrl(window.location.search).query)
+  const readParams = { category: "", typeGood: "", search: "" }
 
   const methods = useForm<UseFormProps>({
     defaultValues: {
@@ -67,7 +65,7 @@ export const Filters = memo((props: FiltersProps) => {
   useEffect(() => addEvent("catalog/goods" as any, (data) => {
     const url = data?.params ? `?${data.params}` : window.location.search
 
-    const parseParams = paramsSchema.parse(queryString.parseUrl(url).query);
+    const parseParams = { category: "", typeGood: "", search: "" };
 
     (Object.keys(parseParams) as Array<keyof UseFormProps>).forEach((key) => {
       methods.setValue(key, { value: parseParams[key] })
@@ -82,7 +80,7 @@ export const Filters = memo((props: FiltersProps) => {
     const event = (event) => {
       if (event.code === "Enter") {
         const search = methods.getValues("search")
-        if (search?.value) actionParams.push("search", search.value)
+        // if (search?.value) actionParams.push("search", search.value)
 
         methods.handleSubmit(onSubmit)()
       }
@@ -103,7 +101,7 @@ export const Filters = memo((props: FiltersProps) => {
               {...field}
               setValue={methods.setValue}
               onClear={() => {
-                actionParams.push("search", null)
+                // actionParams.push("search", null)
               }}
               sx={{ flexGrow: 1 }}
               size="small"
@@ -127,7 +125,7 @@ export const Filters = memo((props: FiltersProps) => {
               options={categoryList}
               onChange={(_, value) => {
                 onChange(value)
-                actionParams.push("category", value)
+                // actionParams.push("category", value)
                 methods.handleSubmit(onSubmit)()
               }}
               sx={{ width: 1 }}
@@ -148,7 +146,7 @@ export const Filters = memo((props: FiltersProps) => {
               options={typeGoodList}
               onChange={(_, value) => {
                 onChange(value)
-                actionParams.push("typeGood", value)
+                // actionParams.push("typeGood", value)
                 methods.handleSubmit(onSubmit)()
               }}
               sx={{ width: 1 }}

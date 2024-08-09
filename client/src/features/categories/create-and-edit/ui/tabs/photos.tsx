@@ -160,7 +160,7 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
           gridTemplateColumns: `repeat(${countColumns}, 1fr)`,
           gridTemplateRows: "170px",
           gap: 1,
-          overflowY: "scroll",
+          overflowY: "auto",
           height: fullScreen ? undefined : 380,
         }}
       >

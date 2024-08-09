@@ -45,6 +45,11 @@ const iconData = {
   empty: "wb_iridescent",
   prev: "arrow_back_ios",
   next: "arrow_forward_ios",
+  setDefaultParameters: "reset_image",
+  imageScaleUp: "zoom_in",
+  imageScaleDown: "zoom_out",
+  rotateLeft: "rotate_left",
+  rotateRight: "rotate_right",
 }
 
 interface DefaultIcon extends IconProps{
