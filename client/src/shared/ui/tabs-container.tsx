@@ -57,7 +57,6 @@ export const TabsContainer = memo((props: TabsProps) => {
   const memoizedTabsArray = useMemo(() => tabs.map((item) => {
     const isError = tabsWithWarning.includes(item.id)
 
-    console.log(tab, item.id)
     return (
       <Tab
         isActive={tab === item.id}

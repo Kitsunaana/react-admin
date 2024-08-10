@@ -1,4 +1,10 @@
 import { makeAutoObservable } from "mobx"
+import { Image, Media } from "widgets/galerry/model/types"
+
+interface IData {
+  index?: number
+  images: (Media | Image)[]
+}
 
 class GalleryStore {
   scale = 1
@@ -7,20 +13,68 @@ class GalleryStore {
 
   rotate = 0
 
+  open = false
+  indexActiveImage = 0
+  images: (Media | Image)[] = []
+
   constructor() {
-    makeAutoObservable(this)
+    makeAutoObservable(this, {}, {
+      autoBind: true,
+    })
   }
 
-  updateScale = (direction: "up" | "down") => {
-    this.scale += direction === "up" ? 0.2 : -0.2
+  openGallery(data: IData) {
+    this.open = true
+    this.images = data.images
+    this.indexActiveImage = data.index ?? 0
   }
 
-  canScale = (direction: "up" | "down") => {
-    const { scale, maxScale, minScale } = this
+  closeGallery() {
+    this.open = false
+  }
 
-    return direction === "up"
-      ? scale >= maxScale
-      : scale <= minScale
+  get prevImage() {
+    return this.images[this.indexActiveImage - 1]
+  }
+
+  get nextImage() {
+    return this.images[this.indexActiveImage + 1]
+  }
+
+  setNextIndexActiveImage() {
+    this.indexActiveImage += 1
+  }
+
+  setPrevIndexActiveImage() {
+    this.indexActiveImage -= 1
+  }
+
+  setIndexActiveImage(index: number) {
+    this.indexActiveImage = index
+  }
+
+  zoomInScale() {
+    this.scale += 0.2
+  }
+
+  zoomOutScale() {
+    this.scale += -0.2
+  }
+
+  get canZoomInScale() {
+    return this.scale >= this.maxScale
+  }
+
+  get canZoomOutScale() {
+    return this.scale <= this.minScale
+  }
+
+  get disabledPrev() {
+    return !this.prevImage
+  }
+
+  get disabledNext() {
+    return !this.nextImage
   }
 
   updateRotate = (direction: "right" | "left") => {

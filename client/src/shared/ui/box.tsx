@@ -1,5 +1,5 @@
 import {
-  Box as MUIBox, BoxProps as MUIBoxProps, Tooltip, TooltipProps,
+  Box as MUIBox, BoxProps as MUIBoxProps, Theme, Tooltip, TooltipProps,
 } from "@mui/material"
 import { CSSProperties, forwardRef } from "react"
 import { StandardLonghandProperties } from "csstype"
@@ -16,6 +16,8 @@ export interface BoxProps extends Omit<MUIBoxProps, "gap" | "flex"> {
   grow?: boolean | number
   strong?: boolean,
   help?: TooltipProps,
+
+  theme?: Theme
 }
 
 export const Box = forwardRef((props: BoxProps, ref) => {

@@ -1,63 +1,56 @@
-import { Box } from "shared/ui/box"
-import { Button } from "@mui/material"
+import { Box, BoxProps } from "shared/ui/box"
+import {
+  Button, ButtonProps, Theme, useTheme,
+} from "@mui/material"
 import { Icon } from "shared/ui/icon"
+import { galleryStore } from "widgets/galerry/model/gallery-store"
+import { observer } from "mobx-react-lite"
+import styled from "styled-components"
 
-interface NavigationProps {
-  disabledPrev?: boolean
-  disabledNext?: boolean
-  onPrevClick: () => void
-  onNextClick: () => void
-}
+export const NavigationContainer = styled(Box)<BoxProps>`
+  background-color: ${({ theme }) => theme.palette.common.black};
+  background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
+  border-radius: 12px;
+  padding: 6px;
+  display: inline-flex;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 33;
+  gap: 6px;
+`
 
-export const Navigation = (props: NavigationProps) => {
-  const {
-    disabledNext, disabledPrev, onPrevClick, onNextClick,
-  } = props
+export const NavigationButton = styled(Button)<ButtonProps & { theme: Theme }>`
+  background-color: ${({ theme }) => theme.palette.primary.dark};
+  min-width: 0;
+  padding: 8px;
+  border-radius: 8px;
+`
+
+export const Navigation = observer(() => {
+  const theme = useTheme()
 
   return (
-    <Box
-      sx={{
-        backgroundColor: ({ palette }) => palette.common.black,
-        backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16))",
-        borderRadius: 3,
-        p: 0.75,
-        display: "inline-flex",
-        position: "absolute",
-        bottom: 10,
-        left: "50%",
-        transform: "translate(-50%, 0)",
-        zIndex: 33,
-        gap: 0.75,
-      }}
-    >
-      <Button
-        sx={{
-          p: 1,
-          minWidth: 0,
-          backgroundColor: ({ palette }) => palette.primary.dark,
-          borderRadius: 2,
-        }}
+    <NavigationContainer theme={theme}>
+      <NavigationButton
+        theme={theme}
         variant="contained"
         color="primary"
-        disabled={disabledPrev}
-        onClick={onPrevClick}
+        disabled={galleryStore.disabledPrev}
+        onClick={galleryStore.setPrevIndexActiveImage}
       >
         <Icon name="next" sx={{ transform: "rotate(180deg)", color: "white" }} />
-      </Button>
-      <Button
-        sx={{
-          p: 1,
-          minWidth: 0,
-          backgroundColor: ({ palette }) => palette.primary.dark,
-          borderRadius: 2,
-        }}
+      </NavigationButton>
+      <NavigationButton
+        theme={theme}
         variant="contained"
         color="primary"
-        disabled={disabledNext}
-        onClick={onNextClick}
+        disabled={galleryStore.disabledNext}
+        onClick={galleryStore.setNextIndexActiveImage}
       >
         <Icon name="next" sx={{ color: "white" }} />
-      </Button>
-    </Box>
+      </NavigationButton>
+    </NavigationContainer>
   )
-}
+})
