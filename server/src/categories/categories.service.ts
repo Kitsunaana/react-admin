@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { FilesService } from '../files/files.service';
-import { TransformedUpdateCategoryDto, UpdateCategoryDto } from './dto/update-category.dto';
+import { TransformedUpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Category } from '../entities-sequelize/category.entity';
 import { GetCategoryDto } from './dto/get-category-dto';
-import { Op } from 'sequelize';
+import sequelize, { Op, Sequelize } from 'sequelize';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { Media } from '../entities-sequelize/media.entity';
 
@@ -30,6 +30,8 @@ export class CategoriesService {
       return prev;
     }, {});
 
+    console.log(dto);
+    await this.filesService.updateOrder(dto.media);
     await this.filesService.saveMedia(files, id);
     await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
 
@@ -47,6 +49,10 @@ export class CategoriesService {
           attributes: {
             exclude: ['createdAt', 'updatedAt', 'mimetype', 'size', 'categoryId'],
           },
+          order: [
+            [Sequelize.col('Media.order'), 'desc'],
+            [Sequelize.col('Media.createdAt'), 'asc'],
+          ],
         },
       ],
       attributes: {
@@ -76,19 +82,20 @@ export class CategoriesService {
   }
 
   async getById(id: number) {
-    return await this.categoryRepository.findOne({ where: { id }, include: [{ model: Media }] });
-    /*return await this.unstable_categoryRepository.findOne({
+    return await this.categoryRepository.findOne({
       where: { id },
-      relations: {
-        images: true,
-      },
-      select: {
-        images: {
-          path: true,
-          id: true,
+      include: [
+        {
+          model: Media,
+          as: 'media',
         },
-      },
-    });*/
+      ],
+      order: [
+        [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],
+        [Sequelize.col('media.order'), 'desc'],
+        [Sequelize.col('media.createdAt'), 'desc'],
+      ],
+    });
   }
 
   async updateOrder(dto: UpdateOrderCategoryDto) {

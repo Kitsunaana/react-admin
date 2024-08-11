@@ -33,4 +33,5 @@ export const getByIdCategoryOptions = (id: number | null): UseQueryOptions => ({
   queryKey: ["category", id],
   queryFn: () => $axios.get(`/categories/${id}`)
     .then(({ data }) => data),
+  staleTime: 0,
 })

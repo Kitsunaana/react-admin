@@ -7,26 +7,25 @@ import { Box } from "shared/ui/box"
 import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import {
   createCategoryOptions,
-  getByIdCategoryOptions,
-  updateCategoryOptions,
+  getByIdCategoryOptions, updateCategoryOptions,
 } from "features/categories/create-and-edit/queries/queries"
 import { tabs } from "features/categories/create-and-edit/model/constants"
-import { UseFormProps } from "features/categories/create-and-edit/model/types"
 import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
-import { useCallback } from "react"
+import { useMemo } from "react"
+import { observer } from "mobx-react-lite"
 
-export const Dialog = () => {
+export const Dialog = observer(() => {
   const tabDefault = 0
   const langBase = "catalog.dialog"
 
-  const methods = useForm<UseFormProps>({
+  const methods = useForm<any>({
     defaultValues: {
       caption: "",
       description: "",
     },
   })
 
-  const renderContainer = useCallback((fullScreen) => (
+  const renderContainer = useMemo(() => (
     <Box flex gap>
       <TabsContainer
         langBase={langBase}
@@ -35,7 +34,7 @@ export const Dialog = () => {
         requiredFields={["caption"]}
       />
       <ContentContainer
-        fullScreen={fullScreen}
+        fullScreen={false}
         langBase={langBase}
         tab={tabDefault}
       />
@@ -52,4 +51,4 @@ export const Dialog = () => {
       />
     </FormProvider>
   )
-}
+})

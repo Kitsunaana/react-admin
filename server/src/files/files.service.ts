@@ -35,4 +35,12 @@ export class FilesService {
       }),
     );
   }
+
+  async updateOrder(media: Media[]) {
+    return await Promise.all(
+      media.map(async (file) => {
+        return await this.mediaRepository.update(file, { where: { id: file.id } });
+      }),
+    );
+  }
 }

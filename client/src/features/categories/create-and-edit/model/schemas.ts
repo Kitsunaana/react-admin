@@ -28,7 +28,10 @@ export const mediaSchema = z.object({
   id: z.number(),
   path: z.string(),
   filename: z.string(),
+  order: z.number().optional().nullable(),
 })
+
+export type Media = z.infer<typeof mediaSchema>
 
 export const categorySchema = z.object({
   id: z.number(),

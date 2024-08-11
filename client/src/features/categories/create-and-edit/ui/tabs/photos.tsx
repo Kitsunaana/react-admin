@@ -1,6 +1,6 @@
 import * as React from "react"
 import {
-  memo, useRef,
+  memo, useCallback, useEffect, useRef,
 } from "react"
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
@@ -11,6 +11,10 @@ import {
 } from "@mui/material"
 import { Image } from "features/categories/create-and-edit/ui/image"
 import { dispatch } from "shared/lib/event"
+import { shallowEqual } from "shared/lib/utils"
+import { makeAutoObservable, observable } from "mobx"
+import { Media } from "features/categories/create-and-edit/model/schemas"
+import { observer } from "mobx-react-lite"
 
 const uuid = () => "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, () => {
   const random = (Math.random() * 16) | 0
@@ -39,7 +43,7 @@ interface InputFileProps extends Omit<InputProps, "onChange"> {
   onChange: (data: IFile[]) => void
 }
 
-const InputFile = (props: InputFileProps) => {
+const InputFile = memo((props: InputFileProps) => {
   const {
     accept, caption, clear, multiple, value, name, onChange, sx, ...other
   } = props
@@ -102,7 +106,7 @@ const InputFile = (props: InputFileProps) => {
       />
     </Box>
   )
-}
+}, shallowEqual)
 
 interface PhotosTabProps {
   fullScreen: boolean
@@ -117,11 +121,11 @@ export const useGetCountColumns = (fullScreen: boolean) => {
   return matchesXl ? 6 : matchesLg ? 5 : matchesMd ? 4 : 3
 }
 
-export const PhotosTab = memo((props: PhotosTabProps) => {
+export const PhotosTab = observer((props: PhotosTabProps) => {
   const { fullScreen } = props
 
   const countColumns = useGetCountColumns(fullScreen)
-  const { setValue, watch } = useFormContext()
+  const { setValue, watch, getValues } = useFormContext()
 
   const watchImages = watch("images")
   const watchMedia = watch("media")
@@ -134,29 +138,29 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
     dispatch("gallery", { images: mergedImages, index: findIndex })
   }
 
+  const onFileUpload = useCallback((data: IFile[]) => {
+    const setImages = Array.isArray(watchImages)
+      ? [...watchImages, ...data]
+      : data
+
+    setValue("images", setImages)
+  }, [])
+
   return (
     <>
       <InputFile
-        sx={{
-          mb: 1,
-        }}
         caption=""
         name="images"
         multiple
         clear={false}
         accept="image/!*"
         disabled={false}
-        onChange={(data) => {
-          const setImages = Array.isArray(watchImages)
-            ? [...watchImages, ...data]
-            : data
-
-          setValue("images", setImages)
-        }}
+        onChange={onFileUpload}
       />
       <Box
         sx={{
           display: "grid",
+          mt: 1,
           gridTemplateColumns: `repeat(${countColumns}, 1fr)`,
           gridTemplateRows: "170px",
           gap: 1,
@@ -166,9 +170,9 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
       >
         {watchMedia && watchMedia.filter((media) => !media.deleted).map((item) => (
           <Image
+            order={item.order}
             onClick={() => onOpenGallery(item.id)}
             url={`http://localhost:3333/${item.path}`}
-            className="draggableItem"
             key={item.id}
             id={item.id}
             name={item.originalName}
@@ -178,7 +182,6 @@ export const PhotosTab = memo((props: PhotosTabProps) => {
           <Image
             local
             onClick={() => onOpenGallery(item.id)}
-            className="draggableItem"
             key={item.id}
             id={item.id}
             name={item.caption}

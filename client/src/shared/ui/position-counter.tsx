@@ -5,8 +5,7 @@ import { Box, BoxProps } from "shared/ui/box"
 import { IconButton } from "shared/ui/icon-button"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
-import { useMutation } from "@tanstack/react-query"
-import { $axios } from "shared/config/axios"
+import { useMutation, UseMutationOptions } from "@tanstack/react-query"
 
 interface ContainerProps extends BoxProps {
   width: number
@@ -49,10 +48,13 @@ interface PositionProps {
   order: number
   sx?: SxProps<Theme>
   id: number
+  updatePositionOptions: (id: number) => UseMutationOptions<any, any, number, any>
 }
 
 export const Position = memo((props: PositionProps) => {
-  const { order: orderProps, sx, id } = props
+  const {
+    order: orderProps, sx, id, updatePositionOptions,
+  } = props
 
   const [open, setOpen] = useState(false)
   const [order, setOrder] = useState(orderProps)
@@ -65,8 +67,7 @@ export const Position = memo((props: PositionProps) => {
   const width = String(order).split("").length
 
   const { isPending, mutate } = useMutation({
-    mutationKey: ["categories"],
-    mutationFn: (order: number) => $axios.patch("/categories/order", { order, id }),
+    ...updatePositionOptions(id),
     onSuccess: (data) => {
       setOrder((prevState) => prevState + direction)
     },

@@ -15,6 +15,8 @@ import { EditButton } from "features/categories/create-and-edit/ui/edit-button"
 import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 import { dispatchDelete } from "shared/lib/event"
 import { mediaSchema } from "features/categories/create-and-edit/model/schemas"
+import { UseMutationOptions } from "@tanstack/react-query"
+import { $axios } from "shared/config/axios"
 
 interface CategoryRowProps {
   id: number
@@ -46,6 +48,19 @@ export const CategoryGoodsAdditional = memo((props: {caption: string }) => {
       />
     </Badge>
   )
+})
+
+/* const { isPending, mutate } = useMutation({
+    mutationKey: ["categories"],
+    mutationFn: (order: number) => $axios.patch("/categories/order", { order, id }),
+    onSuccess: (data) => {
+      setOrder((prevState) => prevState + direction)
+    },
+  }) */
+
+export const updatePositionOptions = (id: number): UseMutationOptions<any, any, number> => ({
+  mutationKey: ["categories", id],
+  mutationFn: (order: number) => $axios.patch("/categories/order", { order, id }),
 })
 
 export const CategoryRow = (props: CategoryRowProps) => {
@@ -80,7 +95,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
           {renderVertical}
           <CategoryGoodsAdditional caption={caption} />
           {renderVertical}
-          <Position order={order} id={id} />
+          <Position updatePositionOptions={updatePositionOptions} order={order} id={id} />
           {renderVertical}
           <IconButton
             name="stopList"

@@ -24,7 +24,7 @@ export const categoriesApi = {
 
   patch: async (id: number | null, data: z.infer<typeof createCategorySchema>) => {
     try {
-      if (!id) throw new Error("Не указан id для катеогрии в запросе на удаление")
+      if (!id) throw new Error("Не указан id для катеогрии в запросе на редактирование")
 
       validation(createCategorySchema, data)
       const formData = createMultipart(data, ["images"])

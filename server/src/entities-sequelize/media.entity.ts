@@ -21,6 +21,9 @@ export class Media extends Model<Media> {
   @Column
   path: string;
 
+  @Column({ defaultValue: null, allowNull: true })
+  order: number;
+
   @Column
   @ForeignKey(() => Category)
   categoryId: number;

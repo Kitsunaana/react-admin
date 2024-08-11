@@ -7,19 +7,25 @@ import * as React from "react"
 import { useFormContext } from "react-hook-form"
 import { IFile } from "features/categories/create-and-edit/ui/tabs/photos"
 import { Icon } from "shared/ui/icon"
+import { Position } from "shared/ui/position-counter"
+import { UseMutationOptions } from "@tanstack/react-query"
+import { $axios } from "shared/config/axios"
+import { UpdateOrder } from "features/categories/create-and-edit/ui/update-order"
+import { Order } from "features/categories/create-and-edit/model/types"
 
-interface ImageProps extends BoxProps {
+interface ImageProps extends Omit<BoxProps, "id" | "order"> {
   src?: string
   url?: string
   name?: string
   local?: boolean
-  id: string
+  id: string | number
   file?: File
+  order?: number | null
 }
 
 export const Image = (props: ImageProps) => {
   const {
-    url, name, local, src: srcProps, file, id, ...other
+    url, name, local, src: srcProps, file, id, order, ...other
   } = props
 
   const { getValues, setValue } = useFormContext()
@@ -42,7 +48,7 @@ export const Image = (props: ImageProps) => {
   return (
     <Box
       {...other}
-      id={id}
+      id={String(id)}
       sx={{
         position: "relative",
         height: 170,
@@ -51,6 +57,7 @@ export const Image = (props: ImageProps) => {
       }}
     >
       <Box
+        onClick={(event) => event.stopPropagation()}
         className="wrapper-filename"
         flex
         ai
@@ -68,7 +75,27 @@ export const Image = (props: ImageProps) => {
           zIndex: 100,
         }}
       >
-        <Text sx={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }} caption={name} />
+        <Text
+          sx={{
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            width: 1,
+          }}
+          caption={name}
+        />
+        {(typeof order === "number" || order === null) && typeof id === "number" && (
+          <UpdateOrder
+            order={order}
+            id={id}
+            onClick={(order, id) => {
+              const media = (getValues("media") ?? [])
+                .map((media) => (media.id === id ? { ...media, order } : media))
+
+              setValue("media", media)
+            }}
+          />
+        )}
         <IconButton
           sx={{
             p: 0.5,
@@ -78,7 +105,7 @@ export const Image = (props: ImageProps) => {
           sxIcon={{
             fontSize: 20,
           }}
-          name="delete"
+          name="clear"
           onClick={(event) => {
             event.stopPropagation()
 
@@ -97,9 +124,6 @@ export const Image = (props: ImageProps) => {
         />
       </Box>
       <img
-        onLoad={() => {
-          console.log(1)
-        }}
         src={src}
         alt=""
         style={{
@@ -107,7 +131,7 @@ export const Image = (props: ImageProps) => {
           borderRadius: 8,
           width: "100%",
           height: "170px",
-          objectFit: "cover",
+          objectFit: "contain",
         }}
       />
     </Box>
