@@ -50,6 +50,8 @@ const iconData = {
   imageScaleDown: "zoom_out",
   rotateLeft: "rotate_left",
   rotateRight: "rotate_right",
+  infinity: "all_inclusive",
+  zoomEffect: "pinch_zoom_in",
 }
 
 interface DefaultIcon extends IconProps{
