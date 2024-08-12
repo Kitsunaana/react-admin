@@ -1,11 +1,10 @@
 import React, {
-  forwardRef, MouseEvent, ReactNode, useEffect, useLayoutEffect, useRef, useState,
+  MouseEvent, ReactNode, useState,
 } from "react"
 import { dispatch } from "shared/lib/event"
-import { IconButton, Menu, MenuItem } from "@mui/material"
+import { IconButton, Menu } from "@mui/material"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import { Divider } from "shared/ui/divider"
 import { Mark } from "shared/ui/mark"
 
 const menu = [

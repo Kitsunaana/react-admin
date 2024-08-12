@@ -11,9 +11,11 @@ import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
 import { SxProps } from "@mui/system"
-import { useFormContext, UseFormSetValue } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 
-export const ColorPickerCustom = styled(RgbaColorPicker)<typeof RgbaColorPicker & { theme: Theme; open: boolean }>`
+type ColorPickerCustomProps = typeof RgbaColorPicker & { theme: Theme; open: boolean }
+
+export const ColorPickerCustom = styled(RgbaColorPicker)<ColorPickerCustomProps>`
   width: 350px !important;
   padding: 8px 8px 18px 8px;
   background-color: black;

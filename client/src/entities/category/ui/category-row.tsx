@@ -1,6 +1,6 @@
-import { Box, BoxProps } from "shared/ui/box"
+import { Box } from "shared/ui/box"
 import {
-  alpha, Theme,
+  alpha,
 } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
@@ -10,8 +10,6 @@ import React, {
 } from "react"
 import { useContextMenu } from "shared/hooks/use-context-menu"
 import { ContextMenu } from "shared/ui/context-menu"
-import styled, { css } from "styled-components"
-import { dispatch } from "shared/lib/event"
 
 interface CategoryItemProps {
   caption: string
@@ -19,35 +17,6 @@ interface CategoryItemProps {
   renderMenuActions: (id: number, close: () => void) => ReactNode
   renderAdditionalActions: ReactNode
 }
-
-interface WrapperProps extends BoxProps {
-  isOpen: boolean
-  theme: Theme
-}
-
-const Wrapper = styled(Box)<WrapperProps>`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  height: 48px;
-  border: 1px solid ${({ theme }) => alpha(theme.palette.grey["600"], 0.75)};
-
-  ${({ isOpen }) => (isOpen && css`
-    background-image: ${({ theme }) => theme.background.hatch.primary};
-    background-size: 8px 8px;
-  `)}
-
-  &:last-child {
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-
-  &:first-of-type {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-  }
-`
 
 export const CategoryItem = memo((props: CategoryItemProps) => {
   const {

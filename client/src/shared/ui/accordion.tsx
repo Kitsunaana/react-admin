@@ -7,9 +7,43 @@ import { Icon } from "shared/ui/icon"
 import { Divider, Vertical } from "shared/ui/divider"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import React, {
-  forwardRef, ReactNode,
+  ReactNode,
 } from "react"
 import styled from "styled-components"
+
+export const AccordionContainer = styled(MUIAccordion)`
+    box-shadow: 0px 0px 0px rgba(0,0,0,0);
+    border: ${({ theme }) => `1px solid ${theme.palette.grey["600"]}`};
+    background-image: ${({ theme }) => `${theme.background.sectionBackground} !important`};
+    
+    &.Mui-expanded {
+        margin-top: ${({ theme }) => `${theme.spacing(0.5)} !important`};
+        margin-bottom: ${({ theme }) => `${theme.spacing(0.5)} !important`};
+        border-radius: ${({ theme }) => theme.spacing(0.5)};
+    }
+`
+
+export const Summary = styled(AccordionSummary)<AccordionSummaryProps & { theme: Theme }>`
+    padding-left: ${({ theme }) => `${theme.spacing(1)} !important`};
+    padding-right: ${({ theme }) => `${theme.spacing(1)} !important`};
+    
+    & .MuiAccordionSummary-content {
+        margin-top: 0;
+        margin-bottom: 0;
+
+        padding-top: ${({ theme }) => theme.spacing(0.5)};
+        padding-bottom: ${({ theme }) => theme.spacing(0.5)};
+        
+        &.Mui-expanded {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+
+    &.Mui-expanded {
+        min-height: unset !important;
+    }
+`
 
 export type AccordionProps = {
   caption?: ReactNode
@@ -53,37 +87,3 @@ export const Accordion = (props: AccordionProps) => {
     </AccordionContainer>
   )
 }
-
-export const AccordionContainer = styled(MUIAccordion)`
-    box-shadow: 0px 0px 0px rgba(0,0,0,0);
-    border: ${({ theme }) => `1px solid ${theme.palette.grey["600"]}`};
-    background-image: ${({ theme }) => `${theme.background.sectionBackground} !important`};
-    
-    &.Mui-expanded {
-        margin-top: ${({ theme }) => `${theme.spacing(0.5)} !important`};
-        margin-bottom: ${({ theme }) => `${theme.spacing(0.5)} !important`};
-        border-radius: ${({ theme }) => theme.spacing(0.5)};
-    }
-`
-
-export const Summary = styled(AccordionSummary)<AccordionSummaryProps & { theme: Theme }>`
-    padding-left: ${({ theme }) => `${theme.spacing(1)} !important`};
-    padding-right: ${({ theme }) => `${theme.spacing(1)} !important`};
-    
-    & .MuiAccordionSummary-content {
-        margin-top: 0;
-        margin-bottom: 0;
-
-        padding-top: ${({ theme }) => theme.spacing(0.5)};
-        padding-bottom: ${({ theme }) => theme.spacing(0.5)};
-        
-        &.Mui-expanded {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-    }
-
-    &.Mui-expanded {
-        min-height: unset !important;
-    }
-`

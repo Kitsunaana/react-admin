@@ -30,8 +30,6 @@ export const mediaSchema = z.object({
   order: z.number().nullable(),
 })
 
-export type Media = z.infer<typeof mediaSchema>
-
 export const categorySchema = z.object({
   id: z.number(),
   caption: z.string(),

@@ -1,5 +1,5 @@
 import {
-  Dispatch, memo, SetStateAction,
+  memo,
 } from "react"
 import { Box } from "shared/ui/box"
 import { alpha, Tooltip } from "@mui/material"

@@ -5,7 +5,6 @@ import { Box, BoxProps } from "shared/ui/box"
 import { IconButton } from "shared/ui/icon-button"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
-import { useMutation, UseMutationOptions } from "@tanstack/react-query"
 import { Icon } from "shared/ui/icon"
 
 interface ContainerProps extends BoxProps {

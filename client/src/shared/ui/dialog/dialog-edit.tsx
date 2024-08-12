@@ -1,6 +1,6 @@
 import { useLang } from "shared/context/Lang"
 import {
-  ReactNode, useEffect, useMemo, useState,
+  ReactNode, useEffect, useMemo,
 } from "react"
 import { useTranslation } from "react-i18next"
 import { useFormContext } from "react-hook-form"
@@ -16,22 +16,6 @@ import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { makeAutoObservable, reaction, toJS } from "mobx"
 import { observer } from "mobx-react-lite"
-import { fabClasses } from "@mui/material"
-
-export const useApplyFields = (data: Record<string, any>) => {
-  const { setValue, trigger } = useFormContext()
-
-  useEffect(() => {
-    const keys = Object.keys(data)
-
-    if (keys.length === 0) return
-
-    keys.forEach((key) => setValue(key, data[key]))
-
-    trigger()
-      .then((r) => r)
-  }, [data])
-}
 
 interface DialogProps {
   langBase?: string
@@ -88,7 +72,6 @@ export const DialogEdit = observer((props: DialogProps) => {
   const lang = useLang()
   const langBase = langBaseProps ?? lang?.lang
 
-  // const [fullScreen, setFullScreen] = useState(false)
   const { t } = useTranslation("translation", { keyPrefix: langBase })
   const methods = useFormContext()
 

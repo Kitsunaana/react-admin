@@ -1,6 +1,3 @@
-import { z } from "zod"
-import { categorySchema } from "features/categories/create-and-edit/model/schemas"
-
 export type TMedia = {
   id: number
   path: string
@@ -8,7 +5,9 @@ export type TMedia = {
   order: number | null
 }
 
-export type TMediaForm = { deleted?: boolean } & TMedia
+export type TMediaForm = {
+  deleted?: boolean
+} & TMedia
 
 export type TImage = {
   caption: string
@@ -16,8 +15,6 @@ export type TImage = {
   id: string
   type: string
 }
-
-export type TCategory = z.infer<typeof categorySchema>
 
 export interface UseCategoryFormProps {
   caption: string;

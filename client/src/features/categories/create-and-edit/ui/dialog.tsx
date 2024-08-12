@@ -7,13 +7,14 @@ import { Box } from "shared/ui/box"
 import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import {
   createCategoryOptions,
-  getByIdCategoryOptions, updateCategoryOptions,
+  updateCategoryOptions,
 } from "features/categories/create-and-edit/queries/queries"
 import { tabs } from "features/categories/create-and-edit/model/constants"
 import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
 import { useMemo } from "react"
 import { observer } from "mobx-react-lite"
 import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
+import { getByIdCategoryOptions } from "entities/category/queries/use-category"
 
 export const Dialog = observer(() => {
   const tabDefault = 0

@@ -8,7 +8,6 @@ import { BackButton } from "shared/ui/back-button"
 import React, { ReactNode, useEffect } from "react"
 import { IconButton } from "shared/ui/icon-button"
 import {
-  Button,
   Pagination,
 } from "@mui/material"
 import { Backdrop } from "shared/ui/backdrop"

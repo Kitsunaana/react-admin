@@ -1,6 +1,5 @@
-import { UseMutationOptions, useQuery, UseQueryOptions } from "@tanstack/react-query"
+import { UseMutationOptions } from "@tanstack/react-query"
 import { z } from "zod"
-import { $axios } from "shared/config/axios"
 import { queryClient } from "app/providers/query-client"
 import { categoriesApi } from "features/categories/create-and-edit/api/categories-api"
 import { createCategorySchema } from "../model/schemas"
@@ -25,12 +24,4 @@ export const createCategoryOptions = (): CreateUseCategoryOptions => ({
       queryKey: ["categories"],
     })
   },
-})
-
-export const getByIdCategoryOptions = (id: number | null): UseQueryOptions => ({
-  enabled: id !== null,
-  queryKey: ["category", id],
-  queryFn: () => $axios.get(`/categories/${id}`)
-    .then(({ data }) => data),
-  staleTime: 0,
 })
