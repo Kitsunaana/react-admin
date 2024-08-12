@@ -1,9 +1,23 @@
 import { makeAutoObservable } from "mobx"
-import { Image, Media } from "widgets/galerry/model/types"
+import { TImage, TMedia } from "features/categories/create-and-edit/model/types"
+
+interface MergedMedia extends TMedia {
+  file?: never
+  caption?: never
+}
+
+interface MergedImage extends TImage {
+  data: File
+
+  path?: never
+  originalName?: never
+}
+
+type TImages = (MergedMedia | MergedImage)[]
 
 interface IData {
   index?: number
-  images: (Media | Image)[]
+  images: TImages
 }
 
 class GalleryStore {
@@ -15,7 +29,7 @@ class GalleryStore {
 
   open = false
   indexActiveImage = 0
-  images: (Media | Image)[] = []
+  images: TImages = []
 
   constructor() {
     makeAutoObservable(this, {}, {

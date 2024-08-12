@@ -1,3 +1,5 @@
+import { TImage, TMedia } from "features/categories/create-and-edit/model/types"
+
 interface IEvents {
   selected: {
     selectedId: number
@@ -12,15 +14,7 @@ interface IEvents {
     isActive: boolean
   }
   gallery: {
-    images: ({
-      id: string
-      data: File
-      caption: string
-    } | {
-      filename: string
-      id: number
-      path: string
-    })[]
+    images: (TImage | TMedia)[]
     index?: number
   }
 }

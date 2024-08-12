@@ -21,7 +21,7 @@ export const SaveButton = (props: SaveButtonProps) => {
       color="primary"
       variant="outlined"
     >
-      <Text langBase={langBase || "global.dialog"} name="save" />
+      <Text sx={{ fontSize: 14 }} langBase={langBase || "global.dialog"} name="save" />
     </Button>
   )
 }

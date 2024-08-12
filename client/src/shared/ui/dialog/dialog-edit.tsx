@@ -14,8 +14,9 @@ import {
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
-import { makeAutoObservable, reaction } from "mobx"
+import { makeAutoObservable, reaction, toJS } from "mobx"
 import { observer } from "mobx-react-lite"
+import { fabClasses } from "@mui/material"
 
 export const useApplyFields = (data: Record<string, any>) => {
   const { setValue, trigger } = useFormContext()
@@ -47,6 +48,7 @@ export class DialogStore {
     id: null,
   }
 
+  fullScreen = false
   data: any = {}
 
   constructor() {
@@ -62,12 +64,17 @@ export class DialogStore {
   }
 
   setData(data: any) {
-    console.log(data)
     this.data = data
   }
 
   get isEdit() {
     return this.state.id !== null
+  }
+
+  setFullScreen(fullScreen: boolean | ((fullScreen: boolean) => boolean)) {
+    this.fullScreen = typeof fullScreen === "boolean"
+      ? fullScreen
+      : fullScreen(this.fullScreen)
   }
 }
 
@@ -81,7 +88,7 @@ export const DialogEdit = observer((props: DialogProps) => {
   const lang = useLang()
   const langBase = langBaseProps ?? lang?.lang
 
-  const [fullScreen, setFullScreen] = useState(false)
+  // const [fullScreen, setFullScreen] = useState(false)
   const { t } = useTranslation("translation", { keyPrefix: langBase })
   const methods = useFormContext()
 
@@ -98,12 +105,12 @@ export const DialogEdit = observer((props: DialogProps) => {
   }, [data])
 
   useEffect(() => {
-    if (!data) return
+    if (!dialogStore.data) return
 
-    const keys = Object.keys(data)
+    const keys = Object.keys(dialogStore.data)
     if (keys.length === 0) return
 
-    keys.forEach((key) => methods.setValue(key, data[key], { shouldValidate: true }))
+    keys.forEach((key) => methods.setValue(key, dialogStore.data[key], { shouldValidate: true }))
 
     methods.trigger().then((r) => r)
   }, [dialogStore.data])
@@ -113,19 +120,20 @@ export const DialogEdit = observer((props: DialogProps) => {
       if (dialogStore.isEdit) onUpdate(data)
       else onCreate(data)
 
+      methods.reset()
       dialogStore.closeDialog()
     })()
   }
 
   return (
     <MUIDialog
-      fullScreen={fullScreen}
+      fullScreen={dialogStore.fullScreen}
       open={dialogStore.state.open}
       PaperProps={{
         sx: {
           display: "flex",
           borderRadius: 4,
-          ...(fullScreen ? {} : {
+          ...(dialogStore.fullScreen ? {} : {
             maxWidth: 900,
             width: 1,
             height: 580,
@@ -137,8 +145,7 @@ export const DialogEdit = observer((props: DialogProps) => {
       <Box sx={{ mx: 1 }}>
         <DialogHeader
           title={t(`dialog.title.${dialogStore.isEdit ? "edit" : "create"}`, { value: title ?? "" })}
-          fullScreen={fullScreen}
-          setFullScreen={setFullScreen}
+          fullScreen={dialogStore.fullScreen}
         />
       </Box>
       <Box grow sx={{ height: 450, p: 1, pt: 0 }}>

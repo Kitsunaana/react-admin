@@ -6,7 +6,6 @@ export const categoryFormSchema = z.object({
   images: z.array(z.object({
     caption: z.string(),
     data: z.record(z.unknown()),
-    index: z.number().optional(),
     id: z.string(),
     type: z.string(),
   })),
@@ -27,8 +26,8 @@ export const createCategorySchema = z.object({
 export const mediaSchema = z.object({
   id: z.number(),
   path: z.string(),
-  filename: z.string(),
-  order: z.number().optional().nullable(),
+  originalName: z.string(),
+  order: z.number().nullable(),
 })
 
 export type Media = z.infer<typeof mediaSchema>

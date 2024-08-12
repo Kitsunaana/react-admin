@@ -13,33 +13,13 @@ import { tabs } from "features/categories/create-and-edit/model/constants"
 import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
 import { useMemo } from "react"
 import { observer } from "mobx-react-lite"
+import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
 
 export const Dialog = observer(() => {
   const tabDefault = 0
   const langBase = "catalog.dialog"
 
-  const methods = useForm<any>({
-    defaultValues: {
-      caption: "",
-      description: "",
-    },
-  })
-
-  const renderContainer = useMemo(() => (
-    <Box flex gap>
-      <TabsContainer
-        langBase={langBase}
-        tabs={tabs}
-        tab={tabDefault}
-        requiredFields={["caption"]}
-      />
-      <ContentContainer
-        fullScreen={false}
-        langBase={langBase}
-        tab={tabDefault}
-      />
-    </Box>
-  ), [])
+  const methods = useForm<UseCategoryFormProps>()
 
   return (
     <FormProvider {...methods}>
@@ -47,7 +27,20 @@ export const Dialog = observer(() => {
         onCreateOptions={createCategoryOptions}
         onUpdateOptions={updateCategoryOptions}
         onGetByIdOptions={getByIdCategoryOptions}
-        container={renderContainer}
+        container={useMemo(() => (
+          <Box flex gap>
+            <TabsContainer
+              langBase={langBase}
+              tabs={tabs}
+              tab={tabDefault}
+              requiredFields={["caption"]}
+            />
+            <ContentContainer
+              langBase={langBase}
+              tab={tabDefault}
+            />
+          </Box>
+        ), [])}
       />
     </FormProvider>
   )

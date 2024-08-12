@@ -7,13 +7,19 @@ import { useTranslation } from "react-i18next"
 import { useLang } from "shared/context/Lang"
 import { Input } from "shared/ui/input"
 import { Box } from "shared/ui/box"
+import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
 
-export const CaptionInput = (props: { sx?: SxProps<Theme> }) => {
-  const { sx } = props
+interface CaptionInputProps {
+  sx?: SxProps<Theme>
+  langBase?: string
+}
 
-  const { control, trigger } = useFormContext()
+export const CaptionInput = (props: CaptionInputProps) => {
+  const { sx, langBase: langBaseProps } = props
+
+  const { control, trigger } = useFormContext<UseCategoryFormProps>()
   const { t } = useTranslation("translation", { keyPrefix: "global.message" })
-  const langBase = useLang()?.lang
+  const langBase = langBaseProps ?? useLang()?.lang
 
   return (
     <Controller

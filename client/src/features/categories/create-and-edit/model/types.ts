@@ -1,12 +1,29 @@
-export interface Order {
+import { z } from "zod"
+import { categorySchema } from "features/categories/create-and-edit/model/schemas"
+
+export type TMedia = {
   id: number
-  order: number
+  path: string
+  originalName: string
+  order: number | null
 }
 
-export interface UseFormProps {
+export type TMediaForm = { deleted?: boolean } & TMedia
+
+export type TImage = {
+  caption: string
+  data: File
+  id: string
+  type: string
+}
+
+export type TCategory = z.infer<typeof categorySchema>
+
+export interface UseCategoryFormProps {
   caption: string;
   description: string;
-  orders: Order[]
+  media?: TMediaForm[]
+  images?: TImage[]
 }
 
 export interface ITab {

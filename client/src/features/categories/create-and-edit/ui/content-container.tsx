@@ -7,8 +7,8 @@ import { CommonTab } from "features/categories/create-and-edit/ui/tabs/common"
 import { PhotosTab } from "features/categories/create-and-edit/ui/tabs/photos"
 import { PhotoPosition } from "features/categories/create-and-edit/ui/tabs/photo-position"
 
-export const ContentContainer = memo((props: { tab: number, langBase?: string, fullScreen: boolean }) => {
-  const { tab: tabProps, langBase: langBaseProps, fullScreen } = props
+export const ContentContainer = memo((props: { tab: number, langBase?: string}) => {
+  const { tab: tabProps, langBase: langBaseProps } = props
 
   const lang = useLang()
   const langBase = langBaseProps ?? lang?.lang
@@ -22,8 +22,8 @@ export const ContentContainer = memo((props: { tab: number, langBase?: string, f
   return (
     <>
       <TabPanel value={tab} index={0}><CommonTab /></TabPanel>
-      <TabPanel value={tab} index={1}><PhotosTab fullScreen={fullScreen} /></TabPanel>
-      <TabPanel value={tab} index={2}><PhotoPosition /></TabPanel>
+      <TabPanel value={tab} index={1}><PhotosTab /></TabPanel>
+      {/* <TabPanel value={tab} index={2}><PhotoPosition /></TabPanel> */}
     </>
   )
 })

@@ -17,7 +17,7 @@ export const CancelButton = (props: CancelButtonProps) => {
       variant="contained"
       color="warning"
     >
-      <Text langBase={langBase || "global.dialog"} name="cancel" />
+      <Text sx={{ fontSize: 14 }} langBase={langBase || "global.dialog"} name="cancel" />
     </Button>
   )
 }

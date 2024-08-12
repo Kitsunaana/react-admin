@@ -84,10 +84,14 @@ export class CategoriesService {
   async getById(id: number) {
     return await this.categoryRepository.findOne({
       where: { id },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
       include: [
         {
           model: Media,
           as: 'media',
+          attributes: ['id', 'order', 'originalName', 'path'],
         },
       ],
       order: [

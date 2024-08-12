@@ -1,5 +1,5 @@
 import React, {
-  memo, useState,
+  memo, useEffect, useState,
 } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { IconButton } from "shared/ui/icon-button"
@@ -65,6 +65,8 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
   const [open, setOpen] = useState(false)
   const [order, setOrder] = useState(orderProps ?? 0)
 
+  useEffect(() => { setOrder(orderProps ?? 0) }, [orderProps])
+
   const onToggle = () => {
     setOpen((prevState) => !prevState)
   }
@@ -84,16 +86,18 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
     />
   )
 
+  const renderContent = () => {
+    if (order === 0) return <Icon name="infinity" onClick={onToggle} sx={{ cursor: "pointer" }} />
+
+    return <Count onClick={onToggle}>{order}</Count>
+  }
+
   return (
     <Container width={width} open={open} sx={sx} fullWidth={order === 0}>
       <ArrowUpButton open={open}>
         {renderIconButton(1)}
       </ArrowUpButton>
-      {order === 0 ? (
-        <Icon name="infinity" onClick={onToggle} sx={{ cursor: "pointer" }} />
-      ) : (
-        <Count onClick={onToggle}>{order}</Count>
-      )}
+      {renderContent()}
       <ArrowDownButton open={open}>
         {renderIconButton(-1)}
       </ArrowDownButton>

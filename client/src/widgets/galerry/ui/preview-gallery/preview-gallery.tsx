@@ -77,8 +77,8 @@ export const PreviewGallery = observer(() => {
       return <Image caption={image.caption} file={image.data} />
     }
 
-    if (image.filename) {
-      return <Image caption={image.filename} path={image.path} />
+    if (image.originalName) {
+      return <Image caption={image.originalName} path={image.path} />
     }
 
     return null

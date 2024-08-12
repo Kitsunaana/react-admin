@@ -7,17 +7,17 @@ import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
 import * as React from "react"
 import { Vertical } from "shared/ui/divider"
+import { dialogStore } from "shared/ui/dialog/dialog-edit"
 
 interface DialogHeaderProps {
   fullScreen: boolean
-  setFullScreen: Dispatch<SetStateAction<boolean>>
   title: string
   hideActions?: boolean
 }
 
 export const DialogHeader = memo((props: DialogHeaderProps) => {
   const {
-    fullScreen, setFullScreen, title, hideActions = false,
+    fullScreen, title, hideActions = false,
   } = props
 
   return (
@@ -72,7 +72,7 @@ export const DialogHeader = memo((props: DialogHeaderProps) => {
       >
         <div>
           <IconButton
-            onClick={() => setFullScreen((prevState) => !prevState)}
+            onClick={() => dialogStore.setFullScreen((fullScreen) => !fullScreen)}
             name={fullScreen ? "fullscreenClose" : "fullscreenOpen"}
           />
         </div>

@@ -1,4 +1,4 @@
-import { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query"
+import { UseMutationOptions, useQuery, UseQueryOptions } from "@tanstack/react-query"
 import { z } from "zod"
 import { $axios } from "shared/config/axios"
 import { queryClient } from "app/providers/query-client"
@@ -12,9 +12,8 @@ export const updateCategoryOptions = (id: number | null): UpdateUseCategoryOptio
   mutationKey: ["category", id],
   mutationFn: (data) => categoriesApi.patch(id, data),
   onSuccess: () => {
-    queryClient.invalidateQueries({
-      queryKey: ["categories"],
-    })
+    queryClient.invalidateQueries({ queryKey: ["categories"] })
+    queryClient.invalidateQueries({ queryKey: ["category", id] })
   },
 })
 
