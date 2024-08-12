@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 
-export const useImage = (data?: string | File) => {
+export const useImage = (data?: string | File): string => {
   const [src, setSrc] = useState(typeof data === "string"
     ? `http://localhost:3333/${data}`
     : "")
 
-  if (data === undefined) return
+  if (data === undefined) return ""
 
   useEffect(() => {
     if (!(data instanceof File)) return

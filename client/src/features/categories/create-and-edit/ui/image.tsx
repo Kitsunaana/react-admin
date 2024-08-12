@@ -1,139 +1,109 @@
-import { useEffect, useState } from "react"
 import { Box, BoxProps } from "shared/ui/box"
-import { alpha, Button } from "@mui/material"
+import { alpha, useTheme } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
 import * as React from "react"
-import { useFormContext } from "react-hook-form"
-import { IFile } from "features/categories/create-and-edit/ui/tabs/photos"
-import { Icon } from "shared/ui/icon"
-import { Position } from "shared/ui/position-counter"
-import { UseMutationOptions } from "@tanstack/react-query"
-import { $axios } from "shared/config/axios"
 import { UpdateOrder } from "features/categories/create-and-edit/ui/update-order"
-import { Order } from "features/categories/create-and-edit/model/types"
+import { useImage } from "shared/hooks/use-image"
+import { Image as BaseImage } from "shared/ui/image"
+import styled from "styled-components"
 
 interface ImageProps extends Omit<BoxProps, "id" | "order"> {
-  src?: string
   url?: string
   name?: string
   local?: boolean
   id: string | number
   file?: File
   order?: number | null
+
+  onUpdateOrder?: (order: number, id: number) => void
+  onClear?: (id: number) => void
+  onClearLocal?: (id: string) => void
 }
+
+const ImageCustom = styled(BaseImage)`
+  .custom__img {
+    transition: .2s;
+    border-radius: 8px;
+    width: 100%;
+    height: 170px;
+    object-fit: contain;
+  }
+`
+
+const ImageContainer = styled(Box)`
+  position: relative;
+  height: 170px;
+  overflow: hidden;
+  border-radius: 8px;
+`
+
+const ImageHeader = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  padding: 4px 8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 30;
+  background-color: ${({ theme }) => alpha(theme.palette.grey["900"], 0.85)};
+`
+
+const Filename = styled(Text)`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+`
+
+const DeleteImageButton = styled(IconButton)`
+  padding: 4px;
+  min-width: unset;
+  border-radius: 50%;
+`
 
 export const Image = (props: ImageProps) => {
   const {
-    url, name, local, src: srcProps, file, id, order, ...other
+    url, name, local, file, id, order, onUpdateOrder, onClear, onClearLocal, ...other
   } = props
 
-  const { getValues, setValue } = useFormContext()
+  const theme = useTheme()
+  const src = useImage(url ?? file)
 
-  const [src, setSrc] = useState(srcProps ?? url)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const isShowUpdateOrder = (
+    order !== undefined
+    && typeof id === "number"
+    && onUpdateOrder
+  )
 
-  useEffect(() => {
-    if (!file) return
+  const handleOnClear = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation()
 
-    const reader = new FileReader()
-
-    reader.onloadend = () => {
-      if (typeof reader.result === "string") setSrc(reader.result)
-    }
-    reader.readAsDataURL(file)
-  }, [file])
+    if (typeof id === "number" && onClear) onClear(id)
+    if (typeof id === "string" && onClearLocal) onClearLocal(id)
+  }
 
   return (
-    <Box
-      {...other}
-      id={String(id)}
-      sx={{
-        position: "relative",
-        height: 170,
-        overflow: "hidden",
-        borderRadius: 2,
-      }}
-    >
-      <Box
-        onClick={(event) => event.stopPropagation()}
-        className="wrapper-filename"
-        flex
-        ai
-        jc_sp
-        row
-        sx={{
-          position: "absolute",
-          right: 0,
-          left: 0,
-          p: 1,
-          py: 0.5,
-          backgroundColor: ({ palette }) => alpha(palette.grey["900"], 0.75),
-          borderTopLeftRadius: 8,
-          borderTopRightRadius: 8,
-          zIndex: 100,
-        }}
-      >
-        <Text
-          sx={{
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            width: 1,
-          }}
-          caption={name}
-        />
-        {(typeof order === "number" || order === null) && typeof id === "number" && (
+    <ImageContainer {...other} theme={theme}>
+      <ImageHeader theme={theme} onClick={(event) => event.stopPropagation()}>
+        <Filename caption={name} />
+        {isShowUpdateOrder && (
           <UpdateOrder
             order={order}
             id={id}
-            onClick={(order, id) => {
-              const media = (getValues("media") ?? [])
-                .map((media) => (media.id === id ? { ...media, order } : media))
-
-              setValue("media", media)
-            }}
+            onClick={onUpdateOrder}
           />
         )}
-        <IconButton
-          sx={{
-            p: 0.5,
-            minWidth: "unset",
-            borderRadius: "50%",
-          }}
-          sxIcon={{
-            fontSize: 20,
-          }}
+        <DeleteImageButton
+          fontSize={20}
           name="clear"
-          onClick={(event) => {
-            event.stopPropagation()
-
-            if (local) {
-              const images = getValues("images").filter((image: IFile) => image.id !== id)
-              setValue("images", images)
-            }
-
-            const media = getValues("media") ?? []
-            const newMedia = media.map((media) => {
-              if (media.id === id) media.deleted = true
-              return media
-            })
-            setValue("media", newMedia)
-          }}
+          onClick={handleOnClear}
         />
-      </Box>
-      <img
-        src={src}
-        alt=""
-        style={{
-          transition: ".2s",
-          borderRadius: 8,
-          width: "100%",
-          height: "170px",
-          objectFit: "contain",
-        }}
-      />
-    </Box>
+      </ImageHeader>
+      <ImageCustom src={src} />
+    </ImageContainer>
   )
 }

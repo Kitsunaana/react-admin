@@ -32,10 +32,10 @@ export const TransitionImage = observer(() => {
   return useMemo(() => (
     <Box ref={containerRef}>
       {galleryStore.images.map((image) => {
-        if (image.filename) {
+        if (image.originalName) {
           return (
             <Image
-              caption={image.filename}
+              caption={image.originalName}
               key={image.id}
               path={image.path}
               data-active={image.id === prevActiveIndexImage}
