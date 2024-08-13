@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react"
 
+const getPath = (data: unknown) => (typeof data === "string"
+  ? `http://localhost:3333/${data}`
+  : "")
+
 export const useImage = (data?: string | File): string => {
-  const [src, setSrc] = useState(typeof data === "string"
-    ? `http://localhost:3333/${data}`
-    : "")
+  const [src, setSrc] = useState(getPath(data))
+
+  useEffect(() => {
+    setSrc(getPath(data))
+  }, [data])
 
   if (data === undefined) return ""
 
@@ -16,7 +22,7 @@ export const useImage = (data?: string | File): string => {
     }
 
     reader.readAsDataURL(data)
-  }, [])
+  }, [data])
 
   return src
 }

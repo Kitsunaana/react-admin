@@ -21,21 +21,21 @@ export function useActionsImage() {
       .map((media) => (media.id === id ? { ...media, order } : media))
 
     setValue("media", media)
-  }, [setValue, getValues])
+  }, [])
 
   const onClear = useCallback((id: number) => {
-    const newMedia = (getValues("media") ?? [])
+    const media = (getValues("media") ?? [])
       .map((media) => (media.id === id ? { ...media, deleted: true } : media))
 
-    setValue("media", newMedia)
-  }, [getValues, setValue])
+    setValue("media", media)
+  }, [])
 
   const onClearLocal = useCallback((id: string) => {
     const images = (getValues("images") ?? [])
       .filter((image: TImage) => image.id !== id)
 
     setValue("images", images)
-  }, [getValues, setValue])
+  }, [])
 
   return {
     onOpenGallery,

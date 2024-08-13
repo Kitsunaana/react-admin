@@ -75,7 +75,9 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
   const renderIconButton = (direction: number) => (
     <IconButton
       name="expand"
-      color="primary"
+      sx={{
+        color: ({ palette }) => palette.primary[palette.mode === "dark" ? "main" : "light"],
+      }}
       fontSize={20}
       onClick={() => {
         setOrder((prevState) => (prevState ?? 0) + direction)

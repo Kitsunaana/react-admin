@@ -1,4 +1,4 @@
-import { memo, useRef } from "react"
+import { ChangeEvent, memo, useRef } from "react"
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
@@ -29,15 +29,15 @@ interface InputFileProps {
   multiple: boolean
   name: string
   disabled?: boolean
+  onFileUpload?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 export const InputFile = memo((props: InputFileProps) => {
   const {
-    accept, caption, multiple, name, disabled,
+    accept, caption, multiple, name, disabled, onFileUpload,
   } = props
 
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const { onFileUpload } = useFilesUpload(multiple)
   const theme = useTheme()
 
   const onClick = () => {

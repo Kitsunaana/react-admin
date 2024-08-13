@@ -6,8 +6,13 @@ import { useActionsImage } from "shared/hooks/use-actions-image"
 import { InputFile } from "shared/ui/input-file"
 import { dialogStore } from "shared/ui/dialog/dialog-edit"
 import styled from "styled-components"
+import { useFilesUpload } from "shared/hooks/use-files-upload"
+import { useCallback } from "react"
 
-const GridImage = styled(Box)<BoxProps & { fullScreen: boolean }>`
+const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
+  const { fullScreen, ...other } = props
+  return <Box {...other} />
+})`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 170px;
@@ -34,6 +39,10 @@ export const PhotosTab = observer(() => {
     media,
   } = useActionsImage()
 
+  const { onFileUpload } = useFilesUpload(true)
+
+  const handleOpenGallery = useCallback((id) => onOpenGallery(id), [])
+
   return (
     <>
       <Box sx={{ pb: 1 }}>
@@ -42,6 +51,7 @@ export const PhotosTab = observer(() => {
           name="images"
           multiple
           accept="image/!*"
+          onFileUpload={onFileUpload}
         />
       </Box>
       <GridImageContainer>
@@ -55,7 +65,7 @@ export const PhotosTab = observer(() => {
               order={item.order}
               onClear={onClear}
               onUpdateOrder={onUpdateOrder}
-              onClick={() => onOpenGallery(item.id)}
+              onOpenGallery={handleOpenGallery}
             />
           ))}
           {images && images.map((item) => (
@@ -66,7 +76,7 @@ export const PhotosTab = observer(() => {
               file={item.data}
               name={item.caption}
               onClearLocal={onClearLocal}
-              onClick={() => onOpenGallery(item.id)}
+              onOpenGallery={handleOpenGallery}
             />
           ))}
         </GridImage>

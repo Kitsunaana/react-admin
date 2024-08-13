@@ -20,7 +20,16 @@ export const Dialog = observer(() => {
   const tabDefault = 0
   const langBase = "catalog.dialog"
 
-  const methods = useForm<UseCategoryFormProps>()
+  const methods = useForm<UseCategoryFormProps>({
+    defaultValues: {
+      color: "red",
+      bgColor: "blue",
+      blur: 5,
+      images: [],
+      media: [],
+      captionPosition: "center-center",
+    },
+  })
 
   return (
     <FormProvider {...methods}>

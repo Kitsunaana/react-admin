@@ -1,5 +1,6 @@
 import { useFormContext } from "react-hook-form"
 import { TImage } from "features/categories/create-and-edit/model/types"
+import { ChangeEvent, useCallback } from "react"
 
 const uuid = () => "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, () => {
   const random = (Math.random() * 16) | 0
@@ -13,7 +14,7 @@ export const useFilesUpload = (multiple: boolean = false) => {
     setValue("images", [...(getValues("images") ?? []), ...files])
   }
 
-  const onFileUpload = (event) => {
+  const onFileUpload = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const files: TImage[] = []
 
     Array.prototype.forEach.call(event.target.files, (file: File) => {
@@ -28,7 +29,7 @@ export const useFilesUpload = (multiple: boolean = false) => {
     })
 
     if (multiple) setUploadedFiles(files)
-  }
+  }, [])
 
   return { onFileUpload }
 }

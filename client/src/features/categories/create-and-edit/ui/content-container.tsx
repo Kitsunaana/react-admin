@@ -23,7 +23,7 @@ export const ContentContainer = memo((props: { tab: number, langBase?: string}) 
     <>
       <TabPanel value={tab} index={0}><CommonTab /></TabPanel>
       <TabPanel value={tab} index={1}><PhotosTab /></TabPanel>
-      {/* <TabPanel value={tab} index={2}><PhotoPosition /></TabPanel> */}
+      <TabPanel value={tab} index={2}><PhotoPosition /></TabPanel>
     </>
   )
 })

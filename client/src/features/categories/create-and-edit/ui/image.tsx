@@ -7,6 +7,8 @@ import { UpdateOrder } from "features/categories/create-and-edit/ui/update-order
 import { useImage } from "shared/hooks/use-image"
 import { Image as BaseImage } from "shared/ui/image"
 import styled from "styled-components"
+import { memo } from "react"
+import { shallowEqual } from "shared/lib/utils"
 
 interface ImageProps extends Omit<BoxProps, "id" | "order"> {
   url?: string
@@ -19,6 +21,7 @@ interface ImageProps extends Omit<BoxProps, "id" | "order"> {
   onUpdateOrder?: (order: number, id: number) => void
   onClear?: (id: number) => void
   onClearLocal?: (id: string) => void
+  onOpenGallery?: (id: string | number) => void
 }
 
 const ImageCustom = styled(BaseImage)`
@@ -65,9 +68,9 @@ const DeleteImageButton = styled(IconButton)`
   color: white;
 `
 
-export const Image = (props: ImageProps) => {
+export const Image = memo((props: ImageProps) => {
   const {
-    url, name, local, file, id, order, onUpdateOrder, onClear, onClearLocal, ...other
+    url, name, local, file, id, order, onUpdateOrder, onClear, onClearLocal, onOpenGallery, ...other
   } = props
 
   const theme = useTheme()
@@ -87,7 +90,7 @@ export const Image = (props: ImageProps) => {
   }
 
   return (
-    <ImageContainer {...other} theme={theme}>
+    <ImageContainer onClick={() => onOpenGallery?.(id)} {...other} theme={theme}>
       <ImageHeader theme={theme} onClick={(event) => event.stopPropagation()}>
         <Filename caption={name} />
         {isShowUpdateOrder && (
@@ -106,4 +109,4 @@ export const Image = (props: ImageProps) => {
       <ImageCustom src={src} />
     </ImageContainer>
   )
-}
+})

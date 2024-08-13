@@ -22,7 +22,7 @@ interface ImageProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElemen
 }
 
 export const Image = (props: ImageProps) => {
-  const { src, className } = props
+  const { src, className, ...other } = props
 
   const theme = useTheme()
   const [loading, setLoading] = useState(true)
@@ -43,6 +43,7 @@ export const Image = (props: ImageProps) => {
         className={className}
         src={src}
         alt=""
+        {...other}
       />
     </>
   )
