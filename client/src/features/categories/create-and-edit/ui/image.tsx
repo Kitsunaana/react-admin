@@ -22,13 +22,11 @@ interface ImageProps extends Omit<BoxProps, "id" | "order"> {
 }
 
 const ImageCustom = styled(BaseImage)`
-  .custom__img {
-    transition: .2s;
-    border-radius: 8px;
-    width: 100%;
-    height: 170px;
-    object-fit: contain;
-  }
+  transition: .2s;
+  border-radius: 8px;
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
 `
 
 const ImageContainer = styled(Box)`
@@ -49,7 +47,8 @@ const ImageHeader = styled(Box)`
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   z-index: 30;
-  background-color: ${({ theme }) => alpha(theme.palette.grey["900"], 0.85)};
+  background-color: ${({ theme }) => alpha(theme.palette.grey["900"], 0.75)};
+  color: white;
 `
 
 const Filename = styled(Text)`
@@ -63,6 +62,7 @@ const DeleteImageButton = styled(IconButton)`
   padding: 4px;
   min-width: unset;
   border-radius: 50%;
+  color: white;
 `
 
 export const Image = (props: ImageProps) => {

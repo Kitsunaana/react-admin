@@ -1,5 +1,14 @@
 import { useImage } from "shared/hooks/use-image"
 import { DetailedHTMLProps, ImgHTMLAttributes } from "react"
+import { Image as BaseImage } from "shared/ui/image"
+import styled from "styled-components"
+
+const CustomImage = styled(BaseImage)`
+  display: block;
+  height: 80px;
+  width: 100%;
+  object-fit: cover;
+`
 
 interface ImageProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>{
   caption: string
@@ -15,17 +24,9 @@ export const Image = (props: ImageProps) => {
   const src = useImage(path ?? file)
 
   return (
-    <img
-      {...other}
+    <CustomImage
       src={src}
       alt={caption}
-      style={{
-        display: "block",
-        height: 80,
-        width: "100%",
-        borderRadius: 1,
-        objectFit: "cover",
-      }}
     />
   )
 }

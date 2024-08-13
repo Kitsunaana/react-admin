@@ -2,10 +2,8 @@ import {
   DetailedHTMLProps, ImgHTMLAttributes, useState,
 } from "react"
 import { Box, BoxProps } from "shared/ui/box"
-import { alpha, useTheme } from "@mui/material"
-import { blue } from "@mui/material/colors"
+import { alpha, CircularProgress, useTheme } from "@mui/material"
 import styled from "styled-components"
-import { IconLoader } from "shared/ui/icon-loader"
 
 const ImageLoader = styled(Box)<BoxProps>`
   display: flex;
@@ -15,7 +13,7 @@ const ImageLoader = styled(Box)<BoxProps>`
   z-index: 30;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => alpha(theme.palette.common.black, 0.5)};
+  background-color: ${({ theme }) => alpha(theme.palette.common.black, 0.1)};
 `
 
 interface ImageProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>{
@@ -34,21 +32,18 @@ export const Image = (props: ImageProps) => {
   }
 
   return (
-    <Box className={className}>
+    <>
       {loading && (
         <ImageLoader theme={theme}>
-          <IconLoader
-            color={blue[400]}
-            fontSize={45}
-          />
+          <CircularProgress />
         </ImageLoader>
       )}
       <img
         onLoad={handleImageLoad}
-        className="custom__img"
+        className={className}
         src={src}
         alt=""
       />
-    </Box>
+    </>
   )
 }

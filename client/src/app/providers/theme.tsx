@@ -3,6 +3,7 @@ import { useMemo } from "react"
 import { alpha, PaletteMode, useMediaQuery } from "@mui/material"
 import { useAppSelector } from "shared/lib/hooks"
 import { RootState } from "app/providers/store"
+import { blue } from "@mui/material/colors"
 
 const Theme = (props) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-schemas: dark)")
@@ -42,13 +43,17 @@ const Theme = (props) => {
         MuiCssBaseline: {
           styleOverrides: {
             "&::-webkit-scrollbar": {
-              width: 2,
+              width: 3,
             },
             "&::-webkit-scrollbar-track": {
-              backgroundColor: "#c9c9c9",
+              backgroundColor: palette.grey[700],
             },
             "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "#989898",
+              backgroundColor: palette.grey[600],
+
+              "&:hover": {
+                backgroundColor: blue[600],
+              },
             },
           },
         },

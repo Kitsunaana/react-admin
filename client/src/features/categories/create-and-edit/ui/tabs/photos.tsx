@@ -9,7 +9,6 @@ import styled from "styled-components"
 
 const GridImage = styled(Box)<BoxProps & { fullScreen: boolean }>`
   display: grid;
-  margin-top: 8px;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 170px;
   gap: 8px;
@@ -37,12 +36,14 @@ export const PhotosTab = observer(() => {
 
   return (
     <>
-      <InputFile
-        caption=""
-        name="images"
-        multiple
-        accept="image/!*"
-      />
+      <Box sx={{ pb: 1 }}>
+        <InputFile
+          caption=""
+          name="images"
+          multiple
+          accept="image/!*"
+        />
+      </Box>
       <GridImageContainer>
         <GridImage fullScreen={fullScreen}>
           {media && media.filter((media) => !media.deleted).map((item) => (

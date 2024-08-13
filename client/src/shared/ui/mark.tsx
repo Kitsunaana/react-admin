@@ -1,4 +1,5 @@
 import React, { CSSProperties, PropsWithChildren } from "react"
+import { alpha, useTheme } from "@mui/material"
 
 interface MarkProps extends PropsWithChildren {
   style?: CSSProperties
@@ -7,6 +8,8 @@ interface MarkProps extends PropsWithChildren {
 export const Mark = (props: MarkProps) => {
   const { style, children } = props
 
+  const { palette } = useTheme()
+
   return (
     <strong
       style={{
@@ -14,7 +17,9 @@ export const Mark = (props: MarkProps) => {
         padding: "2px 8px",
         display: "inline-flex",
         borderRadius: "4px",
-        backgroundColor: "rgba(255, 255, 255, 0.12)",
+        backgroundColor: alpha(palette.mode === "dark"
+          ? palette.common.white
+          : palette.common.black, 0.12),
         ...(style ?? {}),
       }}
     >

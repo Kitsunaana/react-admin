@@ -8,7 +8,8 @@ import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 
 export const NavigationContainer = styled(Box)<BoxProps>`
-  background-color: ${({ theme }) => theme.palette.common.black};
+  background-color: ${({ theme: { palette } }) => (palette.mode === "dark" ? "black" : "white")};
+  box-shadow: ${({ theme }) => theme.shadows[8]};
   background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
   border-radius: 12px;
   padding: 6px;
@@ -22,7 +23,7 @@ export const NavigationContainer = styled(Box)<BoxProps>`
 `
 
 export const NavigationButton = styled(Button)<ButtonProps & { theme: Theme }>`
-  background-color: ${({ theme }) => theme.palette.primary.dark};
+  background-color: ${({ theme: { palette } }) => palette.primary[palette.mode === "dark" ? "dark" : "light"]};
   min-width: 0;
   padding: 8px;
   border-radius: 8px;

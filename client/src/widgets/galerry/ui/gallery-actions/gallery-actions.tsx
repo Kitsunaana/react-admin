@@ -12,8 +12,9 @@ const GalleryActionsContainer = styled(Box)<BoxProps>`
   align-items: center;
   flex-direction: column;
   gap: 4px;
-  background-color: ${({ theme }) => theme.palette.common.black};
+  background-color: ${({ theme: { palette } }) => palette.common[palette.mode === "dark" ? "black" : "white"]};
   background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
+  box-shadow: ${({ theme }) => theme.shadows[8]};
   position: absolute;
   padding: 2px;
   border-radius: 8px;

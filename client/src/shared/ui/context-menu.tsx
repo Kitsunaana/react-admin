@@ -15,22 +15,23 @@ export const ContextMenu = forwardRef<
   const { id, actionsList } = props
 
   return (
-    <Backdrop open sx={{ zIndex: 3 }}>
-      <Box
-        ref={ref}
-        flex
-        sx={{
-          zIndex: 10,
-          position: "absolute",
-          py: 1,
-          borderRadius: 3,
-          backgroundColor: ({ palette }) => palette.grey["900"],
-          backgroundImage: ({ background }) => background.sectionBackground,
-          boxShadow: ({ shadows }) => shadows["6"],
-        }}
-      >
-        {actionsList}
-        {id && (
+    <Box
+      ref={ref}
+      flex
+      sx={{
+        zIndex: 10,
+        position: "absolute",
+        py: 1,
+        borderRadius: 3,
+        backgroundColor: ({ palette }) => (palette.mode === "dark"
+          ? palette.grey["900"]
+          : "white"),
+        backgroundImage: ({ background }) => background.sectionBackground,
+        boxShadow: ({ shadows }) => shadows["6"],
+      }}
+    >
+      {actionsList}
+      {id && (
         <Text
           sx={{ fontSize: 12, textAlign: "center" }}
           caption={(
@@ -40,8 +41,7 @@ export const ContextMenu = forwardRef<
             </>
           )}
         />
-        )}
-      </Box>
-    </Backdrop>
+      )}
+    </Box>
   )
 })

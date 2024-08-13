@@ -1,6 +1,6 @@
 import { Box } from "shared/ui/box"
 import {
-  alpha,
+  alpha, useTheme,
 } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
@@ -37,7 +37,9 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
       sx={{
         px: 1,
         height: 48,
-        border: ({ palette }) => `1px solid ${alpha(palette.grey["600"], 0.75)}`,
+        border: ({ palette }) => `1px solid ${palette.mode === "dark"
+          ? alpha(palette.grey["600"], 0.75)
+          : alpha(palette.grey["400"], 0.45)}`,
         ...(menu.isOpen ? {
           backgroundImage: ({ background }) => background.hatch.primary,
           backgroundSize: "8px 8px",

@@ -3,13 +3,10 @@ import { Icon } from "shared/ui/icon"
 import React, { memo, useState } from "react"
 import { Box } from "shared/ui/box"
 import { dispatch } from "shared/lib/event"
+import { TMedia } from "features/categories/create-and-edit/model/types"
 
 interface TooltipImageViewProps {
-  images: {
-    id: number,
-    path: string,
-    filename: string
-  }[]
+  images: TMedia[]
 }
 
 export const TooltipImageView = memo((props: TooltipImageViewProps) => {
@@ -36,7 +33,7 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
         >
           {newImages.map((image, index) => (
             <img
-              alt={image.filename}
+              alt={image.originalName}
               key={image.id}
               src={`http://localhost:3333/${image.path}`}
               onClick={() => {
@@ -57,12 +54,15 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
       <Badge
         invisible={images.length < 2}
         badgeContent={images.length}
-        color="secondary"
         sx={{
           "& .MuiBadge-badge": {
             px: 0.25,
             top: -1,
             zIndex: 0,
+            backgroundColor: ({ palette }) => (palette.mode === "dark"
+              ? palette.secondary.main
+              : palette.secondary.light),
+            color: ({ palette }) => (palette.mode === "dark" ? "black" : "white"),
           },
         }}
       >

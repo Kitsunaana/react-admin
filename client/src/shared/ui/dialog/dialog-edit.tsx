@@ -84,19 +84,15 @@ export const DialogEdit = observer((props: DialogProps) => {
   const { mutate: onCreate } = useMutation(onCreateOptions())
 
   useEffect(() => {
-    dialogStore.setData(data)
-  }, [data])
+    if (!data) return
 
-  useEffect(() => {
-    if (!dialogStore.data) return
-
-    const keys = Object.keys(dialogStore.data)
+    const keys = Object.keys(data)
     if (keys.length === 0) return
 
-    keys.forEach((key) => methods.setValue(key, dialogStore.data[key], { shouldValidate: true }))
+    keys.forEach((key) => methods.setValue(key, data[key], { shouldValidate: true }))
 
     methods.trigger().then((r) => r)
-  }, [dialogStore.data])
+  }, [data])
 
   const onSubmit = () => {
     methods.handleSubmit((data) => {
