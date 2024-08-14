@@ -3,8 +3,8 @@ import { Category } from './category.entity';
 
 @Table
 export class Media extends Model<Media> {
-  @Column({ unique: true, autoIncrement: true, primaryKey: true, type: DataType.INTEGER })
-  id: number;
+  @Column({ unique: true, primaryKey: true, type: DataType.STRING })
+  id: string;
 
   @Column
   filename: string;

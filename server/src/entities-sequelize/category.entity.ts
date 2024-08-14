@@ -1,6 +1,7 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
 import { Media } from './media.entity';
+import { CustomCategory } from './custom-category';
 
 interface CategoryCreationAttrs {
   caption: string;
@@ -24,4 +25,7 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
 
   @HasMany(() => Media, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   media: Media[];
+
+  @HasOne(() => CustomCategory)
+  custom: CustomCategory;
 }

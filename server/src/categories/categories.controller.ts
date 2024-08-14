@@ -1,5 +1,4 @@
 import {
-  ArgumentMetadata,
   BadRequestException,
   Body,
   Controller,
@@ -11,9 +10,10 @@ import {
   PipeTransform,
   Post,
   Query,
-  Search,
   UploadedFiles,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -22,9 +22,10 @@ import { diskStorage } from 'multer';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { GetCategoryDto } from './dto/get-category-dto';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
+import { FilesService } from '../files/files.service';
 
 @Injectable()
-export class ValidationPipe implements PipeTransform<any> {
+export class ValidationPipeR implements PipeTransform<any> {
   constructor(private fromJsonToObject: string) {}
 
   async transform(value: any) {
@@ -41,9 +42,13 @@ export class ValidationPipe implements PipeTransform<any> {
 
 @Controller('categories')
 export class CategoriesController {
-  constructor(private categoryService: CategoriesService) {}
+  constructor(
+    private categoryService: CategoriesService,
+    private filesService: FilesService,
+  ) {}
 
   @Post('')
+  @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(
     FilesInterceptor('images', 100, {
       storage: diskStorage({
@@ -59,8 +64,15 @@ export class CategoriesController {
       }),
     }),
   )
-  create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateCategoryDto) {
-    return this.categoryService.create(dto, files);
+  async create(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body(new ValidationPipeR('imagesIds')) dto: CreateCategoryDto,
+  ) {
+    const category = await this.categoryService.create(dto);
+    await this.filesService.saveMedia(files, dto.imagesIds, category.id);
+    console.log(category);
+
+    return category;
   }
 
   @Get()
@@ -97,9 +109,10 @@ export class CategoriesController {
   update(
     @Param('id') id: number,
     @UploadedFiles() files: Array<Express.Multer.File>,
-    @Body(new ValidationPipe('media')) dto: UpdateCategoryDto,
+    @Body(new ValidationPipeR('media')) dto: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(id, dto as any, files);
+    console.log(dto);
+    // return this.categoryService.update(id, dto as any, files);
   }
 
   @Delete('/:id')

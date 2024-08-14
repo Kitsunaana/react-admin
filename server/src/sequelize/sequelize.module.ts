@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule as SequelizeModulePackage } from '@nestjs/sequelize';
-import { Category } from '../entities-sequelize/category.entity';
-import { Media } from '../entities-sequelize/media.entity';
+import { Models } from '../entities-sequelize';
 
 @Module({
   imports: [
@@ -13,7 +12,7 @@ import { Media } from '../entities-sequelize/media.entity';
         host: '127.0.0.1',
         dialect: 'postgres',
         port: 5432,
-        models: [Category, Media],
+        models: Models,
         autoLoadModels: true,
         synchronize: true,
         logging: console.log,

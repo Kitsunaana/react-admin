@@ -7,10 +7,17 @@ import * as fs from 'fs';
 export class FilesService {
   constructor(@InjectModel(Media) private mediaRepository: typeof Media) {}
 
-  async saveMedia(media: Array<Express.Multer.File>, categoryId: number) {
+  async saveMedia(
+    media: Array<Express.Multer.File>,
+    imagesIds: Array<{ id: string; caption: string }>,
+    categoryId: number,
+  ) {
     return await Promise.all(
       media.map(async (file) => {
+        const image = imagesIds.find((image) => image.caption === file.originalname);
+
         return await this.mediaRepository.create({
+          id: image.id,
           filename: file.filename,
           size: file.size,
           mimetype: file.mimetype,

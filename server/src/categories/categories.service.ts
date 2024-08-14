@@ -5,22 +5,23 @@ import { TransformedUpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Category } from '../entities-sequelize/category.entity';
 import { GetCategoryDto } from './dto/get-category-dto';
-import sequelize, { Op, Sequelize } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { Media } from '../entities-sequelize/media.entity';
+import { CustomCategory } from '../entities-sequelize/custom-category';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectModel(Category) private categoryRepository: typeof Category,
+    @InjectModel(CustomCategory) private customCategoryRepository: typeof CustomCategory,
     private filesService: FilesService,
   ) {}
 
-  async create(dto: CreateCategoryDto, files: Array<Express.Multer.File>) {
-    const category = await this.categoryRepository.create(dto);
-    await this.filesService.saveMedia(files, category.id);
-
-    return category;
+  async create(dto: CreateCategoryDto) {
+    return await this.categoryRepository.create(dto, {
+      include: [{ model: CustomCategory }],
+    });
   }
 
   async update(id: number, dto: TransformedUpdateCategoryDto, files: Array<Express.Multer.File>) {
@@ -32,7 +33,7 @@ export class CategoriesService {
 
     console.log(dto);
     await this.filesService.updateOrder(dto.media);
-    await this.filesService.saveMedia(files, id);
+    // await this.filesService.saveMedia(files, id);
     await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
 
     return this.categoryRepository.update(values, { where: { id } });
