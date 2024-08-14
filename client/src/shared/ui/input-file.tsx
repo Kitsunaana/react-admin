@@ -3,9 +3,10 @@ import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import * as React from "react"
-import { useFilesUpload } from "shared/hooks/use-files-upload"
 import { useTheme } from "@mui/material"
 import styled from "styled-components"
+import { TImage } from "features/categories/create-and-edit/model/types"
+import { nanoid } from "nanoid"
 
 const InputFileContainer = styled(Box)`
   display: flex;
@@ -29,12 +30,12 @@ interface InputFileProps {
   multiple: boolean
   name: string
   disabled?: boolean
-  onFileUpload?: (event: ChangeEvent<HTMLInputElement>) => void
+  onFilesUpload: (files: TImage[]) => void
 }
 
 export const InputFile = memo((props: InputFileProps) => {
   const {
-    accept, caption, multiple, name, disabled, onFileUpload,
+    accept, caption, multiple, name, disabled, onFilesUpload,
   } = props
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -42,6 +43,23 @@ export const InputFile = memo((props: InputFileProps) => {
 
   const onClick = () => {
     if (inputRef?.current) inputRef.current?.click()
+  }
+
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const files: TImage[] = []
+
+    Array.prototype.forEach.call(event.target.files, (file: File) => {
+      if (multiple) {
+        files.push({
+          caption: file.name,
+          data: file,
+          type: file.type,
+          id: nanoid(),
+        })
+      }
+    })
+
+    if (multiple) onFilesUpload(files)
   }
 
   return (
@@ -55,7 +73,7 @@ export const InputFile = memo((props: InputFileProps) => {
         style={{ display: "none" }}
         ref={inputRef}
         multiple={multiple}
-        onChange={onFileUpload}
+        onChange={handleFileUpload}
         disabled={disabled}
       />
       <Icon name="file" sx={{ mr: 1 }} />

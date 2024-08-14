@@ -3,6 +3,7 @@ import { validation } from "shared/lib/validation"
 import { createCategorySchema } from "features/categories/create-and-edit/model/schemas"
 import { createMultipart } from "shared/lib/multipart"
 import { z } from "zod"
+import { toJS } from "mobx"
 
 const URL = "/categories"
 
@@ -11,7 +12,10 @@ export const categoriesApi = {
     try {
       validation(createCategorySchema, data)
 
-      const formData = createMultipart(data, ["images"])
+      const imagesIds = data.images?.map(({ id, caption }) => ({ id, caption }))
+      console.log(imagesIds)
+
+      const formData = createMultipart({ ...data, imagesIds }, ["images"])
       const response = await $axios.post(URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })

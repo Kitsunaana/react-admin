@@ -9,12 +9,15 @@ export function useActionsImage() {
   const [images, media] = watch(["images", "media"])
 
   const onOpenGallery = useCallback((id: number | string) => {
+    const media = getValues("media")
+    const images = getValues("images")
+
     const filteredMedia = media?.filter((media) => !media.deleted)
     const mergedImages = [...(filteredMedia ?? []), ...(images ?? [])]
 
     const findIndex = mergedImages.findIndex((media) => media.id === id)
     dispatch("gallery", { images: mergedImages, index: findIndex })
-  }, [images, media])
+  }, [])
 
   const onUpdateOrder = useCallback((order, id) => {
     const media = (getValues("media") ?? [])

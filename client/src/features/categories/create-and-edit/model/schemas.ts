@@ -1,16 +1,5 @@
 import { z } from "zod"
 
-export const categoryFormSchema = z.object({
-  description: z.string().optional(),
-  caption: z.string(),
-  images: z.array(z.object({
-    caption: z.string(),
-    data: z.record(z.unknown()),
-    id: z.string(),
-    type: z.string(),
-  })),
-})
-
 export const createCategorySchema = z.object({
   caption: z.string(),
   description: z.string().optional(),
@@ -24,7 +13,7 @@ export const createCategorySchema = z.object({
 })
 
 export const mediaSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   path: z.string(),
   originalName: z.string(),
   order: z.number().nullable(),
@@ -37,5 +26,7 @@ export const categorySchema = z.object({
   order: z.number(),
   media: z.array(mediaSchema).optional(),
 })
+
+export type TCategory = z.infer<typeof categorySchema>
 
 export const categoriesSchema = z.array(categorySchema)

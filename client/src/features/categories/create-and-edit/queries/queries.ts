@@ -12,7 +12,6 @@ export const updateCategoryOptions = (id: number | null): UpdateUseCategoryOptio
   mutationFn: (data) => categoriesApi.patch(id, data),
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ["categories"] })
-    queryClient.invalidateQueries({ queryKey: ["category", id] })
   },
 })
 

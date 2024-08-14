@@ -3,22 +3,22 @@ import {
   Checkbox, FormControlLabel, Slider,
 } from "@mui/material"
 import {
-  forwardRef, memo, useMemo, useState,
+  forwardRef,
 } from "react"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
 import {
-  useFormContext, Controller, useWatch, UseFormWatch,
+  Controller,
 } from "react-hook-form"
 import { MuiColorInput, MuiColorInputProps } from "mui-color-input"
 import {
-  TImage, TMedia, TPosition, UseCategoryFormProps,
+  TPosition,
 } from "features/categories/create-and-edit/model/types"
 import { Image } from "shared/ui/image"
 import { useImage } from "shared/hooks/use-image"
-import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
+import { rootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
 
 type TPositionCheckbox = {
   id: number
@@ -92,6 +92,8 @@ interface CustomImageProps {
   caption: string
 }
 
+const { photoPosition: photoPositionStore } = rootStore
+
 export const CustomImage = (props: CustomImageProps) => {
   const { path, caption, data } = props
 
@@ -111,98 +113,68 @@ export const CustomImage = (props: CustomImageProps) => {
   )
 }
 
-export class Store {
-  color = "red"
-  bgColor = "blue"
-  blur = 5
-  captionPosition: TPosition = "center-center"
-  indexActiveImage = 0
-
-  constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
-  }
-
-  changeColor(newColor: string) {
-    this.color = newColor
-  }
-
-  changeBgColor(newBgColor: string) {
-    this.bgColor = newBgColor
-  }
-
-  changeBlur(newBlur: number) {
-    this.blur = newBlur
-  }
-
-  changeCaptionPosition(newCaptionPosition: TPosition) {
-    this.captionPosition = newCaptionPosition
-  }
-
-  changeIndexActiveImage(newIndex) {
-    this.indexActiveImage = newIndex
-  }
-}
-
-export const store = new Store()
-
 export const CustomizeCaption = observer(() => (
   <Text
     caption="caption"
     sx={{
       fontSize: 20,
       lineHeight: 1.5,
-      color: store.color,
+      color: photoPositionStore.color,
       whiteSpace: "pre-line",
       padding: "4px 8px",
-      background: store.bgColor,
+      background: photoPositionStore.bgColor,
       borderRadius: "8px",
       boxShadow: "rgba(255, 255, 255, 0.25) 0px 4px 30px",
-      backdropFilter: `blur(${store.blur}px)`,
+      backdropFilter: `blur(${photoPositionStore.blur}px)`,
       border: "1px solid rgba(255, 255, 255, 0.12)",
     }}
   />
 ))
 
+export const CheckBoxGrid = observer(() => (
+  <>
+    {gridCheckbox.map((row, index) => (
+      <Box key={index} flex ai row jc_sp>
+        {row.map((checkbox) => (
+          <Box
+            flex
+            row
+            key={checkbox.id}
+            sx={{ flexBasis: "33.33%", justifyContent: checkbox.content }}
+          >
+            {photoPositionStore.captionPosition === checkbox.position ? (
+              <CustomizeCaption />
+            ) : (
+              <Checkbox
+                onChange={() => photoPositionStore.changeCaptionPosition(checkbox.position)}
+              />
+            )}
+          </Box>
+        ))}
+      </Box>
+    ))}
+  </>
+))
+
 export const Gallery = observer(() => {
-  const { watch } = useFormContext<UseCategoryFormProps>()
+  const renderImage = () => {
+    const image = photoPositionStore.activeImage
+    if (!image) return null
 
-  const [media, images] = watch(
-    ["media", "images"],
-  )
-
-  const filteredMedia = media.filter((media) => !media.deleted)
-  const mergedImages: Array<TMedia | TImage> = [...filteredMedia, ...images]
-
-  const onNextImage = () => {
-    store.changeIndexActiveImage(mergedImages[store.indexActiveImage + 1]
-      ? store.indexActiveImage + 1
-      : 0)
-  }
-
-  const onPrevImage = () => {
-    store.changeIndexActiveImage(mergedImages[store.indexActiveImage - 1]
-      ? store.indexActiveImage - 1
-      : mergedImages.length - 1)
-  }
-
-  const renderImage = useMemo(() => {
-    const image = mergedImages[store.indexActiveImage]
-
-    if (image?.caption) {
-      return <CustomImage caption={image.caption} data={image.data} />
+    const props = {
+      ...image,
+      caption: image.originalName ?? image.caption,
     }
 
-    if (image?.originalName) {
-      return <CustomImage caption={image.originalName} path={image.path} />
-    }
-
-    return null
-  }, [store.indexActiveImage, media, images])
+    return <CustomImage {...props} />
+  }
 
   return (
-    <Box flex row ai sx={{ height: 1 }}>
-      <IconButton name="prev" onClick={onPrevImage} />
-      <Box sx={{ position: "relative", width: 1 }}>
+    <Box flex row ai>
+      {photoPositionStore.isShowButton && (
+        <IconButton name="prev" onClick={photoPositionStore.setPrevImage} />
+      )}
+      <Box sx={{ position: "relative", width: 1, height: 250 }}>
         <Box
           flex
           jc_sp
@@ -210,38 +182,21 @@ export const Gallery = observer(() => {
             position: "absolute", width: 1, height: 250, top: 0, right: 0, p: 1,
           }}
         >
-          {gridCheckbox.map((row, index) => (
-            <Box key={index} flex ai row jc_sp>
-              {row.map((checkbox) => (
-                <Box
-                  flex
-                  row
-                  key={checkbox.id}
-                  sx={{ flexBasis: "33.33%", justifyContent: checkbox.content }}
-                >
-                  {store.captionPosition === checkbox.position ? (
-                    <CustomizeCaption />
-                  ) : (
-                    <Checkbox
-                      onChange={() => store.changeCaptionPosition(checkbox.position)}
-                    />
-                  )}
-                </Box>
-              ))}
-            </Box>
-          ))}
+          <CheckBoxGrid />
         </Box>
-        {renderImage}
+        {renderImage()}
       </Box>
-      <IconButton name="next" onClick={onNextImage} />
+      {photoPositionStore.isShowButton && (
+        <IconButton name="next" onClick={photoPositionStore.setNextImage} />
+      )}
     </Box>
   )
 })
 
 export const ChangeTextColor = observer(() => (
   <ColorInput
-    onChange={store.changeColor}
-    value={store.color}
+    onChange={photoPositionStore.changeColor}
+    value={photoPositionStore.color}
     fullWidth
     label="Цвет текста"
   />
@@ -249,48 +204,30 @@ export const ChangeTextColor = observer(() => (
 
 export const ChangeBgColor = observer(() => (
   <ColorInput
-    onChange={store.changeBgColor}
-    value={store.bgColor}
+    onChange={photoPositionStore.changeBgColor}
+    value={photoPositionStore.bgColor}
     fullWidth
     label="Цвет фона для текста"
   />
 ))
 
-/* export const ChangeBlur = observer(() => (
+export const ChangeBlur = observer(() => (
   <Slider
     onChange={(event, value) => {
-      store.changeBlur(Array.isArray(value) ? 0 : value)
+      photoPositionStore.changeBlur(Array.isArray(value) ? 0 : value)
     }}
-    value={store.blur}
+    value={photoPositionStore.blur}
     valueLabelDisplay="auto"
     defaultValue={5}
     max={20}
     marks={[{ value: 10, label: <Icon name="zoomEffect" fontSize="small" /> }]}
-  />
-)) */
-
-export const ChangeBlur = observer(() => (
-  <Controller
-    name="blur"
-    render={({ field }) => (
-      <Slider
-        // onChange={(event, value) => {
-        //   store.changeBlur(Array.isArray(value) ? 0 : value)
-        // }}
-        // value={store.blur}
-        {...field}
-        valueLabelDisplay="auto"
-        defaultValue={5}
-        max={20}
-        marks={[{ value: 10, label: <Icon name="zoomEffect" fontSize="small" /> }]}
-      />
-    )}
   />
 ))
 
 export const PhotoPosition = () => (
   <Box>
     <Controller
+      defaultValue
       name="isShowPhotoWithGoods"
       render={({ field }) => (
         <FormControlLabel

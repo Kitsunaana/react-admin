@@ -8,20 +8,19 @@ import { useImage } from "shared/hooks/use-image"
 import { Image as BaseImage } from "shared/ui/image"
 import styled from "styled-components"
 import { memo } from "react"
-import { shallowEqual } from "shared/lib/utils"
 
 interface ImageProps extends Omit<BoxProps, "id" | "order"> {
   url?: string
   name?: string
   local?: boolean
-  id: string | number
+  id: string
   file?: File
   order?: number | null
 
-  onUpdateOrder?: (order: number, id: number) => void
-  onClear?: (id: number) => void
+  onUpdateOrder?: (order: number, id: string) => void
+  onClear?: (id: string) => void
   onClearLocal?: (id: string) => void
-  onOpenGallery?: (id: string | number) => void
+  onOpenGallery?: (id: string) => void
 }
 
 const ImageCustom = styled(BaseImage)`
@@ -76,17 +75,13 @@ export const Image = memo((props: ImageProps) => {
   const theme = useTheme()
   const src = useImage(url ?? file)
 
-  const isShowUpdateOrder = (
-    order !== undefined
-    && typeof id === "number"
-    && onUpdateOrder
-  )
+  const isShowUpdateOrder = (order !== undefined && onUpdateOrder)
 
   const handleOnClear = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation()
 
-    if (typeof id === "number" && onClear) onClear(id)
-    if (typeof id === "string" && onClearLocal) onClearLocal(id)
+    if (local) onClearLocal?.(id)
+    else onClear?.(id)
   }
 
   return (

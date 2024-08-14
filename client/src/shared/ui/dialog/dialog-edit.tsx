@@ -4,7 +4,7 @@ import {
 } from "react"
 import { useTranslation } from "react-i18next"
 import { useFormContext } from "react-hook-form"
-import { addEvent } from "shared/lib/event"
+import { addEvent, dispatch } from "shared/lib/event"
 import MUIDialog from "@mui/material/Dialog"
 import { Box } from "shared/ui/box"
 import * as React from "react"
@@ -24,6 +24,9 @@ interface DialogProps {
   onGetByIdOptions: (id: number | null) => UseQueryOptions
   onUpdateOptions: (id: number | null) => UseMutationOptions<any, any, any>
   onCreateOptions: () => UseMutationOptions<any, any, any>
+  getData: () => any
+  setData: (data: any) => any
+  storeReset: () => void
 }
 
 export class DialogStore {
@@ -47,10 +50,6 @@ export class DialogStore {
     this.state = { id: null, open: false }
   }
 
-  setData(data: any) {
-    this.data = data
-  }
-
   get isEdit() {
     return this.state.id !== null
   }
@@ -66,7 +65,15 @@ export const dialogStore = new DialogStore()
 
 export const DialogEdit = observer((props: DialogProps) => {
   const {
-    langBase: langBaseProps, title, container, onGetByIdOptions, onUpdateOptions, onCreateOptions,
+    langBase: langBaseProps,
+    setData,
+    title,
+    container,
+    onGetByIdOptions,
+    onUpdateOptions,
+    onCreateOptions,
+    getData,
+    storeReset,
   } = props
 
   const lang = useLang()
@@ -84,6 +91,10 @@ export const DialogEdit = observer((props: DialogProps) => {
   const { mutate: onCreate } = useMutation(onCreateOptions())
 
   useEffect(() => {
+    setData(data)
+  }, [data])
+
+  useEffect(() => {
     if (!data) return
 
     const keys = Object.keys(data)
@@ -96,11 +107,14 @@ export const DialogEdit = observer((props: DialogProps) => {
 
   const onSubmit = () => {
     methods.handleSubmit((data) => {
-      if (dialogStore.isEdit) onUpdate(data)
-      else onCreate(data)
+      const mergedData = { ...data, ...getData() }
+      // console.log({ ...data, ...getData() })
+      if (dialogStore.isEdit) onUpdate(mergedData)
+      else onCreate(mergedData)
 
-      methods.reset()
-      dialogStore.closeDialog()
+      /* methods.reset()
+      dialogStore.closeDialog() */
+      storeReset()
     })()
   }
 
@@ -136,6 +150,7 @@ export const DialogEdit = observer((props: DialogProps) => {
           <CancelButton
             onClick={() => {
               methods.reset()
+              storeReset()
               dialogStore.closeDialog()
             }}
           />

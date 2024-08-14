@@ -15,6 +15,7 @@ import { useMemo } from "react"
 import { observer } from "mobx-react-lite"
 import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
+import { rootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
 
 export const Dialog = observer(() => {
   const tabDefault = 0
@@ -37,6 +38,9 @@ export const Dialog = observer(() => {
         onCreateOptions={createCategoryOptions}
         onUpdateOptions={updateCategoryOptions}
         onGetByIdOptions={getByIdCategoryOptions}
+        getData={rootStore.getData}
+        setData={rootStore.setData}
+        storeReset={rootStore.destroy}
         container={useMemo(() => (
           <Box flex gap>
             <TabsContainer

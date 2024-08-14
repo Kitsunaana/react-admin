@@ -52,8 +52,8 @@ const Container = styled((props: ContainerProps) => {
 interface UpdateOrderProps {
   order: number | null
   sx?: SxProps<Theme>
-  id: number
-  onClick: (order: number, id: number) => void
+  id: string
+  onClick: (order: number, id: string) => void
 }
 
 export const UpdateOrder = memo((props: UpdateOrderProps) => {

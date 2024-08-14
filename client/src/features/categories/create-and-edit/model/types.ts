@@ -1,5 +1,5 @@
 export type TMedia = {
-  id: number
+  id: string
   path: string
   originalName: string
   order: number | null
