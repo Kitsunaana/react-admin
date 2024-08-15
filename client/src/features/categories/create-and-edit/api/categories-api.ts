@@ -13,9 +13,9 @@ export const categoriesApi = {
       validation(createCategorySchema, data)
 
       const imagesIds = data.images?.map(({ id, caption }) => ({ id, caption }))
-      console.log(imagesIds)
 
       const formData = createMultipart({ ...data, imagesIds }, ["images"])
+      console.log(data)
       const response = await $axios.post(URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })

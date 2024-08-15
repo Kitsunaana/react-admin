@@ -13,7 +13,7 @@ type Position =
   | 'bottom-right';
 
 @Table({ timestamps: false })
-export class CustomCategory extends Model {
+export class CustomCategory extends Model<CustomCategory> {
   @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true, unique: true })
   id: number;
 
@@ -44,7 +44,7 @@ export class CustomCategory extends Model {
   @Column
   blur: number;
 
-  @Column
+  @Column({ allowNull: true })
   activeImageId: string;
 
   @Column

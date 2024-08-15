@@ -70,7 +70,6 @@ export class CategoriesController {
   ) {
     const category = await this.categoryService.create(dto);
     await this.filesService.saveMedia(files, dto.imagesIds, category.id);
-    console.log(category);
 
     return category;
   }

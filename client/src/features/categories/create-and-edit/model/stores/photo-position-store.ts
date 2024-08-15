@@ -1,6 +1,7 @@
 import { TPosition } from "features/categories/create-and-edit/model/types"
-import { makeAutoObservable, reaction } from "mobx"
+import { makeAutoObservable, reaction, when } from "mobx"
 import { RootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
+import { CustomCategory } from "features/categories/create-and-edit/model/schemas"
 
 export class PhotoPositionStore {
   color = "red"
@@ -8,16 +9,38 @@ export class PhotoPositionStore {
   blur = 5
   captionPosition: TPosition = "center-center"
   activeImageId: null | string = null
+
   _indexActiveImage = 0
 
   constructor(private rootStore: RootStore) {
     makeAutoObservable(this, {}, { autoBind: true })
 
     reaction(() => this._indexActiveImage, () => this.changeActiveImageId())
+
+    when(
+      () => (
+        !!this.rootStore.photos
+        && !!this.rootStore.photos.mergedImages
+        && !!this.rootStore.photos.mergedImages[this._indexActiveImage]
+      ),
+      () => this.changeActiveImageId(),
+    )
+  }
+
+  setPhotoPosition(data: CustomCategory) {
+    Object.assign(this, data)
+
+    if (!data.activeImageId) return
+
+    this._indexActiveImage = this.rootStore.photos.mergedImages
+      .findIndex((image) => image.id === data.activeImageId)
   }
 
   changeActiveImageId() {
+    if (!this.rootStore.photos) return
+
     const findImage = this.rootStore.photos.mergedImages[this._indexActiveImage]
+    console.log(findImage)
     this.activeImageId = findImage.id
   }
 

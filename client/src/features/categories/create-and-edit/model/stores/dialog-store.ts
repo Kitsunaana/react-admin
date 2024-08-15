@@ -22,13 +22,15 @@ export class RootStore {
 
   setData(data: any) {
     if (!data) return
-    this.photos.setMedia(data?.media)
 
-    this.stores.forEach((store) => {
-      Object.keys(this[store]).forEach((key) => {
-        if (key in data) this[key] = data[key]
-      })
-    })
+    this.photos.setMedia(data?.media)
+    this.photoPosition.setPhotoPosition(data?.custom)
+
+    // this.stores.forEach((store) => {
+    //   Object.keys(this[store]).forEach((key) => {
+    //     if (key in data) this[key] = data[key]
+    //   })
+    // })
   }
 
   getData() {

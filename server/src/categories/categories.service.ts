@@ -19,9 +19,12 @@ export class CategoriesService {
   ) {}
 
   async create(dto: CreateCategoryDto) {
-    return await this.categoryRepository.create(dto, {
-      include: [{ model: CustomCategory }],
-    });
+    const category = await this.categoryRepository.create(dto);
+    const customCategory = await this.customCategoryRepository.create(dto);
+
+    await category.$set('custom', customCategory);
+
+    return category;
   }
 
   async update(id: number, dto: TransformedUpdateCategoryDto, files: Array<Express.Multer.File>) {
@@ -93,6 +96,9 @@ export class CategoriesService {
           model: Media,
           as: 'media',
           attributes: ['id', 'order', 'originalName', 'path'],
+        },
+        {
+          model: CustomCategory,
         },
       ],
       order: [
