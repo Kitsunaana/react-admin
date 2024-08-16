@@ -11,18 +11,49 @@ import {
 } from "features/categories/create-and-edit/queries/queries"
 import { tabs } from "features/categories/create-and-edit/model/constants"
 import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
-import { useMemo } from "react"
+import {
+  Context,
+  createContext, FC, PropsWithChildren, useContext, useEffect, useMemo, useState,
+} from "react"
 import { observer } from "mobx-react-lite"
 import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
-import { rootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
+import { createRootStore, RootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
 
-export const Dialog = observer(() => {
+export const useStrictContext = <T, >(context: Context<T | null>) => {
+  const value = useContext(context)
+  if (value === null) throw new Error("Strict context not passed")
+
+  return value as T
+}
+
+export const createStrictContext = <T, >() => createContext<T | null>(null)
+
+const RootStoreContext = createStrictContext<RootStore>()
+
+export const useStores = () => useStrictContext(RootStoreContext)
+
+export const StoreProvider: FC<PropsWithChildren> = (props) => {
+  const { children } = props
+
+  const [state] = useState(createRootStore)
+
+  return (
+    <RootStoreContext.Provider value={state}>
+      {children}
+    </RootStoreContext.Provider>
+  )
+}
+
+export const D = observer(() => {
   const tabDefault = 0
   const langBase = "catalog.dialog"
 
+  const rootStore = useStores()
+
   const methods = useForm<UseCategoryFormProps>({
     defaultValues: {
+      caption: "",
       color: "red",
       bgColor: "blue",
       blur: 5,
@@ -59,3 +90,9 @@ export const Dialog = observer(() => {
     </FormProvider>
   )
 })
+
+export const Dialog = () => (
+  <StoreProvider>
+    <D />
+  </StoreProvider>
+)

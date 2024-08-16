@@ -1,5 +1,5 @@
 import { TImage, TMediaForm } from "features/categories/create-and-edit/model/types"
-import { makeAutoObservable } from "mobx"
+import { IReactionDisposer, makeAutoObservable, reaction } from "mobx"
 import { dispatch } from "shared/lib/event"
 import { RootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
 
@@ -7,8 +7,16 @@ export class PhotosStore {
   images: TImage[] = []
   media: TMediaForm[] = []
 
+  disposers: IReactionDisposer[] = []
+
   constructor(public rootStore: RootStore) {
     makeAutoObservable(this, {}, { autoBind: true })
+
+    const photosDisposer = reaction(
+      () => this.media,
+      () => console.log("Number of media"),
+    )
+    this.disposers.push(photosDisposer)
   }
 
   get mergedImages() {
@@ -45,5 +53,16 @@ export class PhotosStore {
 
   setMedia(media: TMediaForm[]) {
     this.media = media
+  }
+
+  reset() {
+    this.media = []
+  }
+
+  destroy() {
+    this.reset()
+
+    // this.disposers.forEach((dispose) => dispose())
+    // this.disposers = []
   }
 }

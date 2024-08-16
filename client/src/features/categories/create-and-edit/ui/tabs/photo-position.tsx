@@ -18,7 +18,8 @@ import {
 import { Image } from "shared/ui/image"
 import { useImage } from "shared/hooks/use-image"
 import { observer } from "mobx-react-lite"
-import { rootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
+import { useStores } from "features/categories/create-and-edit/ui/dialog"
+// import { rootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
 
 type TPositionCheckbox = {
   id: number
@@ -92,7 +93,7 @@ interface CustomImageProps {
   caption: string
 }
 
-const { photoPosition: photoPositionStore } = rootStore
+// const { photoPosition: photoPositionStore } = rootStore
 
 export const CustomImage = (props: CustomImageProps) => {
   const { path, caption, data } = props
@@ -113,52 +114,62 @@ export const CustomImage = (props: CustomImageProps) => {
   )
 }
 
-export const CustomizeCaption = observer(() => (
-  <Text
-    caption="caption"
-    sx={{
-      fontSize: 20,
-      lineHeight: 1.5,
-      color: photoPositionStore.color,
-      whiteSpace: "pre-line",
-      padding: "4px 8px",
-      background: photoPositionStore.bgColor,
-      borderRadius: "8px",
-      boxShadow: "rgba(255, 255, 255, 0.25) 0px 4px 30px",
-      backdropFilter: `blur(${photoPositionStore.blur}px)`,
-      border: "1px solid rgba(255, 255, 255, 0.12)",
-    }}
-  />
-))
+export const CustomizeCaption = observer(() => {
+  const { photoPosition } = useStores()
 
-export const CheckBoxGrid = observer(() => (
-  <>
-    {gridCheckbox.map((row, index) => (
-      <Box key={index} flex ai row jc_sp>
-        {row.map((checkbox) => (
-          <Box
-            flex
-            row
-            key={checkbox.id}
-            sx={{ flexBasis: "33.33%", justifyContent: checkbox.content }}
-          >
-            {photoPositionStore.captionPosition === checkbox.position ? (
-              <CustomizeCaption />
-            ) : (
-              <Checkbox
-                onChange={() => photoPositionStore.changeCaptionPosition(checkbox.position)}
-              />
-            )}
-          </Box>
-        ))}
-      </Box>
-    ))}
-  </>
-))
+  return (
+    <Text
+      caption="caption"
+      sx={{
+        fontSize: 20,
+        lineHeight: 1.5,
+        color: photoPosition.color,
+        whiteSpace: "pre-line",
+        padding: "4px 8px",
+        background: photoPosition.bgColor,
+        borderRadius: "8px",
+        boxShadow: "rgba(255, 255, 255, 0.25) 0px 4px 30px",
+        backdropFilter: `blur(${photoPosition.blur}px)`,
+        border: "1px solid rgba(255, 255, 255, 0.12)",
+      }}
+    />
+  )
+})
+
+export const CheckBoxGrid = observer(() => {
+  const { photoPosition } = useStores()
+
+  return (
+    <>
+      {gridCheckbox.map((row, index) => (
+        <Box key={index} flex ai row jc_sp>
+          {row.map((checkbox) => (
+            <Box
+              flex
+              row
+              key={checkbox.id}
+              sx={{ flexBasis: "33.33%", justifyContent: checkbox.content }}
+            >
+              {photoPosition.captionPosition === checkbox.position ? (
+                <CustomizeCaption />
+              ) : (
+                <Checkbox
+                  onChange={() => photoPosition.changeCaptionPosition(checkbox.position)}
+                />
+              )}
+            </Box>
+          ))}
+        </Box>
+      ))}
+    </>
+  )
+})
 
 export const Gallery = observer(() => {
+  const { photoPosition } = useStores()
+
   const renderImage = () => {
-    const image = photoPositionStore.activeImage
+    const image = photoPosition.activeImage
     if (!image) return null
 
     const props = {
@@ -171,8 +182,8 @@ export const Gallery = observer(() => {
 
   return (
     <Box flex row ai>
-      {photoPositionStore.isShowButton && (
-        <IconButton name="prev" onClick={photoPositionStore.setPrevImage} />
+      {photoPosition.isShowButton && (
+        <IconButton name="prev" onClick={photoPosition.setPrevImage} />
       )}
       <Box sx={{ position: "relative", width: 1, height: 250 }}>
         <Box
@@ -186,43 +197,55 @@ export const Gallery = observer(() => {
         </Box>
         {renderImage()}
       </Box>
-      {photoPositionStore.isShowButton && (
-        <IconButton name="next" onClick={photoPositionStore.setNextImage} />
+      {photoPosition.isShowButton && (
+        <IconButton name="next" onClick={photoPosition.setNextImage} />
       )}
     </Box>
   )
 })
 
-export const ChangeTextColor = observer(() => (
-  <ColorInput
-    onChange={photoPositionStore.changeColor}
-    value={photoPositionStore.color}
-    fullWidth
-    label="Цвет текста"
-  />
-))
+export const ChangeTextColor = observer(() => {
+  const { photoPosition } = useStores()
 
-export const ChangeBgColor = observer(() => (
-  <ColorInput
-    onChange={photoPositionStore.changeBgColor}
-    value={photoPositionStore.bgColor}
-    fullWidth
-    label="Цвет фона для текста"
-  />
-))
+  return (
+    <ColorInput
+      onChange={photoPosition.changeColor}
+      value={photoPosition.color}
+      fullWidth
+      label="Цвет текста"
+    />
+  )
+})
 
-export const ChangeBlur = observer(() => (
-  <Slider
-    onChange={(event, value) => {
-      photoPositionStore.changeBlur(Array.isArray(value) ? 0 : value)
-    }}
-    value={photoPositionStore.blur}
-    valueLabelDisplay="auto"
-    defaultValue={5}
-    max={20}
-    marks={[{ value: 10, label: <Icon name="zoomEffect" fontSize="small" /> }]}
-  />
-))
+export const ChangeBgColor = observer(() => {
+  const { photoPosition } = useStores()
+
+  return (
+    <ColorInput
+      onChange={photoPosition.changeBgColor}
+      value={photoPosition.bgColor}
+      fullWidth
+      label="Цвет фона для текста"
+    />
+  )
+})
+
+export const ChangeBlur = observer(() => {
+  const { photoPosition } = useStores()
+
+  return (
+    <Slider
+      onChange={(event, value) => {
+        photoPosition.changeBlur(Array.isArray(value) ? 0 : value)
+      }}
+      value={photoPosition.blur}
+      valueLabelDisplay="auto"
+      defaultValue={5}
+      max={20}
+      marks={[{ value: 10, label: <Icon name="zoomEffect" fontSize="small" /> }]}
+    />
+  )
+})
 
 export const PhotoPosition = () => (
   <Box>

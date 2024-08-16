@@ -1,5 +1,5 @@
 import { PhotosStore } from "features/categories/create-and-edit/model/stores/photos-store"
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {
@@ -11,26 +11,28 @@ export class RootStore {
     this.photos = new PhotosStore(this)
 
     makeAutoObservable(this, {}, { autoBind: true })
+
+    // this.getData = this.getData.bind(this)
+    // this.destroy = this.destroy.bind(this)
+    // this.setData = this.setData.bind(this)
   }
 
   private stores = ["photoPosition", "photos"]
 
   destroy() {
+    this.photos.destroy()
     this.photos = new PhotosStore(this)
     this.photoPosition = new PhotoPositionStore(this)
   }
 
   setData(data: any) {
-    if (!data) return
-
-    this.photos.setMedia(data?.media)
-    this.photoPosition.setPhotoPosition(data?.custom)
-
-    // this.stores.forEach((store) => {
-    //   Object.keys(this[store]).forEach((key) => {
-    //     if (key in data) this[key] = data[key]
-    //   })
-    // })
+    if (!data) {
+      this.photos.destroy()
+      this.photoPosition = new PhotoPositionStore(this)
+    } else {
+      this.photos.setMedia(data?.media)
+      this.photoPosition.setPhotoPosition(data?.custom)
+    }
   }
 
   getData() {
@@ -56,3 +58,4 @@ export class RootStore {
 }
 
 export const rootStore = new RootStore()
+export const createRootStore = () => new RootStore()

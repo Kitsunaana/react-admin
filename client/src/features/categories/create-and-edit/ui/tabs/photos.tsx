@@ -5,7 +5,8 @@ import { observer } from "mobx-react-lite"
 import { InputFile } from "shared/ui/input-file"
 import { dialogStore as baseDialogStore } from "shared/ui/dialog/dialog-edit"
 import styled from "styled-components"
-import { rootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
+import { useStores } from "features/categories/create-and-edit/ui/dialog"
+// import { rootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
 
 const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -27,7 +28,8 @@ const GridImageContainer = styled(Box)`
 
 export const PhotosTab = observer(() => {
   const { fullScreen } = baseDialogStore
-  const { photos: photosStore } = rootStore
+  const { photos } = useStores()
+  console.log(photos)
 
   return (
     <>
@@ -37,32 +39,32 @@ export const PhotosTab = observer(() => {
           name="images"
           multiple
           accept="image/!*"
-          onFilesUpload={photosStore.setUploadedFiles}
+          onFilesUpload={photos.setUploadedFiles}
         />
       </Box>
       <GridImageContainer>
         <GridImage fullScreen={fullScreen}>
-          {photosStore.filteredMedia && photosStore.filteredMedia.map((item) => (
+          {photos.filteredMedia && photos.filteredMedia.map((item) => (
             <Image
               key={item.id}
               id={item.id}
               url={item.path}
               name={item.originalName}
               order={item.order}
-              onClear={photosStore.clearMedia}
-              onUpdateOrder={photosStore.updateOrder}
-              onOpenGallery={photosStore.openGallery}
+              onClear={photos.clearMedia}
+              onUpdateOrder={photos.updateOrder}
+              onOpenGallery={photos.openGallery}
             />
           ))}
-          {photosStore.images && photosStore.images.map((item) => (
+          {photos.images && photos.images.map((item) => (
             <Image
               local
               key={item.id}
               id={item.id}
               file={item.data}
               name={item.caption}
-              onClearLocal={photosStore.clearImage}
-              onOpenGallery={photosStore.openGallery}
+              onClearLocal={photos.clearImage}
+              onOpenGallery={photos.openGallery}
             />
           ))}
         </GridImage>

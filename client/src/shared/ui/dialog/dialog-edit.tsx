@@ -1,6 +1,6 @@
 import { useLang } from "shared/context/Lang"
 import {
-  ReactNode, useEffect, useMemo,
+  ReactNode, useEffect, useLayoutEffect, useMemo,
 } from "react"
 import { useTranslation } from "react-i18next"
 import { useFormContext } from "react-hook-form"
@@ -90,31 +90,35 @@ export const DialogEdit = observer((props: DialogProps) => {
   const { mutate: onUpdate } = useMutation(onUpdateOptions(dialogStore.state.id))
   const { mutate: onCreate } = useMutation(onCreateOptions())
 
-  useEffect(() => {
-    setData(data)
-  }, [data])
+  useEffect(() => () => storeReset(), [])
 
   useEffect(() => {
     if (!data) return
 
+    if (dialogStore.state.id) setData(data)
+
     const keys = Object.keys(data)
     if (keys.length === 0) return
 
-    keys.forEach((key) => methods.setValue(key, data[key], { shouldValidate: true }))
+    keys.forEach((key) => methods.setValue(key, data[key]))
 
     methods.trigger().then((r) => r)
   }, [data])
 
+  const onClose = () => {
+    methods.reset()
+    methods.unregister()
+    dialogStore.closeDialog()
+    storeReset()
+  }
+
   const onSubmit = () => {
     methods.handleSubmit((data) => {
       const mergedData = { ...data, ...getData() }
-      // console.log({ ...data, ...getData() })
       if (dialogStore.isEdit) onUpdate(mergedData)
       else onCreate(mergedData)
 
-      /* methods.reset()
-      dialogStore.closeDialog() */
-      storeReset()
+      onClose()
     })()
   }
 
@@ -148,11 +152,7 @@ export const DialogEdit = observer((props: DialogProps) => {
         <Box flex ai row gap sx={{ alignSelf: "flex-end", p: 1 }}>
           <SaveButton onClick={onSubmit} />
           <CancelButton
-            onClick={() => {
-              methods.reset()
-              storeReset()
-              dialogStore.closeDialog()
-            }}
+            onClick={onClose}
           />
         </Box>
       ), [])}

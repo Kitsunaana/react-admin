@@ -1,4 +1,3 @@
-import { DescriptionInput } from "shared/ui/description"
 import * as React from "react"
 import { SxProps } from "@mui/system"
 import { Theme } from "@mui/material"
@@ -25,7 +24,7 @@ export const CaptionInput = (props: CaptionInputProps) => {
     <Controller
       name="caption"
       control={control}
-      defaultValue=""
+      // defaultValue=""
       rules={{ required: "required", minLength: { value: 3, message: "minLength" } }}
       render={({ field: { value, onChange, ...other }, fieldState: { error } }) => (
         <Input
@@ -41,6 +40,31 @@ export const CaptionInput = (props: CaptionInputProps) => {
           fullWidth
           error={!!error}
           helperText={error?.message ? t(error.message, { value: 3 }) : ""}
+        />
+      )}
+    />
+  )
+}
+
+export const DescriptionInput = () => {
+  const langBase = useLang()?.lang
+
+  return (
+    <Controller
+      name="description"
+      defaultValue=""
+      render={({ field }) => (
+        <Input
+          {...field}
+          fullWidth
+          label={`${langBase}.description`}
+          multiline
+          rows="10"
+          sx={{
+            "& .MuiInputBase-root": {
+              py: 0.5,
+            },
+          }}
         />
       )}
     />

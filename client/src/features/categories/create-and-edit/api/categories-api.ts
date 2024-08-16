@@ -15,7 +15,6 @@ export const categoriesApi = {
       const imagesIds = data.images?.map(({ id, caption }) => ({ id, caption }))
 
       const formData = createMultipart({ ...data, imagesIds }, ["images"])
-      console.log(data)
       const response = await $axios.post(URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
@@ -31,8 +30,9 @@ export const categoriesApi = {
       if (!id) throw new Error("Не указан id для катеогрии в запросе на редактирование")
 
       validation(createCategorySchema, data)
-      const formData = createMultipart(data, ["images"])
+      const imagesIds = data.images?.map(({ id, caption }) => ({ id, caption }))
 
+      const formData = createMultipart({ ...data, imagesIds }, ["images"])
       const response = await $axios.patch(`${URL}/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
