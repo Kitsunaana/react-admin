@@ -6,6 +6,7 @@ import * as React from "react"
 import { CommonTab } from "features/categories/create-and-edit/ui/tabs/common"
 import { PhotosTab } from "features/categories/create-and-edit/ui/tabs/photos"
 import { PhotoPosition } from "features/categories/create-and-edit/ui/tabs/photo-position"
+import { Characteristics } from "features/categories/create-and-edit/ui/tabs/characteristics"
 
 export const ContentContainer = memo((props: { tab: number, langBase?: string}) => {
   const { tab: tabProps, langBase: langBaseProps } = props
@@ -24,6 +25,7 @@ export const ContentContainer = memo((props: { tab: number, langBase?: string}) 
       <TabPanel value={tab} index={0}><CommonTab /></TabPanel>
       <TabPanel value={tab} index={1}><PhotosTab /></TabPanel>
       <TabPanel value={tab} index={2}><PhotoPosition /></TabPanel>
+      <TabPanel value={tab} index={3}><Characteristics /></TabPanel>
     </>
   )
 })

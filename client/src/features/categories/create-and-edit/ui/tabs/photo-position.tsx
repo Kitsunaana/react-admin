@@ -264,7 +264,7 @@ export const CheckboxShowPhoto = observer(() => {
 })
 
 export const PhotoPosition = () => (
-  <Box>
+  <Box sx={{ mt: 1 }}>
     <CheckboxShowPhoto />
     <Box flex ai row jc_sp gap>
       <ChangeBgColor />

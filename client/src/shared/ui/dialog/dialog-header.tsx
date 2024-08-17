@@ -7,18 +7,20 @@ import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
 import * as React from "react"
 import { Vertical } from "shared/ui/divider"
-import { dialogStore } from "shared/ui/dialog/dialog-edit"
+import { useDialogStore } from "shared/ui/dialog/dialog-edit"
+import { observer } from "mobx-react-lite"
 
 interface DialogHeaderProps {
-  fullScreen: boolean
   title: string
   hideActions?: boolean
 }
 
-export const DialogHeader = memo((props: DialogHeaderProps) => {
+export const DialogHeader = observer((props: DialogHeaderProps) => {
   const {
-    fullScreen, title, hideActions = false,
+    title, hideActions = false,
   } = props
+
+  const store = useDialogStore()
 
   return (
     <Box
@@ -72,8 +74,8 @@ export const DialogHeader = memo((props: DialogHeaderProps) => {
       >
         <div>
           <IconButton
-            onClick={() => dialogStore.setFullScreen((fullScreen) => !fullScreen)}
-            name={fullScreen ? "fullscreenClose" : "fullscreenOpen"}
+            onClick={() => store.setFullScreen((fullScreen) => !fullScreen)}
+            name={store.fullScreen ? "fullscreenClose" : "fullscreenOpen"}
           />
         </div>
       </Tooltip>

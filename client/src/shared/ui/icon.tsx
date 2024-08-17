@@ -52,6 +52,8 @@ const iconData = {
   rotateRight: "rotate_right",
   infinity: "all_inclusive",
   zoomEffect: "pinch_zoom_in",
+  allowCategory: "account_tree",
+  invisible: "visibility_off",
 }
 
 interface DefaultIcon extends IconProps{

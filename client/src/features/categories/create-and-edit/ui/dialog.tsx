@@ -1,10 +1,10 @@
 import * as React from "react"
 import {
-  FormProvider, useForm,
+  FormProvider, useForm, useFormContext,
 } from "react-hook-form"
 import { TabsContainer } from "shared/ui/tabs-container"
 import { Box } from "shared/ui/box"
-import { DialogEdit } from "shared/ui/dialog/dialog-edit"
+import { DialogEdit, StoreDialogProvider } from "shared/ui/dialog/dialog-edit"
 import {
   createCategoryOptions,
   updateCategoryOptions,
@@ -13,7 +13,7 @@ import { tabs } from "features/categories/create-and-edit/model/constants"
 import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
 import {
   Context,
-  createContext, FC, PropsWithChildren, useContext, useEffect, useMemo, useState,
+  createContext, FC, PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState,
 } from "react"
 import { observer } from "mobx-react-lite"
 import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
@@ -46,7 +46,7 @@ export const StoreProvider: FC<PropsWithChildren> = (props) => {
 }
 
 export const D = observer(() => {
-  const tabDefault = 0
+  const tabDefault = 3
   const langBase = "catalog.dialog"
 
   const rootStore = useStores()
@@ -73,17 +73,21 @@ export const D = observer(() => {
         setData={rootStore.setData}
         storeReset={rootStore.destroy}
         container={useMemo(() => (
-          <Box flex gap>
-            <TabsContainer
-              langBase={langBase}
-              tabs={tabs}
-              tab={tabDefault}
-              requiredFields={["caption"]}
-            />
-            <ContentContainer
-              langBase={langBase}
-              tab={tabDefault}
-            />
+          <Box grow sx={{ height: 450, pt: 0 }}>
+            <Box flex sx={{ height: 1 }}>
+              <TabsContainer
+                langBase={langBase}
+                tabs={tabs}
+                tab={tabDefault}
+                requiredFields={["caption"]}
+              />
+              <Box sx={{ px: 1, height: 1 }}>
+                <ContentContainer
+                  langBase={langBase}
+                  tab={tabDefault}
+                />
+              </Box>
+            </Box>
           </Box>
         ), [])}
       />
@@ -92,7 +96,9 @@ export const D = observer(() => {
 })
 
 export const Dialog = () => (
-  <StoreProvider>
-    <D />
-  </StoreProvider>
+  <StoreDialogProvider>
+    <StoreProvider>
+      <D />
+    </StoreProvider>
+  </StoreDialogProvider>
 )

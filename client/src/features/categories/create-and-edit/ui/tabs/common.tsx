@@ -72,7 +72,7 @@ export const DescriptionInput = () => {
 }
 
 export const CommonTab = () => (
-  <Box flex ai gap>
+  <Box flex ai gap sx={{ mt: 1 }}>
     <CaptionInput />
     <DescriptionInput />
   </Box>

@@ -1,14 +1,17 @@
 import { PhotosStore } from "features/categories/create-and-edit/model/stores/photos-store"
 import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
+import { CharacteristicsStore } from "features/characteristics/ui/dialog"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {
   photoPosition: PhotoPositionStore
   photos: PhotosStore
+  characteristics: CharacteristicsStore
 
   constructor() {
     this.photoPosition = new PhotoPositionStore(this)
     this.photos = new PhotosStore(this)
+    this.characteristics = new CharacteristicsStore(this)
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
@@ -22,6 +25,8 @@ export class RootStore {
   }
 
   setData(data: any) {
+    console.log(data)
+
     if (!data) {
       this.photos.destroy()
       this.photoPosition = new PhotoPositionStore(this)

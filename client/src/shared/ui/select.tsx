@@ -9,31 +9,31 @@ import { forwardRef } from "react"
 import { Input } from "shared/ui/input"
 
 interface SelectProps extends Omit<AutocompleteProps<any, any, any, any>, "renderInput">{
-  value: string | null
-  onChange: (...event: any[]) => void
   error?: FieldError | undefined
   InputProps?: TextFieldProps
 }
 
 export const Select = forwardRef((props: SelectProps, ref) => {
   const {
-    options, value, onChange, error, InputProps, sx, ...other
+    options, error, InputProps, sx, ...other
   } = props
 
   return (
     <Autocomplete
       {...other}
       sx={sx}
-      value={value}
-      onChange={onChange}
-      options={options.map((option) => (typeof option === "object" && option !== null ? option.value : option))}
+      // value={value}
+      options={options.map((option) => (
+        typeof option === "object" && option !== null ? option.value : option))}
       size="small"
       renderInput={(params) => {
         const extendedParams = { ...params, ...InputProps }
 
-        if (value !== null) {
+        if (other.value !== null) {
           const findOption = options
-            .find((option) => (typeof option === "object" ? option.value === value : option === value))
+            .find((option) => (typeof option === "object"
+              ? option.value === other.value
+              : option === other.value))
 
           params.InputProps.startAdornment = findOption?.icon
             ? (<Icon sx={{ fontSize: 20 }} name={findOption.icon ?? ""} />)
@@ -74,7 +74,7 @@ export const Select = forwardRef((props: SelectProps, ref) => {
               },
             }}
           >
-            {findOption.icon ? <Icon name={findOption.icon} /> : <div />}
+            {findOption?.icon ? <Icon name={findOption.icon} /> : <div />}
             {option}
           </MenuItem>
         )

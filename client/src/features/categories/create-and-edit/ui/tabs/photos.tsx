@@ -31,7 +31,7 @@ export const PhotosTab = observer(() => {
   const { photos } = useStores()
 
   return (
-    <>
+    <Box sx={{ mt: 1 }}>
       <Box sx={{ pb: 1 }}>
         <InputFile
           caption=""
@@ -68,6 +68,6 @@ export const PhotosTab = observer(() => {
           ))}
         </GridImage>
       </GridImageContainer>
-    </>
+    </Box>
   )
 })

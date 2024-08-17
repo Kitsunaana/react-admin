@@ -3,8 +3,9 @@ import {
   memo, ReactNode,
 } from "react"
 import {
-  Tabs as MUITabs, useTheme, TabsProps as BaseTabsProps,
+  Tabs as MUITabs, useTheme, TabsProps as BaseTabsProps, Box,
 } from "@mui/material"
+import { Divider } from "shared/ui/divider"
 
 interface TabsProps extends BaseTabsProps {
   tab: number
@@ -20,34 +21,37 @@ export const Tabs = memo((props: TabsProps) => {
   const { palette } = useTheme()
 
   return (
-    <MUITabs
-      {...other}
-      value={tab}
-      variant="scrollable"
-      scrollButtons="auto"
-      TabIndicatorProps={{
-        sx: {
-          top: 0,
-          height: 3,
-          borderRadius: 2,
-          ...(hasError ? {
-            backgroundColor: palette.warning.main,
-          } : {}),
-          display: "none",
-        },
-      }}
-      sx={{
-        minHeight: 0,
-        "& .MuiTabScrollButton-root": {
-          opacity: "0.75 !important",
-          width: "auto",
-          "&.Mui-disabled": {
-            opacity: "0.25 !important",
+    <Box>
+      <MUITabs
+        {...other}
+        value={tab}
+        variant="scrollable"
+        scrollButtons="auto"
+        TabIndicatorProps={{
+          sx: {
+            top: 0,
+            height: 3,
+            borderRadius: 2,
+            ...(hasError ? {
+              backgroundColor: palette.warning.main,
+            } : {}),
+            display: "none",
           },
-        },
-      }}
-    >
-      {tabs}
-    </MUITabs>
+        }}
+        sx={{
+          minHeight: 0,
+          "& .MuiTabScrollButton-root": {
+            opacity: "0.75 !important",
+            width: "auto",
+            "&.Mui-disabled": {
+              opacity: "0.25 !important",
+            },
+          },
+        }}
+      >
+        {tabs}
+      </MUITabs>
+      <Divider />
+    </Box>
   )
 })
