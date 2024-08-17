@@ -11,10 +11,6 @@ export class RootStore {
     this.photos = new PhotosStore(this)
 
     makeAutoObservable(this, {}, { autoBind: true })
-
-    // this.getData = this.getData.bind(this)
-    // this.destroy = this.destroy.bind(this)
-    // this.setData = this.setData.bind(this)
   }
 
   private stores = ["photoPosition", "photos"]

@@ -11,12 +11,6 @@ export class PhotosStore {
 
   constructor(public rootStore: RootStore) {
     makeAutoObservable(this, {}, { autoBind: true })
-
-    const photosDisposer = reaction(
-      () => this.media,
-      () => console.log("Number of media"),
-    )
-    this.disposers.push(photosDisposer)
   }
 
   get mergedImages() {

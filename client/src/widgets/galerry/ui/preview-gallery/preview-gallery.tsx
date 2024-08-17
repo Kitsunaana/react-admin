@@ -18,6 +18,7 @@ const PreviewGalleryContainer = styled(Box)<BoxProps>`
   z-index: 45;
   border-radius: 8px;
   box-shadow: ${({ theme }) => theme.shadows[4]};
+  background-color: white;
 `
 
 const ButtonBox = styled(Box)<BoxProps>`

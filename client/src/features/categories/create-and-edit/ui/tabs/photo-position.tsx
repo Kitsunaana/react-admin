@@ -247,18 +247,25 @@ export const ChangeBlur = observer(() => {
   )
 })
 
-export const PhotoPosition = () => (
-  <Box>
-    <Controller
-      defaultValue
-      name="isShowPhotoWithGoods"
-      render={({ field }) => (
-        <FormControlLabel
-          control={<Checkbox defaultChecked {...field} />}
-          label="Показывать фото в списке с товарами как раздел"
+export const CheckboxShowPhoto = observer(() => {
+  const { photoPosition } = useStores()
+
+  return (
+    <FormControlLabel
+      control={(
+        <Checkbox
+          onChange={photoPosition.changeShowPhoto}
+          checked={photoPosition.isShowPhotoWithGoods}
         />
       )}
+      label="Показывать фото в списке с товарами как раздел"
     />
+  )
+})
+
+export const PhotoPosition = () => (
+  <Box>
+    <CheckboxShowPhoto />
     <Box flex ai row jc_sp gap>
       <ChangeBgColor />
       <ChangeTextColor />

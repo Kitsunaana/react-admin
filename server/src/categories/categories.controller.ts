@@ -64,10 +64,7 @@ export class CategoriesController {
       }),
     }),
   )
-  async create(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @Body(new ValidationPipeR('imagesIds')) dto: CreateCategoryDto,
-  ) {
+  async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateCategoryDto) {
     const category = await this.categoryService.create(dto);
     await this.filesService.saveMedia(files, dto.imagesIds, category.id);
 
@@ -90,6 +87,7 @@ export class CategoriesController {
   }
 
   @Patch('/:id')
+  @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(
     FilesInterceptor('images', 100, {
       storage: diskStorage({
@@ -108,10 +106,9 @@ export class CategoriesController {
   update(
     @Param('id') id: number,
     @UploadedFiles() files: Array<Express.Multer.File>,
-    @Body(new ValidationPipeR('media')) dto: UpdateCategoryDto,
+    @Body() dto: UpdateCategoryDto,
   ) {
-    console.log(dto);
-    // return this.categoryService.update(id, dto as any, files);
+    return this.categoryService.update(id, dto, files);
   }
 
   @Delete('/:id')

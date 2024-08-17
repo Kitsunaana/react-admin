@@ -1,5 +1,4 @@
 import GoodsPage from "pages/Goods/goods-page"
-import { ReactNode } from "react"
 import { SettingsPage } from "pages/settings"
 import { CategoriesPage } from "pages/categories"
 import { RouteProps } from "react-router-dom"

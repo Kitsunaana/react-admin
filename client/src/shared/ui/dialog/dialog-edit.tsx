@@ -118,7 +118,7 @@ export const DialogEdit = observer((props: DialogProps) => {
       if (dialogStore.isEdit) onUpdate(mergedData)
       else onCreate(mergedData)
 
-      onClose()
+      // onClose()
     })()
   }
 

@@ -8,6 +8,7 @@ export class CreateCategoryDto {
   @IsString()
   readonly description: string;
 
+  @Transform(({ value }) => JSON.parse(value))
   readonly imagesIds: Array<{ id: string; caption: string }>;
 
   @Transform(({ value }) => Number(value))

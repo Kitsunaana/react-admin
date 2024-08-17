@@ -29,7 +29,6 @@ const GridImageContainer = styled(Box)`
 export const PhotosTab = observer(() => {
   const { fullScreen } = baseDialogStore
   const { photos } = useStores()
-  console.log(photos)
 
   return (
     <>

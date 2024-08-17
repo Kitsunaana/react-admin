@@ -8,6 +8,7 @@ export class PhotoPositionStore {
   bgColor = "blue"
   blur = 5
   captionPosition: TPosition = "center-center"
+  isShowPhotoWithGoods = true
   activeImageId: null | string = null
 
   _indexActiveImage = 0
@@ -17,7 +18,7 @@ export class PhotoPositionStore {
 
     reaction(() => this._indexActiveImage, () => this.changeActiveImageId())
 
-    when(
+    reaction(
       () => (
         !!this.rootStore.photos
         && !!this.rootStore.photos.mergedImages
@@ -25,6 +26,10 @@ export class PhotoPositionStore {
       ),
       () => this.changeActiveImageId(),
     )
+  }
+
+  changeShowPhoto() {
+    return this.isShowPhotoWithGoods = !this.isShowPhotoWithGoods
   }
 
   setPhotoPosition(data: CustomCategory) {
@@ -38,10 +43,14 @@ export class PhotoPositionStore {
 
   changeActiveImageId() {
     if (!this.rootStore.photos) return
+    const { mergedImages } = this.rootStore.photos
 
-    const findImage = this.rootStore.photos.mergedImages[this._indexActiveImage]
-    console.log(findImage)
-    this.activeImageId = findImage.id
+    const findImage = mergedImages[this._indexActiveImage]
+    this.activeImageId = findImage
+      ? findImage.id
+      : mergedImages.length > 0
+        ? mergedImages[0].id
+        : null
   }
 
   get activeImage() {
