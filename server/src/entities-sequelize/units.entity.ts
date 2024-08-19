@@ -1,14 +1,10 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { Characteristic } from './characteristic.entity';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-@Table
+@Table({ timestamps: false })
 export class Unit extends Model<Unit> {
   @Column({ unique: true, type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   id: number;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, unique: true })
   caption: string;
-
-  @HasMany(() => Characteristic)
-  characteristics: Characteristic[];
 }

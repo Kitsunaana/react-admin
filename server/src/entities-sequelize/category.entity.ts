@@ -1,16 +1,8 @@
-import {
-  BelongsToMany,
-  Column,
-  DataType,
-  HasMany,
-  HasOne,
-  Model,
-  Table,
-} from 'sequelize-typescript';
+import { Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
 import { Media } from './media.entity';
 import { CustomCategory } from './custom-category';
-import { CategoryCharacteristic, Characteristic } from './characteristic.entity';
+import { CategoryCharacteristic } from './characteristic.entity';
 
 interface CategoryCreationAttrs {
   caption: string;
@@ -38,6 +30,6 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
   @HasOne(() => CustomCategory)
   custom: CustomCategory;
 
-  @BelongsToMany(() => Characteristic, () => CategoryCharacteristic)
-  characteristics: Characteristic[];
+  @HasMany(() => CategoryCharacteristic)
+  characteristics: CategoryCharacteristic[];
 }
