@@ -9,6 +9,11 @@ import sequelize, { Op, Sequelize } from 'sequelize';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { Media } from '../entities-sequelize/media.entity';
 import { CustomCategory } from '../entities-sequelize/custom-category';
+import {
+  CategoryCharacteristic,
+  Characteristic,
+} from '../entities-sequelize/characteristic.entity';
+import { Unit } from '../entities-sequelize/units.entity';
 
 @Injectable()
 export class CategoriesService {
@@ -96,9 +101,8 @@ export class CategoriesService {
           as: 'media',
           attributes: ['id', 'order', 'originalName', 'path'],
         },
-        {
-          model: CustomCategory,
-        },
+        { model: CustomCategory },
+        { model: CategoryCharacteristic, include: [Characteristic, Unit] },
       ],
       order: [
         [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],

@@ -23,8 +23,9 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { GetCategoryDto } from './dto/get-category-dto';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { FilesService } from '../files/files.service';
+import { CharacteristicsService } from '../characteristcs/characteristics.service';
 
-@Injectable()
+/*@Injectable()
 export class ValidationPipeR implements PipeTransform<any> {
   constructor(private fromJsonToObject: string) {}
 
@@ -38,13 +39,14 @@ export class ValidationPipeR implements PipeTransform<any> {
       throw new BadRequestException(`${this.fromJsonToObject} is not valid json`);
     }
   }
-}
+}*/
 
 @Controller('categories')
 export class CategoriesController {
   constructor(
     private categoryService: CategoriesService,
     private filesService: FilesService,
+    private characteristicsService: CharacteristicsService,
   ) {}
 
   @Post('')
@@ -66,6 +68,8 @@ export class CategoriesController {
   )
   async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateCategoryDto) {
     const category = await this.categoryService.create(dto);
+
+    await this.characteristicsService.create(dto.items, category);
     await this.filesService.saveMedia(files, dto.imagesIds, category.id);
 
     return category;

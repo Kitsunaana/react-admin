@@ -13,12 +13,20 @@ export class CreateCategoryDto {
 
   @Transform(({ value }) => Number(value))
   @IsNumber()
-  blur: number;
+  readonly blur: number;
 
   @Transform(({ value }) => (value === 'null' ? null : value))
-  activeImageId: string | null;
+  readonly activeImageId: string | null;
 
   @Transform(({ value }) => value === 'true')
   @IsBoolean()
-  isShowPhotoWithGoods: boolean;
+  readonly isShowPhotoWithGoods: boolean;
+
+  @Transform(({ value }) => JSON.parse(value))
+  readonly items: {
+    caption: string;
+    units: null | string;
+    value: string;
+    hideClient: boolean;
+  }[];
 }

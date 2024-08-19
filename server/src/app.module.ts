@@ -8,6 +8,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { SequelizeModule } from './sequelize/sequelize.module';
+import { CharacteristicsModule } from './characteristcs/characteristics.module';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { SequelizeModule } from './sequelize/sequelize.module';
     CategoriesModule,
     LocalesModule,
     SequelizeModule,
+    CharacteristicsModule,
   ],
 })
-export class AppModule {
-}
+export class AppModule {}
