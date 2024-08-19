@@ -27,6 +27,10 @@ export const Characteristics = observer(() => {
       >
         {characteristics.items.map((characteristic) => (
           <Box
+            onDoubleClick={() => dispatchEdit("characteristics", {
+              id: characteristic.id,
+              localData: characteristic,
+            } as any)}
             key={characteristic.id}
             flex
             ai
@@ -39,10 +43,14 @@ export const Characteristics = observer(() => {
               border: ({ palette }) => `1px solid ${palette.mode === "dark"
                 ? alpha(palette.grey["600"], 0.75)
                 : alpha(palette.grey["400"], 0.45)}`,
-              borderRadius: 1,
+              borderRadius: 2,
               borderLeft: ({ palette }) => (characteristic.local
                 ? `5px solid ${palette.warning.main}`
                 : null),
+              transition: ".3s",
+              "&:hover": {
+                backgroundColor: ({ palette }) => palette.grey[800],
+              },
             }}
           >
             <Box flex row ai>
@@ -58,7 +66,7 @@ export const Characteristics = observer(() => {
                 {" "}
                 {characteristic.value}
                 {" "}
-                {characteristic.units}
+                {characteristic.unit}
               </Box>
             </Box>
             <Box flex ai row>
@@ -74,7 +82,15 @@ export const Characteristics = observer(() => {
               <Vertical />
               <Tooltip title="Редактировать" arrow>
                 <Box flex ai row>
-                  <IconButton fontSize={20} color="primary" name="edit" />
+                  <IconButton
+                    onClick={() => dispatchEdit("characteristics", {
+                      id: characteristic.id,
+                      localData: characteristic,
+                    } as any)}
+                    fontSize={20}
+                    color="primary"
+                    name="edit"
+                  />
                 </Box>
               </Tooltip>
               <Tooltip title="Удалить" arrow>
@@ -93,9 +109,9 @@ export const Characteristics = observer(() => {
           onClick={() => dispatchEdit("characteristics", {})}
         />
       </Box>
-      {/* <StoreDialogProvider>
+      <StoreDialogProvider>
         <CharacteristicsDialog />
-      </StoreDialogProvider> */}
+      </StoreDialogProvider>
 
     </Box>
   )

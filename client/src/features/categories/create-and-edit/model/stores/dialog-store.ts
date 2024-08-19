@@ -16,7 +16,7 @@ export class RootStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  private stores = ["photoPosition", "photos"]
+  private stores = ["photoPosition", "photos", "characteristics"]
 
   destroy() {
     this.photos.destroy()
@@ -25,15 +25,9 @@ export class RootStore {
   }
 
   setData(data: any) {
-    console.log(data)
-
-    if (!data) {
-      this.photos.destroy()
-      this.photoPosition = new PhotoPositionStore(this)
-    } else {
-      this.photos.setMedia(data?.media)
-      this.photoPosition.setPhotoPosition(data?.custom)
-    }
+    this.photos.setMedia(data?.media)
+    this.photoPosition.setPhotoPosition(data?.custom)
+    this.characteristics.setCharacteristics(data?.characteristics)
   }
 
   getData() {

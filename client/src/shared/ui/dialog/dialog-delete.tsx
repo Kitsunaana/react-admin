@@ -12,45 +12,54 @@ import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { Button } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { useMutation, UseMutationOptions } from "@tanstack/react-query"
+import { useDialogStore } from "shared/ui/dialog/dialog-edit"
+import { observer } from "mobx-react-lite"
 
 interface DialogProps {
   langBase?: string
   onDeleteOptions: (id: number) => UseMutationOptions<any, any, number>
 }
 
-export const DialogDelete = (props: DialogProps) => {
+interface OpenDialogProps {
+  id: number
+  caption: string
+}
+
+export const DialogDelete = observer((props: DialogProps) => {
   const {
     langBase: langBaseProps, onDeleteOptions,
   } = props
 
+  const store = useDialogStore()
+
   const lang = useLang()
   const langBase = langBaseProps ?? lang?.lang
 
-  const [data, setData] = useState<{id: number; caption: string}>({ id: 1, caption: "" })
-  const [open, setOpen] = useState(false)
-  const [fullScreen, setFullScreen] = useState(false)
   const { t } = useTranslation("translation", { keyPrefix: langBase })
 
-  useEffect(() => addEvent(`${langBase}.dialog.delete` as any, (data: { id: number; caption: string }) => {
-    setOpen(true)
-    setData(data)
+  useEffect(() => addEvent(`${langBase}.dialog.delete` as any, (data: OpenDialogProps) => {
+    store.openDialog(data.id, { caption: data.caption })
   }), [langBase])
 
-  const { mutate } = useMutation(onDeleteOptions(data.id))
+  let onDelete
+  /* if (store.id) {
+    const { mutate } = useMutation(onDeleteOptions(store.id))
+    onDelete = mutate
+  } */
 
   const onSubmit = () => {
-    setOpen(false)
-    mutate(data.id)
+    store.closeDialog()
+    if (onDelete) onDelete(store.id)
   }
 
   return (
     <MUIDialog
-      fullScreen={fullScreen}
-      open={open}
+      fullScreen={store.fullScreen}
+      open={store.open}
       PaperProps={{
         sx: {
           borderRadius: 4,
-          ...(fullScreen ? {} : {
+          ...(store.fullScreen ? {} : {
             maxWidth: 445,
             width: 1,
           }),
@@ -61,12 +70,10 @@ export const DialogDelete = (props: DialogProps) => {
         <DialogHeader
           hideActions
           title={t("dialog.title.delete")}
-          fullScreen={fullScreen}
-          setFullScreen={setFullScreen}
         />
       </Box>
       <MUIDialogContent sx={{ height: 1, p: 1, mb: 2 }}>
-        {data.caption}
+        {store.data?.caption}
       </MUIDialogContent>
       <MUIDialogActions>
         <Button
@@ -79,10 +86,10 @@ export const DialogDelete = (props: DialogProps) => {
         </Button>
         <CancelButton
           onClick={() => {
-            setOpen(false)
+            store.closeDialog()
           }}
         />
       </MUIDialogActions>
     </MUIDialog>
   )
-}
+})

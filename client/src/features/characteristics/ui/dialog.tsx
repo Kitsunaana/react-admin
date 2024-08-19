@@ -18,11 +18,18 @@ import * as React from "react"
 import { observer } from "mobx-react-lite"
 import { nanoid } from "nanoid"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
+import {
+  characteristicsSchema,
+  TCharacteristics,
+  transformCharacteristic,
+  transformCharacteristics,
+} from "features/characteristics/model/schemas"
+import { validation } from "shared/lib/validation"
 
 interface ICharacteristic {
-  id: string
+  id: string | number
   caption: string
-  units: string | null
+  unit: string | null
   value: string
   hideClient: boolean
 
@@ -31,22 +38,36 @@ interface ICharacteristic {
 }
 
 export class CharacteristicsStore {
-  items: Array<ICharacteristic> = [
-    {
-      id: "1", caption: "new", units: null, value: "123", hideClient: false,
-    },
-    {
-      id: "2", caption: "old", units: "qwe", value: "123", hideClient: true, local: true,
-    },
-  ]
+  items: Array<ICharacteristic> = []
 
   constructor(private rootStore: RootStore) {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
   create(data: ICharacteristic) {
-    console.log(data)
     this.items.push({ ...data, id: nanoid(), local: true })
+  }
+
+  edit(data: ICharacteristic) {
+    this.items = this.items.map((item) => (item.id === data.id ? { ...item, ...data } : item))
+  }
+
+  getData() {
+    return {
+      items: this.items.map((item) => ({
+        caption: item.caption,
+        units: item.unit,
+        value: item.value,
+        hideClient: item.hideClient,
+      })),
+    }
+  }
+
+  setCharacteristics(characteristics: any) {
+    const data = validation(characteristicsSchema, characteristics)
+    const transformedCharacteristics = transformCharacteristics(data)
+
+    this.items = transformedCharacteristics
   }
 }
 
@@ -88,6 +109,7 @@ export const Container = () => {
         }}
         render={({ field, fieldState }) => (
           <Select
+            value={field.value}
             freeSolo
             onChange={(event, option) => {
               field.onChange(option)
@@ -113,6 +135,7 @@ export const Container = () => {
         render={({ field }) => (
           <Select
             freeSolo
+            value={field.value}
             onChange={(event, option) => field.onChange(option)}
             options={top100Films.map((option) => option.title)}
             InputProps={{
@@ -166,7 +189,7 @@ export const CharacteristicsDialog = observer((props: CharacteristicsDialogProps
   const methods = useForm<UseCharacteristicsFormProps>({
     defaultValues: {
       caption: "",
-      units: null,
+      unit: null,
       value: "",
       hideClient: true,
     },
@@ -187,9 +210,9 @@ export const CharacteristicsDialog = observer((props: CharacteristicsDialogProps
         langBase="characteristics"
         getData={() => {}}
         storeReset={() => {}}
-        onGetByIdOptions={onGetCharacteristicByIdOptions}
         setData={console.log}
         onSave={characteristics.create}
+        onEdit={characteristics.edit}
         container={<Container />}
       />
     </FormProvider>

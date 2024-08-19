@@ -22,7 +22,7 @@ import { createRootStore, RootStore } from "features/categories/create-and-edit/
 
 export const useStrictContext = <T, >(context: Context<T | null>) => {
   const value = useContext(context)
-  if (value === null) throw new Error("Strict context not passed")
+  // if (value === null) throw new Error("Strict context not passed")
 
   return value as T
 }

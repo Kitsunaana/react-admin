@@ -24,7 +24,7 @@ interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string
   title?: string
   container?: ReactNode
-  onGetByIdOptions: (id: number | null) => UseQueryOptions<any, any, any, any>
+  onGetByIdOptions?: (id: number | null) => UseQueryOptions<any, any, any, any>
   onUpdateOptions?: (id: number | null) => UseMutationOptions<any, any, any>
   onCreateOptions?: () => UseMutationOptions<any, any, any>
   getData: () => any
@@ -32,11 +32,14 @@ interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   storeReset: () => void
   size?: "auto"
   onSave?: (data: any) => void
+  onEdit?: (data: any) => void
 }
 
 export class DialogStore {
-  open = true
+  // open = true
+  open = false
   id: null | number = null
+  localData?: Record<string, any>
 
   fullScreen = false
   data: any = {}
@@ -45,9 +48,10 @@ export class DialogStore {
     makeAutoObservable(this, { }, { autoBind: true })
   }
 
-  openDialog(id: number | null) {
+  openDialog(id: number | null, localData?: Record<string, any>) {
     this.open = true
     this.id = id
+    this.localData = localData
   }
 
   closeDialog() {
@@ -72,7 +76,7 @@ export const createDialogStore = () => new DialogStore()
 /** CONTEXT */
 export const useStrictContext = <T, >(context: Context<T | null>) => {
   const value = useContext(context)
-  if (value === null) throw new Error("Strict context not passed")
+  // if (value === null) throw new Error("Strict context not passed")
 
   return value as T
 }
@@ -96,6 +100,11 @@ export const StoreDialogProvider: FC<PropsWithChildren> = (props) => {
 }
 /** CONTEXT */
 
+export interface OpenDialogProps {
+  localData?: Record<string, any>
+  id?: number
+}
+
 export const DialogEdit = observer((props: DialogProps) => {
   const {
     langBase: langBaseProps,
@@ -108,6 +117,7 @@ export const DialogEdit = observer((props: DialogProps) => {
     getData,
     storeReset,
     onSave,
+    onEdit,
     size,
     ...other
   } = props
@@ -120,11 +130,18 @@ export const DialogEdit = observer((props: DialogProps) => {
   const { t } = useTranslation("translation", { keyPrefix: langBase })
   const methods = useFormContext()
 
-  useEffect(() => addEvent(`${langBase}.dialog.edit` as any, (data: { id?: number }) => {
-    store.openDialog(data?.id ?? null)
+  useEffect(() => addEvent(`${langBase}.dialog.edit` as any, (data: OpenDialogProps) => {
+    methods.reset()
+    methods.unregister()
+
+    store.openDialog(data?.id ?? null, data?.localData)
   }), [langBase])
 
-  const { data } = useQuery(onGetByIdOptions(store.id))
+  let data = store.localData
+  if (onGetByIdOptions) {
+    const query = useQuery(onGetByIdOptions(store.id))
+    data = query.data
+  }
 
   let onUpdate
   if (onUpdateOptions) {
@@ -148,14 +165,12 @@ export const DialogEdit = observer((props: DialogProps) => {
     const keys = Object.keys(data)
     if (keys.length === 0) return
 
-    keys.forEach((key) => methods.setValue(key, data[key]))
+    keys.forEach((key) => methods.setValue(key, (data as any)[key]))
 
     methods.trigger().then((r) => r)
-  }, [data])
+  }, [data, store.open])
 
   const onClose = () => {
-    methods.reset()
-    methods.unregister()
     store.closeDialog()
     storeReset()
   }
@@ -164,8 +179,8 @@ export const DialogEdit = observer((props: DialogProps) => {
     methods.handleSubmit((data) => {
       const mergedData = { ...data, ...getData() }
       if (store.isEdit) {
-        if (onUpdate) onUpdate?.(mergedData)
-        if (onSave) onSave(mergedData)
+        if (onUpdate) onUpdate(mergedData)
+        if (onEdit) onEdit(mergedData)
       } else {
         if (onCreate) onCreate(mergedData)
         if (onSave) onSave(mergedData)

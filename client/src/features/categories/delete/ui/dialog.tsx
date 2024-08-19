@@ -4,6 +4,7 @@ import { $axios } from "shared/config/axios"
 import { queryClient } from "app/providers/query-client"
 import { useSearchParams } from "react-router-dom"
 import { TCategory } from "features/categories/create-and-edit/model/schemas"
+import { StoreDialogProvider } from "shared/ui/dialog/dialog-edit"
 
 export type DeleteCategoryOptions = UseMutationOptions<any, any, number>
 
@@ -23,10 +24,14 @@ export const deleteCategoryOptions = (params: URLSearchParams) => (id: number): 
 export const DialogDelete = () => {
   const [searchParams] = useSearchParams()
 
-  return (
-    <DialogDeleteBase
-      langBase="catalog"
-      onDeleteOptions={deleteCategoryOptions(searchParams)}
-    />
-  )
+  /* return (
+    <StoreDialogProvider>
+      <DialogDeleteBase
+        langBase="catalog"
+        onDeleteOptions={deleteCategoryOptions(searchParams)}
+      />
+    </StoreDialogProvider>
+  ) */
+
+  return null
 }
