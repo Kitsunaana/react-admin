@@ -6,7 +6,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { SequelizeModule as BaseSequelizeModule } from '../sequelize/sequelize.module';
 import { Category } from '../entities-sequelize/category.entity';
 import { CustomCategory } from '../entities-sequelize/custom-category';
-import { CharacteristicsModule } from '../characteristcs/characteristics.module';
+import { CharacteristicsModule } from '../characteristics/characteristics.module';
 
 @Module({
   providers: [CategoriesService],

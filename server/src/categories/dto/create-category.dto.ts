@@ -25,7 +25,7 @@ export class CreateCategoryDto {
   @Transform(({ value }) => JSON.parse(value))
   readonly items: {
     caption: string;
-    units: null | string;
+    units: string | null;
     value: string;
     hideClient: boolean;
   }[];

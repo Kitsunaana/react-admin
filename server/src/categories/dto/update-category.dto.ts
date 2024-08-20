@@ -13,12 +13,14 @@ export class UpdateCategoryDto extends CreateCategoryDto {
 
   @Transform(({ value }) => JSON.parse(value))
   custom: CustomCategory;
-}
 
-class CustomMedia extends Media {
-  deleted?: boolean;
-}
-
-export class TransformedUpdateCategoryDto extends CreateCategoryDto {
-  readonly media: CustomMedia[];
+  readonly items: {
+    caption: string;
+    units: string | null;
+    value: string;
+    hideClient: boolean;
+    action: 'update' | 'create';
+    id?: number;
+    deleted?: boolean;
+  }[];
 }

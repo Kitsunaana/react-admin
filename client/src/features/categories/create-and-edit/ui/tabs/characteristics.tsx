@@ -1,6 +1,6 @@
 import { Box } from "shared/ui/box"
 import Button from "@mui/material/Button"
-import { dispatchEdit } from "shared/lib/event"
+import { dispatchDelete, dispatchEdit } from "shared/lib/event"
 import { CharacteristicsDialog } from "features/characteristics/ui/dialog"
 import { StoreDialogProvider, useDialogStore } from "shared/ui/dialog/dialog-edit"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
@@ -9,10 +9,13 @@ import { Divider, Vertical } from "shared/ui/divider"
 import { IconButton } from "shared/ui/icon-button"
 import { alpha, Tooltip } from "@mui/material"
 import { Icon } from "shared/ui/icon"
+import { DialogDelete } from "features/characteristics/ui/delete"
 
 export const Characteristics = observer(() => {
   const { characteristics } = useStores()
   const { fullScreen } = useDialogStore()
+
+  console.log(characteristics.filteredItems)
 
   return (
     <Box flex row grow sx={{ height: 1 }}>
@@ -25,7 +28,7 @@ export const Characteristics = observer(() => {
           height: fullScreen ? "calc(100% - 60px)" : 432,
         }}
       >
-        {characteristics.items.map((characteristic) => (
+        {characteristics.filteredItems.map((characteristic) => (
           <Box
             onDoubleClick={() => dispatchEdit("characteristics", {
               id: characteristic.id,
@@ -44,13 +47,19 @@ export const Characteristics = observer(() => {
                 ? alpha(palette.grey["600"], 0.75)
                 : alpha(palette.grey["400"], 0.45)}`,
               borderRadius: 2,
-              borderLeft: ({ palette }) => (characteristic.local
-                ? `5px solid ${palette.warning.main}`
-                : null),
+              borderLeft: ({ palette }) => (characteristics.getConflict(characteristic)
+                ? `5px solid ${palette.error.main}`
+                : characteristic.local
+                  ? `5px solid ${palette.warning.main}`
+                  : null),
               transition: ".3s",
               "&:hover": {
                 backgroundColor: ({ palette }) => palette.grey[800],
               },
+              ...(characteristics.getConflict(characteristic) ? {
+                backgroundImage: ({ background }) => background.hatch.error,
+                backgroundSize: "6px 6px",
+              } : {}),
             }}
           >
             <Box flex row ai>
@@ -95,7 +104,15 @@ export const Characteristics = observer(() => {
               </Tooltip>
               <Tooltip title="Удалить" arrow>
                 <Box flex ai row>
-                  <IconButton fontSize={20} color="warning" name="delete" />
+                  <IconButton
+                    onClick={() => dispatchDelete("characteristics", {
+                      id: characteristic.id,
+                      caption: characteristic.caption,
+                    } as any)}
+                    fontSize={20}
+                    color="warning"
+                    name="delete"
+                  />
                 </Box>
               </Tooltip>
             </Box>
@@ -112,6 +129,7 @@ export const Characteristics = observer(() => {
       <StoreDialogProvider>
         <CharacteristicsDialog />
       </StoreDialogProvider>
+      <DialogDelete />
 
     </Box>
   )

@@ -17,7 +17,7 @@ const Theme = (props) => {
       palette: { mode: calcMode as PaletteMode },
     })
 
-    const { primary, warning } = palette
+    const { primary, warning, error } = palette
 
     return createTheme({
       background: {
@@ -31,6 +31,7 @@ const Theme = (props) => {
         hatch: {
           warning: `linear-gradient(315deg, #0000 48%, ${alpha(warning.main, 0.35)} 50%, #0000 52%)`,
           primary: `linear-gradient(315deg, #0000 48%, ${alpha(primary.main, 0.35)} 50%, #0000 52%)`,
+          error: `linear-gradient(315deg, #0000 48%, ${alpha(error.main, 0.35)} 50%, #0000 52%)`,
         },
       },
       palette: {

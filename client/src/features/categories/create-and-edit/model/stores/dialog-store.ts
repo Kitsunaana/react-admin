@@ -19,9 +19,9 @@ export class RootStore {
   private stores = ["photoPosition", "photos", "characteristics"]
 
   destroy() {
-    this.photos.destroy()
     this.photos = new PhotosStore(this)
     this.photoPosition = new PhotoPositionStore(this)
+    this.characteristics = new CharacteristicsStore(this)
   }
 
   setData(data: any) {

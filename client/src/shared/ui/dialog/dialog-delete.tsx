@@ -17,7 +17,8 @@ import { observer } from "mobx-react-lite"
 
 interface DialogProps {
   langBase?: string
-  onDeleteOptions: (id: number) => UseMutationOptions<any, any, number>
+  onDeleteOptions?: (id: number | null) => UseMutationOptions<any, any, number | null>
+  onDeleteLocal?: (id: number) => void
 }
 
 interface OpenDialogProps {
@@ -27,7 +28,7 @@ interface OpenDialogProps {
 
 export const DialogDelete = observer((props: DialogProps) => {
   const {
-    langBase: langBaseProps, onDeleteOptions,
+    langBase: langBaseProps, onDeleteOptions, onDeleteLocal,
   } = props
 
   const store = useDialogStore()
@@ -42,14 +43,16 @@ export const DialogDelete = observer((props: DialogProps) => {
   }), [langBase])
 
   let onDelete
-  /* if (store.id) {
+  if (onDeleteOptions) {
     const { mutate } = useMutation(onDeleteOptions(store.id))
     onDelete = mutate
-  } */
+  }
 
   const onSubmit = () => {
+    if (onDeleteLocal && store.id) onDeleteLocal(store.id)
+    if (onDelete && store.id) onDelete(store.id)
+
     store.closeDialog()
-    if (onDelete) onDelete(store.id)
   }
 
   return (
@@ -73,7 +76,7 @@ export const DialogDelete = observer((props: DialogProps) => {
         />
       </Box>
       <MUIDialogContent sx={{ height: 1, p: 1, mb: 2 }}>
-        {store.data?.caption}
+        {store.localData?.caption}
       </MUIDialogContent>
       <MUIDialogActions>
         <Button

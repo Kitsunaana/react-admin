@@ -6,32 +6,32 @@ import { useSearchParams } from "react-router-dom"
 import { TCategory } from "features/categories/create-and-edit/model/schemas"
 import { StoreDialogProvider } from "shared/ui/dialog/dialog-edit"
 
-export type DeleteCategoryOptions = UseMutationOptions<any, any, number>
+export type DeleteCategoryOptions = UseMutationOptions<any, any, number | null>
 
-export const deleteCategoryOptions = (params: URLSearchParams) => (id: number): DeleteCategoryOptions => ({
-  mutationKey: ["category", id],
-  mutationFn: (id: number | null) => $axios.delete(`/categories/${id}`),
-  onSuccess: () => {
-    const search = params.get("search")
-    const page = params.get("page") ?? 1
+export const deleteCategoryOptions = (params: URLSearchParams) => (
+  (id: number | null): DeleteCategoryOptions => ({
+    mutationKey: ["category", id],
+    mutationFn: (id: number | null) => $axios.delete(`/categories/${id}`),
+    onSuccess: () => {
+      const search = params.get("search")
+      const page = params.get("page") ?? 1
 
-    queryClient.setQueryData(["categories", search, page], (oldData: TCategory[]) => [
-      ...oldData.filter((category) => category.id !== id),
-    ])
-  },
-})
+      queryClient.setQueryData(["categories", search, page], (oldData: TCategory[]) => [
+        ...oldData.filter((category) => category.id !== id),
+      ])
+    },
+  })
+)
 
 export const DialogDelete = () => {
   const [searchParams] = useSearchParams()
 
-  /* return (
+  return (
     <StoreDialogProvider>
       <DialogDeleteBase
         langBase="catalog"
         onDeleteOptions={deleteCategoryOptions(searchParams)}
       />
     </StoreDialogProvider>
-  ) */
-
-  return null
+  )
 }

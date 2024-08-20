@@ -23,7 +23,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { GetCategoryDto } from './dto/get-category-dto';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { FilesService } from '../files/files.service';
-import { CharacteristicsService } from '../characteristcs/characteristics.service';
+import { CharacteristicsService } from '../characteristics/characteristics.service';
 
 /*@Injectable()
 export class ValidationPipeR implements PipeTransform<any> {
@@ -107,12 +107,18 @@ export class CategoriesController {
       }),
     }),
   )
-  update(
+  async update(
     @Param('id') id: number,
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() dto: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(id, dto, files);
+    await this.filesService.updateOrder(dto.media);
+    await this.filesService.saveMedia(files, dto.imagesIds, parseInt((dto as any).id));
+    await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
+
+    await this.characteristicsService.update(dto.items, id);
+
+    return this.categoryService.update(id, dto);
   }
 
   @Delete('/:id')

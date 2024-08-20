@@ -11,6 +11,7 @@ declare module "@mui/material/styles" {
       hatch: {
         warning: string
         primary: string
+        error: string
       }
     }
   }
@@ -25,6 +26,7 @@ declare module "@mui/material/styles" {
       hatch?: {
         warning?: string
         primary?: string
+        error?: string
       }
     }
   }

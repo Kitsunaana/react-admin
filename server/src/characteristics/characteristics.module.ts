@@ -6,10 +6,12 @@ import {
   Characteristic,
 } from '../entities-sequelize/characteristic.entity';
 import { Unit } from '../entities-sequelize/units.entity';
+import { CharacteristicsController } from './characteristcs.controller';
 
 @Module({
   providers: [CharacteristicsService],
   exports: [CharacteristicsService],
   imports: [SequelizeModule.forFeature([Characteristic, Unit, CategoryCharacteristic])],
+  controllers: [CharacteristicsController],
 })
 export class CharacteristicsModule {}

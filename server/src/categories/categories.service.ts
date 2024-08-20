@@ -32,18 +32,11 @@ export class CategoriesService {
     return category;
   }
 
-  async update(id: number, dto: UpdateCategoryDto, files: Array<Express.Multer.File>) {
-    console.log(dto);
-    await this.filesService.updateOrder(dto.media);
-    await this.filesService.saveMedia(files, dto.imagesIds, parseInt((dto as any).id));
-    await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
-
-    const category = await this.categoryRepository.update(dto, { where: { id } });
-    const customCategory = await this.customCategoryRepository.update(dto, {
+  async update(id: number, dto: UpdateCategoryDto) {
+    await this.categoryRepository.update(dto, { where: { id } });
+    await this.customCategoryRepository.update(dto, {
       where: { categoryId: id },
     });
-
-    return customCategory; /**/
   }
 
   async getAll(query: GetCategoryDto) {
