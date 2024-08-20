@@ -10,115 +10,122 @@ import { IconButton } from "shared/ui/icon-button"
 import { alpha, Tooltip } from "@mui/material"
 import { Icon } from "shared/ui/icon"
 import { DialogDelete } from "features/characteristics/ui/delete"
+import { Text } from "shared/ui/text"
+import React from "react"
 
 export const Characteristics = observer(() => {
   const { characteristics } = useStores()
   const { fullScreen } = useDialogStore()
 
-  console.log(characteristics.filteredItems)
-
   return (
     <Box flex row grow sx={{ height: 1 }}>
-      <Box
-        flex
-        grow
-        sx={{
-          mt: 1,
-          overflow: "auto",
-          height: fullScreen ? "calc(100% - 60px)" : 432,
-        }}
-      >
-        {characteristics.filteredItems.map((characteristic) => (
-          <Box
-            onDoubleClick={() => dispatchEdit("characteristics", {
-              id: characteristic.id,
-              localData: characteristic,
-            } as any)}
-            key={characteristic.id}
-            flex
-            ai
-            row
-            jc_sp
-            sx={{
-              px: 1,
-              minHeight: 40,
-              mb: 0.5,
-              border: ({ palette }) => `1px solid ${palette.mode === "dark"
-                ? alpha(palette.grey["600"], 0.75)
-                : alpha(palette.grey["400"], 0.45)}`,
-              borderRadius: 2,
-              borderLeft: ({ palette }) => (characteristics.getConflict(characteristic)
-                ? `5px solid ${palette.error.main}`
-                : characteristic.local
-                  ? `5px solid ${palette.warning.main}`
-                  : null),
-              transition: ".3s",
-              "&:hover": {
-                backgroundColor: ({ palette }) => palette.grey[800],
-              },
-              ...(characteristics.getConflict(characteristic) ? {
-                backgroundImage: ({ background }) => background.hatch.error,
-                backgroundSize: "6px 6px",
-              } : {}),
-            }}
-          >
-            <Box flex row ai>
-              {characteristic.hideClient && (
-                <Tooltip arrow title="Скрыть у клиента">
-                  <Box flex ai row sx={{ mr: 1 }}>
-                    <Icon name="invisible" fontSize="small" color="warning" />
+      {characteristics.filteredItems.length > 0 ? (
+        <Box
+          flex
+          grow
+          sx={{
+            mt: 1,
+            overflow: "auto",
+            height: fullScreen ? "calc(100% - 60px)" : 432,
+          }}
+        >
+          {characteristics.filteredItems.map((characteristic) => (
+            <Box
+              onDoubleClick={() => dispatchEdit("characteristics", {
+                id: characteristic.id,
+                localData: characteristic,
+              } as any)}
+              key={characteristic.id}
+              flex
+              ai
+              row
+              jc_sp
+              sx={{
+                px: 1,
+                minHeight: 40,
+                mb: 0.5,
+                border: ({ palette }) => `1px solid ${palette.mode === "dark"
+                  ? alpha(palette.grey["600"], 0.75)
+                  : alpha(palette.grey["400"], 0.45)}`,
+                borderRadius: 2,
+                borderLeft: ({ palette }) => (characteristics.getConflict(characteristic)
+                  ? `5px solid ${palette.error.main}`
+                  : characteristic.local
+                    ? `5px solid ${palette.warning.main}`
+                    : null),
+                transition: ".3s",
+                "&:hover": {
+                  backgroundColor: ({ palette }) => palette.grey[800],
+                },
+                ...(characteristics.getConflict(characteristic) ? {
+                  backgroundImage: ({ background }) => background.hatch.error,
+                  backgroundSize: "6px 6px",
+                } : {}),
+              }}
+            >
+              <Box flex row ai>
+                {characteristic.hideClient && (
+                  <Tooltip arrow title="Скрыть у клиента">
+                    <Box flex ai row sx={{ mr: 1 }}>
+                      <Icon name="invisible" fontSize="small" color="warning" />
+                    </Box>
+                  </Tooltip>
+                )}
+                <Box>
+                  {characteristic.caption}
+                  {" "}
+                  {characteristic.value}
+                  {" "}
+                  {characteristic.unit}
+                </Box>
+              </Box>
+              <Box flex ai row>
+                <Tooltip title="Для категории" arrow>
+                  <Box flex ai row gap>
+                    <Icon
+                      name="allowCategory"
+                      fontSize="small"
+                      sx={{ color: ({ palette }) => palette.success.light }}
+                    />
                   </Box>
                 </Tooltip>
-              )}
-              <Box>
-                {characteristic.caption}
-                {" "}
-                {characteristic.value}
-                {" "}
-                {characteristic.unit}
+                <Vertical />
+                <Tooltip title="Редактировать" arrow>
+                  <Box flex ai row>
+                    <IconButton
+                      onClick={() => dispatchEdit("characteristics", {
+                        id: characteristic.id,
+                        localData: characteristic,
+                      } as any)}
+                      fontSize={20}
+                      color="primary"
+                      name="edit"
+                    />
+                  </Box>
+                </Tooltip>
+                <Tooltip title="Удалить" arrow>
+                  <Box flex ai row>
+                    <IconButton
+                      onClick={() => dispatchDelete("characteristics", {
+                        id: characteristic.id,
+                        caption: characteristic.caption,
+                      } as any)}
+                      fontSize={20}
+                      color="warning"
+                      name="delete"
+                    />
+                  </Box>
+                </Tooltip>
               </Box>
             </Box>
-            <Box flex ai row>
-              <Tooltip title="Для категории" arrow>
-                <Box flex ai row gap>
-                  <Icon
-                    name="allowCategory"
-                    fontSize="small"
-                    sx={{ color: ({ palette }) => palette.success.light }}
-                  />
-                </Box>
-              </Tooltip>
-              <Vertical />
-              <Tooltip title="Редактировать" arrow>
-                <Box flex ai row>
-                  <IconButton
-                    onClick={() => dispatchEdit("characteristics", {
-                      id: characteristic.id,
-                      localData: characteristic,
-                    } as any)}
-                    fontSize={20}
-                    color="primary"
-                    name="edit"
-                  />
-                </Box>
-              </Tooltip>
-              <Tooltip title="Удалить" arrow>
-                <Box flex ai row>
-                  <IconButton
-                    onClick={() => dispatchDelete("characteristics", {
-                      id: characteristic.id,
-                      caption: characteristic.caption,
-                    } as any)}
-                    fontSize={20}
-                    color="warning"
-                    name="delete"
-                  />
-                </Box>
-              </Tooltip>
-            </Box>
-          </Box>
-        ))}
-      </Box>
+          ))}
+        </Box>
+      ) : (
+        <Box flex grow ai jc>
+          <Icon color="warning" name="empty" sx={{ fontSize: 80 }} />
+          <Text langBase="global" name="listEmpty" />
+        </Box>
+      )}
       <Vertical />
       <Box sx={{ pt: 1 }}>
         <IconButton

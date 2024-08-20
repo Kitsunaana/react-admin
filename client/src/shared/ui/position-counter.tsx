@@ -45,7 +45,7 @@ const Container = styled((props: ContainerProps) => <Box flex ai row gap jc {...
 `
 
 interface PositionProps {
-  order: number
+  order: number | null
   sx?: SxProps<Theme>
   id: number
   updatePositionOptions: (id: number) => UseMutationOptions<any, any, number, any>
@@ -57,7 +57,7 @@ export const Position = memo((props: PositionProps) => {
   } = props
 
   const [open, setOpen] = useState(false)
-  const [order, setOrder] = useState(orderProps)
+  const [order, setOrder] = useState(orderProps ?? 0)
   const [direction, setDirection] = useState(1)
 
   const onToggle = () => {

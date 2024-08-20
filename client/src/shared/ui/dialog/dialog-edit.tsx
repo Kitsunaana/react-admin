@@ -130,10 +130,12 @@ export const DialogEdit = observer((props: DialogProps) => {
   const { t } = useTranslation("translation", { keyPrefix: langBase })
   const methods = useFormContext()
 
+  let isEdit = false
   useEffect(() => addEvent(`${langBase}.dialog.edit` as any, (data: OpenDialogProps) => {
     methods.reset()
     methods.unregister()
 
+    if (data?.id) isEdit = true
     store.openDialog(data?.id ?? null, data?.localData)
   }), [langBase])
 
@@ -178,7 +180,7 @@ export const DialogEdit = observer((props: DialogProps) => {
   const onSubmit = () => {
     methods.handleSubmit((data) => {
       const mergedData = { ...data, ...getData() }
-      if (store.isEdit) {
+      if (isEdit) {
         if (onUpdate) onUpdate(mergedData)
         if (onEdit) onEdit(mergedData)
       } else {
@@ -211,7 +213,7 @@ export const DialogEdit = observer((props: DialogProps) => {
     >
       <Box sx={{ mx: 1 }}>
         <DialogHeader
-          title={t(`dialog.title.${store.isEdit ? "edit" : "create"}`, { value: title ?? "" })}
+          title={t(`dialog.title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
         />
       </Box>
       {container}

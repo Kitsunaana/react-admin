@@ -22,7 +22,7 @@ interface CategoryRowProps {
   id: number
   caption: string
   images: z.infer<typeof mediaSchema>[]
-  order: number
+  order: number | null
 }
 
 const Badge = styled(MUIBadge)`
