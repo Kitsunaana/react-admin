@@ -1,6 +1,6 @@
 import { PhotosStore } from "features/categories/create-and-edit/model/stores/photos-store"
 import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
-import { CharacteristicsStore } from "features/characteristics/ui/dialog"
+import { CharacteristicsStore } from "entities/characteristic/model/store"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {
@@ -11,7 +11,7 @@ export class RootStore {
   constructor() {
     this.photoPosition = new PhotoPositionStore(this)
     this.photos = new PhotosStore(this)
-    this.characteristics = new CharacteristicsStore(this)
+    this.characteristics = new CharacteristicsStore()
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
@@ -21,7 +21,7 @@ export class RootStore {
   destroy() {
     this.photos = new PhotosStore(this)
     this.photoPosition = new PhotoPositionStore(this)
-    this.characteristics = new CharacteristicsStore(this)
+    this.characteristics = new CharacteristicsStore()
   }
 
   setData(data: any) {

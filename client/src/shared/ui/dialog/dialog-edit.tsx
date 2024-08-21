@@ -1,11 +1,10 @@
 import { useLang } from "shared/context/Lang"
 import {
-  Context, createContext, FC, PropsWithChildren,
-  ReactNode, useContext, useEffect, useLayoutEffect, useMemo, useState,
+  ReactNode, useEffect, useMemo,
 } from "react"
 import { useTranslation } from "react-i18next"
 import { useFormContext } from "react-hook-form"
-import { addEvent, dispatch } from "shared/lib/event"
+import { addEvent } from "shared/lib/event"
 import { Dialog as MUIDialog, DialogProps as MUIDialogProps } from "@mui/material"
 import { Box } from "shared/ui/box"
 import * as React from "react"
@@ -15,10 +14,8 @@ import {
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
-import {
-  makeAutoObservable, reaction, runInAction, toJS,
-} from "mobx"
 import { observer } from "mobx-react-lite"
+import { useDialogStore } from "shared/ui/dialog/model/dialog-context"
 
 interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string
@@ -27,78 +24,13 @@ interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   onGetByIdOptions?: (id: number | null) => UseQueryOptions<any, any, any, any>
   onUpdateOptions?: (id: number | null) => UseMutationOptions<any, any, any>
   onCreateOptions?: () => UseMutationOptions<any, any, any>
-  getData: () => any
-  setData: (data: any) => any
-  storeReset: () => void
+  getData?: () => any
+  setData?: (data: any) => any
+  storeReset?: () => void
   size?: "auto"
   onSave?: (data: any) => void
   onEdit?: (data: any) => void
 }
-
-export class DialogStore {
-  // open = true
-  open = false
-  id: null | number = null
-  localData?: Record<string, any>
-
-  fullScreen = false
-  data: any = {}
-
-  constructor() {
-    makeAutoObservable(this, { }, { autoBind: true })
-  }
-
-  openDialog(id: number | null, localData?: Record<string, any>) {
-    this.open = true
-    this.id = id
-    this.localData = localData
-  }
-
-  closeDialog() {
-    this.id = null
-    this.open = false
-  }
-
-  get isEdit() {
-    return this.id !== null
-  }
-
-  setFullScreen(fullScreen: boolean | ((fullScreen: boolean) => boolean)) {
-    this.fullScreen = typeof fullScreen === "boolean"
-      ? fullScreen
-      : fullScreen(this.fullScreen)
-  }
-}
-
-export const dialogStore = new DialogStore()
-export const createDialogStore = () => new DialogStore()
-
-/** CONTEXT */
-export const useStrictContext = <T, >(context: Context<T | null>) => {
-  const value = useContext(context)
-  // if (value === null) throw new Error("Strict context not passed")
-
-  return value as T
-}
-
-export const createStrictContext = <T, >() => createContext<T | null>(null)
-
-const RootDialogStoreContext = createStrictContext<DialogStore>()
-
-export const useDialogStore = () => useStrictContext(RootDialogStoreContext)
-
-export const StoreDialogProvider: FC<PropsWithChildren> = (props) => {
-  const { children } = props
-
-  const [state] = useState(createDialogStore)
-
-  return (
-    <RootDialogStoreContext.Provider value={state}>
-      {children}
-    </RootDialogStoreContext.Provider>
-  )
-}
-/** CONTEXT */
 
 export interface OpenDialogProps {
   localData?: Record<string, any>
@@ -131,23 +63,22 @@ export const DialogEdit = observer((props: DialogProps) => {
   const methods = useFormContext()
 
   let isEdit = false
-  useEffect(() => addEvent(`${langBase}.dialog.edit` as any, (data: OpenDialogProps) => {
+  useEffect(() => {
     methods.reset()
     methods.unregister()
 
-    if (data?.id) isEdit = true
-    store.openDialog(data?.id ?? null, data?.localData)
-  }), [langBase])
+    if (store?.id) isEdit = true
+  }, [langBase, store.open])
 
   let data = store.localData
   if (onGetByIdOptions) {
-    const query = useQuery(onGetByIdOptions(store.id))
+    const query = useQuery(onGetByIdOptions(store.id as number))
     data = query.data
   }
 
   let onUpdate
   if (onUpdateOptions) {
-    const { mutate } = useMutation(onUpdateOptions(store.id))
+    const { mutate } = useMutation(onUpdateOptions(store.id as number))
     onUpdate = mutate
   }
 
@@ -157,13 +88,12 @@ export const DialogEdit = observer((props: DialogProps) => {
     onCreate = mutate
   }
 
-  useEffect(() => () => storeReset(), [])
+  useEffect(() => () => storeReset?.(), [])
 
   useEffect(() => {
     if (!data) return
 
-    if (store.id) setData(data)
-
+    if (store.id) setData?.(data)
     const keys = Object.keys(data)
     if (keys.length === 0) return
 
@@ -174,19 +104,20 @@ export const DialogEdit = observer((props: DialogProps) => {
 
   const onClose = () => {
     store.closeDialog()
-    storeReset()
+    storeReset?.()
   }
+
+  const callFunc = (callbacks: Array<Function | undefined>, data: Record<string, any>) => (
+    callbacks.forEach((callback) => typeof callback === "function" && callback(data))
+  )
 
   const onSubmit = () => {
     methods.handleSubmit((data) => {
-      const mergedData = { ...data, ...getData() }
-      if (isEdit) {
-        if (onUpdate) onUpdate(mergedData)
-        if (onEdit) onEdit(mergedData)
-      } else {
-        if (onCreate) onCreate(mergedData)
-        if (onSave) onSave(mergedData)
-      }
+      const mergedData = { ...data, ...getData?.() }
+
+      const _ = isEdit
+        ? callFunc([onUpdate, onEdit], mergedData)
+        : callFunc([onCreate, onSave], mergedData)
 
       // onClose()
     })()

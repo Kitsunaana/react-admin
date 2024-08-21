@@ -15,7 +15,7 @@ export interface BoxProps extends Omit<MUIBoxProps, "gap" | "flex"> {
   gap?: boolean | number
   grow?: boolean | number
   strong?: boolean,
-  help?: TooltipProps,
+  help?: Omit<TooltipProps, "children">,
 
   theme?: Theme
 }

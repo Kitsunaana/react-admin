@@ -29,7 +29,7 @@ export const transformCharacteristic = (characteristic: TCharacteristic) => {
 
 export const characteristicsSchema = z.array(characteristicSchema)
 
-export type TCharacteristics = z.infer<typeof characteristicsSchema>
+export type TCharacteristics = z.infer<typeof characteristicsSchema >
 
 export const transformCharacteristics = (characteristics: TCharacteristic[]) => (
   characteristics.map(transformCharacteristic)

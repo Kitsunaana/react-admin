@@ -1,5 +1,7 @@
 import React, { memo } from "react"
-import { Icon, IconProps } from "@mui/material"
+import {
+  Icon, IconProps, Tooltip, TooltipProps,
+} from "@mui/material"
 import { useAppSelector } from "shared/lib/hooks"
 import { RootState } from "app/providers/store"
 
@@ -56,19 +58,20 @@ const iconData = {
   invisible: "visibility_off",
 }
 
-interface DefaultIcon extends IconProps{
+interface DefaultIcon extends IconProps {
   name: string
+  help?: Omit<TooltipProps, "children">
 }
 
 const Default = memo((props: DefaultIcon) => {
-  const { name, ...other } = props
+  const { name, help, ...other } = props
 
   const weight = useAppSelector((state: RootState) => state.settings.weightIcon)
   const fill = useAppSelector((state: RootState) => state.settings.fillIcon)
 
   const icon = iconData[name] ?? iconData.defIcon
 
-  return (
+  const renderIcon = (
     <Icon
       className="material-symbols-outlined"
       style={{
@@ -79,6 +82,16 @@ const Default = memo((props: DefaultIcon) => {
       {icon}
     </Icon>
   )
+
+  if (help) {
+    return (
+      <Tooltip {...help}>
+        {renderIcon}
+      </Tooltip>
+    )
+  }
+
+  return renderIcon
 })
 
 export { Default as Icon }

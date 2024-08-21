@@ -1,143 +1,75 @@
-import { Box } from "shared/ui/box"
-import Button from "@mui/material/Button"
-import { dispatchDelete, dispatchEdit } from "shared/lib/event"
-import { CharacteristicsDialog } from "features/characteristics/ui/dialog"
-import { StoreDialogProvider, useDialogStore } from "shared/ui/dialog/dialog-edit"
+import { Box, BoxProps } from "shared/ui/box"
+import { CharacteristicsDialog } from "features/characteristics/create-and-edit/ui/dialog"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { observer } from "mobx-react-lite"
-import { Divider, Vertical } from "shared/ui/divider"
+import { Vertical } from "shared/ui/divider"
 import { IconButton } from "shared/ui/icon-button"
-import { alpha, Tooltip } from "@mui/material"
 import { Icon } from "shared/ui/icon"
-import { DialogDelete } from "features/characteristics/ui/delete"
+import { DialogDelete } from "features/characteristics/delete/ui/delete"
 import { Text } from "shared/ui/text"
 import React from "react"
+import {
+  StoreDeleteDialogProvider,
+  StoreDialogProvider,
+  useDialogStore,
+} from "shared/ui/dialog/model/dialog-context"
+import styled from "styled-components"
+import { Characteristic } from "entities/characteristic/ui/characteristic"
+import { EmptyList } from "shared/ui/empty-list"
+
+const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
+  const { fullScreen, ...other } = props
+  return <Box {...other} />
+})`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-top: 8px;
+  overflow: auto;
+  height: ${({ fullScreen }) => (fullScreen ? "calc(100% - 60px)" : "432px")};
+`
+
+export const CreateCharacteristicsButton = () => {
+  const { openDialog } = useDialogStore()
+
+  return (
+    <IconButton
+      name="add"
+      onClick={() => openDialog(null)}
+    />
+  )
+}
 
 export const Characteristics = observer(() => {
   const { characteristics } = useStores()
   const { fullScreen } = useDialogStore()
 
   return (
-    <Box flex row grow sx={{ height: 1 }}>
-      {characteristics.filteredItems.length > 0 ? (
-        <Box
-          flex
-          grow
-          sx={{
-            mt: 1,
-            overflow: "auto",
-            height: fullScreen ? "calc(100% - 60px)" : 432,
-          }}
-        >
-          {characteristics.filteredItems.map((characteristic) => (
-            <Box
-              onDoubleClick={() => dispatchEdit("characteristics", {
-                id: characteristic.id,
-                localData: characteristic,
-              } as any)}
-              key={characteristic.id}
-              flex
-              ai
-              row
-              jc_sp
-              sx={{
-                px: 1,
-                minHeight: 40,
-                mb: 0.5,
-                border: ({ palette }) => `1px solid ${palette.mode === "dark"
-                  ? alpha(palette.grey["600"], 0.75)
-                  : alpha(palette.grey["400"], 0.45)}`,
-                borderRadius: 2,
-                borderLeft: ({ palette }) => (characteristics.getConflict(characteristic)
-                  ? `5px solid ${palette.error.main}`
-                  : characteristic.local
-                    ? `5px solid ${palette.warning.main}`
-                    : null),
-                transition: ".3s",
-                "&:hover": {
-                  backgroundColor: ({ palette }) => palette.grey[800],
-                },
-                ...(characteristics.getConflict(characteristic) ? {
-                  backgroundImage: ({ background }) => background.hatch.error,
-                  backgroundSize: "6px 6px",
-                } : {}),
-              }}
-            >
-              <Box flex row ai>
-                {characteristic.hideClient && (
-                  <Tooltip arrow title="Скрыть у клиента">
-                    <Box flex ai row sx={{ mr: 1 }}>
-                      <Icon name="invisible" fontSize="small" color="warning" />
-                    </Box>
-                  </Tooltip>
-                )}
-                <Box>
-                  {characteristic.caption}
-                  {" "}
-                  {characteristic.value}
-                  {" "}
-                  {characteristic.unit}
-                </Box>
-              </Box>
-              <Box flex ai row>
-                <Tooltip title="Для категории" arrow>
-                  <Box flex ai row gap>
-                    <Icon
-                      name="allowCategory"
-                      fontSize="small"
-                      sx={{ color: ({ palette }) => palette.success.light }}
-                    />
-                  </Box>
-                </Tooltip>
-                <Vertical />
-                <Tooltip title="Редактировать" arrow>
-                  <Box flex ai row>
-                    <IconButton
-                      onClick={() => dispatchEdit("characteristics", {
-                        id: characteristic.id,
-                        localData: characteristic,
-                      } as any)}
-                      fontSize={20}
-                      color="primary"
-                      name="edit"
-                    />
-                  </Box>
-                </Tooltip>
-                <Tooltip title="Удалить" arrow>
-                  <Box flex ai row>
-                    <IconButton
-                      onClick={() => dispatchDelete("characteristics", {
-                        id: characteristic.id,
-                        caption: characteristic.caption,
-                      } as any)}
-                      fontSize={20}
-                      color="warning"
-                      name="delete"
-                    />
-                  </Box>
-                </Tooltip>
-              </Box>
-            </Box>
-          ))}
+    <StoreDeleteDialogProvider>
+      <Box flex row grow sx={{ height: 1 }}>
+        {characteristics.filteredItems.length > 0 ? (
+          <StoreDialogProvider>
+            <CharacteristicsContainer fullScreen={fullScreen}>
+              {characteristics.filteredItems.map((characteristic) => (
+                <Characteristic
+                  key={characteristic.id}
+                  {...characteristic}
+                />
+              ))}
+              <CharacteristicsDialog />
+            </CharacteristicsContainer>
+          </StoreDialogProvider>
+        ) : <EmptyList />}
+        <Vertical />
+        <Box sx={{ pt: 1 }}>
+          <StoreDialogProvider>
+            <CreateCharacteristicsButton />
+            <CharacteristicsDialog />
+          </StoreDialogProvider>
         </Box>
-      ) : (
-        <Box flex grow ai jc>
-          <Icon color="warning" name="empty" sx={{ fontSize: 80 }} />
-          <Text langBase="global" name="listEmpty" />
-        </Box>
-      )}
-      <Vertical />
-      <Box sx={{ pt: 1 }}>
-        <IconButton
-          name="add"
-          onClick={() => dispatchEdit("characteristics", {})}
-        />
       </Box>
-      <StoreDialogProvider>
-        <CharacteristicsDialog />
-      </StoreDialogProvider>
       <DialogDelete />
+    </StoreDeleteDialogProvider>
 
-    </Box>
   )
 })

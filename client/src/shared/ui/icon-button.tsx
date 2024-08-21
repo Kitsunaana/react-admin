@@ -5,7 +5,7 @@ import {
 } from "@mui/material"
 import { SxProps } from "@mui/system"
 
-interface IconButtonProps extends MUIIconButtonProps {
+export interface IconButtonProps extends MUIIconButtonProps {
   name: string
   sxIcon?: SxProps<Theme>
   fontSize?: number

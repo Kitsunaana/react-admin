@@ -25,6 +25,7 @@ import { DialogDelete } from "features/categories/delete/ui/dialog"
 import { Icon } from "shared/ui/icon"
 import { validation } from "shared/lib/validation"
 import { Gallery } from "widgets/galerry"
+import { StoreDialogProvider } from "shared/ui/dialog/model/dialog-context"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -132,7 +133,7 @@ const CategoriesPage = () => {
   }
 
   return (
-    <>
+    <StoreDialogProvider>
       <Table
         header={(
           <FormProvider {...methods}>
@@ -172,7 +173,7 @@ const CategoriesPage = () => {
       <DialogDelete />
       <Gallery />
       <Backdrop />
-    </>
+    </StoreDialogProvider>
   )
 }
 

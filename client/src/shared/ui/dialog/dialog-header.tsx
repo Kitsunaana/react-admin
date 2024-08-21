@@ -7,8 +7,8 @@ import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/icon-button"
 import * as React from "react"
 import { Vertical } from "shared/ui/divider"
-import { useDialogStore } from "shared/ui/dialog/dialog-edit"
 import { observer } from "mobx-react-lite"
+import { useDialogStore } from "shared/ui/dialog/model/dialog-context"
 
 interface DialogHeaderProps {
   title: string

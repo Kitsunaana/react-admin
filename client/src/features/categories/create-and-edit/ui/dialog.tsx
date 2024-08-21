@@ -1,10 +1,10 @@
 import * as React from "react"
 import {
-  FormProvider, useForm, useFormContext,
+  FormProvider, useForm,
 } from "react-hook-form"
 import { TabsContainer } from "shared/ui/tabs-container"
 import { Box } from "shared/ui/box"
-import { DialogEdit, StoreDialogProvider } from "shared/ui/dialog/dialog-edit"
+import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import {
   createCategoryOptions,
   updateCategoryOptions,
@@ -13,16 +13,17 @@ import { tabs } from "features/categories/create-and-edit/model/constants"
 import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
 import {
   Context,
-  createContext, FC, PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState,
+  createContext, FC, PropsWithChildren, useContext, useMemo, useState,
 } from "react"
 import { observer } from "mobx-react-lite"
 import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
 import { createRootStore, RootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
+import { StoreDialogProvider } from "shared/ui/dialog/model/dialog-context"
 
 export const useStrictContext = <T, >(context: Context<T | null>) => {
   const value = useContext(context)
-  // if (value === null) throw new Error("Strict context not passed")
+  if (value === null) throw new Error("Strict context not passed")
 
   return value as T
 }
@@ -46,7 +47,7 @@ export const StoreProvider: FC<PropsWithChildren> = (props) => {
 }
 
 export const D = observer(() => {
-  const tabDefault = 3
+  const tabDefault = 0
   const langBase = "catalog.dialog"
 
   const rootStore = useStores()
@@ -96,9 +97,9 @@ export const D = observer(() => {
 })
 
 export const Dialog = () => (
-  <StoreDialogProvider>
-    <StoreProvider>
-      <D />
-    </StoreProvider>
-  </StoreDialogProvider>
+  // <StoreDialogProvider>
+  <StoreProvider>
+    <D />
+  </StoreProvider>
+  // </StoreDialogProvider>
 )

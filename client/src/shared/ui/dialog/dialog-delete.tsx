@@ -12,8 +12,8 @@ import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { Button } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { useMutation, UseMutationOptions } from "@tanstack/react-query"
-import { useDialogStore } from "shared/ui/dialog/dialog-edit"
 import { observer } from "mobx-react-lite"
+import { useDeleteDialogStore } from "shared/ui/dialog/model/dialog-context"
 
 interface DialogProps {
   langBase?: string
@@ -21,35 +21,35 @@ interface DialogProps {
   onDeleteLocal?: (id: number) => void
 }
 
-interface OpenDialogProps {
+/* interface OpenDialogProps {
   id: number
   caption: string
-}
+} */
 
 export const DialogDelete = observer((props: DialogProps) => {
   const {
     langBase: langBaseProps, onDeleteOptions, onDeleteLocal,
   } = props
 
-  const store = useDialogStore()
+  const store = useDeleteDialogStore()
 
   const lang = useLang()
   const langBase = langBaseProps ?? lang?.lang
 
   const { t } = useTranslation("translation", { keyPrefix: langBase })
 
-  useEffect(() => addEvent(`${langBase}.dialog.delete` as any, (data: OpenDialogProps) => {
+  /* useEffect(() => addEvent(`${langBase}.dialog.delete` as any, (data: OpenDialogProps) => {
     store.openDialog(data.id, { caption: data.caption })
-  }), [langBase])
+  }), [langBase]) */
 
   let onDelete
   if (onDeleteOptions) {
-    const { mutate } = useMutation(onDeleteOptions(store.id))
+    const { mutate } = useMutation(onDeleteOptions(store.id as number))
     onDelete = mutate
   }
 
   const onSubmit = () => {
-    if (onDeleteLocal && store.id) onDeleteLocal(store.id)
+    if (onDeleteLocal && store.id) onDeleteLocal(store.id as number)
     if (onDelete && store.id) onDelete(store.id)
 
     store.closeDialog()
