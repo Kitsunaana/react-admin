@@ -7,7 +7,7 @@ import {
 } from "react"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import {
   Controller,
 } from "react-hook-form"
@@ -183,7 +183,7 @@ export const Gallery = observer(() => {
   return (
     <Box flex row ai>
       {photoPosition.isShowButton && (
-        <IconButton name="prev" onClick={photoPosition.setPrevImage} />
+        <IconButtonBase name="prev" onClick={photoPosition.setPrevImage} />
       )}
       <Box sx={{ position: "relative", width: 1, height: 250 }}>
         <Box
@@ -198,7 +198,7 @@ export const Gallery = observer(() => {
         {renderImage()}
       </Box>
       {photoPosition.isShowButton && (
-        <IconButton name="next" onClick={photoPosition.setNextImage} />
+        <IconButtonBase name="next" onClick={photoPosition.setNextImage} />
       )}
     </Box>
   )

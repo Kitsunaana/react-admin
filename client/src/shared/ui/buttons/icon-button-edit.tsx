@@ -1,7 +1,7 @@
 import React from "react"
 import { TooltipProps } from "@mui/material"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { IconButtonProps } from "shared/ui/icon-button"
+import { IconButtonProps } from "shared/ui/buttons/icon-button-base"
 
 interface IconButtonEditProps extends Omit<IconButtonProps, "name"> {
   help?: boolean | Omit<TooltipProps, "children">

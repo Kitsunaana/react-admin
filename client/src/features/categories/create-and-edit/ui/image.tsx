@@ -1,7 +1,7 @@
 import { Box, BoxProps } from "shared/ui/box"
 import { alpha, useTheme } from "@mui/material"
 import { Text } from "shared/ui/text"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import * as React from "react"
 import { UpdateOrder } from "features/categories/create-and-edit/ui/update-order"
 import { useImage } from "shared/hooks/use-image"
@@ -60,7 +60,7 @@ const Filename = styled(Text)`
   width: 100%;
 `
 
-const DeleteImageButton = styled(IconButton)`
+const DeleteImageButton = styled(IconButtonBase)`
   padding: 4px;
   min-width: unset;
   border-radius: 50%;

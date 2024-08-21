@@ -1,4 +1,4 @@
-import { IconButton as BaseIconButton, IconButtonProps } from "shared/ui/icon-button"
+import { IconButtonBase as BaseIconButton, IconButtonProps } from "shared/ui/buttons/icon-button-base"
 import { Box } from "shared/ui/box"
 import React from "react"
 import { TooltipProps } from "@mui/material"

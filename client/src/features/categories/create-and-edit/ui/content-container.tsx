@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react"
 import { useLang } from "shared/context/Lang"
 import { addEvent } from "shared/lib/event"
-import { TabPanel } from "shared/ui/tab-panel"
+import { TabPanel } from "shared/ui/tabs/tab-panel"
 import * as React from "react"
 import { CommonTab } from "features/categories/create-and-edit/ui/tabs/common"
 import { PhotosTab } from "features/categories/create-and-edit/ui/tabs/photos"

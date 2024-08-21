@@ -5,7 +5,7 @@ import { Backdrop } from "shared/ui/backdrop"
 import { Filters } from "features/goods/filters/ui/filters"
 import { Table } from "shared/ui/table"
 import { BottomPage } from "shared/ui/bottom-page"
-import { CreateButton } from "shared/ui/create-button"
+import { CreateButton } from "shared/ui/buttons/create-button"
 
 const GoodsPage = () => (
   <>

@@ -2,7 +2,7 @@ import * as React from "react"
 import {
   FormProvider, useForm,
 } from "react-hook-form"
-import { TabsContainer } from "shared/ui/tabs-container"
+import { TabsContainer } from "shared/ui/tabs/tabs-container"
 import { Box } from "shared/ui/box"
 import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import {

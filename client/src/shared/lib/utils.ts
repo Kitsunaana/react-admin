@@ -13,3 +13,13 @@ export const shallowEqual = (prev, next) => {
 
   return true
 }
+
+export const stringifiedParams = <TParams extends object>(data: TParams) => {
+  const newData = Object.entries(data).reduce((prev, [key, value]) => {
+    if (value) prev[key] = value
+    return prev
+  }, {})
+
+  const searchParams = (new URLSearchParams(newData)).toString()
+  return searchParams && `?${searchParams}`
+}

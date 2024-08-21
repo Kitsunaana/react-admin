@@ -3,16 +3,16 @@ import { Table } from "shared/ui/table"
 import {
   Controller, FormProvider, useForm, useFormContext,
 } from "react-hook-form"
-import { Input } from "shared/ui/input"
+import { Input } from "shared/ui/form/input"
 import { BackButton } from "shared/ui/back-button"
 import React, { ReactNode, useEffect } from "react"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import {
   Pagination,
 } from "@mui/material"
 import { Backdrop } from "shared/ui/backdrop"
 import { z } from "zod"
-import { CreateButton } from "shared/ui/create-button"
+import { CreateButton } from "shared/ui/buttons/create-button"
 import { CategoryRow } from "widgets/category-row/ui/category-row"
 import { categoriesSchema, categorySchema } from "features/categories/create-and-edit/model/schemas"
 import { useCategories } from "entities/category/queries/use-categories"
@@ -81,7 +81,7 @@ const CategoryHeader = (props: CategoryHeaderProps) => {
     <Box flex ai row gap>
       <SearchInput />
       <Box flex ai row>
-        <IconButton
+        <IconButtonBase
           onClick={refetch}
           name="reload"
           color="primary"
@@ -102,13 +102,13 @@ const CategoriesPage = () => {
     },
   })
 
-  const { data: categoriesData, isSuccess, refetch } = useCategories({
+  const { categoriesData, categoriesIsLoading, refetchCategories } = useCategories({
     search: searchParams.get("search"),
     page: searchParams.get("page") ?? 1,
   })
 
   const renderContent = () => {
-    if (!isSuccess) return
+    if (categoriesIsLoading) return
 
     const data = validation(categoriesSchema, categoriesData)
 
@@ -138,8 +138,8 @@ const CategoriesPage = () => {
         header={(
           <FormProvider {...methods}>
             <CategoryHeader
-              refetch={refetch}
-              createButton={<CreateButton langBase="catalog" />}
+              refetch={refetchCategories}
+              createButton={<CreateButton />}
             />
           </FormProvider>
         )}

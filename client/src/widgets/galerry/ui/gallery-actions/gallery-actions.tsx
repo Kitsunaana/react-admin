@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import { Box, BoxProps } from "shared/ui/box"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { galleryStore } from "widgets/galerry/model/gallery-store"
 import styled from "styled-components"
 import { useTheme } from "@mui/material"
@@ -32,22 +32,22 @@ export const GalleryActions = observer(() => {
     <GalleryActionsContainer theme={theme}>
       <ZoomInScale />
       <ZoomOutScale />
-      <IconButton
+      <IconButtonBase
         fontSize={35}
         onClick={() => updateRotate("right")}
         name="rotateRight"
       />
-      <IconButton
+      <IconButtonBase
         fontSize={35}
         onClick={() => updateRotate("left")}
         name="rotateLeft"
       />
-      <IconButton
+      <IconButtonBase
         fontSize={35}
         name="setDefaultParameters"
         onClick={setDefaultParameters}
       />
-      <IconButton
+      <IconButtonBase
         fontSize={35}
         name="clear"
         onClick={() => {

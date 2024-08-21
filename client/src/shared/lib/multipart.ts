@@ -11,7 +11,8 @@ export const createMultipart = (data: Record<string, any>, arrFile: string[] = [
         })
       }
     } else {
-      result.append(key, typeof data[key] === "object" ? JSON.stringify(data[key]) : data[key])
+      result.append(key, typeof data[key] === "object"
+        ? JSON.stringify(data[key]) : data[key])
     }
   })
 

@@ -3,10 +3,8 @@ import { CharacteristicsDialog } from "features/characteristics/create-and-edit/
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { observer } from "mobx-react-lite"
 import { Vertical } from "shared/ui/divider"
-import { IconButton } from "shared/ui/icon-button"
-import { Icon } from "shared/ui/icon"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { DialogDelete } from "features/characteristics/delete/ui/delete"
-import { Text } from "shared/ui/text"
 import React from "react"
 import {
   StoreDeleteDialogProvider,
@@ -33,7 +31,7 @@ export const CreateCharacteristicsButton = () => {
   const { openDialog } = useDialogStore()
 
   return (
-    <IconButton
+    <IconButtonBase
       name="add"
       onClick={() => openDialog(null)}
     />

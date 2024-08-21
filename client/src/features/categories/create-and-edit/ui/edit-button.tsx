@@ -1,4 +1,4 @@
-import { ContextMenuItem } from "shared/ui/context-menu-item"
+import { ContextMenuItem } from "shared/ui/menu/context-menu-item"
 import React from "react"
 import { dispatchEdit } from "shared/lib/event"
 import { useDialogStore } from "shared/ui/dialog/model/dialog-context"

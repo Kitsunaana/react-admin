@@ -2,7 +2,7 @@ import React, {
   memo, useEffect, useState,
 } from "react"
 import { Box, BoxProps } from "shared/ui/box"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
 import { Icon } from "shared/ui/icon"
@@ -73,7 +73,7 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
   const width = String(order).split("").length
 
   const renderIconButton = (direction: number) => (
-    <IconButton
+    <IconButtonBase
       name="expand"
       sx={{
         color: ({ palette }) => palette.primary[palette.mode === "dark" ? "main" : "light"],

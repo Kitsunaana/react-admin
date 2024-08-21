@@ -1,4 +1,4 @@
-import { ContextMenuItem } from "shared/ui/context-menu-item"
+import { ContextMenuItem } from "shared/ui/menu/context-menu-item"
 import React from "react"
 import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 

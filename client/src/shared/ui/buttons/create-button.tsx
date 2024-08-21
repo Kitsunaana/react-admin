@@ -1,4 +1,4 @@
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import React from "react"
 import { useDialogStore } from "shared/ui/dialog/model/dialog-context"
 
@@ -6,7 +6,7 @@ export const CreateButton = () => {
   const { openDialog } = useDialogStore()
 
   return (
-    <IconButton
+    <IconButtonBase
       name="add"
       color="success"
       fontSize={20}

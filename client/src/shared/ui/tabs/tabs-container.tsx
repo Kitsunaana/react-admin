@@ -2,9 +2,9 @@ import * as React from "react"
 import {
   memo, useEffect, useMemo, useState,
 } from "react"
-import { Tabs } from "shared/ui/tabs"
+import { Tabs } from "shared/ui/tabs/tabs"
 import { useFormContext, useFormState } from "react-hook-form"
-import { Tab } from "shared/ui/tab"
+import { Tab } from "shared/ui/tabs/tab"
 import { addEvent } from "shared/lib/event"
 
 export interface ITab {

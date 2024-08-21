@@ -5,11 +5,11 @@ import React, {
   memo, ReactNode, useEffect,
 } from "react"
 import { Box } from "shared/ui/box"
-import { Input } from "shared/ui/input"
+import { Input } from "shared/ui/form/input"
 import { addEvent } from "shared/lib/event"
 import { z } from "zod"
-import { Select } from "shared/ui/select"
-import { IconButton } from "shared/ui/icon-button"
+import { Select } from "shared/ui/form/select"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { BackButton } from "shared/ui/back-button"
 
 export interface Option {
@@ -110,7 +110,7 @@ export const Filters = memo((props: FiltersProps) => {
           )}
         />
         <Box flex row>
-          <IconButton name="reload" color="primary" fontSize={20} />
+          <IconButtonBase name="reload" color="primary" fontSize={20} />
           {createButton}
           <BackButton />
         </Box>

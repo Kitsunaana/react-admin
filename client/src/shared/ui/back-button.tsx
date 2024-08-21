@@ -1,8 +1,8 @@
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import React from "react"
 
 export const BackButton = () => (
-  <IconButton
+  <IconButtonBase
     name="back"
     color="warning"
     fontSize={20}

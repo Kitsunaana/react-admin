@@ -1,5 +1,5 @@
 import React from "react"
-import { ContextMenuItem } from "shared/ui/context-menu-item"
+import { ContextMenuItem } from "shared/ui/menu/context-menu-item"
 
 export interface DeleteButtonProps {
   onClick: () => void

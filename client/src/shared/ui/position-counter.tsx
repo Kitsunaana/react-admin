@@ -2,7 +2,7 @@ import React, {
   memo, useState,
 } from "react"
 import { Box, BoxProps } from "shared/ui/box"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
 import { useMutation, UseMutationOptions } from "@tanstack/react-query"
@@ -74,7 +74,7 @@ export const Position = memo((props: PositionProps) => {
   })
 
   const renderIconButton = (direction: number) => (
-    <IconButton
+    <IconButtonBase
       disabled={isPending}
       name="expand"
       color="primary"

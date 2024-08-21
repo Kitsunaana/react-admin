@@ -11,7 +11,7 @@ export interface IconButtonProps extends MUIIconButtonProps {
   fontSize?: number
 }
 
-export const IconButton = memo((props: IconButtonProps) => {
+export const IconButtonBase = memo((props: IconButtonProps) => {
   const {
     sx, name, sxIcon, fontSize, ...otherProps
   } = props

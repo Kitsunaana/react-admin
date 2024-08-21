@@ -4,12 +4,12 @@ import {
 } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import React, {
   memo, ReactNode, useMemo,
 } from "react"
 import { useContextMenu } from "shared/hooks/use-context-menu"
-import { ContextMenu } from "shared/ui/context-menu"
+import { ContextMenu } from "shared/ui/menu/context-menu"
 
 interface CategoryItemProps {
   caption: string
@@ -65,7 +65,7 @@ export const CategoryItem = memo((props: CategoryItemProps) => {
       <Box row flex ai>
         {renderAdditionalActions}
         <Vertical />
-        <IconButton
+        <IconButtonBase
           sx={{ p: 0.25, borderRadius: 1 }}
           color="primary"
           name="actions"

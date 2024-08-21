@@ -6,7 +6,7 @@ import {
 import { FieldError } from "react-hook-form"
 import * as React from "react"
 import { forwardRef } from "react"
-import { Input } from "shared/ui/input"
+import { Input } from "shared/ui/form/input"
 
 interface SelectProps extends Omit<AutocompleteProps<any, any, any, any>, "renderInput">{
   error?: FieldError | undefined

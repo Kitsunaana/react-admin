@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form"
 import { memo } from "react"
 import { Divider } from "shared/ui/divider"
-import { Input } from "shared/ui/input"
+import { Input } from "shared/ui/form/input"
 import { Text } from "shared/ui/text"
 import { alpha } from "@mui/material"
 import * as React from "react"

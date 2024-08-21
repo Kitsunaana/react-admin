@@ -5,7 +5,7 @@ import { AdditionalCategoryLink } from "features/categories/additional-category-
 import { StopListButton } from "features/categories/add-stop-list"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
 import { Badge as MUIBadge } from "@mui/material"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { Position } from "shared/ui/position-counter"
 import React, { memo, useMemo } from "react"
 import styled from "styled-components"
@@ -41,7 +41,7 @@ export const CategoryGoodsAdditional = memo((props: {caption: string }) => {
 
   return (
     <Badge badgeContent={9} color="warning">
-      <IconButton
+      <IconButtonBase
         name="goods"
         fontSize={20}
         onClick={navigate}
@@ -97,7 +97,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
           {renderVertical}
           <Position updatePositionOptions={updatePositionOptions} order={order} id={id} />
           {renderVertical}
-          <IconButton
+          <IconButtonBase
             name="stopList"
             fontSize={20}
           />

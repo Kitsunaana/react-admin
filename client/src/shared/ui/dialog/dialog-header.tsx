@@ -4,7 +4,7 @@ import {
 import { Box } from "shared/ui/box"
 import { alpha, Tooltip } from "@mui/material"
 import { Text } from "shared/ui/text"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import * as React from "react"
 import { Vertical } from "shared/ui/divider"
 import { observer } from "mobx-react-lite"
@@ -47,7 +47,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
             title="Скопировать данные для переноса"
           >
             <div>
-              <IconButton
+              <IconButtonBase
                 name="copy"
               />
             </div>
@@ -59,7 +59,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
             title="Загрузить скопированные данные"
           >
             <div>
-              <IconButton
+              <IconButtonBase
                 name="paste"
               />
             </div>
@@ -73,7 +73,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
         title="Развернуть на весь экран"
       >
         <div>
-          <IconButton
+          <IconButtonBase
             onClick={() => store.setFullScreen((fullScreen) => !fullScreen)}
             name={store.fullScreen ? "fullscreenClose" : "fullscreenOpen"}
           />

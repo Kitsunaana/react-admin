@@ -3,7 +3,7 @@ import {
 } from "@mui/material"
 import { ChangeEvent, forwardRef } from "react"
 import styled from "styled-components"
-import { IconButton } from "shared/ui/icon-button"
+import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 
 export const StyledInput = styled(TextField)<TextFieldProps>`
     & .MuiInputBase-input {
@@ -44,7 +44,7 @@ export const Input = forwardRef<HTMLDivElement, InputProps>((props, ref) => {
   } = props
 
   const clearButton = (clear && value) ? (
-    <IconButton
+    <IconButtonBase
       fontSize={20}
       name="clear"
       onClick={() => {
