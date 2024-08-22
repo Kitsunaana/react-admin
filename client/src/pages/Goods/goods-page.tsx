@@ -10,7 +10,7 @@ import { CreateButton } from "shared/ui/buttons/create-button"
 const GoodsPage = () => (
   <>
     <Table
-      header={<Filters createButton={<CreateButton langBase="goods" />} />}
+      header={<Filters createButton={<CreateButton />} />}
       content={new Array(40).fill(20).map((_, index) => index).map((item) => (
         <CardProduct key={item} />
       ))}

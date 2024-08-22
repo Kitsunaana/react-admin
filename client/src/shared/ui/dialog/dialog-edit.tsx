@@ -15,7 +15,7 @@ import { SaveButton } from "shared/ui/dialog/save-button"
 import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { observer } from "mobx-react-lite"
-import { useDialogStore } from "shared/ui/dialog/model/dialog-context"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 
 interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string
@@ -30,11 +30,6 @@ interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   size?: "auto"
   onSave?: (data: any) => void
   onEdit?: (data: any) => void
-}
-
-export interface OpenDialogProps {
-  localData?: Record<string, any>
-  id?: number
 }
 
 export const DialogEdit = observer((props: DialogProps) => {
@@ -54,7 +49,7 @@ export const DialogEdit = observer((props: DialogProps) => {
     ...other
   } = props
 
-  const store = useDialogStore()
+  const store = useEditDialogStore()
 
   const lang = useLang()
   const langBase = langBaseProps ?? lang?.lang

@@ -1,7 +1,5 @@
 import { useLang } from "shared/context/Lang"
-import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { addEvent } from "shared/lib/event"
 import MUIDialog from "@mui/material/Dialog"
 import { Box } from "shared/ui/box"
 import MUIDialogContent from "@mui/material/DialogContent"
@@ -13,18 +11,13 @@ import { Button } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { useMutation, UseMutationOptions } from "@tanstack/react-query"
 import { observer } from "mobx-react-lite"
-import { useDeleteDialogStore } from "shared/ui/dialog/model/dialog-context"
+import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 
 interface DialogProps {
   langBase?: string
   onDeleteOptions?: (id: number | null) => UseMutationOptions<any, any, number | null>
   onDeleteLocal?: (id: number) => void
 }
-
-/* interface OpenDialogProps {
-  id: number
-  caption: string
-} */
 
 export const DialogDelete = observer((props: DialogProps) => {
   const {
@@ -37,10 +30,6 @@ export const DialogDelete = observer((props: DialogProps) => {
   const langBase = langBaseProps ?? lang?.lang
 
   const { t } = useTranslation("translation", { keyPrefix: langBase })
-
-  /* useEffect(() => addEvent(`${langBase}.dialog.delete` as any, (data: OpenDialogProps) => {
-    store.openDialog(data.id, { caption: data.caption })
-  }), [langBase]) */
 
   let onDelete
   if (onDeleteOptions) {

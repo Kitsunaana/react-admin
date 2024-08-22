@@ -8,7 +8,7 @@ import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import * as React from "react"
 import { Vertical } from "shared/ui/divider"
 import { observer } from "mobx-react-lite"
-import { useDialogStore } from "shared/ui/dialog/model/dialog-context"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 
 interface DialogHeaderProps {
   title: string
@@ -20,7 +20,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
     title, hideActions = false,
   } = props
 
-  const store = useDialogStore()
+  const store = useEditDialogStore()
 
   return (
     <Box

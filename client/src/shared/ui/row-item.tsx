@@ -5,13 +5,18 @@ import React from "react"
 
 interface RowItemProps extends BoxProps {
   error?: boolean
+  success?: boolean
   warning?: boolean
   errorBg?: boolean
 }
 
+/* border-left: ${({ error, warning, theme: { palette } }) => (error
+  ? `5px solid ${palette.error.main}`
+  : warning ? `5px solid ${palette.warning.main}` : null)}; */
+
 export const RowItem = styled((props: RowItemProps) => {
   const {
-    error, errorBg, warning, ...other
+    error, errorBg, success, warning, ...other
   } = props
   return <Box {...other} />
 })`
@@ -28,10 +33,15 @@ export const RowItem = styled((props: RowItemProps) => {
 
   border: ${({ theme: { palette } }) => `1px solid ${palette.mode === "dark"
     ? alpha(palette.grey["600"], 0.75) : alpha(palette.grey["400"], 0.45)}`};
-  
-  border-left: ${({ error, warning, theme: { palette } }) => (error
-    ? `5px solid ${palette.error.main}`
-    : warning ? `5px solid ${palette.warning.main}` : null)};
+
+  border-left: ${({ error, theme: { palette } }) => (
+    error ? `5px solid ${palette.error.main}` : null)};
+
+  border-left: ${({ success, theme: { palette } }) => (
+    success ? `5px solid ${palette.success.main}` : null)};
+
+  border-left: ${({ warning, theme: { palette } }) => (
+    warning ? `5px solid ${palette.warning.main}` : null)};
   
   background-image: ${({ errorBg, theme: { background } }) => (errorBg ? background.hatch.error : null)};
   

@@ -24,7 +24,6 @@ export const CaptionInput = (props: CaptionInputProps) => {
     <Controller
       name="caption"
       control={control}
-      // defaultValue=""
       rules={{ required: "required", minLength: { value: 3, message: "minLength" } }}
       render={({ field: { value, onChange, ...other }, fieldState: { error } }) => (
         <Input

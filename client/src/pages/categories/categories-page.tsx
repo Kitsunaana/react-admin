@@ -16,7 +16,7 @@ import { CreateButton } from "shared/ui/buttons/create-button"
 import { CategoryRow } from "widgets/category-row/ui/category-row"
 import { categoriesSchema, categorySchema } from "features/categories/create-and-edit/model/schemas"
 import { useCategories } from "entities/category/queries/use-categories"
-import { Dialog } from "features/categories/create-and-edit/ui/dialog"
+import { DialogCategory } from "features/categories/create-and-edit/ui/dialog"
 import { useEvent } from "shared/hooks/use-event"
 import { useSearchParams } from "react-router-dom"
 import { Text } from "shared/ui/text"
@@ -25,7 +25,7 @@ import { DialogDelete } from "features/categories/delete/ui/dialog"
 import { Icon } from "shared/ui/icon"
 import { validation } from "shared/lib/validation"
 import { Gallery } from "widgets/galerry"
-import { StoreDialogProvider } from "shared/ui/dialog/model/dialog-context"
+import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -133,7 +133,7 @@ const CategoriesPage = () => {
   }
 
   return (
-    <StoreDialogProvider>
+    <RootDialogProvider>
       <Table
         header={(
           <FormProvider {...methods}>
@@ -169,11 +169,13 @@ const CategoriesPage = () => {
         )}
         content={renderContent()}
       />
-      <Dialog />
+
+      <DialogCategory />
       <DialogDelete />
+
       <Gallery />
       <Backdrop />
-    </StoreDialogProvider>
+    </RootDialogProvider>
   )
 }
 

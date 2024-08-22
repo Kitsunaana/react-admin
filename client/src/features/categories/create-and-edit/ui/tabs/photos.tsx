@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite"
 import { InputFile } from "shared/ui/form/input-file"
 import styled from "styled-components"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
-import { useDialogStore } from "shared/ui/dialog/model/dialog-context"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 
 const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -26,7 +26,7 @@ const GridImageContainer = styled(Box)`
 `
 
 export const PhotosTab = observer(() => {
-  const { fullScreen } = useDialogStore()
+  const { fullScreen } = useEditDialogStore()
   const { photos } = useStores()
 
   return (

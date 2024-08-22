@@ -1,17 +1,20 @@
 import { PhotosStore } from "features/categories/create-and-edit/model/stores/photos-store"
 import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
 import { CharacteristicsStore } from "entities/characteristic/model/store"
+import { AltNames } from "features/alt-names/alt-names-list"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {
   photoPosition: PhotoPositionStore
   photos: PhotosStore
   characteristics: CharacteristicsStore
+  altNames: AltNames
 
   constructor() {
     this.photoPosition = new PhotoPositionStore(this)
     this.photos = new PhotosStore(this)
     this.characteristics = new CharacteristicsStore()
+    this.altNames = new AltNames()
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
@@ -22,6 +25,7 @@ export class RootStore {
     this.photos = new PhotosStore(this)
     this.photoPosition = new PhotoPositionStore(this)
     this.characteristics = new CharacteristicsStore()
+    this.altNames = new AltNames()
   }
 
   setData(data: any) {

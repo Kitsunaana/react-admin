@@ -17,6 +17,8 @@ import { dispatchDelete } from "shared/lib/event"
 import { mediaSchema } from "features/categories/create-and-edit/model/schemas"
 import { UseMutationOptions } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
+import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 
 interface CategoryRowProps {
   id: number
@@ -50,14 +52,6 @@ export const CategoryGoodsAdditional = memo((props: {caption: string }) => {
   )
 })
 
-/* const { isPending, mutate } = useMutation({
-    mutationKey: ["categories"],
-    mutationFn: (order: number) => $axios.patch("/categories/order", { order, id }),
-    onSuccess: (data) => {
-      setOrder((prevState) => prevState + direction)
-    },
-  }) */
-
 export const updatePositionOptions = (id: number): UseMutationOptions<any, any, number> => ({
   mutationKey: ["categories", id],
   mutationFn: (order: number) => $axios.patch("/categories/order", { order, id }),
@@ -69,6 +63,8 @@ export const CategoryRow = (props: CategoryRowProps) => {
   } = props
 
   const renderVertical = useMemo(() => <Vertical />, [])
+
+  const { openDialog } = useDeleteDialogStore()
 
   return (
     <CategoryItem
@@ -84,7 +80,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
           <Divider />
           <DeleteButton
             close={close}
-            onClick={() => dispatchDelete("catalog", { id, caption } as any)}
+            onClick={() => openDialog(id, { caption })}
           />
           <Divider />
         </>

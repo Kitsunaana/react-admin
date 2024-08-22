@@ -12,23 +12,13 @@ import {
 import { tabs } from "features/categories/create-and-edit/model/constants"
 import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
 import {
-  Context,
-  createContext, FC, PropsWithChildren, useContext, useMemo, useState,
+  FC, PropsWithChildren, useMemo, useState,
 } from "react"
 import { observer } from "mobx-react-lite"
 import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
 import { createRootStore, RootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
-import { StoreDialogProvider } from "shared/ui/dialog/model/dialog-context"
-
-export const useStrictContext = <T, >(context: Context<T | null>) => {
-  const value = useContext(context)
-  if (value === null) throw new Error("Strict context not passed")
-
-  return value as T
-}
-
-export const createStrictContext = <T, >() => createContext<T | null>(null)
+import { createStrictContext, useStrictContext } from "shared/lib/react"
 
 const RootStoreContext = createStrictContext<RootStore>()
 
@@ -46,8 +36,8 @@ export const StoreProvider: FC<PropsWithChildren> = (props) => {
   )
 }
 
-export const D = observer(() => {
-  const tabDefault = 0
+export const Dialog = observer(() => {
+  const tabDefault = 4
   const langBase = "catalog.dialog"
 
   const rootStore = useStores()
@@ -96,10 +86,8 @@ export const D = observer(() => {
   )
 })
 
-export const Dialog = () => (
-  // <StoreDialogProvider>
+export const DialogCategory = () => (
   <StoreProvider>
-    <D />
+    <Dialog />
   </StoreProvider>
-  // </StoreDialogProvider>
 )

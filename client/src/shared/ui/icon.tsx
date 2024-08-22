@@ -56,6 +56,7 @@ const iconData = {
   zoomEffect: "pinch_zoom_in",
   allowCategory: "account_tree",
   invisible: "visibility_off",
+  translate: "g_translate",
 }
 
 interface DefaultIcon extends IconProps {

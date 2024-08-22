@@ -6,14 +6,11 @@ import { Vertical } from "shared/ui/divider"
 import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { DialogDelete } from "features/characteristics/delete/ui/delete"
 import React from "react"
-import {
-  StoreDeleteDialogProvider,
-  StoreDialogProvider,
-  useDialogStore,
-} from "shared/ui/dialog/model/dialog-context"
 import styled from "styled-components"
 import { Characteristic } from "entities/characteristic/ui/characteristic"
 import { EmptyList } from "shared/ui/empty-list"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -28,7 +25,7 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
 `
 
 export const CreateCharacteristicsButton = () => {
-  const { openDialog } = useDialogStore()
+  const { openDialog } = useEditDialogStore()
 
   return (
     <IconButtonBase
@@ -40,34 +37,29 @@ export const CreateCharacteristicsButton = () => {
 
 export const Characteristics = observer(() => {
   const { characteristics } = useStores()
-  const { fullScreen } = useDialogStore()
+  const { fullScreen } = useEditDialogStore()
 
   return (
-    <StoreDeleteDialogProvider>
+    <RootDialogProvider>
       <Box flex row grow sx={{ height: 1 }}>
         {characteristics.filteredItems.length > 0 ? (
-          <StoreDialogProvider>
-            <CharacteristicsContainer fullScreen={fullScreen}>
-              {characteristics.filteredItems.map((characteristic) => (
-                <Characteristic
-                  key={characteristic.id}
-                  {...characteristic}
-                />
-              ))}
-              <CharacteristicsDialog />
-            </CharacteristicsContainer>
-          </StoreDialogProvider>
+          <CharacteristicsContainer fullScreen={fullScreen}>
+            {characteristics.filteredItems.map((characteristic) => (
+              <Characteristic
+                key={characteristic.id}
+                {...characteristic}
+              />
+            ))}
+            <CharacteristicsDialog />
+          </CharacteristicsContainer>
         ) : <EmptyList />}
         <Vertical />
         <Box sx={{ pt: 1 }}>
-          <StoreDialogProvider>
-            <CreateCharacteristicsButton />
-            <CharacteristicsDialog />
-          </StoreDialogProvider>
+          <CreateCharacteristicsButton />
+          <CharacteristicsDialog />
         </Box>
       </Box>
       <DialogDelete />
-    </StoreDeleteDialogProvider>
-
+    </RootDialogProvider>
   )
 })

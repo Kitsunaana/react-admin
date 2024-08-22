@@ -1,10 +1,16 @@
 import { ContextMenuItem } from "shared/ui/menu/context-menu-item"
 import React from "react"
-import { dispatchEdit } from "shared/lib/event"
-import { useDialogStore } from "shared/ui/dialog/model/dialog-context"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 
-export const EditButton = ({ id, close }: { id: number, close: () => void }) => {
-  const { openDialog } = useDialogStore()
+interface EditButtonProps {
+  id: number
+  close: () => void
+}
+
+export const EditButton = (props: EditButtonProps) => {
+  const { id, close } = props
+
+  const { openDialog } = useEditDialogStore()
 
   return (
     <ContextMenuItem
@@ -13,7 +19,6 @@ export const EditButton = ({ id, close }: { id: number, close: () => void }) => 
       variantIcon="primary"
       onClick={() => {
         close()
-        // dispatchEdit("catalog", { id } as any)
         openDialog(id)
       }}
     />

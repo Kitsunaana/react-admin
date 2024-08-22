@@ -5,20 +5,18 @@ import {
 import * as React from "react"
 import { observer } from "mobx-react-lite"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
-import { CreateEditForm } from "features/characteristics/create-and-edit/ui/create-edit-form"
-import { UseCharacteristicsFormProps } from "features/characteristics/create-and-edit/model/types"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { CreateEditForm } from "features/alt-names/create-edit-form"
 
-export const CharacteristicsDialog = observer(() => {
+export const AltNameDialog = observer(() => {
   const store = useEditDialogStore()
-  const { characteristics } = useStores()
+  const { altNames } = useStores()
 
-  const methods = useForm<UseCharacteristicsFormProps>({
+  const methods = useForm({
     defaultValues: {
-      caption: null,
-      unit: null,
-      value: "",
-      hideClient: true,
+      lang: null,
+      caption: "",
+      description: "",
     },
   })
 
@@ -26,9 +24,9 @@ export const CharacteristicsDialog = observer(() => {
     <FormProvider {...methods}>
       <DialogEdit
         size="auto"
-        langBase="characteristics"
-        onSave={characteristics.create}
-        onEdit={characteristics.edit}
+        langBase="altNames"
+        onSave={() => {}}
+        onEdit={() => {}}
         container={<CreateEditForm />}
         PaperProps={{
           sx: {

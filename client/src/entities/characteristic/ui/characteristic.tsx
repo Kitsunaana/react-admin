@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
-import { useDeleteDialogStore, useDialogStore } from "shared/ui/dialog/model/dialog-context"
 import { useTheme } from "@mui/material"
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
@@ -12,6 +11,8 @@ import { Caption } from "entities/characteristic/ui/caption"
 import { HiddenIndicator } from "entities/characteristic/ui/hidden-indicator"
 import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 
 export interface CharacteristicItemProps extends ICharacteristic {
   local?: boolean
@@ -23,7 +24,7 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   } = props
 
   const { characteristics } = useStores()
-  const { openDialog } = useDialogStore()
+  const { openDialog } = useEditDialogStore()
   const { openDialog: openDeleteDialog } = useDeleteDialogStore()
   const theme = useTheme()
 

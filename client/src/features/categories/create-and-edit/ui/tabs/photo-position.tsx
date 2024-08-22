@@ -1,25 +1,15 @@
 import { Box } from "shared/ui/box"
-import {
-  Checkbox, FormControlLabel, Slider,
-} from "@mui/material"
-import {
-  forwardRef,
-} from "react"
+import { Checkbox, FormControlLabel, Slider } from "@mui/material"
+import { forwardRef } from "react"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
-import {
-  Controller,
-} from "react-hook-form"
 import { MuiColorInput, MuiColorInputProps } from "mui-color-input"
-import {
-  TPosition,
-} from "features/categories/create-and-edit/model/types"
+import { TPosition } from "features/categories/create-and-edit/model/types"
 import { Image } from "shared/ui/image"
 import { useImage } from "shared/hooks/use-image"
 import { observer } from "mobx-react-lite"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
-// import { rootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
 
 type TPositionCheckbox = {
   id: number
@@ -92,8 +82,6 @@ interface CustomImageProps {
   data?: File
   caption: string
 }
-
-// const { photoPosition: photoPositionStore } = rootStore
 
 export const CustomImage = (props: CustomImageProps) => {
   const { path, caption, data } = props
