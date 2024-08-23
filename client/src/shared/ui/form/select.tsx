@@ -1,26 +1,26 @@
 import Autocomplete from "@mui/material/Autocomplete"
 import { Icon } from "shared/ui/icon"
 import {
-  alpha, MenuItem, AutocompleteProps, TextFieldProps,
+  alpha, MenuItem, AutocompleteProps, TextFieldProps, MenuItemProps,
 } from "@mui/material"
 import { FieldError } from "react-hook-form"
 import * as React from "react"
-import { forwardRef } from "react"
+import { forwardRef, ReactNode } from "react"
 import { Input } from "shared/ui/form/input"
 
 interface SelectProps extends Omit<AutocompleteProps<any, any, any, any>, "renderInput">{
   error?: FieldError | undefined
   InputProps?: TextFieldProps
+  startAdornmentOption?: (option: string) => ReactNode
 }
 
 export const Select = forwardRef((props: SelectProps, ref) => {
   const {
-    options, error, InputProps, sx, ...other
+    options, error, InputProps, sx, startAdornmentOption, ...other
   } = props
 
   return (
     <Autocomplete
-      {...other}
       sx={sx}
       // value={value}
       options={options.map((option) => (
@@ -75,10 +75,46 @@ export const Select = forwardRef((props: SelectProps, ref) => {
             }}
           >
             {findOption?.icon ? <Icon name={findOption.icon} /> : <div />}
+            {startAdornmentOption?.(option)}
             {option}
           </MenuItem>
         )
       }}
+      {...other}
     />
   )
 })
+
+export const SelectItem = (props: MenuItemProps) => {
+  const { sx, children, ...other } = props
+
+  return (
+    <MenuItem
+      sx={{
+        mx: 1,
+        my: 0.25,
+        px: "4px !important",
+        py: "4px !important",
+        display: "flex",
+        justifyContent: "space-between !important",
+        alignItems: "center",
+        borderRadius: 1.5,
+        border: "1px solid transparent",
+        transition: ".2s",
+        "&:hover": {
+          backgroundColor: ({ palette }) => alpha(palette.grey["600"], 0.25),
+          border: ({ palette }) => `1px solid ${alpha(palette.grey["300"], 0.25)}`,
+        },
+
+        "&[aria-selected='true']": {
+          backgroundColor: ({ palette }) => alpha(palette.grey["600"], 0.25),
+          border: ({ palette }) => `1px solid ${alpha(palette.grey["300"], 0.25)}`,
+        },
+        ...sx,
+      }}
+      {...other}
+    >
+      {children}
+    </MenuItem>
+  )
+}

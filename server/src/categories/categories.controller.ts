@@ -1,13 +1,10 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
-  Injectable,
   Param,
   Patch,
-  PipeTransform,
   Post,
   Query,
   UploadedFiles,
@@ -24,22 +21,7 @@ import { GetCategoryDto } from './dto/get-category-dto';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { FilesService } from '../files/files.service';
 import { CharacteristicsService } from '../characteristics/characteristics.service';
-
-/*@Injectable()
-export class ValidationPipeR implements PipeTransform<any> {
-  constructor(private fromJsonToObject: string) {}
-
-  async transform(value: any) {
-    if (!value?.[this.fromJsonToObject]) return value;
-
-    try {
-      const parsed = JSON.parse(value[this.fromJsonToObject]);
-      return { ...value, [this.fromJsonToObject]: parsed };
-    } catch (error) {
-      throw new BadRequestException(`${this.fromJsonToObject} is not valid json`);
-    }
-  }
-}*/
+import { LocalesService } from '../locales/locales.service';
 
 @Controller('categories')
 export class CategoriesController {
@@ -47,6 +29,7 @@ export class CategoriesController {
     private categoryService: CategoriesService,
     private filesService: FilesService,
     private characteristicsService: CharacteristicsService,
+    private localesService: LocalesService,
   ) {}
 
   @Post('')
@@ -117,6 +100,7 @@ export class CategoriesController {
     await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
 
     await this.characteristicsService.update(dto.items, id);
+    await this.localesService.createAltNamesCategory(dto.locales, id);
 
     return this.categoryService.update(id, dto);
   }

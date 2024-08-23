@@ -1,6 +1,6 @@
 import { useLang } from "shared/context/Lang"
 import {
-  ReactNode, useEffect, useMemo,
+  ReactNode, useEffect, useMemo, useState,
 } from "react"
 import { useTranslation } from "react-i18next"
 import { useFormContext } from "react-hook-form"
@@ -57,12 +57,13 @@ export const DialogEdit = observer((props: DialogProps) => {
   const { t } = useTranslation("translation", { keyPrefix: langBase })
   const methods = useFormContext()
 
-  let isEdit = false
+  const [isEdit, setIsEdit] = useState(false)
+
   useEffect(() => {
     methods.reset()
     methods.unregister()
 
-    if (store?.id) isEdit = true
+    if (store?.id) setIsEdit(true)
   }, [langBase, store.open])
 
   let data = store.localData
@@ -110,11 +111,11 @@ export const DialogEdit = observer((props: DialogProps) => {
     methods.handleSubmit((data) => {
       const mergedData = { ...data, ...getData?.() }
 
-      const _ = isEdit
+      const _ = store.id
         ? callFunc([onUpdate, onEdit], mergedData)
         : callFunc([onCreate, onSave], mergedData)
 
-      // onClose()
+      onClose()
     })()
   }
 

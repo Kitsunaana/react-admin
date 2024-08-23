@@ -29,4 +29,11 @@ export class CreateCategoryDto {
     value: string;
     hideClient: boolean;
   }[];
+
+  @Transform(({ value }) => JSON.parse(value))
+  readonly locales: {
+    caption: string;
+    lang: string;
+    code: string;
+  }[];
 }

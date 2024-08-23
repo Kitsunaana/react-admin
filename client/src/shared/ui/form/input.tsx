@@ -7,7 +7,7 @@ import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 
 export const StyledInput = styled(TextField)<TextFieldProps>`
     & .MuiInputBase-input {
-        padding: 8.5px 12px 8.5px 4px;
+        padding: 8.5px 12px 8.5px 10px;
         height: 18px;
     }
     

@@ -7,6 +7,7 @@ import { SequelizeModule as BaseSequelizeModule } from '../sequelize/sequelize.m
 import { Category } from '../entities-sequelize/category.entity';
 import { CustomCategory } from '../entities-sequelize/custom-category';
 import { CharacteristicsModule } from '../characteristics/characteristics.module';
+import { LocalesModule } from '../locales/locales.module';
 
 @Module({
   providers: [CategoriesService],
@@ -16,6 +17,7 @@ import { CharacteristicsModule } from '../characteristics/characteristics.module
     FilesModule,
     BaseSequelizeModule,
     CharacteristicsModule,
+    LocalesModule,
   ],
 })
 export class CategoriesModule {}

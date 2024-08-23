@@ -19,7 +19,7 @@ export class RootStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  private stores = ["photoPosition", "photos", "characteristics"]
+  private stores = ["photoPosition", "photos", "characteristics", "altNames"]
 
   destroy() {
     this.photos = new PhotosStore(this)

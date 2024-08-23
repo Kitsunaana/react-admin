@@ -25,8 +25,8 @@ export const AltNameDialog = observer(() => {
       <DialogEdit
         size="auto"
         langBase="altNames"
-        onSave={() => {}}
-        onEdit={() => {}}
+        onSave={altNames.create}
+        onEdit={altNames.edit}
         container={<CreateEditForm />}
         PaperProps={{
           sx: {

@@ -1,4 +1,6 @@
 import { z } from "zod"
+import { characteristicsSchema } from "entities/characteristic"
+import { altNamesSchema } from "features/alt-names/schemas"
 
 export const customCategorySchema = z.object({
   id: z.number(),
@@ -47,7 +49,10 @@ export const categorySchema = z.object({
   caption: z.string(),
   description: z.string(),
   order: z.number().nullable(),
-  media: z.array(mediaSchema).optional(),
+  media: z.array(mediaSchema.optional()),
+  custom: z.array(customCategorySchema).optional(),
+  characteristics: characteristicsSchema.optional(),
+  altNames: altNamesSchema.optional(),
 })
 
 export type TCategory = z.infer<typeof categorySchema>

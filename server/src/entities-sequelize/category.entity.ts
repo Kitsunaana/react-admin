@@ -3,6 +3,7 @@ import { DataTypes } from 'sequelize';
 import { Media } from './media.entity';
 import { CustomCategory } from './custom-category';
 import { CategoryCharacteristic } from './characteristic.entity';
+import { AltNameCategory, Locale } from './locale.entity';
 
 interface CategoryCreationAttrs {
   caption: string;
@@ -32,4 +33,7 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
 
   @HasMany(() => CategoryCharacteristic)
   characteristics: CategoryCharacteristic[];
+
+  @HasMany(() => AltNameCategory)
+  altNames: Locale;
 }
