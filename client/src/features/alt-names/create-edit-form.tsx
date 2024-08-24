@@ -1,5 +1,7 @@
 import { Controller, useFormContext } from "react-hook-form"
-import { useEffect } from "react"
+import {
+  useEffect, useLayoutEffect, useRef, useState,
+} from "react"
 import { Box } from "shared/ui/box"
 import { Select, SelectItem } from "shared/ui/form/select"
 import * as React from "react"
@@ -11,35 +13,33 @@ import { Autocomplete } from "@mui/material"
 import { observer } from "mobx-react-lite"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
 
-export const CreateEditForm = () => {
+export const CreateEditForm = observer(() => {
   const { altNames } = useStores()
   const methods = useFormContext()
 
   const { localesData, localesIsLoading } = useGetLocales()
 
-  // console.log(altNames.exclude(localesData ?? []))
-  altNames.exclude(localesData ?? [])
-
   useEffect(() => { methods.trigger() }, [])
+
+  const excludedLocales = altNames.exclude(localesData || [], methods.getValues("locale"))
 
   return (
     <Box flex gap sx={{ p: 1, height: 1 }}>
       <Controller
-        name="lang"
-        rules={{
-          required: "Поле должно быть заполнено",
-        }}
+        name="locale"
+        rules={{ required: "Поле должно быть заполнено" }}
+        defaultValue={null}
         render={({ field, fieldState }) => (
           <Autocomplete
             size="small"
             value={field.value}
             onChange={(event, option) => {
               field.onChange(option)
-              methods.trigger("lang")
+              methods.trigger("locale")
             }}
             disabled={localesIsLoading}
-            options={(altNames.exclude(localesData ?? [])).map((option) => option)}
-            getOptionLabel={(option) => option.caption}
+            options={excludedLocales}
+            getOptionLabel={(option) => (option ? option.caption : "")}
             isOptionEqualToValue={(option, value) => option?.caption === value?.caption}
             renderInput={(props) => (
               <Input
@@ -50,7 +50,7 @@ export const CreateEditForm = () => {
               />
             )}
             renderOption={({ key, ...other }, option) => (
-              <SelectItem key={key} {...other}>
+              <SelectItem key={key} disabled={option?.disabled} {...other}>
                 <Mark style={{ fontSize: 12 }}>{option.altName}</Mark>
                 <div>{option.caption}</div>
               </SelectItem>
@@ -83,4 +83,4 @@ export const CreateEditForm = () => {
       <DescriptionInput />
     </Box>
   )
-}
+})

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, toJS } from "mobx"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { RowItem } from "shared/ui/row-item"
 import styled from "styled-components"
@@ -26,10 +26,10 @@ export interface Locale {
   code: string
 }
 
-interface IAltName {
+export interface IAltName {
   id: number
   caption: string
-  lang: Locale
+  locale: Locale
   description?: string
 
   local?: boolean
@@ -43,7 +43,7 @@ export class AltNames {
       id: 1,
       caption: "Pomelo",
       // local: true,
-      lang: {
+      locale: {
         caption: "English",
         code: "en",
         altName: "EN",
@@ -52,7 +52,7 @@ export class AltNames {
   ]
 
   constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this, { selectedLocale: false }, { autoBind: true })
   }
 
   create(data: IAltName) {
@@ -77,10 +77,19 @@ export class AltNames {
       .filter((item): item is IAltName => item !== null)
   }
 
-  exclude(altNames: Locale[]) {
-    const haveAltNames = this.filteredItems.map((item) => item.lang.code)
+  selectedLocale: Locale | null = null
+  exclude(altNames: Locale[], nonExclude: Locale | null) {
+    const haveAltNames = this.filteredItems.map((item) => item.locale.code)
 
-    return altNames.filter((item) => (haveAltNames.includes(item.code) ? null : item))
+    if (nonExclude !== null) this.selectedLocale = nonExclude
+
+    return altNames.map((item) => {
+      if (haveAltNames.includes(item.code) && this.selectedLocale?.code !== item.code) {
+        return { ...item, disabled: true }
+      }
+
+      return item
+    })
   }
 
   get filteredItems() {
@@ -89,8 +98,15 @@ export class AltNames {
 
   getData() {
     return {
-      locales: this.items.map(({ id, ...other }) => ({ ...other })),
+      altNames: this.items.map(({ id, ...other }) => ({
+        ...other,
+        ...(other.action === "update" || other.deleted ? { id } : {}),
+      })),
     }
+  }
+
+  setAltNames(altNames: any[]) {
+    this.items = altNames
   }
 }
 
@@ -113,6 +129,8 @@ export const AltNamesList = observer(() => {
 
   const theme = useTheme()
 
+  console.log(toJS(altNames.items))
+
   return (
     <>
       <Box flex row grow sx={{ height: 1 }}>
@@ -123,7 +141,7 @@ export const AltNamesList = observer(() => {
                 <Text caption={altName.caption} />
 
                 <Box flex row ai>
-                  <Mark>{altName.lang.caption}</Mark>
+                  <Mark>{altName.locale.caption}</Mark>
                   <Vertical />
                   <IconButtonEdit onClick={() => openEditDialog(altName.id, altName)} />
                   <IconButtonDelete onClick={() => openDeleteDialog(altName.id, {

@@ -115,7 +115,7 @@ export const DialogEdit = observer((props: DialogProps) => {
         ? callFunc([onUpdate, onEdit], mergedData)
         : callFunc([onCreate, onSave], mergedData)
 
-      onClose()
+      // onClose()
     })()
   }
 

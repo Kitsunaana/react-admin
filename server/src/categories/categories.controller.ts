@@ -100,7 +100,7 @@ export class CategoriesController {
     await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
 
     await this.characteristicsService.update(dto.items, id);
-    await this.localesService.createAltNamesCategory(dto.locales, id);
+    await this.localesService.updateAltNamesCategory(dto.altNames, id);
 
     return this.categoryService.update(id, dto);
   }

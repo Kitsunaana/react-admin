@@ -32,6 +32,7 @@ export class RootStore {
     this.photos.setMedia(data?.media)
     this.photoPosition.setPhotoPosition(data?.custom)
     this.characteristics.setCharacteristics(data?.characteristics)
+    this.altNames.setAltNames(data?.altNames)
   }
 
   getData() {
@@ -47,7 +48,7 @@ export class RootStore {
           return data
         }
 
-        prev[current] = this[parentCurrent][current]
+        // prev[current] = this[parentCurrent][current]
         return prev
       }, {})
 

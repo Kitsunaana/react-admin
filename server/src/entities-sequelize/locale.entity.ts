@@ -24,6 +24,9 @@ export class AltNameCategory extends Model<AltNameCategory> {
   @Column
   caption: string;
 
+  @Column
+  description: string;
+
   @ForeignKey(() => Locale)
   @Column
   localeId: number;

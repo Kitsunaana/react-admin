@@ -31,9 +31,17 @@ export class CreateCategoryDto {
   }[];
 
   @Transform(({ value }) => JSON.parse(value))
-  readonly locales: {
+  readonly altNames: {
+    id?: number;
     caption: string;
-    lang: string;
-    code: string;
+    description: string | null;
+    action?: 'create' | 'update';
+    deleted?: boolean;
+    locale: {
+      id: number;
+      code: string;
+      caption: string;
+      altName: string;
+    };
   }[];
 }
