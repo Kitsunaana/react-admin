@@ -29,7 +29,7 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   const theme = useTheme()
 
   const onOpenEditDialog = () => openDialog(id, {
-    unit, hideClient, value, caption,
+    unit, hideClient, value, caption, id,
   })
 
   const onOpenDeleteDialog = () => openDeleteDialog(id, { caption })

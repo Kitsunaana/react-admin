@@ -19,6 +19,16 @@ import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-con
 import { ICharacteristic } from "entities/characteristic/model/types"
 import { observer } from "mobx-react-lite"
 import { AltNameDeleteDialog } from "features/alt-names/alt-name-delete-dialog"
+import { useGetLocales } from "features/alt-names/queries"
+import axios from "axios"
+import { useMutation } from "@tanstack/react-query"
+import { useFormContext } from "react-hook-form"
+
+function generateRandomNumber(): number {
+  let result = ""
+  while (result.length < 16) result += Math.floor(Math.random() * 10)
+  return Number(result)
+}
 
 export interface Locale {
   caption: string
@@ -30,26 +40,25 @@ export interface IAltName {
   id: number
   caption: string
   locale: Locale
-  description?: string
+  description?: string | null
 
   local?: boolean
   deleted?: boolean
+  edited?: boolean
   action?: "create" | "update"
 }
 
+interface ITranslate {
+  trans: {
+    caption: string
+    description?: string | null
+  }
+}
+
+type FetchTranslateData = Array<{ data: ITranslate, locale: Locale }>
+
 export class AltNames {
-  items: IAltName[] = [
-    {
-      id: 1,
-      caption: "Pomelo",
-      // local: true,
-      locale: {
-        caption: "English",
-        code: "en",
-        altName: "EN",
-      },
-    },
-  ]
+  items: IAltName[] = []
 
   constructor() {
     makeAutoObservable(this, { selectedLocale: false }, { autoBind: true })
@@ -61,15 +70,66 @@ export class AltNames {
     })
   }
 
+  getFreeLocale(locales: Locale[]) {
+    const busyLocales = this.filteredItems.map((item) => item.locale.code)
+
+    return locales.filter((locale) => (busyLocales.includes(locale.code) ? null : locale))
+  }
+
+  isLoading = false
+  translate(category: { caption: string; description: string | null }, locales: Locale[]) {
+    this.isLoading = true
+
+    const URL = "https://google-translate113.p.rapidapi.com/api/v1/translator/json"
+
+    Promise.all(
+      this.getFreeLocale(locales).map((locale) => {
+        const data = {
+          from: "auto",
+          to: locale.code,
+          json: {
+            caption: category.caption,
+            description: category.description,
+          },
+        }
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            "x-rapidapi-host": "google-translate113.p.rapidapi.com",
+            "x-rapidapi-key": "96f8c6e5a6msh97a27abce15673ap184725jsn5eb78c1312cd",
+          },
+        }
+
+        return axios.post(URL, data, config)
+          .then(({ data }) => ({ data, locale }))
+      }),
+    )
+      .then((response) => this.addTranslateAltNames(response))
+      .catch(console.log)
+  }
+
+  addTranslateAltNames(altNames: FetchTranslateData) {
+    const items: IAltName[] = altNames.map((item) => ({
+      ...item.data.trans,
+      id: generateRandomNumber(),
+      locale: item.locale,
+      local: true,
+      action: "create",
+    }))
+
+    this.items = [...this.items, ...items]
+  }
+
   edit(data: IAltName) {
     this.items = this.items.map((item) => (item.id === data.id ? {
-      ...item, ...data, action: "update", local: true,
+      ...item, ...data, action: "update", edited: true,
     } : item))
   }
 
   remove(id: number) {
     const removeItem = (item: IAltName) => (item.id === id
-      ? { ...item, deleted: true }
+      ? ({ ...item, deleted: true })
       : item)
 
     this.items = this.items
@@ -100,7 +160,7 @@ export class AltNames {
     return {
       altNames: this.items.map(({ id, ...other }) => ({
         ...other,
-        ...(other.action === "update" || other.deleted ? { id } : {}),
+        ...(other.local ? { } : { id }),
       })),
     }
   }
@@ -129,7 +189,11 @@ export const AltNamesList = observer(() => {
 
   const theme = useTheme()
 
-  console.log(toJS(altNames.items))
+  const { localesData } = useGetLocales()
+
+  const methods = useFormContext()
+  const [caption, description] = methods.watch(["caption", "description"])
+  const freeLocales = altNames.getFreeLocale(localesData ?? [])
 
   return (
     <>
@@ -137,7 +201,7 @@ export const AltNamesList = observer(() => {
         {altNames.items.length > 0 ? (
           <CharacteristicsContainer fullScreen={fullScreen}>
             {altNames.filteredItems.map((altName) => (
-              <RowItem key={altName.id} theme={theme} success={altName.local}>
+              <RowItem key={altName.id} theme={theme} success={altName.edited}>
                 <Text caption={altName.caption} />
 
                 <Box flex row ai>
@@ -162,6 +226,10 @@ export const AltNamesList = observer(() => {
           />
           <IconButton
             name="translate"
+            disabled={!caption}
+            onClick={() => {
+              altNames.translate({ caption, description }, freeLocales)
+            }}
             help={{ title: "Перевести", arrow: true }}
           />
         </Box>

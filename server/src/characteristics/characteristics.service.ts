@@ -9,7 +9,7 @@ import { Category } from '../entities-sequelize/category.entity';
 
 export class CreateCharacteristicsDto {
   readonly caption: string;
-  readonly units: string | null;
+  readonly unit: string | null;
   readonly value: string;
   readonly hideClient: boolean;
 }
@@ -33,9 +33,9 @@ export class CharacteristicsService {
     await Promise.all(
       items.map(async (item) => {
         const [unit] = await this.unitsRepository.findOrCreate({
-          where: { caption: item.units },
+          where: { caption: item.unit },
           defaults: {
-            caption: item.units,
+            caption: item.unit,
           },
         });
 
@@ -67,8 +67,8 @@ export class CharacteristicsService {
       items.map(async (item) => {
         if (item.action === 'update' && item?.id) {
           const [unit] = await this.unitsRepository.findOrCreate({
-            where: { caption: item.units },
-            defaults: { caption: item.units },
+            where: { caption: item.unit },
+            defaults: { caption: item.unit },
           });
 
           const [characteristic] = await this.characteristicsRepository.findOrCreate({
@@ -92,16 +92,19 @@ export class CharacteristicsService {
         }
 
         if (item?.action === 'create') {
+          console.log(item);
           const [unit] = await this.unitsRepository.findOrCreate({
-            where: { caption: item.units },
+            where: { caption: item.unit },
             defaults: {
-              caption: item.units,
+              caption: item.unit,
             },
           });
 
           const [characteristic] = await this.characteristicsRepository.findOrCreate({
             where: { caption: item.caption },
-            defaults: item.caption,
+            defaults: {
+              caption: item.caption,
+            },
           });
 
           const categoryCharacteristics = {
@@ -111,6 +114,7 @@ export class CharacteristicsService {
             value: item.value,
             hideClient: item.hideClient,
           };
+
           await this.categoryCharacteristicsRepository.findOrCreate({
             where: {
               characteristicId: characteristic.id,
@@ -124,11 +128,11 @@ export class CharacteristicsService {
           await this.categoryCharacteristicsRepository.destroy({ where: { id: item.id } });
 
           const units = await this.categoryCharacteristicsRepository.findAll({
-            include: [{ model: Unit, where: { caption: item.units } }],
+            include: [{ model: Unit, where: { caption: item.unit } }],
           });
 
           if (units.length === 0) {
-            await this.unitsRepository.destroy({ where: { caption: item.units } });
+            await this.unitsRepository.destroy({ where: { caption: item.unit } });
           }
 
           const characteristics = await this.categoryCharacteristicsRepository.findAll({

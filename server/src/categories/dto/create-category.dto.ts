@@ -11,6 +11,8 @@ export class CreateCategoryDto {
   @Transform(({ value }) => JSON.parse(value))
   readonly imagesIds: Array<{ id: string; caption: string }>;
 
+  order: number | null;
+
   @Transform(({ value }) => Number(value))
   @IsNumber()
   readonly blur: number;
@@ -25,7 +27,7 @@ export class CreateCategoryDto {
   @Transform(({ value }) => JSON.parse(value))
   readonly items: {
     caption: string;
-    units: string | null;
+    unit: string | null;
     value: string;
     hideClient: boolean;
   }[];

@@ -28,7 +28,10 @@ export const CharacteristicsDialog = observer(() => {
         size="auto"
         langBase="characteristics"
         onSave={characteristics.create}
-        onEdit={characteristics.edit}
+        onEdit={(data) => {
+          console.log(data)
+          return characteristics.edit(data)
+        }}
         container={<CreateEditForm />}
         PaperProps={{
           sx: {

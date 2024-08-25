@@ -52,6 +52,7 @@ export class CategoriesController {
   async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateCategoryDto) {
     const category = await this.categoryService.create(dto);
 
+    await this.localesService.create(dto.altNames, category.id);
     await this.characteristicsService.create(dto.items, category);
     await this.filesService.saveMedia(files, dto.imagesIds, category.id);
 
@@ -106,7 +107,9 @@ export class CategoriesController {
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: string) {
-    return this.categoryService.delete(parseInt(id));
+  async delete(@Param('id') id: string) {
+    await this.localesService.delete(parseInt(id));
+
+    return await this.categoryService.delete(parseInt(id));
   }
 }

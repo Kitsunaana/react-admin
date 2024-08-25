@@ -16,7 +16,7 @@ export class UpdateCategoryDto extends CreateCategoryDto {
 
   readonly items: {
     caption: string;
-    units: string | null;
+    unit: string | null;
     value: string;
     hideClient: boolean;
     action: 'update' | 'create';

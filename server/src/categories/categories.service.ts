@@ -34,7 +34,14 @@ export class CategoriesService {
   }
 
   async update(id: number, dto: UpdateCategoryDto) {
-    await this.categoryRepository.update(dto, { where: { id } });
+    await this.categoryRepository.update(
+      {
+        order: dto.order,
+        caption: dto.caption,
+        description: dto.description,
+      },
+      { where: { id } },
+    );
     await this.customCategoryRepository.update(dto, {
       where: { categoryId: id },
     });
@@ -79,6 +86,7 @@ export class CategoriesService {
       where: { id },
       include: [{ model: Media }],
     });
+
     await this.filesService.deleteMedia(category.media);
     return await category.destroy();
   }

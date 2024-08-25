@@ -27,6 +27,12 @@ export class LocalesService {
     return await this.localesRepository.findAll({ order: [['caption', 'asc']] });
   }
 
+  async delete(categoryId: number) {
+    return await this.altNameCategoryRepository.destroy({
+      where: { categoryId: categoryId },
+    });
+  }
+
   async updateAltNamesCategory(altNames: CreateAltNameCategoryDto[], categoryId: number) {
     await Promise.all(
       altNames.map(async (altName) => {
@@ -54,6 +60,18 @@ export class LocalesService {
         if (altName.deleted) {
           await this.altNameCategoryRepository.destroy({ where: { id: altName.id } });
         }
+      }),
+    );
+  }
+
+  async create(altNames: CreateAltNameCategoryDto[], categoryId: number) {
+    await Promise.all(
+      altNames.map(async ({ locale, ...other }) => {
+        return await this.altNameCategoryRepository.create({
+          ...other,
+          localeId: locale.id,
+          categoryId,
+        });
       }),
     );
   }

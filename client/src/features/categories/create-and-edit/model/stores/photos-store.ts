@@ -7,8 +7,6 @@ export class PhotosStore {
   images: TImage[] = []
   media: TMediaForm[] = []
 
-  disposers: IReactionDisposer[] = []
-
   constructor(public rootStore: RootStore) {
     makeAutoObservable(this, {}, { autoBind: true })
   }
@@ -49,14 +47,18 @@ export class PhotosStore {
     this.media = media
   }
 
+  getData() {
+    return {
+      media: this.media,
+      images: this.images,
+    }
+  }
+
   reset() {
     this.media = []
   }
 
   destroy() {
     this.reset()
-
-    // this.disposers.forEach((dispose) => dispose())
-    // this.disposers = []
   }
 }

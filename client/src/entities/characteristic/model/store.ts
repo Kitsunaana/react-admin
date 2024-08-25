@@ -56,6 +56,6 @@ export class CharacteristicsStore {
     const data = validation(characteristicsSchema, characteristics)
     const transformedCharacteristics = transformCharacteristics(data)
 
-    this.items = [...this.items, ...transformedCharacteristics]
+    this.items = transformedCharacteristics
   }
 }
