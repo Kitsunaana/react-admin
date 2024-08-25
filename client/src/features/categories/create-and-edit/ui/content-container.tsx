@@ -9,6 +9,7 @@ import { PhotoPosition } from "features/categories/create-and-edit/ui/tabs/photo
 import { Characteristics } from "features/categories/create-and-edit/ui/tabs/characteristics"
 import { AltNamesList } from "features/alt-names/alt-names-list"
 import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
+import { Tags } from "features/categories/create-and-edit/ui/tabs/tags"
 
 export const ContentContainer = memo((props: { tab: number, langBase?: string}) => {
   const { tab: tabProps, langBase: langBaseProps } = props
@@ -29,6 +30,7 @@ export const ContentContainer = memo((props: { tab: number, langBase?: string}) 
       <TabPanel value={tab} index={2}><PhotoPosition /></TabPanel>
       <TabPanel value={tab} index={3}><Characteristics /></TabPanel>
       <TabPanel value={tab} index={4}><RootDialogProvider><AltNamesList /></RootDialogProvider></TabPanel>
+      <TabPanel value={tab} index={4}><RootDialogProvider><Tags /></RootDialogProvider></TabPanel>
     </>
   )
 })

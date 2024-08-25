@@ -12,17 +12,16 @@ import {
 import { tabs } from "features/categories/create-and-edit/model/constants"
 import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
 import {
-  FC, PropsWithChildren, useMemo, useState,
+  createContext,
+  FC, PropsWithChildren, useContext, useMemo, useState,
 } from "react"
 import { observer } from "mobx-react-lite"
 import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
-import { createRootStore, RootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
-import { createStrictContext, useStrictContext } from "shared/lib/react"
+import { createRootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
 
-const RootStoreContext = createStrictContext<RootStore>()
-
-export const useStores = () => useStrictContext(RootStoreContext)
+const RootStoreContext = createContext(createRootStore())
+export const useStores = () => useContext(RootStoreContext)
 
 export const StoreProvider: FC<PropsWithChildren> = (props) => {
   const { children } = props
