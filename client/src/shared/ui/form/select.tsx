@@ -22,7 +22,6 @@ export const Select = forwardRef((props: SelectProps, ref) => {
   return (
     <Autocomplete
       sx={sx}
-      // value={value}
       options={options.map((option) => (
         typeof option === "object" && option !== null ? option.value : option))}
       size="small"
@@ -91,8 +90,12 @@ export const SelectItem = (props: MenuItemProps) => {
   return (
     <MenuItem
       sx={{
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+
         mx: 1,
-        my: 0.25,
+        my: 0.75,
         px: "4px !important",
         py: "4px !important",
         display: "flex",

@@ -2,6 +2,7 @@ import { PhotosStore } from "features/categories/create-and-edit/model/stores/ph
 import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
 import { CharacteristicsStore } from "entities/characteristic/model/store"
 import { AltNames } from "features/alt-names/alt-names-list"
+import { TagsStore } from "features/categories/create-and-edit/ui/tabs/tags"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {
@@ -9,23 +10,26 @@ export class RootStore {
   photos: PhotosStore
   characteristics: CharacteristicsStore
   altNames: AltNames
+  tags: TagsStore
 
   constructor() {
     this.photoPosition = new PhotoPositionStore(this)
     this.photos = new PhotosStore(this)
     this.characteristics = new CharacteristicsStore()
     this.altNames = new AltNames()
+    this.tags = new TagsStore()
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  private stores = ["photoPosition", "photos", "characteristics", "altNames"]
+  private stores = ["photoPosition", "photos", "characteristics", "altNames", "tags"]
 
   destroy() {
     this.photos = new PhotosStore(this)
     this.photoPosition = new PhotoPositionStore(this)
     this.characteristics = new CharacteristicsStore()
     this.altNames = new AltNames()
+    this.tags = new TagsStore()
   }
 
   setData(data: any) {

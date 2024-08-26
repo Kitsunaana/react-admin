@@ -30,7 +30,7 @@ export const ContentContainer = memo((props: { tab: number, langBase?: string}) 
       <TabPanel value={tab} index={2}><PhotoPosition /></TabPanel>
       <TabPanel value={tab} index={3}><Characteristics /></TabPanel>
       <TabPanel value={tab} index={4}><RootDialogProvider><AltNamesList /></RootDialogProvider></TabPanel>
-      <TabPanel value={tab} index={4}><RootDialogProvider><Tags /></RootDialogProvider></TabPanel>
+      <TabPanel value={tab} index={5}><RootDialogProvider><Tags /></RootDialogProvider></TabPanel>
     </>
   )
 })

@@ -37,8 +37,8 @@ const gridCheckbox: Array<Array<TPositionCheckbox>> = [
 
 type ColorInputProps = {} & MuiColorInputProps
 
-const ColorInput = forwardRef<HTMLDivElement, ColorInputProps>((props, ref) => {
-  const { sx } = props
+export const ColorInput = forwardRef<HTMLDivElement, ColorInputProps>((props, ref) => {
+  const { sx, ...other } = props
 
   return (
     <MuiColorInput
@@ -70,9 +70,16 @@ const ColorInput = forwardRef<HTMLDivElement, ColorInputProps>((props, ref) => {
           width: 24,
           p: 0,
         },
+        "& .MuiFormLabel-root": {
+          fontSize: 12,
+          top: 3,
+        },
+        "& legend": {
+          fontSize: 10,
+        },
         ...sx,
       }}
-      {...props}
+      {...other}
     />
   )
 })

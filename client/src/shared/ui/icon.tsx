@@ -60,7 +60,7 @@ const iconData = {
 }
 
 interface DefaultIcon extends IconProps {
-  name: string
+  name?: string
   help?: Omit<TooltipProps, "children">
 }
 
@@ -70,7 +70,7 @@ const Default = memo((props: DefaultIcon) => {
   const weight = useAppSelector((state: RootState) => state.settings.weightIcon)
   const fill = useAppSelector((state: RootState) => state.settings.fillIcon)
 
-  const icon = iconData[name] ?? iconData.defIcon
+  const icon = other.children ?? (iconData[name ?? ""] || iconData.defIcon)
 
   const renderIcon = (
     <Icon
