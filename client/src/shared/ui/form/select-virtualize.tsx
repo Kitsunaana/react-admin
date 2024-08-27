@@ -1,19 +1,15 @@
 import * as React from "react"
-import TextField from "@mui/material/TextField"
-import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete"
+import Autocomplete from "@mui/material/Autocomplete"
 import useMediaQuery from "@mui/material/useMediaQuery"
-import ListSubheader from "@mui/material/ListSubheader"
-import Popper from "@mui/material/Popper"
-import { useTheme, styled } from "@mui/material/styles"
+import { useTheme } from "@mui/material/styles"
 import { VariableSizeList, ListChildComponentProps } from "react-window"
-import Typography from "@mui/material/Typography"
 import { Input } from "shared/ui/form/input"
 
 import { SelectItem } from "shared/ui/form/select"
 import { Text } from "shared/ui/text"
 import { Icon } from "shared/ui/icon"
 import { forwardRef, HTMLAttributes } from "react"
-import icons from "./tabs/icons.json"
+import { AutocompleteProps } from "@mui/material"
 
 const LISTBOX_PADDING = 8 // px
 
@@ -106,16 +102,23 @@ export const ListboxComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLEl
   )
 })
 
-export const Virtualize = () => (
-  <Autocomplete
-    open
-    size="small"
-    id="virtualize-demo"
-    sx={{ width: "70%" }}
-    disableListWrap
-    ListboxComponent={ListboxComponent}
-    options={icons}
-    renderInput={(params) => <Input {...params} label="10,000 options" />}
-    renderOption={(props, option, state) => [props, option, state.index] as React.ReactNode}
-  />
-)
+interface SelectVirtualizeProps extends Omit<AutocompleteProps<any, any, any, any>, "renderInput"> {}
+
+export const SelectVirtualize = (props: SelectVirtualizeProps) => {
+  const { options, ...other } = props
+
+  return (
+    <Autocomplete
+      open
+      size="small"
+      id="virtualize-demo"
+      sx={{ width: "70%" }}
+      disableListWrap
+      ListboxComponent={ListboxComponent}
+      options={options}
+      renderInput={(params) => <Input {...params} label="10,000 options" />}
+      renderOption={(props, option, state) => [props, option, state.index] as React.ReactNode}
+      {...other}
+    />
+  )
+}

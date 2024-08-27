@@ -2,7 +2,7 @@ import { PhotosStore } from "features/categories/create-and-edit/model/stores/ph
 import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
 import { CharacteristicsStore } from "entities/characteristic/model/store"
 import { AltNames } from "features/alt-names/alt-names-list"
-import { TagsStore } from "features/categories/create-and-edit/ui/tabs/tags"
+import { TagsStore } from "entities/tag"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {

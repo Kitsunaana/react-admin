@@ -15,6 +15,24 @@ export class TagsService {
     @InjectModel(CategoryTag) private categoryTagRepository: typeof CategoryTag,
   ) {}
 
+  async create(tags: TagCreateDto[], categoryId: number) {
+    await Promise.all(
+      tags.map(async (tag) => {
+        const [findTag] = await this.tagRepository.findOrCreate({
+          where: { caption: tag.tag.caption },
+          defaults: { caption: tag.tag.caption },
+        });
+
+        await this.categoryTagRepository.create({
+          tagId: findTag.id,
+          icon: tag.icon,
+          tagColor: tag.tagColor,
+          categoryId,
+        });
+      }),
+    );
+  }
+
   async update(tags: TagCreateDto[], categoryId: number) {
     await Promise.all(
       tags.map(async (item) => {

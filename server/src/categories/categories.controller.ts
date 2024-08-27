@@ -57,6 +57,7 @@ export class CategoriesController {
     await this.localesService.create(dto.altNames, category.id);
     await this.characteristicsService.create(dto.items, category);
     await this.filesService.saveMedia(files, dto.imagesIds, category.id);
+    await this.tagsService.create(dto.tags, category.id);
 
     return category;
   }
