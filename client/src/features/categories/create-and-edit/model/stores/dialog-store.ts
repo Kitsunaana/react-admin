@@ -37,6 +37,7 @@ export class RootStore {
     this.photoPosition.setPhotoPosition(data?.custom)
     this.characteristics.setCharacteristics(data?.characteristics)
     this.altNames.setAltNames(data?.altNames)
+    this.tags.setTags(data?.tags)
   }
 
   getData() {

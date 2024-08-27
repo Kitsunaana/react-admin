@@ -14,7 +14,7 @@ import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { observer } from "mobx-react-lite"
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, toJS } from "mobx"
 import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { Icon } from "shared/ui/icon"
 import {
@@ -27,6 +27,10 @@ import { FixedSizeList as List } from "react-window"
 import { ListboxComponent, Virtualize } from "features/categories/create-and-edit/ui/virt"
 import { ColorInput } from "features/categories/create-and-edit/ui/tabs/photo-position"
 import { nanoid } from "nanoid"
+import { useQuery } from "@tanstack/react-query"
+import { $axios } from "shared/config/axios"
+import { z } from "zod"
+import { DialogDelete } from "shared/ui/dialog/dialog-delete"
 import icons from "./icons.json"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
@@ -41,21 +45,35 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
   height: ${({ fullScreen }) => (fullScreen ? "calc(100% - 60px)" : "432px")};
 `
 
+/* "tags": [
+  {
+    "id": 1,
+    "icon": "fastfood",
+    "tagColor": "#000",
+    "tag": {
+      "id": 1,
+      "caption": "Google"
+    }
+  }
+] */
+export const tagSchema = z.object({
+
+})
+
 interface ITag {
   id: string | number
 
-  caption: string
+  tag: {caption: string}
   icon: string | null
   tagColor: string
 
   edited?: boolean
   local?: boolean
-  deleted?: boolean
-  action: "create" | "update"
+  action: "create" | "update" | "remove"
 }
 
 interface ITagCreate {
-  caption: string
+  tag: {caption: string}
   icon: string | null
   tagColor: string
 }
@@ -66,9 +84,9 @@ interface ITagEdit extends ITagCreate {
 
 export class TagsStore {
   tags: ITag[] = [
-    {
-      id: "1", caption: "Google", icon: "fastfood", tagColor: "#000", local: true, action: "create",
-    },
+    /* {
+      id: "1", tag: { caption: "Google" }, icon: "fastfood", tagColor: "#000", local: true, action: "create",
+    }, */
   ]
 
   getData() {
@@ -80,12 +98,16 @@ export class TagsStore {
     }
   }
 
+  setTags(tags: any) {
+    this.tags = tags
+  }
+
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
   get filteredTags() {
-    return this.tags.filter((tag) => !tag.deleted)
+    return this.tags.filter((tag) => tag.action !== "remove")
   }
 
   create(data: ITagCreate) {
@@ -99,13 +121,22 @@ export class TagsStore {
       .map((item) => {
         if (item.id === data.id) {
           return {
-            ...item, ...data, action: "update", edited: true,
+            ...item, ...data, edited: true, action: item.local ? "create" : "update",
           }
         }
 
         return item
       })
-      .filter((item): item is ITag => item !== null)
+  }
+
+  remove(id: number | string) {
+    this.tags = this.tags.map((tag) => {
+      if (tag.id === id) {
+        return tag.local ? null : { ...tag, action: "remove" }
+      }
+
+      return tag
+    }).filter((item): item is ITag => item !== null)
   }
 }
 
@@ -143,14 +174,28 @@ export const Tag = styled((props: TagProps) => {
   align-items: center;
 `
 
+export const useTags = () => {
+  const { data, isLoading, isPending } = useQuery({
+    queryKey: ["tags"],
+    queryFn: () => $axios.get("/tags").then(({ data }) => data),
+  })
+
+  return {
+    tagsData: data,
+    tagsIsLoading: isLoading || isPending,
+  }
+}
+
 export const TagEditForm = () => {
   const { getValues, watch, trigger } = useFormContext()
 
-  const caption = watch("caption") ?? getValues("caption")
+  const caption = watch("tag.caption") ?? getValues("tag.caption")
   const icon = watch("icon") ?? getValues("icon")
   const tagColor = watch("tagColor") ?? getValues("tagColor")
 
-  const options = [{ id: 1, caption: "Google" }, { id: 1, caption: "Kitsunaana" }]
+  const { tagsData, tagsIsLoading } = useTags()
+
+  if (tagsIsLoading) return <Box>Loading</Box>
 
   return (
     <Box flex ai gap grow sx={{ p: 1 }}>
@@ -159,7 +204,7 @@ export const TagEditForm = () => {
       </Box>
 
       <Controller
-        name="caption"
+        name="tag.caption"
         rules={{ required: "Должно быть выбрано" }}
         render={({ field, fieldState }) => (
           <Autocomplete
@@ -169,16 +214,16 @@ export const TagEditForm = () => {
             value={field.value}
             onChange={(event, option) => {
               field.onChange(option)
-              trigger("caption")
+              trigger("tag.caption")
             }}
-            options={options.map((item) => item.caption)}
+            options={tagsData.map((item) => item.caption)}
             renderInput={(props) => (
               <Input
                 {...props}
                 {...field}
                 onChange={(event) => {
                   field.onChange(event)
-                  trigger("caption")
+                  trigger("tag.caption")
                 }}
                 label="Тег"
                 helperText={fieldState.error?.message}
@@ -255,7 +300,7 @@ export const TagDialog = () => {
 
   const methods = useForm({
     defaultValues: {
-      caption: null,
+      tag: { caption: null },
       icon: null,
       tagColor: "rgb(255, 183, 77)",
     },
@@ -280,8 +325,21 @@ export const TagDialog = () => {
   )
 }
 
+export const TagDialogDelete = () => {
+  const { tags } = useStores()
+
+  return (
+    <DialogDelete
+      langBase="tags"
+      onDeleteLocal={tags.remove}
+    />
+  )
+}
+
 export const Tags = observer(() => {
   const { tags } = useStores()
+
+  console.log(JSON.parse(JSON.stringify(tags.filteredTags)))
 
   const { fullScreen, openDialog: openEditDialog } = useEditDialogStore()
   const { openDialog: openDeleteDialog } = useDeleteDialogStore()
@@ -295,12 +353,15 @@ export const Tags = observer(() => {
           <CharacteristicsContainer fullScreen={fullScreen}>
             {tags.filteredTags.map((tag) => (
               <RowItem key={tag.id} theme={theme} success={tag.edited || tag.local}>
-                <Tag caption={tag.caption} icon={tag.icon} color={tag.tagColor} />
+                <Tag caption={tag.tag.caption} icon={tag.icon} color={tag.tagColor} />
 
                 <Box flex row ai>
                   <Vertical />
                   <IconButtonEdit onClick={() => openEditDialog(tag.id, tag)} />
-                  <IconButtonDelete onClick={() => openDeleteDialog(tag.id, tag)} />
+                  <IconButtonDelete onClick={() => openDeleteDialog(tag.id, {
+                    caption: tag.tag.caption,
+                  })}
+                  />
                 </Box>
               </RowItem>
             ))}
@@ -317,6 +378,7 @@ export const Tags = observer(() => {
       </Box>
 
       <TagDialog />
+      <TagDialogDelete />
     </>
   )
 })
