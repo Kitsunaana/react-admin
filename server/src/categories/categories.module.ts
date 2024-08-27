@@ -8,6 +8,7 @@ import { Category } from '../entities-sequelize/category.entity';
 import { CustomCategory } from '../entities-sequelize/custom-category';
 import { CharacteristicsModule } from '../characteristics/characteristics.module';
 import { LocalesModule } from '../locales/locales.module';
+import { TagsModule } from '../tags/tags.module';
 
 @Module({
   providers: [CategoriesService],
@@ -18,6 +19,7 @@ import { LocalesModule } from '../locales/locales.module';
     BaseSequelizeModule,
     CharacteristicsModule,
     LocalesModule,
+    TagsModule,
   ],
 })
 export class CategoriesModule {}

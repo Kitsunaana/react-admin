@@ -1,5 +1,6 @@
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { TagCreate } from '../../entities-sequelize/tag.entity';
 
 export class CreateCategoryDto {
   @IsString()
@@ -31,6 +32,12 @@ export class CreateCategoryDto {
     value: string;
     hideClient: boolean;
   }[];
+
+  @Transform(({ value }) => JSON.parse(value))
+  readonly tags: ({
+    id: number;
+    action?: 'create' | 'update' | 'remove';
+  } & TagCreate)[];
 
   @Transform(({ value }) => JSON.parse(value))
   readonly altNames: {

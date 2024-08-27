@@ -9,6 +9,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { SequelizeModule } from './sequelize/sequelize.module';
 import { CharacteristicsModule } from './characteristics/characteristics.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CharacteristicsModule } from './characteristics/characteristics.module'
     LocalesModule,
     SequelizeModule,
     CharacteristicsModule,
+    TagsModule,
   ],
 })
 export class AppModule {}

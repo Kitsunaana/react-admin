@@ -15,6 +15,8 @@ import {
 } from '../entities-sequelize/characteristic.entity';
 import { Unit } from '../entities-sequelize/units.entity';
 import { AltNameCategory, Locale } from '../entities-sequelize/locale.entity';
+import { Tag } from '../entities-sequelize/tag.entity';
+import { CategoryTag } from '../entities-sequelize/category-tag.entity';
 
 @Injectable()
 export class CategoriesService {
@@ -106,6 +108,7 @@ export class CategoriesService {
         { model: CustomCategory },
         { model: CategoryCharacteristic, include: [Characteristic, Unit] },
         { model: AltNameCategory, include: [Locale] },
+        { model: CategoryTag, include: [Tag], attributes: { exclude: ['tagId', 'categoryId'] } },
       ],
       order: [
         [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],

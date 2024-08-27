@@ -4,6 +4,7 @@ import { Media } from './media.entity';
 import { CustomCategory } from './custom-category';
 import { CategoryCharacteristic } from './characteristic.entity';
 import { AltNameCategory, Locale } from './locale.entity';
+import { CategoryTag } from './category-tag.entity';
 
 interface CategoryCreationAttrs {
   caption: string;
@@ -36,4 +37,7 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
 
   @HasMany(() => AltNameCategory)
   altNames: Locale;
+
+  @HasMany(() => CategoryTag)
+  tags: CategoryTag[];
 }

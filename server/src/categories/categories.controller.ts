@@ -22,6 +22,7 @@ import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { FilesService } from '../files/files.service';
 import { CharacteristicsService } from '../characteristics/characteristics.service';
 import { LocalesService } from '../locales/locales.service';
+import { TagsService } from '../tags/tags.service';
 
 @Controller('categories')
 export class CategoriesController {
@@ -30,6 +31,7 @@ export class CategoriesController {
     private filesService: FilesService,
     private characteristicsService: CharacteristicsService,
     private localesService: LocalesService,
+    private tagsService: TagsService,
   ) {}
 
   @Post('')
@@ -102,6 +104,7 @@ export class CategoriesController {
 
     await this.characteristicsService.update(dto.items, id);
     await this.localesService.updateAltNamesCategory(dto.altNames, id);
+    await this.tagsService.update(dto.tags, id);
 
     return this.categoryService.update(id, dto);
   }
