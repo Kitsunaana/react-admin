@@ -19,7 +19,7 @@ export class UpdateCategoryDto extends CreateCategoryDto {
     unit: string | null;
     value: string;
     hideClient: boolean;
-    action: 'update' | 'create';
+    action: 'update' | 'create' | 'remove';
     id?: number;
     deleted?: boolean;
   }[];

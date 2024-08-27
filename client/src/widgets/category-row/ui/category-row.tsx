@@ -19,11 +19,12 @@ import { UseMutationOptions } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { TMedia } from "features/categories/create-and-edit/model/types"
 
 interface CategoryRowProps {
   id: number
   caption: string
-  images: z.infer<typeof mediaSchema>[]
+  images: TMedia[]
   order: number | null
 }
 

@@ -7,6 +7,8 @@ export const localeSchema = z.object({
   altName: z.string(),
 })
 
+export const localesSchema = z.array(localeSchema).optional()
+
 export const altNameSchema = z.object({
   id: z.number(),
   caption: z.string(),

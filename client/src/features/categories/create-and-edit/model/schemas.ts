@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { characteristicsSchema } from "entities/characteristic"
-import { altNamesSchema } from "features/alt-names/schemas"
+import { altNamesSchema } from "entities/alt-name"
 
 export const customCategorySchema = z.object({
   id: z.number(),

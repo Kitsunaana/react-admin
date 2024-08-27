@@ -44,8 +44,7 @@ export class CreateCategoryDto {
     id?: number;
     caption: string;
     description: string | null;
-    action?: 'create' | 'update';
-    deleted?: boolean;
+    action?: 'create' | 'update' | 'remove';
     locale: {
       id: number;
       code: string;

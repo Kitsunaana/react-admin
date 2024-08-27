@@ -36,7 +36,7 @@ export const StoreProvider: FC<PropsWithChildren> = (props) => {
 }
 
 export const Dialog = observer(() => {
-  const tabDefault = 5
+  const tabDefault = 4
   const langBase = "catalog.dialog"
 
   const rootStore = useStores()

@@ -7,7 +7,7 @@ export class CreateAltNameCategoryDto {
   caption: string;
   description: string | null;
   deleted?: boolean;
-  action?: 'create' | 'update';
+  action?: 'create' | 'update' | 'remove';
   locale: {
     id: number;
     caption: string;
@@ -57,7 +57,7 @@ export class LocalesService {
           });
         }
 
-        if (altName.deleted) {
+        if (altName.action === 'remove') {
           await this.altNameCategoryRepository.destroy({ where: { id: altName.id } });
         }
       }),
