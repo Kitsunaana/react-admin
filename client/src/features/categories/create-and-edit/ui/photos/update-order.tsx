@@ -6,6 +6,8 @@ import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
 import { Icon } from "shared/ui/icon"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { useTranslation } from "react-i18next"
 
 interface ContainerProps extends BoxProps {
   width: number
@@ -63,6 +65,7 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
 
   const [open, setOpen] = useState(false)
   const [order, setOrder] = useState(orderProps ?? 0)
+  const { t } = useTranslation("locales", { keyPrefix: "global" })
 
   useEffect(() => { setOrder(orderProps ?? 0) }, [orderProps])
 
@@ -73,7 +76,11 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
   const width = String(order).split("").length
 
   const renderIconButton = (direction: number) => (
-    <IconButtonBase
+    <IconButton
+      help={{
+        arrow: true,
+        title: t(direction === 1 ? "moveUp" : "moveDown"),
+      }}
       name="expand"
       sx={{
         color: ({ palette }) => palette.primary[palette.mode === "dark" ? "main" : "light"],
@@ -88,7 +95,19 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
   )
 
   const renderContent = () => {
-    if (order === 0) return <Icon name="infinity" onClick={onToggle} sx={{ cursor: "pointer" }} />
+    if (order === 0) {
+      return (
+        <Icon
+          name="infinity"
+          onClick={onToggle}
+          sx={{ cursor: "pointer" }}
+          help={{
+            arrow: true,
+            title: t("displayAccordingCreationDate"),
+          }}
+        />
+      )
+    }
 
     return <Count onClick={onToggle}>{order}</Count>
   }

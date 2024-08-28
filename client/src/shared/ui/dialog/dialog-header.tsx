@@ -9,6 +9,7 @@ import * as React from "react"
 import { Vertical } from "shared/ui/divider"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { shallowEqual } from "shared/lib/utils"
 
 interface DialogHeaderProps {
   title: string

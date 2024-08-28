@@ -57,6 +57,12 @@ const iconData = {
   allowCategory: "account_tree",
   invisible: "visibility_off",
   translate: "g_translate",
+  file: "file_download",
+  photo: "image",
+  positionPhoto: "compare",
+  characteristic: "extension",
+  alternativeName: "signature",
+  tags: "loyalty",
 }
 
 interface DefaultIcon extends IconProps {

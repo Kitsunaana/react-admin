@@ -3,6 +3,8 @@ import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
 import { CharacteristicsStore } from "entities/characteristic/model/store"
 import { TagsStore } from "entities/tag"
 import { AltNames } from "entities/alt-name/model/alt-name-store"
+import { validation } from "shared/lib/validation"
+import { categorySchema } from "features/categories/create-and-edit/model/schemas"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {
@@ -33,11 +35,13 @@ export class RootStore {
   }
 
   setData(data: any) {
-    this.photos.setMedia(data?.media)
-    this.photoPosition.setPhotoPosition(data?.custom)
-    this.characteristics.setCharacteristics(data?.characteristics)
-    this.altNames.setAltNames(data?.altNames)
-    this.tags.setTags(data?.tags)
+    const validatedData = validation(categorySchema, data)
+
+    this.photos.setMedia(validatedData.media)
+    this.photoPosition.setPhotoPosition(validatedData?.custom)
+    this.characteristics.setCharacteristics(validatedData?.characteristics)
+    this.altNames.setAltNames(validatedData?.altNames)
+    this.tags.setTags(validatedData?.tags)
   }
 
   getData() {

@@ -53,9 +53,9 @@ export class CharacteristicsStore {
   }
 
   setCharacteristics(characteristics: any) {
-    const data = validation(characteristicsSchema, characteristics)
-    const transformedCharacteristics = transformCharacteristics(data)
+    if (!characteristics) return
 
-    this.items = transformedCharacteristics
+    const data = validation(characteristicsSchema, characteristics)
+    this.items = transformCharacteristics(data)
   }
 }

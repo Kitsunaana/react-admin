@@ -41,7 +41,7 @@ export const ColorInput = forwardRef<HTMLDivElement, ColorInputProps>((props, re
           top: 3,
         },
         "& legend": {
-          fontSize: 10,
+          fontSize: 8,
         },
         ...sx,
       }}

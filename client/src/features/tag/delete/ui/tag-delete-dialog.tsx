@@ -1,6 +1,6 @@
-import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { DialogDelete } from "shared/ui/dialog/dialog-delete"
 import React from "react"
+import { useStores } from "features/categories/create-and-edit/model/context"
 
 export const TagDeleteDialog = () => {
   const { tags } = useStores()

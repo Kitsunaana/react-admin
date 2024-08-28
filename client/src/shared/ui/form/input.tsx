@@ -4,6 +4,8 @@ import {
 import { ChangeEvent, forwardRef } from "react"
 import styled from "styled-components"
 import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { useTranslation } from "react-i18next"
 
 export const StyledInput = styled(TextField)<TextFieldProps>`
     & .MuiInputBase-input {
@@ -43,8 +45,14 @@ export const Input = forwardRef<HTMLDivElement, InputProps>((props, ref) => {
     clear = true, name, onClear, setValue, onChange, InputProps, value, ...other
   } = props
 
+  const { t } = useTranslation()
+
   const clearButton = (clear && value) ? (
-    <IconButtonBase
+    <IconButton
+      help={{
+        arrow: true,
+        title: t("global.clear"),
+      }}
       fontSize={20}
       name="clear"
       onClick={() => {

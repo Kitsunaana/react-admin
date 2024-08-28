@@ -16,11 +16,15 @@ import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { TabsContainer } from "shared/ui/tabs/tabs-container"
+import { tabs } from "features/categories/create-and-edit/model/constants"
+import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
 
 interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string
   title?: string
   container?: ReactNode
+  tabs?: ReactNode
   onGetByIdOptions?: (id: number | null) => UseQueryOptions<any, any, any, any>
   onUpdateOptions?: (id: number | null) => UseMutationOptions<any, any, any>
   onCreateOptions?: () => UseMutationOptions<any, any, any>
@@ -38,6 +42,7 @@ export const DialogEdit = observer((props: DialogProps) => {
     setData,
     title,
     container,
+    tabs,
     onGetByIdOptions,
     onUpdateOptions,
     onCreateOptions,
@@ -119,6 +124,25 @@ export const DialogEdit = observer((props: DialogProps) => {
     })()
   }
 
+  /* container={useMemo(() => (
+    <Box grow sx={{ height: 450, pt: 0 }}>
+      <Box flex sx={{ height: 1 }}>
+        <TabsContainer
+          langBase={langBase}
+          tabs={tabs}
+          tab={tabDefault}
+          requiredFields={requiredFields}
+        />
+        <Box sx={{ px: 1, height: 1 }}>
+          <ContentContainer
+            langBase={langBase}
+            tab={tabDefault}
+          />
+        </Box>
+      </Box>
+    </Box>
+  ), [])} */
+
   return (
     <MUIDialog
       fullScreen={store.fullScreen}
@@ -143,7 +167,14 @@ export const DialogEdit = observer((props: DialogProps) => {
           title={t(`dialog.title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
         />
       </Box>
-      {container}
+      <Box grow sx={{ height: 450, pt: 0 }}>
+        <Box flex sx={{ height: 1 }}>
+          {tabs}
+          <Box sx={{ px: 1, height: 1 }}>
+            {container}
+          </Box>
+        </Box>
+      </Box>
       {useMemo(() => (
         <Box
           flex

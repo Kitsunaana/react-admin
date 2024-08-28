@@ -1,6 +1,5 @@
 import { Box, BoxProps } from "shared/ui/box"
 import { CharacteristicsDialog } from "features/characteristics/create-and-edit/ui/dialog"
-import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { observer } from "mobx-react-lite"
 import { Vertical } from "shared/ui/divider"
 import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
@@ -11,6 +10,7 @@ import { Characteristic } from "entities/characteristic/ui/characteristic"
 import { EmptyList } from "shared/ui/empty-list"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
+import { useStores } from "features/categories/create-and-edit/model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -35,7 +35,7 @@ export const CreateCharacteristicsButton = () => {
   )
 }
 
-export const Characteristics = observer(() => {
+export const TabCharacteristics = observer(() => {
   const { characteristics } = useStores()
   const { fullScreen } = useEditDialogStore()
 

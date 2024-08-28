@@ -4,10 +4,10 @@ import {
 } from "react-hook-form"
 import * as React from "react"
 import { observer } from "mobx-react-lite"
-import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { CreateEditForm } from "features/characteristics/create-and-edit/ui/create-edit-form"
 import { UseCharacteristicsFormProps } from "features/characteristics/create-and-edit/model/types"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useStores } from "features/categories/create-and-edit/model/context"
 
 export const CharacteristicsDialog = observer(() => {
   const store = useEditDialogStore()

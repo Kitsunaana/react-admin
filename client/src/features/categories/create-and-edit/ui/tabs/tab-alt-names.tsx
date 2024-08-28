@@ -1,4 +1,3 @@
-import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import styled from "styled-components"
 import { Box, BoxProps } from "shared/ui/box"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
@@ -11,6 +10,7 @@ import { useFormContext } from "react-hook-form"
 import { AltNameItem } from "entities/alt-name"
 import { useGetLocales } from "entities/alt-name/queries/use-get-locales"
 import { AltNameEditDialog, AltNameDeleteDialog } from "features/alt-names"
+import { useStores } from "features/categories/create-and-edit/model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -24,7 +24,7 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
   height: ${({ fullScreen }) => (fullScreen ? "calc(100% - 60px)" : "432px")};
 `
 
-export const AltNamesTab = observer(() => {
+export const TabAltNames = observer(() => {
   const { altNames } = useStores()
   const { fullScreen, openDialog: openEditDialog } = useEditDialogStore()
 

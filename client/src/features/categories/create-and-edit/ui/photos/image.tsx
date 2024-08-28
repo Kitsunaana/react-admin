@@ -1,13 +1,15 @@
 import { Box, BoxProps } from "shared/ui/box"
 import { alpha, useTheme } from "@mui/material"
 import { Text } from "shared/ui/text"
-import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import * as React from "react"
-import { UpdateOrder } from "features/categories/create-and-edit/ui/update-order"
+import { UpdateOrder } from "features/categories/create-and-edit/ui/photos/update-order"
 import { useImage } from "shared/hooks/use-image"
 import { Image as BaseImage } from "shared/ui/image"
 import styled from "styled-components"
 import { memo } from "react"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { useTranslation } from "react-i18next"
+import { useLang } from "shared/context/Lang"
 
 interface ImageProps extends Omit<BoxProps, "id" | "order"> {
   url?: string
@@ -25,7 +27,6 @@ interface ImageProps extends Omit<BoxProps, "id" | "order"> {
 
 const ImageCustom = styled(BaseImage)`
   transition: .2s;
-  border-radius: 8px;
   width: 100%;
   height: 170px;
   object-fit: contain;
@@ -35,7 +36,6 @@ const ImageContainer = styled(Box)`
   position: relative;
   height: 170px;
   overflow: hidden;
-  border-radius: 8px;
 `
 
 const ImageHeader = styled(Box)`
@@ -46,10 +46,8 @@ const ImageHeader = styled(Box)`
   right: 0px;
   left: 0px;
   padding: 4px 8px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
   z-index: 30;
-  background-color: ${({ theme }) => alpha(theme.palette.grey["900"], 0.75)};
+  background-color: ${({ theme }) => alpha(theme.palette.grey["900"], 0.85)};
   color: white;
 `
 
@@ -60,7 +58,7 @@ const Filename = styled(Text)`
   width: 100%;
 `
 
-const DeleteImageButton = styled(IconButtonBase)`
+const DeleteImageButton = styled(IconButton)`
   padding: 4px;
   min-width: unset;
   border-radius: 50%;
@@ -69,13 +67,25 @@ const DeleteImageButton = styled(IconButtonBase)`
 
 export const Image = memo((props: ImageProps) => {
   const {
-    url, name, local, file, id, order, onUpdateOrder, onClear, onClearLocal, onOpenGallery, ...other
+    id,
+    name,
+    url,
+    file,
+    order,
+    local,
+    onUpdateOrder,
+    onClear,
+    onClearLocal,
+    onOpenGallery,
+    ...other
   } = props
 
   const theme = useTheme()
   const src = useImage(url ?? file)
+  const langBase = useLang()?.lang
+  const { t } = useTranslation("locales", { keyPrefix: langBase })
 
-  const isShowUpdateOrder = (order !== undefined && onUpdateOrder)
+  const isShowUpdateOrder = onUpdateOrder && order !== undefined
 
   const handleOnClear = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation()
@@ -90,15 +100,16 @@ export const Image = memo((props: ImageProps) => {
         <Filename caption={name} />
         {isShowUpdateOrder && (
           <UpdateOrder
-            order={order}
             id={id}
+            order={order}
             onClick={onUpdateOrder}
           />
         )}
         <DeleteImageButton
-          fontSize={20}
           name="clear"
+          fontSize={20}
           onClick={handleOnClear}
+          help={{ arrow: true, title: t("clear") }}
         />
       </ImageHeader>
       <ImageCustom src={src} />

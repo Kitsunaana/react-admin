@@ -6,9 +6,9 @@ import { Vertical } from "shared/ui/divider"
 import React from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
-import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { TagItem } from "entities/tag"
 import { TagEditDialog, TagDeleteDialog } from "features/tag"
+import { useStores } from "features/categories/create-and-edit/model/context"
 
 const TagsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -22,7 +22,7 @@ const TagsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   height: ${({ fullScreen }) => (fullScreen ? "calc(100% - 60px)" : "432px")};
 `
 
-export const Tags = observer(() => {
+export const TabTags = observer(() => {
   const { tags } = useStores()
 
   const { fullScreen, openDialog } = useEditDialogStore()

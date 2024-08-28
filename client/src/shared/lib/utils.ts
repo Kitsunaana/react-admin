@@ -8,6 +8,8 @@ export const shallowEqual = (prev, next) => {
         [`${key}-prev`]: prev[key],
         [`${key}-next`]: next[key],
       })
+
+      return false
     }
   }
 

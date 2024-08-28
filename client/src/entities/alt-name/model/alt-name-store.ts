@@ -93,7 +93,9 @@ export class AltNames {
     }
   }
 
-  setAltNames(altNames: any[]) {
+  setAltNames(altNames?: IAltName[]) {
+    if (!altNames) return
+
     this.items = altNames
   }
 }

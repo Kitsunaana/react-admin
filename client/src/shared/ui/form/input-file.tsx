@@ -1,9 +1,11 @@
-import { ChangeEvent, memo, useRef } from "react"
-import { Box } from "shared/ui/box"
+import {
+  ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, memo, useRef,
+} from "react"
+import { Box, BoxProps } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import * as React from "react"
-import { useTheme } from "@mui/material"
+import { InputProps, useTheme } from "@mui/material"
 import styled from "styled-components"
 import { TImage } from "features/categories/create-and-edit/model/types"
 import { nanoid } from "nanoid"
@@ -24,7 +26,7 @@ const InputFileContainer = styled(Box)`
   }
 `
 
-interface InputFileProps {
+interface InputFileProps extends BoxProps {
   accept: string
   caption: string
   multiple: boolean
@@ -35,7 +37,7 @@ interface InputFileProps {
 
 export const InputFile = memo((props: InputFileProps) => {
   const {
-    accept, caption, multiple, name, disabled, onFilesUpload,
+    accept, caption, multiple, name, disabled, onFilesUpload, ...other
   } = props
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -66,6 +68,7 @@ export const InputFile = memo((props: InputFileProps) => {
     <InputFileContainer
       theme={theme}
       onClick={onClick}
+      {...other}
     >
       <input
         type="file"

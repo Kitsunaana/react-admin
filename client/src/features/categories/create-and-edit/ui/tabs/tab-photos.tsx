@@ -1,11 +1,11 @@
 import * as React from "react"
 import { Box, BoxProps } from "shared/ui/box"
-import { Image } from "features/categories/create-and-edit/ui/image"
+import { Image } from "features/categories/create-and-edit/ui/photos/image"
 import { observer } from "mobx-react-lite"
 import { InputFile } from "shared/ui/form/input-file"
 import styled from "styled-components"
-import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useStores } from "features/categories/create-and-edit/model/context"
 
 const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -25,7 +25,7 @@ const GridImageContainer = styled(Box)`
   max-height: calc(100vh - 200px);
 `
 
-export const PhotosTab = observer(() => {
+export const TabPhotos = observer(() => {
   const { fullScreen } = useEditDialogStore()
   const { photos } = useStores()
 
@@ -50,8 +50,8 @@ export const PhotosTab = observer(() => {
               name={item.originalName}
               order={item.order}
               onClear={photos.clearMedia}
-              onUpdateOrder={photos.updateOrder}
               onOpenGallery={photos.openGallery}
+              onUpdateOrder={photos.updateOrder}
             />
           ))}
           {photos.images && photos.images.map((item) => (

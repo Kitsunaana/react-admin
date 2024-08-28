@@ -27,7 +27,7 @@ export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
 
   const requiredFieldsDeps = requiredFields.map((field) => errors[field])
 
-  const tabWithWarning = useMemo(() => Object
+  return useMemo(() => Object
     .keys(getValues())
     .filter((property) => errors[property])
     .map((property) => {
@@ -35,8 +35,6 @@ export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
 
       return findTabWithWarning && findTabWithWarning.id
     }), [...requiredFieldsDeps, getValues])
-
-  return tabWithWarning
 }
 
 export const TabsContainer = memo((props: TabsProps) => {
@@ -46,9 +44,9 @@ export const TabsContainer = memo((props: TabsProps) => {
 
   const [tab, setTab] = useState(tabProps)
   const tabsWithWarning = useTabsWarning(tabs, requiredFields)
-  const { handleSubmit } = useFormContext()
+  const methods = useFormContext()
 
-  useEffect(() => { handleSubmit(() => {})() }, [])
+  useEffect(() => { methods.handleSubmit(() => {})() }, [])
 
   useEffect(() => addEvent(`${langBase}.changeTab` as any, ({ tab }: { tab: number }) => {
     setTab(tab)

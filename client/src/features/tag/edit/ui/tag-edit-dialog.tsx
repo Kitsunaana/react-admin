@@ -1,9 +1,9 @@
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { useStores } from "features/categories/create-and-edit/ui/dialog"
 import { FormProvider, useForm } from "react-hook-form"
 import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import React from "react"
 import { LangContext } from "shared/context/Lang"
+import { useStores } from "features/categories/create-and-edit/model/context"
 import { TagEditForm } from "./tag-edit-form"
 
 export const TagEditDialog = () => {

@@ -1,5 +1,5 @@
 import { DialogDelete as DialogDeleteBase } from "shared/ui/dialog/dialog-delete"
-import { useStores } from "features/categories/create-and-edit/ui/dialog"
+import { useStores } from "features/categories/create-and-edit/model/context"
 
 export const DialogDelete = () => {
   const { characteristics } = useStores()

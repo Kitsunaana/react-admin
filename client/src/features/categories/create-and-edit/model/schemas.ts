@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { characteristicsSchema } from "entities/characteristic"
 import { altNamesSchema } from "entities/alt-name"
+import { tagsSchema } from "entities/tag"
 
 export const customCategorySchema = z.object({
   id: z.number(),
@@ -20,7 +21,7 @@ export const customCategorySchema = z.object({
   bgColor: z.string(),
   blur: z.number(),
   activeImageId: z.string().nullable(),
-  categoryId: z.string(),
+  categoryId: z.number(),
 })
 
 export type CustomCategory = z.infer<typeof customCategorySchema>
@@ -46,13 +47,14 @@ export const mediaSchema = z.object({
 
 export const categorySchema = z.object({
   id: z.number(),
-  caption: z.string(),
   description: z.string(),
+  caption: z.string(),
   order: z.number().nullable(),
-  media: z.array(mediaSchema.optional()),
-  custom: z.array(customCategorySchema).optional(),
+  media: z.array(mediaSchema),
+  custom: customCategorySchema.optional(),
   characteristics: characteristicsSchema.optional(),
   altNames: altNamesSchema.optional(),
+  tags: tagsSchema.optional(),
 })
 
 export type TCategory = z.infer<typeof categorySchema>

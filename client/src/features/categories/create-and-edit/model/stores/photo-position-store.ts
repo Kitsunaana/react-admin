@@ -29,10 +29,12 @@ export class PhotoPositionStore {
   }
 
   changeShowPhoto() {
-    return this.isShowPhotoWithGoods = !this.isShowPhotoWithGoods
+    this.isShowPhotoWithGoods = !this.isShowPhotoWithGoods
   }
 
-  setPhotoPosition(data: CustomCategory) {
+  setPhotoPosition(data?: CustomCategory) {
+    if (!data) return
+
     Object.assign(this, data)
 
     if (!data.activeImageId) return

@@ -1,17 +1,21 @@
-import { memo, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLang } from "shared/context/Lang"
 import { addEvent } from "shared/lib/event"
-import { TabPanel } from "shared/ui/tabs/tab-panel"
 import * as React from "react"
-import { CommonTab } from "features/categories/create-and-edit/ui/tabs/common"
-import { PhotosTab } from "features/categories/create-and-edit/ui/tabs/photos"
-import { PhotoPosition } from "features/categories/create-and-edit/ui/tabs/photo-position"
-import { Characteristics } from "features/categories/create-and-edit/ui/tabs/characteristics"
+import { TabCommon } from "features/categories/create-and-edit/ui/tabs/tab-common"
+import { TabPhotos } from "features/categories/create-and-edit/ui/tabs/tab-photos"
+import { TabCharacteristics } from "features/categories/create-and-edit/ui/tabs/tab-characteristics"
 import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
-import { Tags } from "features/categories/create-and-edit/ui/tabs/tags"
-import { AltNamesTab } from "features/categories/create-and-edit/ui/tabs/alt-names-tab"
+import { TabTags } from "features/categories/create-and-edit/ui/tabs/tab-tags"
+import { TabAltNames } from "features/categories/create-and-edit/ui/tabs/tab-alt-names"
+import { TabPhotoPosition } from "features/categories/create-and-edit/ui/tabs/tab-photo-position"
 
-export const ContentContainer = memo((props: { tab: number, langBase?: string}) => {
+interface ContentContainerProps {
+  tab: number
+  langBase?: string
+}
+
+export const ContentContainer = (props: ContentContainerProps) => {
   const { tab: tabProps, langBase: langBaseProps } = props
 
   const lang = useLang()
@@ -25,12 +29,12 @@ export const ContentContainer = memo((props: { tab: number, langBase?: string}) 
 
   return (
     <>
-      <TabPanel value={tab} index={0}><CommonTab /></TabPanel>
-      <TabPanel value={tab} index={1}><PhotosTab /></TabPanel>
-      <TabPanel value={tab} index={2}><PhotoPosition /></TabPanel>
-      <TabPanel value={tab} index={3}><Characteristics /></TabPanel>
-      <TabPanel value={tab} index={4}><RootDialogProvider><AltNamesTab /></RootDialogProvider></TabPanel>
-      <TabPanel value={tab} index={5}><RootDialogProvider><Tags /></RootDialogProvider></TabPanel>
+      {tab === 0 && (<TabCommon />)}
+      {tab === 1 && (<TabPhotos />)}
+      {tab === 2 && (<TabPhotoPosition />)}
+      {tab === 3 && (<TabCharacteristics />)}
+      {tab === 4 && (<RootDialogProvider><TabAltNames /></RootDialogProvider>)}
+      {tab === 5 && (<RootDialogProvider><TabTags /></RootDialogProvider>)}
     </>
   )
-})
+}

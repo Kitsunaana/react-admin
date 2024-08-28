@@ -16,7 +16,6 @@ import { CreateButton } from "shared/ui/buttons/create-button"
 import { CategoryRow } from "widgets/category-row/ui/category-row"
 import { categoriesSchema, categorySchema } from "features/categories/create-and-edit/model/schemas"
 import { useCategories } from "entities/category/queries/use-categories"
-import { DialogCategory } from "features/categories/create-and-edit/ui/dialog"
 import { useEvent } from "shared/hooks/use-event"
 import { useSearchParams } from "react-router-dom"
 import { Text } from "shared/ui/text"
@@ -26,6 +25,7 @@ import { Icon } from "shared/ui/icon"
 import { validation } from "shared/lib/validation"
 import { Gallery } from "widgets/galerry"
 import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
+import { CategoryEditDialog } from "features/categories"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -170,7 +170,7 @@ const CategoriesPage = () => {
         content={renderContent()}
       />
 
-      <DialogCategory />
+      <CategoryEditDialog />
       <DialogDelete />
 
       <Gallery />
