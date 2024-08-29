@@ -1,7 +1,7 @@
 import {
   createContext, FC, PropsWithChildren, useContext, useState,
 } from "react"
-import { createRootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
+import { createRootStore } from "features/categories/edit/model/stores/dialog-store"
 import * as React from "react"
 
 const RootStoreContext = createContext(createRootStore())

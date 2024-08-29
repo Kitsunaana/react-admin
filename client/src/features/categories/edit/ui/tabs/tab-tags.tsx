@@ -8,7 +8,7 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { TagItem } from "entities/tag"
 import { TagEditDialog, TagDeleteDialog } from "features/tag"
-import { useStores } from "features/categories/create-and-edit/model/context"
+import { useStores } from "features/categories/edit/model/context"
 
 const TagsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props

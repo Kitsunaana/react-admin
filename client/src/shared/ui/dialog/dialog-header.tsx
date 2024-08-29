@@ -1,15 +1,13 @@
-import {
-  memo,
-} from "react"
 import { Box } from "shared/ui/box"
-import { alpha, Tooltip } from "@mui/material"
+import { alpha } from "@mui/material"
 import { Text } from "shared/ui/text"
-import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import * as React from "react"
 import { Vertical } from "shared/ui/divider"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { shallowEqual } from "shared/lib/utils"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { useTranslation } from "react-i18next"
+import { useLang } from "shared/context/Lang"
 
 interface DialogHeaderProps {
   title: string
@@ -22,6 +20,10 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
   } = props
 
   const store = useEditDialogStore()
+  const langBase = useLang()?.lang ?? ""
+  const { t } = useTranslation()
+
+  const fullscreenState = store.fullScreen ? "fullscreenClose" : "fullscreenOpen"
 
   return (
     <Box
@@ -42,44 +44,34 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
       <Text sx={{ display: "flex", justifyContent: "center", width: 1 }} caption={title} />
       {!hideActions && (
         <>
-          <Tooltip
-            arrow
-            disableInteractive
-            title="Скопировать данные для переноса"
-          >
-            <div>
-              <IconButtonBase
-                name="copy"
-              />
-            </div>
-          </Tooltip>
+          <IconButton
+            name="copy"
+            help={{
+              arrow: true,
+              disableInteractive: true,
+              title: t(`${langBase}.copy`),
+            }}
+          />
           <Vertical sx={{ m: 0 }} />
-          <Tooltip
-            disableInteractive
-            arrow
-            title="Загрузить скопированные данные"
-          >
-            <div>
-              <IconButtonBase
-                name="paste"
-              />
-            </div>
-          </Tooltip>
+          <IconButton
+            name="paste"
+            help={{
+              arrow: true,
+              disableInteractive: true,
+              title: t(`${langBase}.paste`),
+            }}
+          />
         </>
       )}
       <Vertical sx={{ m: 0 }} />
-      <Tooltip
-        arrow
-        disableInteractive
-        title="Развернуть на весь экран"
-      >
-        <div>
-          <IconButtonBase
-            onClick={() => store.setFullScreen((fullScreen) => !fullScreen)}
-            name={store.fullScreen ? "fullscreenClose" : "fullscreenOpen"}
-          />
-        </div>
-      </Tooltip>
+      <IconButton
+        onClick={() => store.setFullScreen((fullScreen) => !fullScreen)}
+        name={fullscreenState}
+        help={{
+          arrow: true,
+          title: t(`${langBase}.${fullscreenState}`),
+        }}
+      />
     </Box>
   )
 })

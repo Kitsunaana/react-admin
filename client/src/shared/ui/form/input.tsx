@@ -3,7 +3,6 @@ import {
 } from "@mui/material"
 import { ChangeEvent, forwardRef } from "react"
 import styled from "styled-components"
-import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { useTranslation } from "react-i18next"
 
@@ -22,7 +21,7 @@ export const StyledInput = styled(TextField)<TextFieldProps>`
     }
     
     & legend {
-        font-size: 9px;
+        font-size: 8.5px;
     }
     
     & .MuiInputBase-root {

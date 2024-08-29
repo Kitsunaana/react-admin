@@ -7,15 +7,13 @@ import { observer } from "mobx-react-lite"
 import { useGetLocales } from "entities/alt-name/queries/use-get-locales"
 import { AltNameInputLocale } from "features/alt-names/edit/ui/forms/alt-name-input-locale"
 import { AltNameInputCaption } from "features/alt-names/edit/ui/forms/alt-name-input-caption"
-import { useStores } from "features/categories/create-and-edit/model/context"
+import { useStores } from "features/categories/edit/model/context"
 
 export const CreateEditForm = observer(() => {
   const { altNames } = useStores()
   const methods = useFormContext()
 
   const { localesData } = useGetLocales()
-
-  useEffect(() => { methods.trigger() }, [])
 
   const excludedLocales = altNames
     .exclude(localesData || [], methods.getValues("locale"))

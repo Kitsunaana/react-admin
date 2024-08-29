@@ -1,11 +1,11 @@
 import * as React from "react"
 import { Box, BoxProps } from "shared/ui/box"
-import { Image } from "features/categories/create-and-edit/ui/photos/image"
+import { Image } from "features/categories/edit/ui/photos/image"
 import { observer } from "mobx-react-lite"
 import { InputFile } from "shared/ui/form/input-file"
 import styled from "styled-components"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { useStores } from "features/categories/create-and-edit/model/context"
+import { useStores } from "features/categories/edit/model/context"
 
 const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props

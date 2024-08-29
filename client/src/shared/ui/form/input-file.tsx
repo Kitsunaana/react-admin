@@ -7,7 +7,7 @@ import { Text } from "shared/ui/text"
 import * as React from "react"
 import { InputProps, useTheme } from "@mui/material"
 import styled from "styled-components"
-import { TImage } from "features/categories/create-and-edit/model/types"
+import { TImage } from "features/categories/edit/model/types"
 import { nanoid } from "nanoid"
 
 const InputFileContainer = styled(Box)`

@@ -12,7 +12,9 @@ import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
-import { useStores } from "features/categories/create-and-edit/model/context"
+import { useStores } from "features/categories/edit/model/context"
+import { useLang } from "shared/context/Lang"
+import { useTranslation } from "react-i18next"
 
 export interface CharacteristicItemProps extends ICharacteristic {
   local?: boolean
@@ -27,6 +29,9 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   const { openDialog } = useEditDialogStore()
   const { openDialog: openDeleteDialog } = useDeleteDialogStore()
   const theme = useTheme()
+
+  const langBase = useLang()?.lang ?? ""
+  const { t } = useTranslation("locales", { keyPrefix: langBase })
 
   const onOpenEditDialog = () => openDialog(id, {
     unit, hideClient, value, caption, id,
@@ -53,7 +58,7 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
           name="allowCategory"
           fontSize="small"
           color="success"
-          help={{ title: "Для категории", arrow: true }}
+          help={{ title: t("forCategory"), arrow: true }}
         />
         <Vertical />
         <IconButtonEdit onClick={onOpenEditDialog} />

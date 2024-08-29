@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx"
-import { TImage, TMedia } from "features/categories/create-and-edit/model/types"
+import { TImage, TMedia } from "features/categories/edit/model/types"
 
 interface MergedMedia extends TMedia {
   file?: never

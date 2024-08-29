@@ -1,7 +1,7 @@
-import { TPosition } from "features/categories/create-and-edit/model/types"
+import { TPosition } from "features/categories/edit/model/types"
 import { makeAutoObservable, reaction, when } from "mobx"
-import { RootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
-import { CustomCategory } from "features/categories/create-and-edit/model/schemas"
+import { RootStore } from "features/categories/edit/model/stores/dialog-store"
+import { CustomCategory } from "features/categories/edit/model/schemas"
 
 export class PhotoPositionStore {
   color = "red"

@@ -25,13 +25,15 @@ export class AltNames {
   }
 
   remove(id: number) {
-    const removeItem = (item: IAltName) => (item.id === id
-      ? ({ ...item, deleted: true })
-      : item)
-
     this.items = this.items
-      .map(removeItem)
-      .filter((item): item is IAltName => item !== null)
+      .map((altName): IAltName | null => {
+        if (altName.id === id) {
+          return altName.local ? null : { ...altName, action: "remove" }
+        }
+
+        return altName
+      })
+      .filter((altName): altName is IAltName => altName !== null)
   }
 
   get filteredItems() {

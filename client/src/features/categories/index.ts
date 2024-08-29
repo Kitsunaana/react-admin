@@ -1,1 +1,1 @@
-export { CategoryEditDialog } from "./create-and-edit"
+export { CategoryEditDialog } from "./edit"

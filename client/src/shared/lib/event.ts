@@ -1,4 +1,4 @@
-import { TImage, TMedia } from "features/categories/create-and-edit/model/types"
+import { TImage, TMedia } from "features/categories/edit/model/types"
 
 interface IEvents {
   selected: {

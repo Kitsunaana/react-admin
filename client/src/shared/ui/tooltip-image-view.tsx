@@ -3,7 +3,7 @@ import { Icon } from "shared/ui/icon"
 import React, { memo, useState } from "react"
 import { Box } from "shared/ui/box"
 import { dispatch } from "shared/lib/event"
-import { TMedia } from "features/categories/create-and-edit/model/types"
+import { TMedia } from "features/categories/edit/model/types"
 
 interface TooltipImageViewProps {
   images: TMedia[]

@@ -10,7 +10,9 @@ import { useFormContext } from "react-hook-form"
 import { AltNameItem } from "entities/alt-name"
 import { useGetLocales } from "entities/alt-name/queries/use-get-locales"
 import { AltNameEditDialog, AltNameDeleteDialog } from "features/alt-names"
-import { useStores } from "features/categories/create-and-edit/model/context"
+import { useStores } from "features/categories/edit/model/context"
+import { useTranslation } from "react-i18next"
+import { useLang } from "shared/context/Lang"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -31,6 +33,8 @@ export const TabAltNames = observer(() => {
   const { localesData } = useGetLocales()
 
   const methods = useFormContext()
+  const langBase = useLang()?.lang ?? ""
+  const { t } = useTranslation("locales", { keyPrefix: langBase })
   const [caption, description] = methods.watch(["caption", "description"])
   const freeLocales = altNames.getFreeLocale(localesData ?? [])
 
@@ -49,7 +53,7 @@ export const TabAltNames = observer(() => {
           <IconButton
             name="add"
             onClick={() => openEditDialog(null)}
-            help={{ title: "Создать", arrow: true }}
+            help={{ title: t("add"), arrow: true }}
           />
           <IconButton
             name="translate"
@@ -57,7 +61,7 @@ export const TabAltNames = observer(() => {
             onClick={() => {
               altNames.translate({ caption, description }, freeLocales)
             }}
-            help={{ title: "Перевести", arrow: true }}
+            help={{ title: t("translate"), arrow: true }}
           />
         </Box>
       </Box>

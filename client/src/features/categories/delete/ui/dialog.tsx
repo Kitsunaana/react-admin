@@ -2,7 +2,7 @@ import { DialogDelete as DialogDeleteBase } from "shared/ui/dialog/dialog-delete
 import { useSearchParams } from "react-router-dom"
 import { UseMutationOptions } from "@tanstack/react-query"
 import { queryClient } from "app/providers/query-client"
-import { TCategory } from "features/categories/create-and-edit/model/schemas"
+import { TCategory } from "features/categories/edit/model/schemas"
 import { $axios } from "shared/config/axios"
 
 export type DeleteCategoryOptions = UseMutationOptions<any, any, number | null>

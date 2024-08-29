@@ -4,7 +4,6 @@ import {
 } from "react"
 import { useTranslation } from "react-i18next"
 import { useFormContext } from "react-hook-form"
-import { addEvent } from "shared/lib/event"
 import { Dialog as MUIDialog, DialogProps as MUIDialogProps } from "@mui/material"
 import { Box } from "shared/ui/box"
 import * as React from "react"
@@ -16,9 +15,6 @@ import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { TabsContainer } from "shared/ui/tabs/tabs-container"
-import { tabs } from "features/categories/create-and-edit/model/constants"
-import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
 
 interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string
@@ -34,15 +30,19 @@ interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   size?: "auto"
   onSave?: (data: any) => void
   onEdit?: (data: any) => void
+  height?: number | string
+  hideActions?: boolean
 }
 
 export const DialogEdit = observer((props: DialogProps) => {
   const {
     langBase: langBaseProps,
+    height,
     setData,
     title,
     container,
     tabs,
+    hideActions,
     onGetByIdOptions,
     onUpdateOptions,
     onCreateOptions,
@@ -124,25 +124,6 @@ export const DialogEdit = observer((props: DialogProps) => {
     })()
   }
 
-  /* container={useMemo(() => (
-    <Box grow sx={{ height: 450, pt: 0 }}>
-      <Box flex sx={{ height: 1 }}>
-        <TabsContainer
-          langBase={langBase}
-          tabs={tabs}
-          tab={tabDefault}
-          requiredFields={requiredFields}
-        />
-        <Box sx={{ px: 1, height: 1 }}>
-          <ContentContainer
-            langBase={langBase}
-            tab={tabDefault}
-          />
-        </Box>
-      </Box>
-    </Box>
-  ), [])} */
-
   return (
     <MUIDialog
       fullScreen={store.fullScreen}
@@ -164,10 +145,11 @@ export const DialogEdit = observer((props: DialogProps) => {
     >
       <Box sx={{ mx: 1 }}>
         <DialogHeader
-          title={t(`dialog.title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
+          hideActions={hideActions}
+          title={t(`title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
         />
       </Box>
-      <Box grow sx={{ height: 450, pt: 0 }}>
+      <Box grow sx={{ height: height ?? 450, pt: 0 }}>
         <Box flex sx={{ height: 1 }}>
           {tabs}
           <Box sx={{ px: 1, height: 1 }}>

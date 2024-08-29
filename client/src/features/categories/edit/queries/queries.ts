@@ -1,7 +1,7 @@
 import { UseMutationOptions } from "@tanstack/react-query"
 import { z } from "zod"
 import { queryClient } from "app/providers/query-client"
-import { categoriesApi } from "features/categories/create-and-edit/api/categories-api"
+import { categoriesApi } from "features/categories/edit/api/categories-api"
 import { createCategorySchema } from "../model/schemas"
 
 type UpdateUseCategoryOptions = UseMutationOptions<unknown, unknown, z.infer<typeof createCategorySchema>>

@@ -7,18 +7,18 @@ import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import {
   createCategoryOptions,
   updateCategoryOptions,
-} from "features/categories/create-and-edit/queries/queries"
-import { tabs } from "features/categories/create-and-edit/model/constants"
-import { ContentContainer } from "features/categories/create-and-edit/ui/content-container"
+} from "features/categories/edit/queries/queries"
+import { tabs } from "features/categories/edit/model/constants"
+import { ContentContainer } from "features/categories/edit/ui/content-container"
 import { useMemo } from "react"
 import { observer } from "mobx-react-lite"
-import { UseCategoryFormProps } from "features/categories/create-and-edit/model/types"
+import { UseCategoryFormProps } from "features/categories/edit/model/types"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
 import { LangContext } from "shared/context/Lang"
-import { StoreProvider, useStores } from "features/categories/create-and-edit/model/context"
+import { StoreProvider, useStores } from "features/categories/edit/model/context"
 
 export const EditDialog = observer(() => {
-  const tabDefault = 0
+  const tabDefault = 4
   const langBase = "catalog.dialog"
 
   const rootStore = useStores()

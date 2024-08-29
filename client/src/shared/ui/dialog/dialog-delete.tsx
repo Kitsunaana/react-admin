@@ -61,7 +61,7 @@ export const DialogDelete = observer((props: DialogProps) => {
       <Box sx={{ mx: 1 }}>
         <DialogHeader
           hideActions
-          title={t("dialog.title.delete")}
+          title={t("title.delete")}
         />
       </Box>
       <MUIDialogContent sx={{ height: 1, p: 1, mb: 2 }}>

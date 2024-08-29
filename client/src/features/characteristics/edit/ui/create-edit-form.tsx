@@ -6,45 +6,44 @@ import { Input } from "shared/ui/form/input"
 import { Checkbox, FormControlLabel } from "@mui/material"
 import * as React from "react"
 import { useGetCharacteristics, useGetUnits } from "entities/characteristic"
+import { useTranslation } from "react-i18next"
 
-export const CreateEditForm = () => {
+interface CreateEditFormProps {
+  langBase?: string
+}
+
+export const CreateEditForm = (props: CreateEditFormProps) => {
+  const { langBase } = props
+
   const methods = useFormContext()
 
   const { characteristics, characteristicsIsLoading } = useGetCharacteristics()
   const { units, unitsIsLoading } = useGetUnits()
-
-  useEffect(() => { methods.trigger() }, [])
+  const { t } = useTranslation("locales", { keyPrefix: langBase ?? "" })
 
   return (
-    <Box flex gap sx={{ p: 1, height: 1 }}>
+    <Box flex gap sx={{ pt: 1 }}>
       <Controller
         name="caption"
         rules={{
-          required: "Поле должно быть заполнено",
-          minLength: {
-            value: 3,
-            message: "Поле должно быть не менее 3 символов",
-          },
+          required: "required",
+          minLength: { value: 3, message: "minLength" },
         }}
-        render={({ field, fieldState }) => (
+        render={({ field, fieldState: { error } }) => (
           <Select
             disabled={characteristicsIsLoading}
             value={field.value}
             freeSolo
-            onChange={(event, option) => {
-              field.onChange(option)
-              methods.trigger()
-            }}
+            onChange={(event, option) => { field.onChange(option) }}
             options={(characteristics || []).map((option) => option.caption)}
             InputProps={{
-              label: "Название",
               ...field,
+              error: !!error,
+              helperText: error?.message ? t(`validate.${error.message}`) : null,
+              label: t("forms.caption"),
               onChange: (event) => {
                 field.onChange(event)
-                methods.trigger()
               },
-              error: !!fieldState.error,
-              helperText: fieldState.error ? fieldState.error.message : null,
             }}
           />
         )}
@@ -62,7 +61,7 @@ export const CreateEditForm = () => {
               .filter((option) => Boolean(option.caption))
               .map((option) => option.caption)}
             InputProps={{
-              label: "Единицы измерения",
+              label: t("forms.unit"),
               ...field,
             }}
           />
@@ -71,34 +70,30 @@ export const CreateEditForm = () => {
 
       <Controller
         name="value"
-        rules={{
-          required: "Количество символов должно быть больше 1",
-        }}
-        render={({ field, fieldState }) => (
+        rules={{ required: "required" }}
+        render={({ field, fieldState: { error } }) => (
           <Input
             {...field}
-            onChange={(event) => {
-              field.onChange(event)
-              methods.trigger()
-            }}
             size="small"
-            label="Значение"
-            error={!!fieldState.error}
-            helperText={fieldState.error ? fieldState.error.message : null}
+            label={t("forms.value")}
+            error={!!error}
+            helperText={error?.message ? t(`validate.${error.message}`) : null}
           />
         )}
       />
 
-      <Controller
-        name="hideClient"
-        render={({ field }) => (
-          <FormControlLabel
-            sx={{ alignSelf: "start" }}
-            control={<Checkbox {...field} checked={field.value} />}
-            label="Скрыть у клиента"
-          />
-        )}
-      />
+      <Box sx={{ mx: 1 }}>
+        <Controller
+          name="hideClient"
+          render={({ field }) => (
+            <FormControlLabel
+              sx={{ alignSelf: "start" }}
+              control={<Checkbox {...field} sx={{ p: 0.75, mr: 1 }} checked={field.value} />}
+              label={t("forms.hideClient")}
+            />
+          )}
+        />
+      </Box>
     </Box>
   )
 }

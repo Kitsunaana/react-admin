@@ -1,10 +1,10 @@
-import { PhotosStore } from "features/categories/create-and-edit/model/stores/photos-store"
+import { PhotosStore } from "features/categories/edit/model/stores/photos-store"
 import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
 import { CharacteristicsStore } from "entities/characteristic/model/store"
 import { TagsStore } from "entities/tag"
 import { AltNames } from "entities/alt-name/model/alt-name-store"
 import { validation } from "shared/lib/validation"
-import { categorySchema } from "features/categories/create-and-edit/model/schemas"
+import { categorySchema } from "features/categories/edit/model/schemas"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {

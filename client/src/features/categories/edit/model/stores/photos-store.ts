@@ -1,7 +1,7 @@
-import { TImage, TMedia, TMediaForm } from "features/categories/create-and-edit/model/types"
+import { TImage, TMedia, TMediaForm } from "features/categories/edit/model/types"
 import { IReactionDisposer, makeAutoObservable, reaction } from "mobx"
 import { dispatch } from "shared/lib/event"
-import { RootStore } from "features/categories/create-and-edit/model/stores/dialog-store"
+import { RootStore } from "features/categories/edit/model/stores/dialog-store"
 
 export class PhotosStore {
   images: TImage[] = []

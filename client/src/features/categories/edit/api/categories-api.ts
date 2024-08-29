@@ -1,6 +1,6 @@
 import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
-import { createCategorySchema } from "features/categories/create-and-edit/model/schemas"
+import { createCategorySchema } from "features/categories/edit/model/schemas"
 import { createMultipart } from "shared/lib/multipart"
 import { z } from "zod"
 import { toJS } from "mobx"

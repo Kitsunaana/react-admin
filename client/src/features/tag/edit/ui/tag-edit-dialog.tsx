@@ -3,7 +3,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import React from "react"
 import { LangContext } from "shared/context/Lang"
-import { useStores } from "features/categories/create-and-edit/model/context"
+import { useStores } from "features/categories/edit/model/context"
 import { TagEditForm } from "./tag-edit-form"
 
 export const TagEditDialog = () => {
@@ -22,6 +22,7 @@ export const TagEditDialog = () => {
     <LangContext lang="global.dialog">
       <FormProvider {...methods}>
         <DialogEdit
+          height="auto"
           size="auto"
           langBase="tags"
           onSave={tags.create}
