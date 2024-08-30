@@ -3,8 +3,8 @@ import {
   ReactNode, useEffect, useMemo, useState,
 } from "react"
 import { useTranslation } from "react-i18next"
-import { useFormContext } from "react-hook-form"
-import { Dialog as MUIDialog, DialogProps as MUIDialogProps } from "@mui/material"
+import { DeepPartial, useForm, useFormContext } from "react-hook-form"
+import { Dialog as MUIDialog, DialogProps as MUIDialogProps, Skeleton } from "@mui/material"
 import { Box } from "shared/ui/box"
 import * as React from "react"
 import {
@@ -72,13 +72,18 @@ export const DialogEdit = observer((props: DialogProps) => {
   }, [langBase, store.open])
 
   let data = store.localData
+  let isLoading = false
   if (onGetByIdOptions) {
+    isLoading = true
     const query = useQuery(onGetByIdOptions(store.id as number))
     data = query.data
+    isLoading = query.isFetching || query.isLoading
   }
 
   let onUpdate
+  let canCloseDialog = true
   if (onUpdateOptions) {
+    canCloseDialog = false
     const { mutate } = useMutation(onUpdateOptions(store.id as number))
     onUpdate = mutate
   }
@@ -120,6 +125,7 @@ export const DialogEdit = observer((props: DialogProps) => {
         ? callFunc([onUpdate, onEdit], mergedData)
         : callFunc([onCreate, onSave], mergedData)
 
+      if (canCloseDialog) onClose()
       // onClose()
     })()
   }
@@ -144,16 +150,21 @@ export const DialogEdit = observer((props: DialogProps) => {
       }}
     >
       <Box sx={{ mx: 1 }}>
-        <DialogHeader
-          hideActions={hideActions}
-          title={t(`title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
-        />
+        {isLoading ? (
+          <Skeleton sx={{ borderRadius: 2, my: 1 }} variant="rectangular" height={40.19} />
+        ) : (
+          <DialogHeader
+            hideActions={!!hideActions}
+            title={t(`title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
+          />
+        )}
+
       </Box>
       <Box grow sx={{ height: height ?? 450, pt: 0 }}>
         <Box flex sx={{ height: 1 }}>
-          {tabs}
+          {isLoading ? <Skeleton sx={{ mx: 1, borderRadius: 2 }} variant="rectangular" height={40.19} /> : tabs}
           <Box sx={{ px: 1, height: 1 }}>
-            {container}
+            {isLoading ? <Skeleton sx={{ borderRadius: 2 }} height="100%" /> : container}
           </Box>
         </Box>
       </Box>
@@ -171,6 +182,150 @@ export const DialogEdit = observer((props: DialogProps) => {
           <SaveButton onClick={onSubmit} />
           <CancelButton
             onClick={onClose}
+          />
+        </Box>
+      ), [])}
+    </MUIDialog>
+  )
+})
+
+interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
+  langBase?: string
+  title?: string
+  container?: ReactNode
+  tabs?: ReactNode
+  onGetByIdOptions: (id: number | null) => UseQueryOptions<any, any, any, any>
+  onUpdateOptions: (id: number | null, onClose: () => void) => UseMutationOptions<any, any, any>
+  onCreateOptions: () => UseMutationOptions<any, any, any>
+  getData?: () => any
+  setData?: (data: any) => any
+  storeReset?: () => void
+  size?: "auto"
+  height?: number | string
+  hideActions?: boolean
+  defaultValues?: DeepPartial<any>
+}
+
+export const DialogEditV2 = observer((props: DialogPropsV2) => {
+  const {
+    langBase: langBaseProps,
+    title,
+    height,
+    size,
+    defaultValues,
+    hideActions,
+    tabs,
+    container,
+    setData,
+    getData,
+    storeReset,
+    onGetByIdOptions,
+    onUpdateOptions,
+    onCreateOptions,
+    ...other
+  } = props
+
+  const store = useEditDialogStore()
+
+  const lang = useLang()
+  const langBase = langBaseProps ?? lang?.lang
+
+  const { t } = useTranslation("translation", { keyPrefix: langBase })
+  const methods = useFormContext()
+
+  const [isEdit, setIsEdit] = useState(false)
+
+  const onClose = () => {
+    store.closeDialog()
+    storeReset?.()
+  }
+
+  const { data, isLoading, isFetching } = useQuery(onGetByIdOptions(store.id as number))
+  const { mutate: onUpdate, isSuccess } = useMutation(onUpdateOptions(store.id as number, () => {}))
+  const { mutate: onCreate } = useMutation(onCreateOptions())
+
+  const isShowSkeleton = isFetching || isLoading || isSuccess
+
+  useEffect(() => {
+    if (store?.id) setIsEdit(true)
+
+    if (data) {
+      methods.reset(data)
+      setData?.(data)
+    }
+
+    return () => {
+      methods.reset(defaultValues ?? {})
+      methods.unregister()
+    }
+  }, [data, langBase, store.id])
+
+  const onSubmit = () => {
+    methods.handleSubmit((data) => {
+      const mergedData = { ...data, ...getData?.() }
+
+      if (store.id) onUpdate(mergedData)
+      else onCreate(mergedData)
+    })()
+  }
+
+  return (
+    <MUIDialog
+      fullScreen={store.fullScreen}
+      open={store.open}
+      {...other}
+      PaperProps={{
+        sx: {
+          display: "flex",
+          borderRadius: 4,
+          ...(store.fullScreen ? {} : {
+            maxWidth: 900,
+            width: 1,
+            height: size ?? 580,
+            overflow: "unset",
+          }),
+          ...(other?.PaperProps?.sx ?? {}),
+        },
+      }}
+    >
+      <Box sx={{ mx: 1 }}>
+        {isShowSkeleton ? (
+          <Skeleton sx={{ borderRadius: 2, my: 1 }} variant="rectangular" height={40.19} />
+        ) : (
+          <DialogHeader
+            hideActions={!!hideActions}
+            title={t(`title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
+          />
+        )}
+
+      </Box>
+      <Box grow sx={{ height: height ?? 450, pt: 0 }}>
+        <Box flex sx={{ height: 1 }}>
+          {isShowSkeleton ? <Skeleton sx={{ mx: 1, borderRadius: 2 }} variant="rectangular" height={40.19} /> : tabs}
+          <Box sx={{ px: 1, height: 1 }}>
+            {isShowSkeleton ? <Skeleton sx={{ borderRadius: 2 }} height="100%" /> : container}
+          </Box>
+        </Box>
+      </Box>
+      {useMemo(() => (
+        <Box
+          flex
+          ai
+          row
+          gap
+          sx={{
+            alignSelf: "flex-end",
+            p: 1,
+          }}
+        >
+          <SaveButton onClick={onSubmit} />
+          <CancelButton
+            // onClick={onClose}
+            onClick={() => { methods.reset() }}
+          />
+          <CancelButton
+            onClick={onClose}
+            // onClick={() => { methods.reset() }}
           />
         </Box>
       ), [])}

@@ -29,6 +29,8 @@ export const TabPhotos = observer(() => {
   const { fullScreen } = useEditDialogStore()
   const { photos } = useStores()
 
+  console.log(JSON.parse(JSON.stringify(photos.filteredMedia)))
+
   return (
     <Box sx={{ mt: 1 }}>
       <Box sx={{ pb: 1 }}>

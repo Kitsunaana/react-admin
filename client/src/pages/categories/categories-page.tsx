@@ -26,6 +26,36 @@ import { validation } from "shared/lib/validation"
 import { Gallery } from "widgets/galerry"
 import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
 import { CategoryEditDialog } from "features/categories"
+import { IParams } from "entities/category/api/types"
+import { useQuery } from "@tanstack/react-query/build/modern"
+import { categoriesApi } from "entities/category/api/categories-api"
+import { MobxQuery } from "shared/lib/mobx-react-query"
+import { queryClient } from "app/providers/query-client"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
+import * as querystring from "querystring"
+/*
+export const useCategories = (options: IParams) => {
+  const { search, page } = options
+
+  const {
+    data, isLoading, isFetching, error, refetch,
+  } = useQuery({
+    queryKey: ["categories", search, page],
+    queryFn: () => categoriesApi.getAll(options),
+  })
+
+  return {
+    categoriesData: data,
+    categoriesError: error,
+    categoriesIsLoading: isLoading || isFetching,
+    refetchCategories: refetch,
+  }
+} */
+
+import queryString from "query-string"
+import { $axios } from "shared/config/axios"
+import { stringifiedParams } from "shared/lib/utils"
 
 export const SearchInput = () => {
   const { control } = useFormContext()
@@ -74,6 +104,7 @@ const CategoryHeader = (props: CategoryHeaderProps) => {
     const search = getValues("search")
     if (!(event.code === "Enter" && search !== null)) return
 
+    categoriesSearchStore.setSearchParams(getValues())
     setSearchParams(`?search=${search}`)
   })
 
@@ -94,7 +125,44 @@ const CategoryHeader = (props: CategoryHeaderProps) => {
   )
 }
 
-const CategoriesPage = () => {
+class SearchStore {
+  searchParams = queryString.stringify(queryString.parseUrl(window.location.search).query)
+  page = 1
+
+  constructor() {
+    makeAutoObservable(this, {}, { autoBind: true })
+  }
+
+  setPage(page: number) {
+    console.log(page)
+  }
+
+  setSearchParams(data) {
+    this.searchParams = queryString.stringify(data)
+  }
+}
+
+const createSearchStore = () => new SearchStore()
+export const categoriesSearchStore = createSearchStore()
+
+class CategoriesStore {
+  categoriesQuery = new MobxQuery(
+    () => ({
+      queryKey: ["categories", categoriesSearchStore.searchParams],
+      queryFn: () => $axios.get(`/categories?${categoriesSearchStore.searchParams}`)
+        .then(({ data }) => data),
+    }),
+    queryClient,
+  )
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
+
+const categoriesStore = new CategoriesStore()
+
+const CategoriesPage = observer(() => {
   const [searchParams, setSearchParams] = useSearchParams()
   const methods = useForm({
     defaultValues: {
@@ -102,10 +170,16 @@ const CategoriesPage = () => {
     },
   })
 
-  const { categoriesData, categoriesIsLoading, refetchCategories } = useCategories({
-    search: searchParams.get("search"),
-    page: searchParams.get("page") ?? 1,
-  })
+  const {
+    data: categoriesData,
+    isLoading: categoriesIsLoading,
+    refetch: refetchCategories,
+  } = categoriesStore.categoriesQuery.result
+
+  // const { categoriesData, categoriesIsLoading, refetchCategories } = useCategories({
+  //   search: searchParams.get("search"),
+  //   page: searchParams.get("page") ?? 1,
+  // })
 
   const renderContent = () => {
     if (categoriesIsLoading) return
@@ -177,6 +251,6 @@ const CategoriesPage = () => {
       <Backdrop />
     </RootDialogProvider>
   )
-}
+})
 
 export default CategoriesPage
