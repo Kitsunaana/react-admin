@@ -10,10 +10,6 @@ interface RowItemProps extends BoxProps {
   errorBg?: boolean
 }
 
-/* border-left: ${({ error, warning, theme: { palette } }) => (error
-  ? `5px solid ${palette.error.main}`
-  : warning ? `5px solid ${palette.warning.main}` : null)}; */
-
 export const RowItem = styled((props: RowItemProps) => {
   const {
     error, errorBg, success, warning, ...other

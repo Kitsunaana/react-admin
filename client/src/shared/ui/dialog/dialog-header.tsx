@@ -8,9 +8,10 @@ import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { useTranslation } from "react-i18next"
 import { useLang } from "shared/context/Lang"
+import { ReactNode } from "react"
 
 interface DialogHeaderProps {
-  title: string
+  title: string | ReactNode
   hideActions?: boolean
 }
 
@@ -20,8 +21,6 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
   } = props
 
   const store = useEditDialogStore()
-  const langBase = useLang()?.lang ?? ""
-  const { t } = useTranslation()
 
   const fullscreenState = store.fullScreen ? "fullscreenClose" : "fullscreenOpen"
 
@@ -49,7 +48,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
             help={{
               arrow: true,
               disableInteractive: true,
-              title: t(`${langBase}.copy`),
+              title: <Text onlyText name="copy" />,
             }}
           />
           <Vertical sx={{ m: 0 }} />
@@ -58,7 +57,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
             help={{
               arrow: true,
               disableInteractive: true,
-              title: t(`${langBase}.paste`),
+              title: <Text onlyText name="paste" />,
             }}
           />
         </>
@@ -69,7 +68,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
         name={fullscreenState}
         help={{
           arrow: true,
-          title: t(`${langBase}.${fullscreenState}`),
+          title: <Text onlyText name={fullscreenState} />,
         }}
       />
     </Box>

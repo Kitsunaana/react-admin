@@ -18,11 +18,13 @@ export class PhotoPositionStore {
 
     reaction(() => this._indexActiveImage, () => this.changeActiveImageId())
 
+    const { photos } = this.rootStore
+
     reaction(
       () => (
-        !!this.rootStore.photos
-        && !!this.rootStore.photos.mergedImages
-        && !!this.rootStore.photos.mergedImages[this._indexActiveImage]
+        !!photos
+        && !!photos.mergedImages
+        && !!photos.mergedImages[this._indexActiveImage]
       ),
       () => this.changeActiveImageId(),
     )
@@ -34,9 +36,7 @@ export class PhotoPositionStore {
 
   setPhotoPosition(data?: CustomCategory) {
     if (!data) return
-
     Object.assign(this, data)
-
     if (!data.activeImageId) return
 
     this._indexActiveImage = this.rootStore.photos.mergedImages

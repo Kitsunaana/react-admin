@@ -1,12 +1,14 @@
 import { DialogDelete as DialogDeleteBase } from "shared/ui/dialog/dialog-delete"
-import { useStores } from "features/categories/edit/model/context"
+import { CharacteristicsStore } from "entities/characteristic/model/store"
 
-export const CharacteristicDeleteDialog = () => {
-  const { characteristics } = useStores()
+interface CharacteristicDeleteDialogProps {
+  characteristics: CharacteristicsStore
+}
+
+export const CharacteristicDeleteDialog = (props: CharacteristicDeleteDialogProps) => {
+  const { characteristics } = props
 
   return (
-    <DialogDeleteBase
-      onDeleteLocal={characteristics.remove}
-    />
+    <DialogDeleteBase onDeleteLocal={characteristics.remove} />
   )
 }

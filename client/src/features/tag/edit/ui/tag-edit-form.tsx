@@ -2,13 +2,13 @@ import { useFormContext } from "react-hook-form"
 import { useTags } from "entities/tag/queries/use-tags"
 import { Box } from "shared/ui/box"
 import { Tag } from "entities/tag"
-import React, { useEffect } from "react"
+import React from "react"
 import { TagInputCaption } from "./forms/tag-input-caption"
 import { TagInputIcon } from "./forms/tag-input-icon"
 import { TagInputColor } from "./forms/tag-input-color"
 
 export const TagEditForm = () => {
-  const { getValues, watch, trigger } = useFormContext()
+  const { getValues, watch } = useFormContext()
 
   const caption = watch("tag.caption") ?? getValues("tag.caption")
   const icon = watch("icon") ?? getValues("icon")
@@ -16,12 +16,10 @@ export const TagEditForm = () => {
 
   const { tagsData, tagsIsLoading } = useTags()
 
-  useEffect(() => { trigger() }, [tagsIsLoading])
-
   if (tagsIsLoading) return <Box>Loading</Box>
 
   return (
-    <Box flex ai gap grow sx={{ p: 1 }}>
+    <Box flex ai gap grow sx={{ py: 1 }}>
       <Box flex row jc>
         <Tag caption={caption} icon={icon} color={tagColor} />
       </Box>

@@ -1,13 +1,10 @@
-import React, {
-  memo, useEffect, useState,
-} from "react"
+import React, { memo, useEffect, useState } from "react"
 import { Box, BoxProps } from "shared/ui/box"
-import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
 import { Icon } from "shared/ui/icon"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { useTranslation } from "react-i18next"
+import { Text } from "shared/ui/text"
 
 interface ContainerProps extends BoxProps {
   width: number
@@ -65,7 +62,6 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
 
   const [open, setOpen] = useState(false)
   const [order, setOrder] = useState(orderProps ?? 0)
-  const { t } = useTranslation("locales", { keyPrefix: "global" })
 
   useEffect(() => { setOrder(orderProps ?? 0) }, [orderProps])
 
@@ -79,7 +75,13 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
     <IconButton
       help={{
         arrow: true,
-        title: t(direction === 1 ? "moveUp" : "moveDown"),
+        title: (
+          <Text
+            onlyText
+            langBase="global"
+            name={direction === 1 ? "moveUp" : "moveDown"}
+          />
+        ),
       }}
       name="expand"
       sx={{
@@ -103,7 +105,13 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
           sx={{ cursor: "pointer" }}
           help={{
             arrow: true,
-            title: t("displayAccordingCreationDate"),
+            title: (
+              <Text
+                onlyText
+                langBase="global"
+                name="displayAccordingCreationDate"
+              />
+            ),
           }}
         />
       )
@@ -113,7 +121,12 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
   }
 
   return (
-    <Container width={width} open={open} sx={sx} fullWidth={order === 0}>
+    <Container
+      fullWidth={order === 0}
+      width={width}
+      open={open}
+      sx={sx}
+    >
       <ArrowUpButton open={open}>
         {renderIconButton(1)}
       </ArrowUpButton>

@@ -3,12 +3,11 @@ import { FormProvider, useForm } from "react-hook-form"
 import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import React from "react"
 import { LangContext } from "shared/context/Lang"
-import { useStores } from "features/categories/edit/model/context"
+import { TagsStore } from "entities/tag"
 import { TagEditForm } from "./tag-edit-form"
 
-export const TagEditDialog = () => {
+export const TagEditDialog = ({ tags }: { tags: TagsStore }) => {
   const store = useEditDialogStore()
-  const { tags } = useStores()
 
   const methods = useForm({
     defaultValues: {
@@ -22,6 +21,7 @@ export const TagEditDialog = () => {
     <LangContext lang="global.dialog">
       <FormProvider {...methods}>
         <DialogEdit
+          hideActions
           height="auto"
           size="auto"
           langBase="tags"

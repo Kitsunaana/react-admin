@@ -5,7 +5,7 @@ import {
   FetchTranslateData, IAltName, IAltNameCreate, IAltNameEdit, Locale,
 } from "../model/types"
 
-export class AltNames {
+export class AltNamesStore {
   items: IAltName[] = []
 
   constructor() {
@@ -46,6 +46,10 @@ export class AltNames {
     return locales.filter((locale) => (busyLocales.includes(locale.code) ? null : locale))
   }
 
+  setIsLoading(isLoading) {
+    this.isLoading = isLoading
+  }
+
   isLoading = false
   translate(category: { caption: string; description: string | null }, locales: Locale[]) {
     this.isLoading = true
@@ -56,7 +60,7 @@ export class AltNames {
     )
       .then(this.addTranslateAltNames)
       .catch(console.log)
-      .finally(() => { this.isLoading = false })
+      .finally(() => { this.setIsLoading(false) })
   }
 
   addTranslateAltNames(altNames: FetchTranslateData) {

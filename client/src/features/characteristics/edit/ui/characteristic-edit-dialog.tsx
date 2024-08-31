@@ -7,12 +7,14 @@ import { observer } from "mobx-react-lite"
 import { CreateEditForm } from "features/characteristics/edit/ui/create-edit-form"
 import { UseCharacteristicsFormProps } from "features/characteristics/edit/model/types"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { useStores } from "features/categories/edit/model/context"
 import { useLang } from "shared/context/Lang"
+import { CharacteristicsStore } from "entities/characteristic/model/store"
 
-export const CharacteristicEditDialog = observer(() => {
+interface CharacteristicEditDialogProps { characteristics: CharacteristicsStore }
+
+export const CharacteristicEditDialog = (props: CharacteristicEditDialogProps) => {
+  const { characteristics } = props
   const store = useEditDialogStore()
-  const { characteristics } = useStores()
 
   const langBase = useLang()?.lang ?? ""
 
@@ -43,4 +45,4 @@ export const CharacteristicEditDialog = observer(() => {
       />
     </FormProvider>
   )
-})
+}

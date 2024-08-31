@@ -1,5 +1,4 @@
 import { useFormContext } from "react-hook-form"
-import { useEffect } from "react"
 import { Box } from "shared/ui/box"
 import * as React from "react"
 import { DescriptionInput } from "shared/ui/description"
@@ -19,7 +18,7 @@ export const CreateEditForm = observer(() => {
     .exclude(localesData || [], methods.getValues("locale"))
 
   return (
-    <Box flex gap sx={{ p: 1, height: 1 }}>
+    <Box flex gap sx={{ height: 1, pt: 1 }}>
       <AltNameInputLocale options={excludedLocales} />
       <AltNameInputCaption />
       <DescriptionInput />

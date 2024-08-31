@@ -8,7 +8,8 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { TagItem } from "entities/tag"
 import { TagEditDialog, TagDeleteDialog } from "features/tag"
-import { useStores } from "features/categories/edit/model/context"
+import { Text } from "shared/ui/text"
+import { useStores } from "../../model/context"
 
 const TagsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -32,23 +33,21 @@ export const TabTags = observer(() => {
       <Box flex row grow sx={{ height: 1 }}>
         {tags.filteredTags.length > 0 ? (
           <TagsContainer fullScreen={fullScreen}>
-            {tags.filteredTags.map((tag) => (
-              <TagItem key={tag.id} {...tag} />
-            ))}
+            {tags.filteredTags.map((tag) => (<TagItem key={tag.id} {...tag} />))}
           </TagsContainer>
         ) : <EmptyList />}
         <Vertical />
         <Box sx={{ pt: 1 }}>
           <IconButton
             name="add"
-            help={{ title: "Создать", arrow: true }}
+            help={{ title: <Text onlyText name="add" />, arrow: true }}
             onClick={() => openDialog(null)}
           />
         </Box>
       </Box>
 
-      <TagEditDialog />
-      <TagDeleteDialog />
+      <TagEditDialog tags={tags} />
+      <TagDeleteDialog tags={tags} />
     </>
   )
 })

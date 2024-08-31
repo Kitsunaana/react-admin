@@ -17,7 +17,7 @@ export const AltNameInputLocale = (props: AltNameInputLocaleProps) => {
   const { options, ...other } = props
 
   const methods = useFormContext()
-  const { t } = useTranslation("locales", { keyPrefix: "global.dialog.validate" })
+  const { t } = useTranslation("translation", { keyPrefix: "global.dialog.validate" })
 
   const onChangeAutocomplete = (option: IAltName, field: TField<"locale">) => {
     field.onChange(option)

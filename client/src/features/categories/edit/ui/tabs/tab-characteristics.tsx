@@ -3,14 +3,13 @@ import { observer } from "mobx-react-lite"
 import { Vertical } from "shared/ui/divider"
 import React from "react"
 import styled from "styled-components"
-import { Characteristic } from "entities/characteristic/ui/characteristic"
 import { EmptyList } from "shared/ui/empty-list"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
-import { useStores } from "features/categories/edit/model/context"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { useTranslation } from "react-i18next"
 import { CharacteristicDeleteDialog, CharacteristicEditDialog } from "features/characteristics"
+import { Text } from "shared/ui/text"
+import { Characteristic } from "entities/characteristic"
+import { useStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -24,28 +23,14 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
   height: ${({ fullScreen }) => (fullScreen ? "calc(100% - 60px)" : "432px")};
 `
 
-export const CreateCharacteristicsButton = () => {
-  const { openDialog } = useEditDialogStore()
-  const { t } = useTranslation()
-
-  return (
-    <IconButton
-      help={{
-        arrow: true,
-        title: t("global.add"),
-      }}
-      name="add"
-      onClick={() => openDialog(null)}
-    />
-  )
-}
-
 export const TabCharacteristics = observer(() => {
+  const editStore = useEditDialogStore()
+
   const { characteristics } = useStores()
   const { fullScreen } = useEditDialogStore()
 
   return (
-    <RootDialogProvider>
+    <>
       <Box flex row grow sx={{ height: 1 }}>
         {characteristics.filteredItems.length > 0 ? (
           <CharacteristicsContainer fullScreen={fullScreen}>
@@ -59,12 +44,19 @@ export const TabCharacteristics = observer(() => {
         ) : <EmptyList />}
         <Vertical />
         <Box sx={{ pt: 1 }}>
-          <CreateCharacteristicsButton />
+          <IconButton
+            name="add"
+            onClick={() => editStore.openDialog(null)}
+            help={{
+              arrow: true,
+              title: <Text onlyText name="add" />,
+            }}
+          />
         </Box>
       </Box>
 
-      <CharacteristicEditDialog />
-      <CharacteristicDeleteDialog />
-    </RootDialogProvider>
+      <CharacteristicEditDialog characteristics={characteristics} />
+      <CharacteristicDeleteDialog characteristics={characteristics} />
+    </>
   )
 })

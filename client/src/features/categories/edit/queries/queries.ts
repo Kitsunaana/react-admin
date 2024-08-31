@@ -16,12 +16,11 @@ export const updateCategoryOptions = (id: number | null, onClose: () => void): U
   },
 })
 
-export const createCategoryOptions = (): CreateUseCategoryOptions => ({
+export const createCategoryOptions = (onClose: () => void): CreateUseCategoryOptions => ({
   mutationKey: ["category"],
   mutationFn: (data) => categoriesApi.post(data),
   onSuccess: () => {
-    queryClient.invalidateQueries({
-      queryKey: ["categories"],
-    })
+    queryClient.invalidateQueries({ queryKey: ["categories"] })
+    onClose()
   },
 })

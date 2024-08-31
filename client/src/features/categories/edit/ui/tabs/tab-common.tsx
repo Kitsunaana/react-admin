@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { useLang } from "shared/context/Lang"
 import { Input } from "shared/ui/form/input"
@@ -14,12 +14,7 @@ export const TabCommon = (props: CommonTabProps) => {
   const { langBase: langBaseProps } = props
 
   const langBase = langBaseProps ?? useLang()?.lang
-  const { t } = useTranslation(
-    "translation",
-    { keyPrefix: `${langBase}.validate` },
-  )
-
-  const { register } = useFormContext()
+  const { t } = useTranslation("translation", { keyPrefix: `${langBase}.validate` })
 
   return (
     <Box flex ai gap sx={{ mt: 1 }}>

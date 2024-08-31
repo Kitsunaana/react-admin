@@ -1,11 +1,11 @@
 import * as React from "react"
 import { Box, BoxProps } from "shared/ui/box"
-import { Image } from "features/categories/edit/ui/photos/image"
 import { observer } from "mobx-react-lite"
 import { InputFile } from "shared/ui/form/input-file"
 import styled from "styled-components"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { useStores } from "features/categories/edit/model/context"
+import { Image } from "../photos/image"
+import { useStores } from "../../model/context"
 
 const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -28,8 +28,6 @@ const GridImageContainer = styled(Box)`
 export const TabPhotos = observer(() => {
   const { fullScreen } = useEditDialogStore()
   const { photos } = useStores()
-
-  console.log(JSON.parse(JSON.stringify(photos.filteredMedia)))
 
   return (
     <Box sx={{ mt: 1 }}>

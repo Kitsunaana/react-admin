@@ -1,21 +1,22 @@
 import { DialogEdit } from "shared/ui/dialog/dialog-edit"
-import {
-  FormProvider, useForm,
-} from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import * as React from "react"
-import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { LangContext } from "shared/context/Lang"
-import { useStores } from "features/categories/edit/model/context"
+import { AltNamesStore } from "entities/alt-name"
 import { CreateEditForm } from "./alt-name-edit-form"
 
-export const AltNameEditDialog = observer(() => {
+interface AltNameEditDialogProps {
+  altNames: AltNamesStore
+}
+
+export const AltNameEditDialog = (props: AltNameEditDialogProps) => {
+  const { altNames } = props
+
   const store = useEditDialogStore()
-  const { altNames } = useStores()
 
   const methods = useForm({
     defaultValues: {
-      lang: null,
       caption: "",
       description: "",
     },
@@ -25,6 +26,7 @@ export const AltNameEditDialog = observer(() => {
     <LangContext lang="global.dialog">
       <FormProvider {...methods}>
         <DialogEdit
+          hideActions
           size="auto"
           height="auto"
           onSave={altNames.create}
@@ -40,4 +42,4 @@ export const AltNameEditDialog = observer(() => {
       </FormProvider>
     </LangContext>
   )
-})
+}

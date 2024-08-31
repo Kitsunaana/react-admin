@@ -15,11 +15,9 @@ interface CreateEditFormProps {
 export const CreateEditForm = (props: CreateEditFormProps) => {
   const { langBase } = props
 
-  const methods = useFormContext()
-
   const { characteristics, characteristicsIsLoading } = useGetCharacteristics()
   const { units, unitsIsLoading } = useGetUnits()
-  const { t } = useTranslation("locales", { keyPrefix: langBase ?? "" })
+  const { t } = useTranslation("translation", { keyPrefix: langBase ?? "" })
 
   return (
     <Box flex gap sx={{ pt: 1 }}>

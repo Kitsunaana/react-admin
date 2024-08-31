@@ -3,7 +3,7 @@ import { ColorInput } from "shared/ui/form/input-color"
 import { Text } from "shared/ui/text"
 import { useStores } from "../../../model/context"
 
-export const PhotoInputTextColor = observer(() => {
+export const InputTextColor = observer(() => {
   const { photoPosition } = useStores()
 
   return (

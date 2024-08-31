@@ -1,10 +1,12 @@
 import { DialogDelete as DialogDeleteBase } from "shared/ui/dialog/dialog-delete"
-import { useStores } from "features/categories/edit/model/context"
+import { AltNamesStore } from "entities/alt-name"
 
-export const AltNameDeleteDialog = () => {
-  const { altNames } = useStores()
+interface AltNameDeleteDialogProps {
+  altNames: AltNamesStore
+}
 
-  return (
-    <DialogDeleteBase onDeleteLocal={altNames.remove} />
-  )
+export const AltNameDeleteDialog = (props: AltNameDeleteDialogProps) => {
+  const { altNames } = props
+
+  return <DialogDeleteBase onDeleteLocal={altNames.remove} />
 }

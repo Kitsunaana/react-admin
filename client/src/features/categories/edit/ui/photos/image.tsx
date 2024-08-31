@@ -2,14 +2,13 @@ import { Box, BoxProps } from "shared/ui/box"
 import { alpha, useTheme } from "@mui/material"
 import { Text } from "shared/ui/text"
 import * as React from "react"
-import { UpdateOrder } from "features/categories/edit/ui/photos/update-order"
 import { useImage } from "shared/hooks/use-image"
 import { Image as BaseImage } from "shared/ui/image"
 import styled from "styled-components"
 import { memo } from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { useTranslation } from "react-i18next"
 import { useLang } from "shared/context/Lang"
+import { UpdateOrder } from "./update-order"
 
 interface ImageProps extends Omit<BoxProps, "id" | "order"> {
   url?: string
@@ -73,9 +72,9 @@ export const Image = memo((props: ImageProps) => {
     file,
     order,
     local,
-    onUpdateOrder,
     onClear,
     onClearLocal,
+    onUpdateOrder,
     onOpenGallery,
     ...other
   } = props
@@ -83,7 +82,6 @@ export const Image = memo((props: ImageProps) => {
   const theme = useTheme()
   const src = useImage(url ?? file)
   const langBase = useLang()?.lang
-  const { t } = useTranslation("locales", { keyPrefix: langBase })
 
   const isShowUpdateOrder = onUpdateOrder && order !== undefined
 
@@ -95,8 +93,15 @@ export const Image = memo((props: ImageProps) => {
   }
 
   return (
-    <ImageContainer onClick={() => onOpenGallery?.(id)} {...other} theme={theme}>
-      <ImageHeader theme={theme} onClick={(event) => event.stopPropagation()}>
+    <ImageContainer
+      onClick={() => onOpenGallery?.(id)}
+      theme={theme}
+      {...other}
+    >
+      <ImageHeader
+        theme={theme}
+        onClick={(event) => event.stopPropagation()}
+      >
         <Filename caption={name} />
         {isShowUpdateOrder && (
           <UpdateOrder
@@ -109,7 +114,16 @@ export const Image = memo((props: ImageProps) => {
           name="clear"
           fontSize={20}
           onClick={handleOnClear}
-          help={{ arrow: true, title: t("clear") }}
+          help={{
+            arrow: true,
+            title: (
+              <Text
+                onlyText
+                langBase={langBase}
+                name="clear"
+              />
+            ),
+          }}
         />
       </ImageHeader>
       <ImageCustom src={src} />

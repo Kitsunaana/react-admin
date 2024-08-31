@@ -1,38 +1,36 @@
 import { PhotosStore } from "features/categories/edit/model/stores/photos-store"
-import { makeAutoObservable, IReactionDisposer, reaction } from "mobx"
+import { makeAutoObservable } from "mobx"
 import { CharacteristicsStore } from "entities/characteristic/model/store"
 import { TagsStore } from "entities/tag"
-import { AltNames } from "entities/alt-name/model/alt-name-store"
 import { validation } from "shared/lib/validation"
 import { categorySchema } from "features/categories/edit/model/schemas"
+import { AltNamesStore } from "entities/alt-name"
 import { PhotoPositionStore } from "./photo-position-store"
 
 export class RootStore {
-  photoPosition: PhotoPositionStore
-  photos: PhotosStore
-  characteristics: CharacteristicsStore
-  altNames: AltNames
-  tags: TagsStore
+  tags!: TagsStore
+  photos!: PhotosStore
+  altNames!: AltNamesStore
+  photoPosition!: PhotoPositionStore
+  characteristics!: CharacteristicsStore
+
+  createStores() {
+    this.tags = new TagsStore()
+    this.photos = new PhotosStore(this)
+    this.altNames = new AltNamesStore()
+    this.photoPosition = new PhotoPositionStore(this)
+    this.characteristics = new CharacteristicsStore()
+  }
 
   constructor() {
-    this.photoPosition = new PhotoPositionStore(this)
-    this.photos = new PhotosStore(this)
-    this.characteristics = new CharacteristicsStore()
-    this.altNames = new AltNames()
-    this.tags = new TagsStore()
+    this.createStores()
 
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
   private stores = ["photoPosition", "photos", "characteristics", "altNames", "tags"]
 
-  destroy() {
-    this.photos = new PhotosStore(this)
-    this.photoPosition = new PhotoPositionStore(this)
-    this.characteristics = new CharacteristicsStore()
-    this.altNames = new AltNames()
-    this.tags = new TagsStore()
-  }
+  destroy() { this.createStores() }
 
   setData(data: any) {
     const validatedData = validation(categorySchema, data)
@@ -66,5 +64,4 @@ export class RootStore {
   }
 }
 
-export const rootStore = new RootStore()
 export const createRootStore = () => new RootStore()

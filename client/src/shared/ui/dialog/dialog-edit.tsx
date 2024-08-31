@@ -15,6 +15,7 @@ import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { Text } from "shared/ui/text"
 
 interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string
@@ -196,7 +197,7 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   tabs?: ReactNode
   onGetByIdOptions: (id: number | null) => UseQueryOptions<any, any, any, any>
   onUpdateOptions: (id: number | null, onClose: () => void) => UseMutationOptions<any, any, any>
-  onCreateOptions: () => UseMutationOptions<any, any, any>
+  onCreateOptions: (onClose: () => void) => UseMutationOptions<any, any, any>
   getData?: () => any
   setData?: (data: any) => any
   storeReset?: () => void
@@ -226,25 +227,21 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
   } = props
 
   const store = useEditDialogStore()
-
-  const lang = useLang()
-  const langBase = langBaseProps ?? lang?.lang
-
-  const { t } = useTranslation("translation", { keyPrefix: langBase })
+  const langBase = langBaseProps ?? useLang()?.lang
   const methods = useFormContext()
-
   const [isEdit, setIsEdit] = useState(false)
 
-  const onClose = () => {
-    store.closeDialog()
-    storeReset?.()
-  }
+  const onClose = () => store.closeDialog()
 
   const { data, isLoading, isFetching } = useQuery(onGetByIdOptions(store.id as number))
   const { mutate: onUpdate, isSuccess } = useMutation(onUpdateOptions(store.id as number, () => {}))
-  const { mutate: onCreate } = useMutation(onCreateOptions())
+  const { mutate: onCreate } = useMutation(onCreateOptions(onClose))
 
   const isShowSkeleton = isFetching || isLoading || isSuccess
+
+  useEffect(() => {
+    if (!store.open) return () => storeReset?.()
+  }, [store.open])
 
   useEffect(() => {
     if (store?.id) setIsEdit(true)
@@ -294,7 +291,13 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
         ) : (
           <DialogHeader
             hideActions={!!hideActions}
-            title={t(`title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
+            title={(
+              <Text
+                onlyText
+                name={`title.${isEdit ? "edit" : "create"}`}
+                value={title ?? ""}
+              />
+            )}
           />
         )}
 
@@ -319,14 +322,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
           }}
         >
           <SaveButton onClick={onSubmit} />
-          <CancelButton
-            // onClick={onClose}
-            onClick={() => { methods.reset() }}
-          />
-          <CancelButton
-            onClick={onClose}
-            // onClick={() => { methods.reset() }}
-          />
+          <CancelButton onClick={onClose} />
         </Box>
       ), [])}
     </MUIDialog>

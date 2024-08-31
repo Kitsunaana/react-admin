@@ -1,10 +1,11 @@
-import { memo, useMemo } from "react"
+import { useMemo } from "react"
 import * as React from "react"
 import { Tab as MUITab, useTheme } from "@mui/material"
 import { TabProps as BaseTabProps } from "@mui/material/Tab/Tab"
-import { dispatch } from "shared/lib/event"
 import { useLang } from "shared/context/Lang"
 import { TabLabel } from "shared/ui/tabs/tab-label"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { observer } from "mobx-react-lite"
 
 interface TabProps extends Omit<BaseTabProps, "id"> {
   isError: boolean
@@ -15,7 +16,7 @@ interface TabProps extends Omit<BaseTabProps, "id"> {
   isActive: boolean
 }
 
-export const Tab = memo((props: TabProps) => {
+export const Tab = observer((props: TabProps) => {
   const {
     id, isError, icon, caption, langBase: langBaseProps, isActive, ...other
   } = props
@@ -29,9 +30,11 @@ export const Tab = memo((props: TabProps) => {
     color: icon === "done" && !isError ? palette.success.main : undefined,
   }), [icon, isError, palette])
 
+  const { changeTab } = useEditDialogStore()
+
   return (
     <MUITab
-      onClick={() => dispatch(`${langBase}.changeTab` as any, { tab: id })}
+      onClick={() => changeTab(id)}
       {...other}
       value={id}
       key={id}

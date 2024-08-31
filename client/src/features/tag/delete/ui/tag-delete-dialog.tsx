@@ -1,14 +1,7 @@
 import { DialogDelete } from "shared/ui/dialog/dialog-delete"
 import React from "react"
-import { useStores } from "features/categories/edit/model/context"
+import { TagsStore } from "entities/tag"
 
-export const TagDeleteDialog = () => {
-  const { tags } = useStores()
-
-  return (
-    <DialogDelete
-      langBase="tags"
-      onDeleteLocal={tags.remove}
-    />
-  )
-}
+export const TagDeleteDialog = ({ tags }: { tags: TagsStore }) => (
+  <DialogDelete onDeleteLocal={tags.remove} />
+)

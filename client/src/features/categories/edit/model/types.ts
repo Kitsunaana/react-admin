@@ -1,7 +1,7 @@
 export type TMedia = {
   id: string
-  path: string
   originalName: string
+  path: string
   order: number | null
 
   data?: never
@@ -14,9 +14,9 @@ export type TMediaForm = {
 } & TMedia
 
 export type TImage = {
+  id: string
   caption: string
   data: File
-  id: string
   type: string
 
   path?: never
@@ -44,4 +44,10 @@ export interface ITab {
   caption: string
   icon: string
   content?: string[]
+}
+
+export type TPositionCheckbox = {
+  id: number
+  content: string
+  position: TPosition
 }

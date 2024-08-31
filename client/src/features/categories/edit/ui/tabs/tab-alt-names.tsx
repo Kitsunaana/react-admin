@@ -10,9 +10,9 @@ import { useFormContext } from "react-hook-form"
 import { AltNameItem } from "entities/alt-name"
 import { useGetLocales } from "entities/alt-name/queries/use-get-locales"
 import { AltNameEditDialog, AltNameDeleteDialog } from "features/alt-names"
-import { useStores } from "features/categories/edit/model/context"
-import { useTranslation } from "react-i18next"
-import { useLang } from "shared/context/Lang"
+import { Text } from "shared/ui/text"
+import { Skeleton } from "@mui/material"
+import { useStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -33,41 +33,58 @@ export const TabAltNames = observer(() => {
   const { localesData } = useGetLocales()
 
   const methods = useFormContext()
-  const langBase = useLang()?.lang ?? ""
-  const { t } = useTranslation("locales", { keyPrefix: langBase })
   const [caption, description] = methods.watch(["caption", "description"])
   const freeLocales = altNames.getFreeLocale(localesData ?? [])
+
+  const isShowCharacteristics = altNames.filteredItems.length > 0
+  const isShowSkeletons = freeLocales.length > 0 && altNames.isLoading
+  const isShowEmptyList = altNames.filteredItems.length === 0 && !altNames.isLoading
 
   return (
     <>
       <Box flex row grow sx={{ height: 1 }}>
-        {altNames.items.length > 0 ? (
+        {!isShowEmptyList ? (
           <CharacteristicsContainer fullScreen={fullScreen}>
-            {altNames.filteredItems.map((altName) => (
-              <AltNameItem key={altName.id} {...altName} />
+            {isShowCharacteristics && altNames.filteredItems.map((altName) => (
+              <AltNameItem
+                key={altName.id}
+                disabled={altNames.isLoading}
+                {...altName}
+              />
+            ))}
+
+            {isShowSkeletons && freeLocales.map(({ id }) => (
+              <Skeleton
+                key={id}
+                sx={{ borderRadius: 2, mb: 0.5 }}
+                height={40}
+                variant="rectangular"
+              />
             ))}
           </CharacteristicsContainer>
-        ) : <EmptyList />}
+        ) : (<EmptyList />)}
         <Vertical />
-        <Box sx={{ pt: 1 }}>
+        <Box sx={{ pt: 1 }} flex ai>
           <IconButton
             name="add"
+            isLoading={altNames.isLoading}
             onClick={() => openEditDialog(null)}
-            help={{ title: t("add"), arrow: true }}
+            help={{ title: <Text onlyText name="add" />, arrow: true }}
           />
           <IconButton
             name="translate"
+            isLoading={altNames.isLoading}
             disabled={!caption}
+            help={{ title: <Text onlyText name="translate" />, arrow: true }}
             onClick={() => {
               altNames.translate({ caption, description }, freeLocales)
             }}
-            help={{ title: t("translate"), arrow: true }}
           />
         </Box>
       </Box>
 
-      <AltNameDeleteDialog />
-      <AltNameEditDialog />
+      <AltNameDeleteDialog altNames={altNames} />
+      <AltNameEditDialog altNames={altNames} />
     </>
   )
 })

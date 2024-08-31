@@ -1,11 +1,10 @@
 import * as React from "react"
-import {
-  memo, useEffect, useMemo, useState,
-} from "react"
+import { useEffect, useMemo } from "react"
 import { Tabs } from "shared/ui/tabs/tabs"
 import { useFormContext, useFormState } from "react-hook-form"
 import { Tab } from "shared/ui/tabs/tab"
-import { addEvent } from "shared/lib/event"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { observer } from "mobx-react-lite"
 
 export interface ITab {
   id: number
@@ -15,7 +14,6 @@ export interface ITab {
 }
 
 interface TabsProps {
-  tab: number
   tabs: ITab[]
   requiredFields?: string[]
   langBase: string
@@ -37,20 +35,16 @@ export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
     }), [...requiredFieldsDeps, getValues])
 }
 
-export const TabsContainer = memo((props: TabsProps) => {
+export const TabsContainer = observer((props: TabsProps) => {
   const {
-    tabs, tab: tabProps, langBase, requiredFields = [],
+    tabs, langBase, requiredFields = [],
   } = props
 
-  const [tab, setTab] = useState(tabProps)
+  const { tab } = useEditDialogStore()
   const tabsWithWarning = useTabsWarning(tabs, requiredFields)
   const methods = useFormContext()
 
   useEffect(() => { methods.handleSubmit(() => {})() }, [])
-
-  useEffect(() => addEvent(`${langBase}.changeTab` as any, ({ tab }: { tab: number }) => {
-    setTab(tab)
-  }), [])
 
   const memoizedTabsArray = useMemo(() => tabs.map((item) => {
     const isError = tabsWithWarning.includes(item.id)

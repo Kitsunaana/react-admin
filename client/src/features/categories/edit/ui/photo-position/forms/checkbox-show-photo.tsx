@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import { Text } from "shared/ui/text"
 import { useStores } from "../../../model/context"
 
-export const PhotoCheckboxShowPhoto = observer(() => {
+export const CheckboxShowPhoto = observer(() => {
   const { photoPosition } = useStores()
 
   return (

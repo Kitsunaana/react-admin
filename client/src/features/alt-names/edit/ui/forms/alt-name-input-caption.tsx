@@ -11,7 +11,7 @@ type TField<TPath extends string> = ControllerRenderProps<FieldValues, TPath>
 type EventInput = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 
 export const AltNameInputCaption = () => {
-  const { t } = useTranslation("locales", { keyPrefix: "global.dialog.validate" })
+  const { t } = useTranslation("translation", { keyPrefix: "global.dialog.validate" })
   const methods = useFormContext()
 
   const onChangeInput = (event: EventInput, field: TField<"caption">) => {

@@ -4,6 +4,7 @@ export class DialogStore {
   open = false
   id: null | string | number = null
   localData?: Record<string, any>
+  tab = 0
 
   fullScreen = false
   data: any = {}
@@ -27,6 +28,10 @@ export class DialogStore {
     this.fullScreen = typeof fullScreen === "boolean"
       ? fullScreen
       : fullScreen(this.fullScreen)
+  }
+
+  changeTab(tab: number) {
+    this.tab = tab
   }
 }
 
