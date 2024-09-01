@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Injectable,
   Param,
   Patch,
   Post,
@@ -24,6 +25,25 @@ import { CharacteristicsService } from '../characteristics/characteristics.servi
 import { LocalesService } from '../locales/locales.service';
 import { TagsService } from '../tags/tags.service';
 
+@Injectable()
+export class CustomFilesInterceptor {
+  static imagesInterceptor() {
+    return FilesInterceptor('images', 100, {
+      storage: diskStorage({
+        destination: './uploads',
+        filename(
+          req: any,
+          file: Express.Multer.File,
+          callback: (error: Error | null, filename: string) => void,
+        ) {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          callback(null, uniqueSuffix + file.originalname);
+        },
+      }),
+    });
+  }
+}
+
 @Controller('categories')
 export class CategoriesController {
   constructor(
@@ -36,21 +56,7 @@ export class CategoriesController {
 
   @Post('')
   @UsePipes(new ValidationPipe({ transform: true }))
-  @UseInterceptors(
-    FilesInterceptor('images', 100, {
-      storage: diskStorage({
-        destination: './uploads',
-        filename(
-          req: any,
-          file: Express.Multer.File,
-          callback: (error: Error | null, filename: string) => void,
-        ) {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9); // 1_000_000_000
-          callback(null, uniqueSuffix + file.originalname);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
   async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateCategoryDto) {
     const category = await this.categoryService.create(dto);
 
@@ -79,21 +85,7 @@ export class CategoriesController {
 
   @Patch('/:id')
   @UsePipes(new ValidationPipe({ transform: true }))
-  @UseInterceptors(
-    FilesInterceptor('images', 100, {
-      storage: diskStorage({
-        destination: './uploads',
-        filename(
-          req: any,
-          file: Express.Multer.File,
-          callback: (error: Error | null, filename: string) => void,
-        ) {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9); // 1_000_000_000
-          callback(null, uniqueSuffix + file.originalname);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
   async update(
     @Param('id') id: number,
     @UploadedFiles() files: Array<Express.Multer.File>,
@@ -112,7 +104,9 @@ export class CategoriesController {
 
   @Delete('/:id')
   async delete(@Param('id') id: string) {
+    await this.tagsService.delete(parseInt(id));
     await this.localesService.delete(parseInt(id));
+    await this.characteristicsService.delete(parseInt(id));
 
     return await this.categoryService.delete(parseInt(id));
   }

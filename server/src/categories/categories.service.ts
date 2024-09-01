@@ -3,20 +3,17 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { FilesService } from '../files/files.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { Category } from '../entities-sequelize/category.entity';
+import { Category } from '../entities/category.entity';
 import { GetCategoryDto } from './dto/get-category-dto';
 import sequelize, { Op, Sequelize } from 'sequelize';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
-import { Media } from '../entities-sequelize/media.entity';
-import { CustomCategory } from '../entities-sequelize/custom-category';
-import {
-  CategoryCharacteristic,
-  Characteristic,
-} from '../entities-sequelize/characteristic.entity';
-import { Unit } from '../entities-sequelize/units.entity';
-import { AltNameCategory, Locale } from '../entities-sequelize/locale.entity';
-import { Tag } from '../entities-sequelize/tag.entity';
-import { CategoryTag } from '../entities-sequelize/category-tag.entity';
+import { Media } from '../entities/media.entity';
+import { CustomCategory } from '../entities/custom-category';
+import { CategoryCharacteristic, Characteristic } from '../entities/characteristic.entity';
+import { Unit } from '../entities/units.entity';
+import { AltNameCategory, Locale } from '../entities/locale.entity';
+import { Tag } from '../entities/tag.entity';
+import { CategoryTag } from '../entities/category-tag.entity';
 
 @Injectable()
 export class CategoriesService {
@@ -52,7 +49,7 @@ export class CategoriesService {
   async getAll(query: GetCategoryDto) {
     const limit = 25;
 
-    return await this.categoryRepository.findAll({
+    return await this.categoryRepository.findAndCountAll({
       include: [
         {
           model: Media,

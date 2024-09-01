@@ -1,6 +1,6 @@
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { TagCreate } from '../../entities-sequelize/tag.entity';
+import { TagCreate } from '../../entities/tag.entity';
 
 export class CreateCategoryDto {
   @IsString()

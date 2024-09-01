@@ -1,7 +1,7 @@
 import { CreateCategoryDto } from './create-category.dto';
-import { Media } from '../../entities-sequelize/media.entity';
+import { Media } from '../../entities/media.entity';
 import { Transform } from 'class-transformer';
-import { CustomCategory } from '../../entities-sequelize/custom-category';
+import { CustomCategory } from '../../entities/custom-category';
 
 class TransformedMedia extends Media {
   deleted: boolean;

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Tag, TagCreate } from '../entities-sequelize/tag.entity';
-import { CategoryTag } from '../entities-sequelize/category-tag.entity';
+import { Tag, TagCreate } from '../entities/tag.entity';
+import { CategoryTag } from '../entities/category-tag.entity';
 
 class TagCreateDto extends TagCreate {
   id: number;
@@ -15,91 +15,81 @@ export class TagsService {
     @InjectModel(CategoryTag) private categoryTagRepository: typeof CategoryTag,
   ) {}
 
-  async create(tags: TagCreateDto[], categoryId: number) {
-    await Promise.all(
-      tags.map(async (tag) => {
-        const [findTag] = await this.tagRepository.findOrCreate({
-          where: { caption: tag.tag.caption },
-          defaults: { caption: tag.tag.caption },
-        });
+  async findOrCreateTag({ caption }: TagCreate['tag']) {
+    return await this.tagRepository.findOrCreate({
+      where: { caption },
+      defaults: { caption },
+    });
+  }
 
-        await this.categoryTagRepository.create({
-          tagId: findTag.id,
-          icon: tag.icon,
-          tagColor: tag.tagColor,
-          categoryId,
-        });
-      }),
-    );
+  async createCategoryTag(data: TagCreateDto, categoryId: number) {
+    const [tag] = await this.findOrCreateTag(data.tag);
+
+    return await this.categoryTagRepository.create({
+      tagId: tag.id,
+      icon: data.icon,
+      tagColor: data.tagColor,
+      categoryId,
+    });
+  }
+
+  async create(tags: TagCreateDto[], categoryId: number) {
+    await Promise.all(tags.map(async (item) => await this.createCategoryTag(item, categoryId)));
+  }
+
+  async updateCategoryTag({ tag, icon, tagColor, id }: TagCreateDto) {
+    const tags = await this.categoryTagRepository.findAll({
+      include: [{ model: Tag, where: { id } }],
+    });
+
+    let tagId = null;
+    if (tags.length === 1) {
+      tagId = id;
+      await this.tagRepository.update({ caption: tag.caption }, { where: { id: tagId } });
+    } else {
+      const newTag = await this.tagRepository.create({ caption: tag.caption });
+      tagId = newTag.id;
+    }
+
+    return await this.categoryTagRepository.update({ tagId, icon, tagColor }, { where: { id } });
+  }
+
+  async destroyCategoryTag({ id, tag }: TagCreateDto) {
+    await this.categoryTagRepository.destroy({
+      where: { id },
+    });
+
+    const tags = await this.tagRepository.findAll({
+      include: [
+        {
+          model: CategoryTag,
+          where: { tagId: tag?.id },
+        },
+      ],
+    });
+
+    if (tags.length === 0) await this.tagRepository.destroy({ where: { id: tag.id } });
   }
 
   async update(tags: TagCreateDto[], categoryId: number) {
     await Promise.all(
       tags.map(async (item) => {
-        if (item.action === 'create') {
-          const [tag] = await this.tagRepository.findOrCreate({
-            where: { caption: item.tag.caption },
-            defaults: item.tag.caption,
-          });
-
-          return await this.categoryTagRepository.create({
-            tagId: tag.id,
-            categoryId,
-            tagColor: item.tagColor,
-            icon: item.icon,
-          });
-        }
-
-        if (item.action === 'update') {
-          const tags = await this.categoryTagRepository.findAll({
-            include: [{ model: Tag, where: { id: item.tag.id } }],
-          });
-
-          let tagId = null;
-          if (tags.length === 1) {
-            tagId = item.tag.id;
-            await this.tagRepository.update(
-              { caption: item.tag.caption },
-              { where: { id: item.tag.id } },
-            );
-          } else {
-            const tag = await this.tagRepository.create({ caption: item.tag.caption });
-            tagId = tag.id;
-          }
-
-          await this.categoryTagRepository.update(
-            {
-              tagId,
-              icon: item.icon,
-              tagColor: item.tagColor,
-            },
-            { where: { id: item.id } },
-          );
-        }
-
-        if (item.action === 'remove') {
-          await this.categoryTagRepository.destroy({
-            where: { id: item.id },
-          });
-
-          const tags = await this.tagRepository.findAll({
-            include: [
-              {
-                model: CategoryTag,
-                where: { tagId: item.tag?.id },
-              },
-            ],
-          });
-
-          if (tags.length === 0) {
-            await this.tagRepository.destroy({ where: { id: item.tag.id } });
-          }
-        }
+        if (item.action === 'create') return this.createCategoryTag(item, categoryId);
+        if (item.action === 'update') return await this.updateCategoryTag(item);
+        if (item.action === 'remove') return await this.destroyCategoryTag(item);
       }),
     );
   }
 
   async getAll() {
     return this.tagRepository.findAll({ order: [['caption', 'asc']] });
+  }
+
+  async delete(categoryId: number) {
+    const allTags = await this.tagRepository.findAll({
+      include: [{ model: CategoryTag, where: { categoryId } }],
+    });
+
+    await Promise.all(allTags.map(async (tag) => await tag.destroy()));
   }
 }

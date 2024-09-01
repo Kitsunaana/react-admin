@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Media } from '../entities-sequelize/media.entity';
+import { Media } from '../entities/media.entity';
 import * as fs from 'fs';
 
 @Injectable()

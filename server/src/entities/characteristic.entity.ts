@@ -22,8 +22,28 @@ export class Characteristic extends Model<Characteristic> {
   categories: Array<Category & { CategoryCharacteristic: CategoryCharacteristic }>;
 }
 
+export class CategoryCharacteristicCreate {
+  characteristicId: number;
+  categoryId: number;
+  unitId: number;
+  value: string;
+  hideClient: boolean;
+}
+
+export class CategoryCharacteristicUpdate {
+  id: number;
+  characteristicId: number;
+  categoryId: number;
+  unitId: number;
+  value: string;
+  hideClient: boolean;
+}
+
 @Table({ timestamps: false })
-export class CategoryCharacteristic extends Model<CategoryCharacteristic> {
+export class CategoryCharacteristic extends Model<
+  CategoryCharacteristic,
+  CategoryCharacteristicCreate
+> {
   @Column({ unique: true, type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   id: number;
 

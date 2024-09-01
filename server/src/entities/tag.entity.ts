@@ -1,4 +1,4 @@
-import { BelongsTo, Column, ForeignKey, HasOne, Model, Table } from 'sequelize-typescript';
+import { Column, HasOne, Model, Table } from 'sequelize-typescript';
 import { CategoryTag } from './category-tag.entity';
 
 export class TagCreate {

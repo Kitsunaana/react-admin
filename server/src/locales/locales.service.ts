@@ -1,20 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { AltNameCategory, Locale } from '../entities-sequelize/locale.entity';
-
-export class CreateAltNameCategoryDto {
-  id?: number;
-  caption: string;
-  description: string | null;
-  deleted?: boolean;
-  action?: 'create' | 'update' | 'remove';
-  locale: {
-    id: number;
-    caption: string;
-    altName: string;
-    code: string;
-  };
-}
+import { AltNameCategory, Locale } from '../entities/locale.entity';
+import { CreateAltNameCategoryDto } from './dto/create-alt-name-category-dto';
 
 @Injectable()
 export class LocalesService {
@@ -33,33 +20,37 @@ export class LocalesService {
     });
   }
 
+  async destroyAltName(id: number) {
+    return await this.altNameCategoryRepository.destroy({ where: { id } });
+  }
+
+  async createAltName(data: CreateAltNameCategoryDto, categoryId: number) {
+    return await this.altNameCategoryRepository.create({
+      categoryId,
+      caption: data.caption,
+      description: data.description,
+      localeId: data.locale.id,
+    });
+  }
+
+  async updateAltName(data: CreateAltNameCategoryDto, categoryId: number) {
+    return await this.altNameCategoryRepository.update(
+      {
+        categoryId,
+        caption: data.caption,
+        description: data.description,
+        localeId: data.locale.id,
+      },
+      { where: { id: data.id } },
+    );
+  }
+
   async updateAltNamesCategory(altNames: CreateAltNameCategoryDto[], categoryId: number) {
     await Promise.all(
       altNames.map(async (altName) => {
-        if (altName?.action === 'update' && altName.id) {
-          await this.altNameCategoryRepository.update(
-            {
-              categoryId,
-              caption: altName.caption,
-              description: altName.description,
-              localeId: altName.locale.id,
-            },
-            { where: { id: altName.id } },
-          );
-        }
-
-        if (altName?.action === 'create') {
-          await this.altNameCategoryRepository.create({
-            categoryId,
-            caption: altName.caption,
-            description: altName.description,
-            localeId: altName.locale.id,
-          });
-        }
-
-        if (altName.action === 'remove') {
-          await this.altNameCategoryRepository.destroy({ where: { id: altName.id } });
-        }
+        if (altName.action === 'update') return this.updateAltName(altName, categoryId);
+        if (altName.action === 'create') return this.createAltName(altName, categoryId);
+        if (altName.action === 'remove') return this.destroyAltName(altName.id);
       }),
     );
   }
