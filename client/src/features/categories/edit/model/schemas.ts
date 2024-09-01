@@ -59,4 +59,7 @@ export const categorySchema = z.object({
 
 export type TCategory = z.infer<typeof categorySchema>
 
-export const categoriesSchema = z.array(categorySchema)
+export const categoriesSchema = z.object({
+  count: z.number(),
+  rows: z.array(categorySchema),
+})

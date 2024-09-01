@@ -67,7 +67,8 @@ export const TabAltNames = observer(() => {
         <Box sx={{ pt: 1 }} flex ai>
           <IconButton
             name="add"
-            isLoading={altNames.isLoading}
+            // isLoading={altNames.isLoading}
+            isLoading
             onClick={() => openEditDialog(null)}
             help={{ title: <Text onlyText name="add" />, arrow: true }}
           />

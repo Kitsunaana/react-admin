@@ -42,9 +42,6 @@ export const TabsContainer = observer((props: TabsProps) => {
 
   const { tab } = useEditDialogStore()
   const tabsWithWarning = useTabsWarning(tabs, requiredFields)
-  const methods = useFormContext()
-
-  useEffect(() => { methods.handleSubmit(() => {})() }, [])
 
   const memoizedTabsArray = useMemo(() => tabs.map((item) => {
     const isError = tabsWithWarning.includes(item.id)

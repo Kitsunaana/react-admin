@@ -4,7 +4,9 @@ import {
 } from "react"
 import { useTranslation } from "react-i18next"
 import { DeepPartial, useForm, useFormContext } from "react-hook-form"
-import { Dialog as MUIDialog, DialogProps as MUIDialogProps, Skeleton } from "@mui/material"
+import {
+  Button, Dialog as MUIDialog, DialogProps as MUIDialogProps, Skeleton,
+} from "@mui/material"
 import { Box } from "shared/ui/box"
 import * as React from "react"
 import {
@@ -234,13 +236,21 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
   const onClose = () => store.closeDialog()
 
   const { data, isLoading, isFetching } = useQuery(onGetByIdOptions(store.id as number))
-  const { mutate: onUpdate, isSuccess } = useMutation(onUpdateOptions(store.id as number, () => {}))
-  const { mutate: onCreate } = useMutation(onCreateOptions(onClose))
+  const { mutate: onUpdate, isPending: isPendingUpdate } = useMutation(
+    onUpdateOptions(store.id as number, onClose),
+  )
+  const { mutate: onCreate, isPending: isPendingCreate } = useMutation(onCreateOptions(onClose))
 
-  const isShowSkeleton = isFetching || isLoading || isSuccess
+  const isShowSkeleton = isFetching || isLoading || isPendingUpdate || isPendingCreate
 
   useEffect(() => {
-    if (!store.open) return () => storeReset?.()
+    if (!store.open) {
+      return () => {
+        storeReset?.()
+        methods.reset(defaultValues ?? {})
+        setIsEdit(false)
+      }
+    }
   }, [store.open])
 
   useEffect(() => {
@@ -249,11 +259,6 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
     if (data) {
       methods.reset(data)
       setData?.(data)
-    }
-
-    return () => {
-      methods.reset(defaultValues ?? {})
-      methods.unregister()
     }
   }, [data, langBase, store.id])
 
@@ -310,21 +315,19 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
           </Box>
         </Box>
       </Box>
-      {useMemo(() => (
-        <Box
-          flex
-          ai
-          row
-          gap
-          sx={{
-            alignSelf: "flex-end",
-            p: 1,
-          }}
-        >
-          <SaveButton onClick={onSubmit} />
-          <CancelButton onClick={onClose} />
-        </Box>
-      ), [])}
+      <Box
+        flex
+        ai
+        row
+        gap
+        sx={{
+          alignSelf: "flex-end",
+          p: 1,
+        }}
+      >
+        <SaveButton onClick={onSubmit} disabled={isPendingUpdate || isPendingCreate} />
+        <CancelButton onClick={onClose} disabled={isPendingUpdate || isPendingCreate} />
+      </Box>
     </MUIDialog>
   )
 })

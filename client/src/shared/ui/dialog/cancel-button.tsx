@@ -1,14 +1,15 @@
 import Button from "@mui/material/Button"
 import { Text } from "shared/ui/text"
 import * as React from "react"
+import { ButtonProps } from "@mui/material"
 
-interface CancelButtonProps {
+interface CancelButtonProps extends ButtonProps{
   onClick: () => void
   langBase?: string
 }
 
 export const CancelButton = (props: CancelButtonProps) => {
-  const { onClick, langBase } = props
+  const { onClick, langBase, ...other } = props
 
   return (
     <Button
@@ -16,6 +17,7 @@ export const CancelButton = (props: CancelButtonProps) => {
       onClick={onClick}
       variant="contained"
       color="warning"
+      {...other}
     >
       <Text sx={{ fontSize: 14 }} langBase={langBase || "global.dialog"} name="cancel" />
     </Button>

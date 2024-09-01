@@ -27,7 +27,7 @@ export class CharacteristicsStore {
 
   remove(id: string | number) {
     const removeItem = (item: ICharacteristic) => (item.id === id
-      ? (typeof item.id === "string" ? null : { ...item, deleted: true })
+      ? (typeof item.id === "string" ? null : { ...item, action: "remove" })
       : item)
 
     this.items = this.items
@@ -36,7 +36,7 @@ export class CharacteristicsStore {
   }
 
   get filteredItems() {
-    return this.items.filter((item) => item.deleted !== true)
+    return this.items.filter((item) => item.action !== "remove")
   }
 
   getConflict({ caption, id }: Pick<ICharacteristic, "caption" | "id">) {

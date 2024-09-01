@@ -13,7 +13,7 @@ export const IconButton = (props: ButtonProps) => {
 
   const iconButton = <BaseIconButton {...other} />
 
-  if (help) {
+  if (help && !isLoading) {
     return (<Box help={help}>{iconButton}</Box>)
   }
 

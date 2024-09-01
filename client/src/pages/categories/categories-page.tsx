@@ -176,17 +176,12 @@ const CategoriesPage = observer(() => {
     refetch: refetchCategories,
   } = categoriesStore.categoriesQuery.result
 
-  // const { categoriesData, categoriesIsLoading, refetchCategories } = useCategories({
-  //   search: searchParams.get("search"),
-  //   page: searchParams.get("page") ?? 1,
-  // })
-
   const renderContent = () => {
     if (categoriesIsLoading) return
 
     const data = validation(categoriesSchema, categoriesData)
 
-    if (data?.length === 0) {
+    if (data?.rows.length === 0) {
       return (
         <Box ai flex jc sx={{ height: 1 }}>
           <Icon color="warning" name="empty" sx={{ fontSize: 80 }} />
@@ -195,7 +190,7 @@ const CategoriesPage = observer(() => {
       )
     }
 
-    return data.map((category: z.infer<typeof categorySchema>) => (
+    return data.rows.map((category: z.infer<typeof categorySchema>) => (
       <CategoryRow
         key={category.id}
         caption={category.caption}

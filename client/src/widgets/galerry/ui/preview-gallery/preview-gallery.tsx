@@ -18,7 +18,8 @@ const PreviewGalleryContainer = styled(Box)<BoxProps>`
   z-index: 45;
   border-radius: 8px;
   box-shadow: ${({ theme }) => theme.shadows[4]};
-  background-color: white;
+  background-color: ${({ theme: { palette } }) => palette.common[palette.mode === "dark" ? "black" : "white"]};
+  background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
 `
 
 const ButtonBox = styled(Box)<BoxProps>`

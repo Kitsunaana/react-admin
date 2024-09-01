@@ -6,6 +6,5 @@ export interface ICharacteristic {
   hideClient: boolean
 
   local?: boolean
-  deleted?: boolean
-  action?: "update" | "create"
+  action?: "update" | "create" | "remove"
 }
