@@ -1,0 +1,25 @@
+import * as React from "react"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { observer } from "mobx-react-lite"
+import { TabCommon } from "features/categories/ui/tabs/tab-common"
+import { TabPhotos } from "features/categories/ui/tabs/tab-photos"
+import { TabPhotoPosition } from "features/categories/ui/tabs/tab-photo-position"
+import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
+import { TabCharacteristics } from "features/categories/ui/tabs/tab-characteristics"
+import { TabAltNames } from "features/categories/ui/tabs/tab-alt-names"
+import { TabTags } from "features/categories/ui/tabs/tab-tags"
+
+export const ContentContainer = observer(() => {
+  const { tab } = useEditDialogStore()
+
+  return (
+    <>
+      {tab === 0 && (<TabCommon />)}
+      {tab === 1 && (<TabPhotos />)}
+      {tab === 2 && (<TabPhotoPosition />)}
+      {tab === 3 && (<RootDialogProvider><TabCharacteristics /></RootDialogProvider>)}
+      {tab === 4 && (<RootDialogProvider><TabAltNames /></RootDialogProvider>)}
+      {tab === 5 && (<RootDialogProvider><TabTags /></RootDialogProvider>)}
+    </>
+  )
+})
