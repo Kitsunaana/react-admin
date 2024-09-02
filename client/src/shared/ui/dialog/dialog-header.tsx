@@ -9,15 +9,23 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import { useTranslation } from "react-i18next"
 import { useLang } from "shared/context/Lang"
 import { ReactNode } from "react"
+import {
+  copyToClipboard,
+  readOfClipboard,
+} from "shared/lib/utils"
+import { useFormContext, UseFormReset } from "react-hook-form"
 
 interface DialogHeaderProps {
   title: string | ReactNode
   hideActions?: boolean
+  dataToCopy?: any
+  setData?: (data: any) => void
+  setValues?: UseFormReset<any>
 }
 
 export const DialogHeader = observer((props: DialogHeaderProps) => {
   const {
-    title, hideActions = false,
+    title, dataToCopy = {}, setData, setValues, hideActions = false,
   } = props
 
   const store = useEditDialogStore()
@@ -44,6 +52,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
       {!hideActions && (
         <>
           <IconButton
+            onClick={() => copyToClipboard({ ...dataToCopy, caption: `${dataToCopy.caption} copy` })}
             name="copy"
             help={{
               arrow: true,
@@ -53,6 +62,10 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
           />
           <Vertical sx={{ m: 0 }} />
           <IconButton
+            onClick={async () => {
+              setData?.(await readOfClipboard())
+              setValues?.(await readOfClipboard())
+            }}
             name="paste"
             help={{
               arrow: true,

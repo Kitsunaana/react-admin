@@ -8,11 +8,12 @@ interface RowItemProps extends BoxProps {
   success?: boolean
   warning?: boolean
   errorBg?: boolean
+  primaryBg?: boolean
 }
 
 export const RowItem = styled((props: RowItemProps) => {
   const {
-    error, errorBg, success, warning, ...other
+    error, errorBg, primaryBg, success, warning, ...other
   } = props
   return <Box {...other} />
 })`
@@ -40,6 +41,8 @@ export const RowItem = styled((props: RowItemProps) => {
     warning ? `5px solid ${palette.warning.main}` : null)};
   
   background-image: ${({ errorBg, theme: { background } }) => (errorBg ? background.hatch.error : null)};
+    
+  background-image: ${({ primaryBg, theme: { background } }) => (primaryBg ? background.hatch.primary : null)};
   
   &:hover {
     background-color: ${({ theme: { palette } }) => (palette.mode === "dark"

@@ -6,7 +6,7 @@ import { dispatch } from "shared/lib/event"
 import { TMedia } from "features/categories/edit/model/types"
 
 interface TooltipImageViewProps {
-  images: TMedia[]
+  images?: TMedia[]
 }
 
 export const TooltipImageView = memo((props: TooltipImageViewProps) => {
@@ -14,6 +14,7 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
 
   const [open, setOpen] = useState(false)
 
+  if (!images || images.length === 0) return null
   const newImages = images.length >= 14 ? [...images].splice(0, 14) : images
 
   return (

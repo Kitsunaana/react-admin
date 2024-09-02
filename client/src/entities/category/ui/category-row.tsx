@@ -1,77 +1,127 @@
-import { Box } from "shared/ui/box"
-import {
-  alpha, useTheme,
-} from "@mui/material"
-import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
-import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
-import React, {
-  memo, ReactNode, useMemo,
-} from "react"
+import { TooltipImageView } from "shared/ui/tooltip-image-view"
+import { Position } from "shared/ui/position-counter"
+import React from "react"
+import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
+import { UseMutationOptions } from "@tanstack/react-query"
+import { $axios } from "shared/config/axios"
+import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
+import { TMedia } from "features/categories/edit/model/types"
+import { Box } from "shared/ui/box"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { RowItem } from "shared/ui/row-item"
+import { useTheme } from "@mui/material"
 import { useContextMenu } from "shared/hooks/use-context-menu"
-import { ContextMenu } from "shared/ui/menu/context-menu"
+import { CategoryContextMenu } from "entities/category/ui/context-menu"
+import styled from "styled-components"
+import { LangContext } from "shared/context/lang"
+import { Text } from "shared/ui/text"
 
-interface CategoryItemProps {
-  caption: string
+interface CategoryRowProps {
   id: number
-  renderMenuActions: (id: number, close: () => void) => ReactNode
-  renderAdditionalActions: ReactNode
+  caption: string
+  images?: TMedia[]
+  order: number | null
 }
 
-export const CategoryItem = memo((props: CategoryItemProps) => {
+export const updatePositionOptions = (id: number): UseMutationOptions<any, any, number> => ({
+  mutationKey: ["categories", id],
+  mutationFn: (order: number) => $axios.patch("/categories/order", { order, id }),
+})
+
+const CustomRowItem = styled(RowItem)`
+  margin-bottom: 0px;
+  min-height: 48px;
+  border-radius: 0px;
+    
+  &:last-child {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+    
+  &:first-of-type {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+`
+
+export const CategoryRow = (props: CategoryRowProps) => {
   const {
-    caption, id, renderAdditionalActions, renderMenuActions,
+    caption, id, images, order,
   } = props
 
+  const deleteStore = useDeleteDialogStore()
+  const editStore = useEditDialogStore()
+
+  const navigate = useNavigateGoods(caption)
+
+  const theme = useTheme()
   const menu = useContextMenu()
 
-  const renderCaption = useMemo(() => <Text caption={caption} />, [caption])
+  const handleOnEdit = () => {
+    editStore.openDialog(id)
+    menu.close()
+  }
+
+  const handleOnDelete = () => {
+    deleteStore.openDialog(id, { caption })
+    menu.close()
+  }
 
   return (
-    <Box
+    <CustomRowItem
+      primaryBg={menu.isOpen}
       onContextMenu={menu.open}
-      flex
-      ai
-      row
-      jc_sp
-      sx={{
-        px: 1,
-        height: 48,
-        border: ({ palette }) => `1px solid ${palette.mode === "dark"
-          ? alpha(palette.grey["600"], 0.75)
-          : alpha(palette.grey["400"], 0.45)}`,
-        ...(menu.isOpen ? {
-          backgroundImage: ({ background }) => background.hatch.primary,
-          backgroundSize: "8px 8px",
-        } : {}),
-        "&:last-child": {
-          borderBottomLeftRadius: 8,
-          borderBottomRightRadius: 8,
-        },
-        "&:first-of-type": {
-          borderTopLeftRadius: 8,
-          borderTopRightRadius: 8,
-        },
-      }}
+      theme={theme}
     >
+      {caption}
       {menu.isOpen && (
-        <ContextMenu
-          ref={menu.ref}
-          id={id}
-          actionsList={renderMenuActions(id, menu.close)}
-        />
+        <LangContext lang="category.contextMenu">
+          <CategoryContextMenu
+            id={id}
+            ref={menu.ref}
+            onGoodsCategory={navigate}
+            onEdit={handleOnEdit}
+            onDelete={handleOnDelete}
+          />
+        </LangContext>
       )}
-      {renderCaption}
-      <Box row flex ai>
-        {renderAdditionalActions}
+
+      <Box flex row ai>
+        <TooltipImageView images={images} />
         <Vertical />
-        <IconButtonBase
+        <IconButton
+          name="goods"
+          fontSize={20}
+          onClick={navigate}
+          help={{ title: <Text onlyText name="goodsCategoryCount" /> }}
+          badge={{
+            badgeContent: 9,
+            color: "warning",
+          }}
+        />
+        <Vertical />
+        <Position
+          order={order}
+          id={id}
+          updatePositionOptions={updatePositionOptions}
+        />
+        <Vertical />
+        <IconButton
+          name="stopList"
+          help={{ title: <Text onlyText name="addStopList" /> }}
+          fontSize={20}
+        />
+        <Vertical />
+        <IconButton
+          help={{ title: <Text onlyText name="actions" /> }}
           sx={{ p: 0.25, borderRadius: 1 }}
           color="primary"
           name="actions"
           onClick={menu.open}
         />
       </Box>
-    </Box>
+    </CustomRowItem>
   )
-})
+}

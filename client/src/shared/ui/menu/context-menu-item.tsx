@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React, { memo, ReactNode } from "react"
 import { MenuItem } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Icon } from "shared/ui/icon"
@@ -31,7 +31,7 @@ export const ContextMenuItem = memo((props: MenuActionItemProps) => {
       }}
     >
       <Text
-        caption={caption}
+        name={caption}
         sx={{
           color: ({ palette }) => (variantText ? palette[variantText].main : null),
         }}

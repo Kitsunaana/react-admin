@@ -104,11 +104,11 @@ export const Image = memo((props: ImageProps) => {
       >
         <Filename caption={name} />
         {isShowUpdateOrder && (
-          <UpdateOrder
-            id={id}
-            order={order}
-            onClick={onUpdateOrder}
-          />
+        <UpdateOrder
+          id={id}
+          order={order}
+          onClick={onUpdateOrder}
+        />
         )}
         <DeleteImageButton
           name="clear"

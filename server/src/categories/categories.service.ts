@@ -5,7 +5,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Category } from '../entities/category.entity';
 import { GetCategoryDto } from './dto/get-category-dto';
-import sequelize, { Op, Sequelize } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { Media } from '../entities/media.entity';
 import { CustomCategory } from '../entities/custom-category';

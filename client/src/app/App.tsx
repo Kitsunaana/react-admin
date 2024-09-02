@@ -10,6 +10,8 @@ import { routeConfig } from "shared/config/route-config"
 import { LangContext } from "shared/context/Lang"
 import { Route, Routes } from "react-router-dom"
 import { Spinner } from "shared/ui/spinner"
+import { Gallery } from "widgets/galerry"
+import { Backdrop } from "shared/ui/backdrop"
 
 export const Pages = () => {
   const { palette } = useTheme()
@@ -66,6 +68,9 @@ export const App = () => (
     <LangContext lang="sidebar">
       <Sidebar menu={menu} menuBottom={menuBottom} />
     </LangContext>
+
+    <Gallery />
+    <Backdrop />
 
     <Pages />
   </Box>

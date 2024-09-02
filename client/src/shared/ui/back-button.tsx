@@ -1,8 +1,10 @@
-import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import React from "react"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { Text } from "shared/ui/text"
 
 export const BackButton = () => (
-  <IconButtonBase
+  <IconButton
+    help={{ arrow: true, title: <Text onlyText name="back" /> }}
     name="back"
     color="warning"
     fontSize={20}

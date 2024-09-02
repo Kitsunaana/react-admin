@@ -296,6 +296,9 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
         ) : (
           <DialogHeader
             hideActions={!!hideActions}
+            setData={setData}
+            setValues={methods.reset}
+            dataToCopy={{ ...methods.getValues(), ...getData?.() }}
             title={(
               <Text
                 onlyText

@@ -3,8 +3,8 @@ import { useEffect, useMemo } from "react"
 import { Tabs } from "shared/ui/tabs/tabs"
 import { useFormContext, useFormState } from "react-hook-form"
 import { Tab } from "shared/ui/tabs/tab"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { observer } from "mobx-react-lite"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 
 export interface ITab {
   id: number
@@ -41,6 +41,7 @@ export const TabsContainer = observer((props: TabsProps) => {
   } = props
 
   const { tab } = useEditDialogStore()
+
   const tabsWithWarning = useTabsWarning(tabs, requiredFields)
 
   const memoizedTabsArray = useMemo(() => tabs.map((item) => {
