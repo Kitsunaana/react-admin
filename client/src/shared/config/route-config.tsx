@@ -2,17 +2,20 @@ import GoodsPage from "pages/Goods/goods-page"
 import { SettingsPage } from "pages/settings"
 import { CategoriesPage } from "pages/categories"
 import { RouteProps } from "react-router-dom"
+import { StopListPage } from "pages/stop-list"
 
 export enum AppRoutes {
   CATALOG = "catalog",
   SETTINGS = "settings",
   GOODS = "goods",
+  STOP_LIST = "stop-list"
 }
 
 export const RoutePath: Record<AppRoutes, string> = {
   [AppRoutes.CATALOG]: "/catalog",
   [AppRoutes.GOODS]: "/catalog/goods",
   [AppRoutes.SETTINGS]: "/users/settings",
+  [AppRoutes.STOP_LIST]: "/stop-list",
 }
 
 export const routeConfig: Record<AppRoutes, RouteProps> = {
@@ -27,5 +30,9 @@ export const routeConfig: Record<AppRoutes, RouteProps> = {
   [AppRoutes.GOODS]: {
     path: RoutePath.goods,
     element: <GoodsPage />,
+  },
+  [AppRoutes.STOP_LIST]: {
+    path: RoutePath["stop-list"],
+    element: <StopListPage />,
   },
 }

@@ -63,6 +63,7 @@ const iconData = {
   characteristic: "extension",
   alternativeName: "signature",
   tags: "loyalty",
+  arrowRight: "navigate_next",
 }
 
 interface DefaultIcon extends IconProps {

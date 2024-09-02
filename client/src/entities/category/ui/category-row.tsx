@@ -6,7 +6,6 @@ import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 import { UseMutationOptions } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
-import { TMedia } from "features/categories/edit/model/types"
 import { Box } from "shared/ui/box"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { IconButton } from "shared/ui/buttons/icon-button"
@@ -17,6 +16,7 @@ import { CategoryContextMenu } from "entities/category/ui/context-menu"
 import styled from "styled-components"
 import { LangContext } from "shared/context/lang"
 import { Text } from "shared/ui/text"
+import { TMedia } from "features/categories/model/types"
 
 interface CategoryRowProps {
   id: number

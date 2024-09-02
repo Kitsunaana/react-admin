@@ -12,10 +12,9 @@ import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
-import { useStores } from "features/categories/edit/model/context"
 import { useLang } from "shared/context/Lang"
-import { useTranslation } from "react-i18next"
 import { Text } from "shared/ui/text"
+import { useStores } from "features/categories/model/context"
 
 export interface CharacteristicItemProps extends ICharacteristic {
   local?: boolean
@@ -30,8 +29,6 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   const { openDialog } = useEditDialogStore()
   const { openDialog: openDeleteDialog } = useDeleteDialogStore()
   const theme = useTheme()
-
-  const langBase = useLang()?.lang ?? ""
 
   const onOpenEditDialog = () => openDialog(id, {
     unit, hideClient, value, caption, id,
