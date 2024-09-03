@@ -6,8 +6,7 @@ import React from "react"
 import { Mark } from "shared/ui/mark"
 import { Tag } from "shared/ui/tag"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
-import { ActionButton } from "entities/goods/ui/action-button"
-import { MIKU } from "shared/config/constants"
+import { IconButton } from "shared/ui/buttons/icon-button"
 import { StopListButton } from "./stop-list-button"
 import { AdditionalButton } from "./additional-button"
 import { CardProductDetails } from "./card-product-details"
@@ -27,14 +26,13 @@ export const CardProduct = () => (
           },
         }}
       />
-        )}
+    )}
     tags={(
       <>
-        <Tag caption="-18 шт." variant="warning" />
         <Tag caption="new" />
         <Tag caption="hot" />
       </>
-        )}
+    )}
     actions={(
       <>
         <TooltipImageView images={[]} />
@@ -46,9 +44,15 @@ export const CardProduct = () => (
           26
         </Box>
         <Vertical />
-        <ActionButton />
+        <IconButton
+          help={{ title: <Text onlyText name="actions" /> }}
+          sx={{ p: 0.25, borderRadius: 1 }}
+          color="primary"
+          name="actions"
+          // onClick={menu.open}
+        />
       </>
-        )}
+    )}
     contentTitle="Прайс-лист"
     details={<CardProductDetails />}
   />

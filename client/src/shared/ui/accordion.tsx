@@ -7,7 +7,7 @@ import { Icon } from "shared/ui/icon"
 import { Divider, Vertical } from "shared/ui/divider"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import React, {
-  ReactNode,
+  ReactNode, useState,
 } from "react"
 import styled from "styled-components"
 
@@ -61,20 +61,33 @@ export const Accordion = (props: AccordionProps) => {
   } = props
 
   const theme = useTheme()
+  const [isExpanded, setIdExpanded] = useState(false)
 
   return (
-    <AccordionContainer theme={theme} {...other}>
+    <AccordionContainer
+      theme={theme}
+      {...other}
+      expanded={isExpanded}
+      onClick={() => setIdExpanded((prevState) => !prevState)}
+    >
       <Summary theme={theme}>
         <Box flex row jc_sp ai sx={{ width: 1 }}>
           <Box>
             {caption}
             {description}
           </Box>
-          <Box flex ai row sx={{ height: 1 }}>
+          <Box flex ai row sx={{ height: 1 }} onClick={(event) => event.stopPropagation()}>
             {tags}
             {actions}
             <Vertical sx={{ mx: 0.75 }} />
-            <IconButton sx={{ p: 0.5 }}>
+            <IconButton
+              sx={{
+                p: 0.5,
+                transform: `rotate(${isExpanded ? 180 : 0}deg)`,
+                transition: ".3s",
+              }}
+              onClick={() => setIdExpanded((prevState) => !prevState)}
+            >
               <Icon sx={{ fontSize: 20 }} name="expand" />
             </IconButton>
           </Box>

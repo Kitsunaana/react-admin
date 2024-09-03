@@ -14,20 +14,6 @@ interface RowItemProps extends BoxProps {
   height?: number
 }
 
-/*
-margin-bottom: 0px;
-border-radius: 0px;
-
-&:last-child {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-
-&:first-of-type {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-} */
-
 export const RowItem = styled((props: RowItemProps) => {
   const {
     error, errorBg, primaryBg, success, warning, disableMargin, eachRadius, height, ...other
@@ -43,7 +29,7 @@ export const RowItem = styled((props: RowItemProps) => {
   border-radius: ${({ eachRadius = true }) => (eachRadius ? "8px" : "0px")};
   transition: .3s;
   background-size: 6px 6px;
-  min-height: ${({ height }) => `${height}px` ?? "40px"};
+  min-height: ${({ height = 40 }) => `${height}px` ?? "40px"};
 
   &:last-child {
       border-bottom-left-radius: 8px;

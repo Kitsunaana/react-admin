@@ -6,6 +6,7 @@ import { Filters } from "features/goods/filters/ui/filters"
 import { Table } from "shared/ui/table"
 import { BottomPage } from "shared/ui/bottom-page"
 import { CreateButton } from "shared/ui/buttons/create-button"
+import { GoodDialog } from "features/goods/dialog"
 
 const GoodsPage = () => (
   <>
@@ -17,6 +18,8 @@ const GoodsPage = () => (
       bottom={<BottomPage />}
     />
     <Backdrop />
+
+    <GoodDialog />
   </>
 )
 
