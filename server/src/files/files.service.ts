@@ -10,7 +10,10 @@ export class FilesService {
   async saveMedia(
     media: Array<Express.Multer.File>,
     imagesIds: Array<{ id: string; caption: string }>,
-    categoryId: number,
+    owner: {
+      categoryId?: number;
+      goodId?: number;
+    },
   ) {
     return await Promise.all(
       media.map(async (file) => {
@@ -22,7 +25,7 @@ export class FilesService {
           size: file.size,
           mimetype: file.mimetype,
           path: file.path,
-          categoryId: categoryId,
+          categoryId: owner.categoryId,
           originalName: file.originalname,
         });
       }),

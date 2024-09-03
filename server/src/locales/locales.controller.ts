@@ -5,9 +5,12 @@ import { LocalesService } from './locales.service';
 export class LocalesController {
   constructor(private localeService: LocalesService) {}
 
-  @Get('/:ru')
-  getLanguage(@Param() value: string) {
-    return { catalog: { rows: { count: 'Всего <strong>{{value}}</strong> элементов' } } };
+  @Get('/:lng')
+  getLanguage(@Param() lng: string) {
+    return {
+      catalog: { rows: { count: 'Всего <strong>{{value}}</strong> элементов' } },
+      goods: { table: { row: { category: 'Категория <strong>{{value}}</strong>' } } },
+    };
   }
 
   @Get('')

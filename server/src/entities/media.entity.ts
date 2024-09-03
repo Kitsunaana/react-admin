@@ -1,5 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Category } from './category.entity';
+import { Good } from './good.entity';
 
 @Table
 export class Media extends Model<Media> {
@@ -30,4 +31,11 @@ export class Media extends Model<Media> {
 
   @BelongsTo(() => Category, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   category: Category;
+
+  @Column
+  @ForeignKey(() => Good)
+  goodId: number;
+
+  @BelongsTo(() => Good, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  good: Category;
 }

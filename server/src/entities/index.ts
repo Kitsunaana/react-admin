@@ -7,6 +7,7 @@ import { Unit } from './units.entity';
 import { AltNameCategory, Locale } from './locale.entity';
 import { Tag } from './tag.entity';
 import { CategoryTag } from './category-tag.entity';
+import { Good } from './good.entity';
 
 export const Models: ModelCtor<Model<any, any>>[] = [
   CustomCategory,
@@ -19,4 +20,5 @@ export const Models: ModelCtor<Model<any, any>>[] = [
   AltNameCategory,
   Tag,
   CategoryTag,
+  Good,
 ];

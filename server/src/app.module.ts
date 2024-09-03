@@ -10,6 +10,7 @@ import { join } from 'path';
 import { SequelizeModule } from './sequelize/sequelize.module';
 import { CharacteristicsModule } from './characteristics/characteristics.module';
 import { TagsModule } from './tags/tags.module';
+import { GoodsModule } from './goods/goods.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TagsModule } from './tags/tags.module';
     SequelizeModule,
     CharacteristicsModule,
     TagsModule,
+    GoodsModule,
   ],
 })
 export class AppModule {}

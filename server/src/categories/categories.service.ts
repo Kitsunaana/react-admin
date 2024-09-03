@@ -46,6 +46,13 @@ export class CategoriesService {
     });
   }
 
+  async getAllCategories() {
+    return await this.categoryRepository.findAll({
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      order: [['order', 'desc']],
+    });
+  }
+
   async getAll(query: GetCategoryDto) {
     const limit = 25;
 

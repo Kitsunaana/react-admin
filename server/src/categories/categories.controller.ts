@@ -62,7 +62,7 @@ export class CategoriesController {
 
     await this.localesService.create(dto.altNames, category.id);
     await this.characteristicsService.create(dto.items, category);
-    await this.filesService.saveMedia(files, dto.imagesIds, category.id);
+    await this.filesService.saveMedia(files, dto.imagesIds, { categoryId: category.id });
     await this.tagsService.create(dto.tags, category.id);
 
     return category;
@@ -71,6 +71,11 @@ export class CategoriesController {
   @Get()
   getAll(@Query() query: GetCategoryDto) {
     return this.categoryService.getAll(query);
+  }
+
+  @Get('/all')
+  async getAllCategories() {
+    return await this.categoryService.getAllCategories();
   }
 
   @Get('/:id')
@@ -92,7 +97,9 @@ export class CategoriesController {
     @Body() dto: UpdateCategoryDto,
   ) {
     await this.filesService.updateOrder(dto.media);
-    await this.filesService.saveMedia(files, dto.imagesIds, parseInt((dto as any).id));
+    await this.filesService.saveMedia(files, dto.imagesIds, {
+      categoryId: parseInt((<any>dto).id),
+    });
     await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
 
     await this.characteristicsService.update(dto.items, id);
