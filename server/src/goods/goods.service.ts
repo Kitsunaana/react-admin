@@ -9,7 +9,7 @@ export class GoodsService {
   constructor(@InjectModel(Good) private goodRepository: typeof Good) {}
 
   async create(dto: CreateGoodDto) {
-    return await this.goodRepository.create(dto);
+    // return await this.goodRepository.create(dto);
   }
 
   async getAll() {

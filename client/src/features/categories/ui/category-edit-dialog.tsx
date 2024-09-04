@@ -55,8 +55,5 @@ export const EditDialog = observer(() => {
 })
 
 export const CategoryEditDialog = () => (
-  /* <StoreProvider>
-    <EditDialog />
-  </StoreProvider> */
   <EditDialog />
 )

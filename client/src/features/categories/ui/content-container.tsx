@@ -8,18 +8,26 @@ import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
 import { TabCharacteristics } from "features/categories/ui/tabs/tab-characteristics"
 import { TabAltNames } from "features/categories/ui/tabs/tab-alt-names"
 import { TabTags } from "features/categories/ui/tabs/tab-tags"
+import { TabPanel } from "shared/ui/tabs/tab-panel"
 
 export const ContentContainer = observer(() => {
   const { tab } = useEditDialogStore()
 
   return (
     <>
-      {tab === 0 && (<TabCommon />)}
+      {/* {tab === 0 && (<TabCommon />)}
       {tab === 1 && (<TabPhotos />)}
       {tab === 2 && (<TabPhotoPosition />)}
       {tab === 3 && (<RootDialogProvider><TabCharacteristics /></RootDialogProvider>)}
       {tab === 4 && (<RootDialogProvider><TabAltNames /></RootDialogProvider>)}
-      {tab === 5 && (<RootDialogProvider><TabTags /></RootDialogProvider>)}
+      {tab === 5 && (<RootDialogProvider><TabTags /></RootDialogProvider>)} */}
+
+      <TabPanel value={tab} index={0}><TabCommon /></TabPanel>
+      <TabPanel value={tab} index={1}><TabPhotos /></TabPanel>
+      <TabPanel value={tab} index={2}><TabPhotoPosition /></TabPanel>
+      <TabPanel value={tab} index={3}><RootDialogProvider><TabCharacteristics /></RootDialogProvider></TabPanel>
+      {/* <TabPanel value={tab} index={4}><RootDialogProvider><TabAltNames /></RootDialogProvider></TabPanel> */}
+      {/* <TabPanel value={tab} index={5}><RootDialogProvider><TabTags /></RootDialogProvider></TabPanel> */}
     </>
   )
 })

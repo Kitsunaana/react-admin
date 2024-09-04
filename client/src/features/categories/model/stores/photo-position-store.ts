@@ -104,9 +104,18 @@ export class PhotoPositionStore {
   }
 
   getData() {
-    return {
+    /* return {
       ...this,
       indexActiveImage: this.indexActiveImage,
+    } */
+
+    const { rootStore, ...otherProperties } = this
+
+    return {
+      custom: {
+        ...otherProperties,
+        indexActiveImage: this.indexActiveImage,
+      },
     }
   }
 }

@@ -2,39 +2,40 @@ import {
   Controller, FormProvider, useForm,
 } from "react-hook-form"
 import React, {
-  memo, ReactNode, useEffect,
+  KeyboardEvent,
+  memo, ReactNode, useEffect, useRef, useState,
 } from "react"
 import { Box } from "shared/ui/box"
 import { Input } from "shared/ui/form/input"
 import { addEvent } from "shared/lib/event"
 import { z } from "zod"
-import { Select } from "shared/ui/form/select"
+import { Select, SelectItem } from "shared/ui/form/select"
 import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { BackButton } from "shared/ui/back-button"
+import { RefetchButton } from "shared/ui/buttons/refresh-button"
+import { useQuery } from "@tanstack/react-query"
+import { $axios } from "shared/config/axios"
+import Autocomplete from "@mui/material/Autocomplete"
+import { validation } from "shared/lib/validation"
+import { Icon } from "shared/ui/icon"
+import { useSearchParams } from "react-router-dom"
+import { useEvent } from "shared/hooks/use-event"
 
-export interface Option {
-  id?: number
-  value: string | null
-  icon?: string
-  default?: boolean
+export interface TypeGood {
+  id: number
+  caption: string
+  icon: string
 }
 
-export interface UseFormProps {
-  category: Option
-  typeGood: Option
-  search: { value: string | null }
-}
-
-const categoryList = [{ id: 1, value: "option1" }, { id: 2, value: "option2" }]
 const typeGoodList = [
   {
     id: 1,
-    value: "option1",
+    caption: "zxc",
     icon: "consumable",
   },
   {
     id: 2,
-    value: "option2",
+    caption: "qwe",
     icon: "typeGood",
   },
 ]
@@ -43,117 +44,187 @@ interface FiltersProps {
   createButton: ReactNode
 }
 
-const paramsSchema = z.object({
-  category: z.string().optional().nullable().default(null),
-  typeGood: z.string().optional().default("option2"),
-  search: z.string().optional().default(""),
-}).strict()
+export const categorySchema = z.object({
+  id: z.number(),
+  description: z.string().optional(),
+  caption: z.string(),
+  order: z.number(),
+})
+
+export const categoriesSchema = z.array(categorySchema)
+
+export type Categories = z.infer<typeof categoriesSchema>
+export type Category = z.infer<typeof categorySchema>
+
+export interface UseFormProps {
+  search: string
+  category: Category | null
+  typeGood: TypeGood | null
+}
+
+export const useGetAllCategories = () => {
+  const { data, isLoading } = useQuery<Categories>({
+    queryKey: ["categories"],
+    queryFn: () => $axios.get("/categories/all").then(({ data }) => data),
+  })
+
+  let validatedData = data
+  if (data !== undefined) {
+    validatedData = validation(categoriesSchema, data)
+  }
+
+  return { categories: validatedData, isLoading }
+}
 
 export const Filters = memo((props: FiltersProps) => {
   const { createButton } = props
 
-  const readParams = { category: "", typeGood: "", search: "" }
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isFocused, setIsFocused] = useState(false)
+  const { categories, isLoading } = useGetAllCategories()
 
   const methods = useForm<UseFormProps>({
     defaultValues: {
-      category: { value: readParams.category },
-      typeGood: { value: readParams.typeGood },
-      search: { value: readParams.search },
+      search: "",
+      category: null,
+      typeGood: typeGoodList[1],
     },
   })
 
-  useEffect(() => addEvent("catalog/goods" as any, (data) => {
-    const url = data?.params ? `?${data.params}` : window.location.search
+  useEvent("keydown", (event: KeyboardEvent) => {
+    const search = methods.getValues("search")
+    if (isFocused && typeof search === "string" && event.key === "Enter") {
+      setSearchParams((prev) => {
+        if (search) prev.set("search", search)
+        else prev.delete("search")
 
-    const parseParams = { category: "", typeGood: "", search: "" };
-
-    (Object.keys(parseParams) as Array<keyof UseFormProps>).forEach((key) => {
-      methods.setValue(key, { value: parseParams[key] })
-    })
-  }), [])
-
-  const onSubmit = (data: UseFormProps) => {
-    // console.log(data)
-  }
+        return prev
+      })
+    }
+  })
 
   useEffect(() => {
-    const event = (event) => {
-      if (event.code === "Enter") {
-        const search = methods.getValues("search")
-        // if (search?.value) actionParams.push("search", search.value)
+    const search = searchParams.get("search") ?? ""
+    const category = searchParams.get("category")
+    const typeGood = searchParams.get("typeGood")
 
-        methods.handleSubmit(onSubmit)()
-      }
-    }
+    const findCategory = categories?.find((item) => item.caption === category) ?? null
+    const findTypeGood = typeGoodList?.find((item) => item.caption === typeGood)
 
-    window.addEventListener("keydown", event)
+    methods.setValue("search", search)
+    methods.setValue("category", findCategory)
+    !!findTypeGood && methods.setValue("typeGood", findTypeGood)
+  }, [searchParams, categories])
 
-    return () => window.removeEventListener("keydown", event)
-  }, [])
+  const applySearchParam = (name: string, value?: string) => {
+    setSearchParams((prev) => {
+      if (value) prev.set(name, value)
+      else prev.delete(name)
+
+      return prev
+    })
+  }
 
   return (
     <FormProvider {...methods}>
       <Box flex row ai gap>
         <Controller
-          name="search.value"
+          name="search"
+          defaultValue=""
           render={({ field }) => (
             <Input
               {...field}
+              fullWidth
+              onClear={() => applySearchParam("search")}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               setValue={methods.setValue}
-              onClear={() => {
-                // actionParams.push("search", null)
-              }}
-              sx={{ flexGrow: 1 }}
               size="small"
               label="Поиск"
             />
           )}
         />
         <Box flex row>
-          <IconButtonBase name="reload" color="primary" fontSize={20} />
+          <RefetchButton onRefetch={() => {}} />
           {createButton}
           <BackButton />
         </Box>
       </Box>
       <Box ai flex row gap grow sx={{ width: 1 }}>
-        <Controller
-          name="category.value"
-          control={methods.control}
-          render={({ field: { onChange, ...otherFields } }) => (
-            <Select
-              {...otherFields}
-              options={categoryList}
-              onChange={(_, value) => {
-                onChange(value)
-                // actionParams.push("category", value)
-                methods.handleSubmit(onSubmit)()
-              }}
-              sx={{ width: 1 }}
-              InputProps={{
-                fullWidth: true,
-                label: "Категория",
-              }}
-            />
-          )}
-        />
+        {!isLoading && categories && (
+          <Controller
+            name="category"
+            control={methods.control}
+            render={({ field }) => (
+              <Autocomplete
+                fullWidth
+                options={categories}
+                value={field.value ?? null}
+                isOptionEqualToValue={(option, value) => option?.caption === value?.caption}
+                getOptionLabel={(option) => option.caption}
+                onChange={(_, value) => {
+                  field.onChange(value)
+                  applySearchParam("category", value?.caption)
+                }}
+                renderInput={(params) => (
+                  <Input
+                    {...params}
+                    size="small"
+                    label="Категория"
+                  />
+                )}
+                renderOption={({ key, ...other }, option) => (
+                  <SelectItem key={key} {...other}>
+                    <Box />
+                    {option.caption}
+                  </SelectItem>
+                )}
+              />
+            )}
+          />
+        )}
 
         <Controller
-          name="typeGood.value"
+          name="typeGood"
           control={methods.control}
-          render={({ field: { onChange, ...otherFields } }) => (
-            <Select
-              {...otherFields}
+          render={({ field }) => (
+            <Autocomplete
+              fullWidth
               options={typeGoodList}
+              value={field.value ?? null}
+              isOptionEqualToValue={(option, value) => option?.caption === value?.caption}
+              getOptionLabel={(option) => option.caption}
               onChange={(_, value) => {
-                onChange(value)
-                // actionParams.push("typeGood", value)
-                methods.handleSubmit(onSubmit)()
+                field.onChange(value)
+                applySearchParam("typeGood", value?.caption)
               }}
-              sx={{ width: 1 }}
-              InputProps={{
-                fullWidth: true,
-                label: "Тип товара",
+              renderInput={(params) => {
+                const findOption = methods.getValues("typeGood")
+
+                return (
+                  <Input
+                    {...params}
+                    size="small"
+                    label="Тип товара"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        findOption ? (
+                          <Icon
+                            fontSize="small"
+                            name={findOption?.icon}
+                          />
+                        ) : null),
+                    }}
+                  />
+                )
               }}
+              renderOption={({ key, ...other }, option) => (
+                <SelectItem key={key} {...other}>
+                  <Icon name={option.icon} />
+                  {option.caption}
+                </SelectItem>
+              )}
             />
           )}
         />

@@ -271,6 +271,8 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
     })()
   }
 
+  const memoizedGetValuesFn = useMemo(() => [methods.getValues, getData], [])
+
   return (
     <MUIDialog
       fullScreen={store.fullScreen}
@@ -298,7 +300,8 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
             hideActions={!!hideActions}
             setData={setData}
             setValues={methods.reset}
-            dataToCopy={{ ...methods.getValues(), ...getData?.() }}
+            getValues={memoizedGetValuesFn}
+            // dataToCopy={{ ...methods.getValues(), ...getData?.() }}
             title={(
               <Text
                 onlyText

@@ -21,11 +21,12 @@ interface DialogHeaderProps {
   dataToCopy?: any
   setData?: (data: any) => void
   setValues?: UseFormReset<any>
+  getValues?: ((() => any) | undefined)[]
 }
 
 export const DialogHeader = observer((props: DialogHeaderProps) => {
   const {
-    title, dataToCopy = {}, setData, setValues, hideActions = false,
+    title, dataToCopy = {}, setData, setValues, getValues, hideActions = false,
   } = props
 
   const store = useEditDialogStore()
@@ -52,7 +53,17 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
       {!hideActions && (
         <>
           <IconButton
-            onClick={() => copyToClipboard({ ...dataToCopy, caption: `${dataToCopy.caption} copy` })}
+            onClick={() => {
+              copyToClipboard({
+                ...(
+                  getValues
+                    ?.filter((fn): fn is () => any => typeof fn === "function")
+                    .map((fn) => ({ ...fn() }))
+                    .reduce((prev, current) => ({ ...prev, ...current }), {})
+                ),
+                caption: `${dataToCopy.caption} copy`,
+              })
+            }}
             name="copy"
             help={{
               arrow: true,

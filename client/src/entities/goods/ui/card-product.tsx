@@ -11,49 +11,58 @@ import { StopListButton } from "./stop-list-button"
 import { AdditionalButton } from "./additional-button"
 import { CardProductDetails } from "./card-product-details"
 
-export const CardProduct = () => (
-  <Accordion
-    caption={<Text caption="Ананас" />}
-    description={(
-      <Text
-        sx={{ fontSize: 12 }}
-        langBase="goods.table.row"
-        name="category"
-        value="Экзотические фрукты"
-        translateOptions={{
-          components: {
-            strong: <Mark />,
-          },
-        }}
-      />
-    )}
-    tags={(
-      <>
-        <Tag caption="new" />
-        <Tag caption="hot" />
-      </>
-    )}
-    actions={(
-      <>
-        <TooltipImageView images={[]} />
-        <Vertical />
-        <StopListButton />
-        <AdditionalButton />
-        <Vertical />
-        <Box sx={{ mx: 0.25 }}>
-          26
-        </Box>
-        <Vertical />
-        <IconButton
-          help={{ title: <Text onlyText name="actions" /> }}
-          sx={{ p: 0.25, borderRadius: 1 }}
-          color="primary"
-          name="actions"
-          // onClick={menu.open}
+interface CardProductProps {
+  caption: string
+  category: string
+}
+
+export const CardProduct = (props: CardProductProps) => {
+  const { caption, category } = props
+
+  return (
+    <Accordion
+      caption={<Text caption={caption} />}
+      description={(
+        <Text
+          sx={{ fontSize: 12 }}
+          langBase="goods.table.row"
+          name="category"
+          value={category}
+          translateOptions={{
+            components: {
+              strong: <Mark />,
+            },
+          }}
         />
-      </>
-    )}
-    contentTitle="Прайс-лист"
-    details={<CardProductDetails />}
-  />
-)
+      )}
+      tags={(
+        <>
+          <Tag caption="new" />
+          <Tag caption="hot" />
+        </>
+      )}
+      actions={(
+        <>
+          <TooltipImageView images={[]} />
+          <Vertical />
+          <StopListButton />
+          <AdditionalButton />
+          <Vertical />
+          <Box sx={{ mx: 0.25 }}>
+            26
+          </Box>
+          <Vertical />
+          <IconButton
+            help={{ title: <Text onlyText name="actions" /> }}
+            sx={{ p: 0.25, borderRadius: 1 }}
+            color="primary"
+            name="actions"
+            // onClick={menu.open}
+          />
+        </>
+      )}
+      contentTitle="Прайс-лист"
+      details={<CardProductDetails />}
+    />
+  )
+}

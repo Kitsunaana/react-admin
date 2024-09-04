@@ -13,13 +13,18 @@ import styled from "styled-components"
 
 export const AccordionContainer = styled(MUIAccordion)`
     box-shadow: 0px 0px 0px rgba(0,0,0,0);
-    border: ${({ theme }) => `1px solid ${theme.palette.grey["600"]}`};
+    border: ${({ theme }) => `1px solid ${theme.palette.grey["700"]}`};
     background-image: ${({ theme }) => `${theme.background.sectionBackground} !important`};
     
     &.Mui-expanded {
         margin-top: ${({ theme }) => `${theme.spacing(0.5)} !important`};
         margin-bottom: ${({ theme }) => `${theme.spacing(0.5)} !important`};
-        border-radius: ${({ theme }) => theme.spacing(0.5)};
+        border-radius: ${({ theme }) => theme.spacing(1)};
+    }
+
+    &:first-of-type {
+        border-top-left-radius: 8px !important;
+        border-top-right-radius: 8px !important;;
     }
 `
 

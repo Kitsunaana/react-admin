@@ -26,7 +26,16 @@ export class RootStore {
 
   setData(data: any) {}
 
-  getData() {}
+  getData() {
+    return ["photos", "characteristics", "altNames"]
+      .reduce((prev, current) => {
+        if (typeof this[current]?.getData === "function") {
+          prev[current] = this[current]?.getData()
+        }
+
+        return prev
+      }, {})
+  }
 }
 
 export const createRootStore = () => new RootStore()
