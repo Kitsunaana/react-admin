@@ -2,11 +2,42 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Media } from '../entities/media.entity';
 import * as fs from 'fs';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class FilesService {
   constructor(@InjectModel(Media) private mediaRepository: typeof Media) {}
 
+  async saveUploadedMedia(media: Media[], categoryId: number) {
+    console.log(media);
+    await Promise.all(
+      media.map(async ({ id, ...otherProperties }) => {
+        return await this.mediaRepository.findOrCreate({
+          where: { id, categoryId },
+          defaults: {
+            ...otherProperties,
+            categoryId,
+            id: nanoid(),
+          },
+        });
+      }),
+    );
+  }
+
+  /**
+   *  {
+   *             "id": "yeu5VLctTGkf64aw1aWMY",
+   *         },
+   *         {
+   *             "id": "gPmjsc52kg66fFNei_So9",
+   *         },
+   *         {
+   *             "id": "D7uRh9_sgxIZKRVs5uWiC",
+   *         }
+   * @param media
+   * @param imagesIds
+   * @param owner
+   */
   async saveMedia(
     media: Array<Express.Multer.File>,
     imagesIds: Array<{ id: string; caption: string }>,
@@ -33,14 +64,17 @@ export class FilesService {
   }
 
   async deleteMedia(media?: Media[]): Promise<void[]> {
+    // console.log(media);
     return await Promise.all(
-      media?.map(async (file) => {
-        if (fs.existsSync(file.path)) {
-          await this.mediaRepository.destroy({ where: { id: file.id } });
+      media?.map(async ({ path, id }) => {
+        await this.mediaRepository.destroy({ where: { id } });
 
-          return fs.unlink(file.path, (err) => {
-            console.log(err);
-          });
+        const allMedia = await this.mediaRepository.findAll({
+          where: { path },
+        });
+
+        if (allMedia.length === 0 && fs.existsSync(path)) {
+          return fs.unlink(path, console.log);
         }
       }),
     );
@@ -49,6 +83,7 @@ export class FilesService {
   async updateOrder(media: Media[]) {
     return await Promise.all(
       media.map(async (file) => {
+        console.log(file);
         return await this.mediaRepository.update(file, { where: { id: file.id } });
       }),
     );

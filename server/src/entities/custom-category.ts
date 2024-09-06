@@ -1,7 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Category } from './category.entity';
 
-type Position =
+export type Position =
   | 'top-left'
   | 'top-center'
   | 'top-right'

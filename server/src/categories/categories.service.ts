@@ -25,7 +25,7 @@ export class CategoriesService {
 
   async create(dto: CreateCategoryDto) {
     const category = await this.categoryRepository.create(dto);
-    const customCategory = await this.customCategoryRepository.create(dto);
+    const customCategory = await this.customCategoryRepository.create(dto.custom);
 
     await category.$set('custom', customCategory);
 
@@ -41,7 +41,7 @@ export class CategoriesService {
       },
       { where: { id } },
     );
-    await this.customCategoryRepository.update(dto, {
+    await this.customCategoryRepository.update(dto.custom, {
       where: { categoryId: id },
     });
   }
@@ -62,7 +62,7 @@ export class CategoriesService {
           model: Media,
           separate: true,
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'mimetype', 'size', 'categoryId'],
+            exclude: ['createdAt', 'updatedAt', 'goodId', 'categoryId'],
           },
           order: [
             [Sequelize.col('Media.order'), 'desc'],
@@ -107,7 +107,9 @@ export class CategoriesService {
         {
           model: Media,
           as: 'media',
-          attributes: ['id', 'order', 'originalName', 'path'],
+          attributes: {
+            exclude: ['updatedAt', 'createdAt', 'categoryId', 'goodId'],
+          },
         },
         { model: CustomCategory },
         { model: CategoryCharacteristic, include: [Characteristic, Unit] },

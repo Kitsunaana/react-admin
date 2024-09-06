@@ -1,6 +1,8 @@
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { TagCreate } from '../../entities/tag.entity';
+import { CustomCategory, Position } from '../../entities/custom-category';
+import { Media } from '../../entities/media.entity';
 
 export class CreateCategoryDto {
   @IsString()
@@ -12,18 +14,13 @@ export class CreateCategoryDto {
   @Transform(({ value }) => JSON.parse(value))
   readonly imagesIds: Array<{ id: string; caption: string }>;
 
+  @Transform(({ value }) => JSON.parse(value))
+  media: Media[];
+
   order: number | null;
 
-  @Transform(({ value }) => Number(value))
-  @IsNumber()
-  readonly blur: number;
-
-  @Transform(({ value }) => (value === 'null' ? null : value))
-  readonly activeImageId: string | null;
-
-  @Transform(({ value }) => value === 'true')
-  @IsBoolean()
-  readonly isShowPhotoWithGoods: boolean;
+  @Transform(({ value }) => JSON.parse(value))
+  readonly custom: CustomCategory;
 
   @Transform(({ value }) => JSON.parse(value))
   readonly items: {
