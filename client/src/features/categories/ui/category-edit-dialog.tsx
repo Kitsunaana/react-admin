@@ -40,6 +40,7 @@ export const EditDialog = observer(() => {
           getData={rootStore.getData}
           setData={rootStore.setData}
           storeReset={rootStore.destroy}
+          getCopyData={rootStore.getCopyData}
           container={<ContentContainer />}
           tabs={(
             <TabsContainer

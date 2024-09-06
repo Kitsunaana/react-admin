@@ -1,7 +1,7 @@
-import { TImage, TMedia, TMediaForm } from "features/categories/edit/model/types"
 import { makeAutoObservable } from "mobx"
 import { dispatch } from "shared/lib/event"
-import { RootStore } from "features/categories/edit/model/stores/dialog-store"
+import { RootStore } from "features/categories/model/stores/dialog-store"
+import { TImage, TMedia, TMediaForm } from "features/categories/model/types"
 
 export class PhotosStore {
   images: TImage[] = []
@@ -45,6 +45,15 @@ export class PhotosStore {
 
   setMedia(media: TMedia[]) {
     this.media = media
+  }
+
+  setImages(images?: TImage[]) {
+    if (!images) return
+
+    const imageIds = this.images.map((image) => image.id)
+    const filteredImages = images.filter((image) => !imageIds.includes(image.id))
+
+    this.images = [...this.images, ...filteredImages]
   }
 
   getData() {

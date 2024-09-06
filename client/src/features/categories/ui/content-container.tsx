@@ -15,19 +15,24 @@ export const ContentContainer = observer(() => {
 
   return (
     <>
-      {/* {tab === 0 && (<TabCommon />)}
-      {tab === 1 && (<TabPhotos />)}
-      {tab === 2 && (<TabPhotoPosition />)}
-      {tab === 3 && (<RootDialogProvider><TabCharacteristics /></RootDialogProvider>)}
-      {tab === 4 && (<RootDialogProvider><TabAltNames /></RootDialogProvider>)}
-      {tab === 5 && (<RootDialogProvider><TabTags /></RootDialogProvider>)} */}
-
       <TabPanel value={tab} index={0}><TabCommon /></TabPanel>
       <TabPanel value={tab} index={1}><TabPhotos /></TabPanel>
       <TabPanel value={tab} index={2}><TabPhotoPosition /></TabPanel>
-      <TabPanel value={tab} index={3}><RootDialogProvider><TabCharacteristics /></RootDialogProvider></TabPanel>
-      {/* <TabPanel value={tab} index={4}><RootDialogProvider><TabAltNames /></RootDialogProvider></TabPanel> */}
-      {/* <TabPanel value={tab} index={5}><RootDialogProvider><TabTags /></RootDialogProvider></TabPanel> */}
+      <TabPanel value={tab} index={3}>
+        <RootDialogProvider>
+          <TabCharacteristics />
+        </RootDialogProvider>
+      </TabPanel>
+      <TabPanel value={tab} index={4}>
+        <RootDialogProvider>
+          <TabAltNames />
+        </RootDialogProvider>
+      </TabPanel>
+      <TabPanel value={tab} index={5}>
+        <RootDialogProvider>
+          <TabTags />
+        </RootDialogProvider>
+      </TabPanel>
     </>
   )
 })

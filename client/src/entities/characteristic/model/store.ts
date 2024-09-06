@@ -43,12 +43,14 @@ export class CharacteristicsStore {
     return !!this.filteredItems.find((item) => (item.caption === caption && item.id !== id))
   }
 
-  getData() {
+  getData(all: boolean = false) {
     return {
-      items: this.items.map(({ id, ...other }) => ({
-        ...other,
-        ...((other?.local && other?.action === "create") ? {} : { id }),
-      })),
+      items: (() => (all
+        ? this.items
+        : this.items.map(({ id, ...other }) => ({
+          ...other,
+          ...((other?.local && other?.action === "create") ? {} : { id }),
+        }))))(),
     }
   }
 

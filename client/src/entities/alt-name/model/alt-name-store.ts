@@ -52,6 +52,8 @@ export class AltNamesStore {
 
   isLoading = false
   translate(category: { caption: string; description: string | null }, locales: Locale[]) {
+    if (!category.caption) return
+
     this.isLoading = true
 
     Promise.all(

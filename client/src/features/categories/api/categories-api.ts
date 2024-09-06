@@ -39,7 +39,7 @@ export const categoriesApi = {
 
       return response.data
     } catch (error) {
-      if (error instanceof Error) console.log(error.message)
+      if (error instanceof Error) throw new Error(error.message)
     }
   },
 }

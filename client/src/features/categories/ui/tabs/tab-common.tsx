@@ -5,10 +5,14 @@ import { useLang } from "shared/context/Lang"
 import { Input } from "shared/ui/form/input"
 import { Box } from "shared/ui/box"
 import { Text } from "shared/ui/text"
+import { createRoute, eventBus } from "shared/lib/event-bus"
 
 interface CommonTabProps {
   langBase?: string
 }
+
+export const updateCaption = createRoute("updateCaption")
+  .withParams<{ caption: string }>()
 
 export const TabCommon = (props: CommonTabProps) => {
   const { langBase: langBaseProps } = props
@@ -27,6 +31,12 @@ export const TabCommon = (props: CommonTabProps) => {
         render={({ field, fieldState: { error } }) => (
           <Input
             {...field}
+            onChange={(event) => {
+              field.onChange(event)
+              eventBus.emit(updateCaption({
+                caption: event.target.value,
+              }))
+            }}
             size="small"
             fullWidth
             error={!!error}

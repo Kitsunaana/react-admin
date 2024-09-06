@@ -18,6 +18,7 @@ import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { Text } from "shared/ui/text"
+import { getFormSubmissionInfo } from "react-router-dom/dist/dom"
 
 interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string
@@ -207,6 +208,7 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   height?: number | string
   hideActions?: boolean
   defaultValues?: DeepPartial<any>
+  getCopyData?: () => any
 }
 
 export const DialogEditV2 = observer((props: DialogPropsV2) => {
@@ -225,6 +227,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
     onGetByIdOptions,
     onUpdateOptions,
     onCreateOptions,
+    getCopyData,
     ...other
   } = props
 
@@ -236,12 +239,16 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
   const onClose = () => store.closeDialog()
 
   const { data, isLoading, isFetching } = useQuery(onGetByIdOptions(store.id as number))
-  const { mutate: onUpdate, isPending: isPendingUpdate } = useMutation(
-    onUpdateOptions(store.id as number, onClose),
+  const { mutate: onUpdate, isPending: isPendingUpdate, isSuccess } = useMutation(
+    onUpdateOptions(store.id as number, () => {}),
   )
-  const { mutate: onCreate, isPending: isPendingCreate } = useMutation(onCreateOptions(onClose))
+  const { mutate: onCreate, isPending: isPendingCreate } = useMutation(onCreateOptions(() => {}))
 
   const isShowSkeleton = isFetching || isLoading || isPendingUpdate || isPendingCreate
+
+  useEffect(() => {
+    // if (isSuccess) onClose()
+  }, [isSuccess])
 
   useEffect(() => {
     if (!store.open) {
@@ -271,7 +278,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
     })()
   }
 
-  const memoizedGetValuesFn = useMemo(() => [methods.getValues, getData], [])
+  const memoizedGetValuesFn = useMemo(() => [methods.getValues, getCopyData], [])
 
   return (
     <MUIDialog
@@ -301,7 +308,6 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
             setData={setData}
             setValues={methods.reset}
             getValues={memoizedGetValuesFn}
-            // dataToCopy={{ ...methods.getValues(), ...getData?.() }}
             title={(
               <Text
                 onlyText
@@ -315,9 +321,20 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
       </Box>
       <Box grow sx={{ height: height ?? 450, pt: 0 }}>
         <Box flex sx={{ height: 1 }}>
-          {isShowSkeleton ? <Skeleton sx={{ mx: 1, borderRadius: 2 }} variant="rectangular" height={40.19} /> : tabs}
+          {isShowSkeleton ? (
+            <Skeleton
+              sx={{ mx: 1, borderRadius: 2 }}
+              variant="rectangular"
+              height={40.19}
+            />
+          ) : tabs}
           <Box sx={{ px: 1, height: 1 }}>
-            {isShowSkeleton ? <Skeleton sx={{ borderRadius: 2 }} height="100%" /> : container}
+            {isShowSkeleton ? (
+              <Skeleton
+                sx={{ borderRadius: 2 }}
+                height="100%"
+              />
+            ) : container}
           </Box>
         </Box>
       </Box>
@@ -331,8 +348,14 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
           p: 1,
         }}
       >
-        <SaveButton onClick={onSubmit} disabled={isPendingUpdate || isPendingCreate} />
-        <CancelButton onClick={onClose} disabled={isPendingUpdate || isPendingCreate} />
+        <SaveButton
+          onClick={onSubmit}
+          disabled={isPendingUpdate || isPendingCreate}
+        />
+        <CancelButton
+          onClick={onClose}
+          disabled={isPendingUpdate || isPendingCreate}
+        />
       </Box>
     </MUIDialog>
   )

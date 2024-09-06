@@ -3,6 +3,9 @@ export type TMedia = {
   originalName: string
   path: string
   order: number | null
+  /* filename: string
+  mimetype: string
+  size: number */
 
   data?: never
   type?: never

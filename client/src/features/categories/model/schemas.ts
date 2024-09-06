@@ -40,9 +40,12 @@ export const createCategorySchema = z.object({
 
 export const mediaSchema = z.object({
   id: z.string(),
-  path: z.string(),
   originalName: z.string(),
+  path: z.string(),
   order: z.number().nullable(),
+  filename: z.string(),
+  mimetype: z.string(),
+  size: z.number(),
 })
 
 export const categorySchema = z.object({
