@@ -44,7 +44,10 @@ export class PhotosStore {
   }
 
   setMedia(media: TMedia[]) {
-    this.media = media
+    const action = this.rootStore.settings.images
+
+    if (action === "add") this.media = [...this.media, ...media]
+    else if (action === "replace") this.media = media
   }
 
   setImages(images?: TImage[]) {
@@ -53,7 +56,10 @@ export class PhotosStore {
     const imageIds = this.images.map((image) => image.id)
     const filteredImages = images.filter((image) => !imageIds.includes(image.id))
 
-    this.images = [...this.images, ...filteredImages]
+    const action = this.rootStore.settings.images
+
+    if (action === "add") this.images = [...this.images, ...filteredImages]
+    else if (action === "replace") this.images = filteredImages
   }
 
   getData() {

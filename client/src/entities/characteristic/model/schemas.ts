@@ -13,6 +13,16 @@ export const characteristicSchema = z.object({
   }),
 })
 
+export const createCharacteristicSchema = z.object({
+  id: z.string(),
+  value: z.string(),
+  hideClient: z.boolean(),
+  caption: z.string(),
+  unit: z.string().nullable(),
+})
+
+export const createCharacteristicsSchema = z.array(createCharacteristicSchema)
+
 export type TCharacteristic = z.infer<typeof characteristicSchema>
 
 export const transformCharacteristic = (characteristic: TCharacteristic) => {

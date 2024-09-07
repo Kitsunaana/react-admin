@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Media } from '../entities/media.entity';
 import * as fs from 'fs';
-import { nanoid } from 'nanoid';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class FilesService {
@@ -17,27 +17,13 @@ export class FilesService {
           defaults: {
             ...otherProperties,
             categoryId,
-            id: nanoid(),
+            id: v4(),
           },
         });
       }),
     );
   }
 
-  /**
-   *  {
-   *             "id": "yeu5VLctTGkf64aw1aWMY",
-   *         },
-   *         {
-   *             "id": "gPmjsc52kg66fFNei_So9",
-   *         },
-   *         {
-   *             "id": "D7uRh9_sgxIZKRVs5uWiC",
-   *         }
-   * @param media
-   * @param imagesIds
-   * @param owner
-   */
   async saveMedia(
     media: Array<Express.Multer.File>,
     imagesIds: Array<{ id: string; caption: string }>,

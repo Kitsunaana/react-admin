@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
 import { validation } from "shared/lib/validation"
-import { characteristicsSchema, transformCharacteristics } from "./schemas"
+import { characteristicsSchema, createCharacteristicsSchema, transformCharacteristics } from "./schemas"
 import { ICharacteristic } from "./types"
 
 export class CharacteristicsStore {
@@ -45,7 +45,7 @@ export class CharacteristicsStore {
 
   getData(all: boolean = false) {
     return {
-      items: (() => (all
+      characteristics: (() => (all
         ? this.items
         : this.items.map(({ id, ...other }) => ({
           ...other,
@@ -57,7 +57,17 @@ export class CharacteristicsStore {
   setCharacteristics(characteristics: any) {
     if (!characteristics) return
 
-    const data = validation(characteristicsSchema, characteristics)
-    this.items = transformCharacteristics(data)
+    const parsedCharacteristics = createCharacteristicsSchema.parse(characteristics)
+    if (parsedCharacteristics) {
+      const itemsIds = this.items.map((item) => item.id)
+      const characteristicsFiltered = parsedCharacteristics.filter((item) => !itemsIds.includes(item.id))
+
+      this.items = [...this.items, ...characteristicsFiltered]
+    } else {
+      const data = validation(characteristicsSchema, characteristics)
+      const transformedData = transformCharacteristics(data)
+
+      this.items = [...this.items, ...transformedData]
+    }
   }
 }

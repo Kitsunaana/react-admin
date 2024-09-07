@@ -7,6 +7,18 @@ import { PhotosStore } from "features/categories/model/stores/photos-store"
 import { categorySchema, CustomCategory } from "features/categories/model/schemas"
 import { PhotoPositionStore } from "./photo-position-store"
 
+type Actions = "add" | "replace" | "none"
+type Tabs = "altNames" | "characteristics" | "images" | "tags"
+
+const initialSettings: Record<Tabs, Actions> = {
+  altNames: "add",
+  characteristics: "add",
+  images: "add",
+  tags: "add",
+}
+
+type Setting = keyof typeof initialSettings
+
 export class RootStore {
   tags!: TagsStore
   photos!: PhotosStore
@@ -70,9 +82,21 @@ export class RootStore {
     const { custom, ...otherProperties } = data as { custom: CustomCategory }
     const { id, ...otherCustomProperties } = custom
 
-    console.log(otherProperties)
-
     return { custom: otherCustomProperties, ...otherProperties }
+  }
+
+  settings = initialSettings
+  onChangePasteSettings<
+    Name extends Setting | string,
+    Value extends Actions | string
+  >(name: Name, value: Value) {
+    const isValidName = (name: string): name is Setting => name in this.settings
+    const isValidValue = (value: string): value is Actions => ["add", "replace", "none"].includes(value)
+
+    if (!isValidName(name)) return
+    if (!isValidValue(value)) return
+
+    this.settings[name] = value
   }
 }
 

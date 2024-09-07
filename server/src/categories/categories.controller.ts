@@ -58,11 +58,10 @@ export class CategoriesController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
   async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateCategoryDto) {
-    console.log(dto?.media);
     const category = await this.categoryService.create(dto);
 
     await this.localesService.create(dto.altNames, category.id);
-    await this.characteristicsService.create(dto.items, category);
+    await this.characteristicsService.create(dto.characteristics, category);
     if (dto?.media) await this.filesService.saveUploadedMedia(dto.media, category.id);
     await this.filesService.saveMedia(files, dto.imagesIds, { categoryId: category.id });
     await this.tagsService.create(dto.tags, category.id);
@@ -104,7 +103,7 @@ export class CategoriesController {
     await this.filesService.saveMedia(files, dto.imagesIds, { categoryId });
     if (dto?.media) await this.filesService.saveUploadedMedia(dto.media, id);
     await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
-    await this.characteristicsService.update(dto.items, id);
+    await this.characteristicsService.update(dto.characteristics, id);
     await this.localesService.updateAltNamesCategory(dto.altNames, id);
     await this.tagsService.update(dto.tags, id);
 

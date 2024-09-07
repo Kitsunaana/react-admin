@@ -36,10 +36,7 @@ export class PhotoPositionStore {
 
   setPhotoPosition(data?: CustomCategory) {
     if (!data) return
-    const { indexActiveImage, ...other } = data as any
-
     Object.assign(this, data)
-
     if (!data.activeImageId) return
 
     this._indexActiveImage = this.rootStore.photos.mergedImages
@@ -106,13 +103,12 @@ export class PhotoPositionStore {
     return this.rootStore.photos.mergedImages.length > 1
   }
 
-  getData() {
+  getData(all: boolean = false) {
     const { rootStore, ...otherProperties } = this
 
     return {
       custom: {
         ...otherProperties,
-        // indexActiveImage: this.indexActiveImage,
       },
     }
   }

@@ -41,6 +41,7 @@ export class CategoriesService {
       },
       { where: { id } },
     );
+
     await this.customCategoryRepository.update(dto.custom, {
       where: { categoryId: id },
     });
@@ -111,10 +112,14 @@ export class CategoriesService {
             exclude: ['updatedAt', 'createdAt', 'categoryId', 'goodId'],
           },
         },
-        { model: CustomCategory },
+        { model: CustomCategory, attributes: { exclude: ['id', 'categoryId'] } },
         { model: CategoryCharacteristic, include: [Characteristic, Unit] },
         { model: AltNameCategory, include: [Locale] },
-        { model: CategoryTag, include: [Tag], attributes: { exclude: ['tagId', 'categoryId'] } },
+        {
+          model: CategoryTag,
+          include: [Tag],
+          attributes: { exclude: ['tagId', 'categoryId'] },
+        },
       ],
       order: [
         [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],

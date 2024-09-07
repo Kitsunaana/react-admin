@@ -23,7 +23,7 @@ export class CreateCategoryDto {
   readonly custom: CustomCategory;
 
   @Transform(({ value }) => JSON.parse(value))
-  readonly items: {
+  readonly characteristics: {
     caption: string;
     unit: string | null;
     value: string;

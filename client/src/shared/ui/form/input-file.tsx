@@ -1,14 +1,12 @@
-import {
-  ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, memo, useRef,
-} from "react"
+import { ChangeEvent, memo, useRef } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import * as React from "react"
-import { InputProps, useTheme } from "@mui/material"
+import { useTheme } from "@mui/material"
 import styled from "styled-components"
-import { TImage } from "features/categories/edit/model/types"
 import { nanoid } from "nanoid"
+import { TImage } from "features/categories/model/types"
 
 const InputFileContainer = styled(Box)`
   display: flex;

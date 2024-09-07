@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React, { forwardRef, memo } from "react"
 import {
   Icon, IconProps, Tooltip, TooltipProps,
 } from "@mui/material"
@@ -64,6 +64,7 @@ const iconData = {
   alternativeName: "signature",
   tags: "loyalty",
   arrowRight: "navigate_next",
+  settings_v2: "settings",
 }
 
 interface DefaultIcon extends IconProps {
@@ -71,7 +72,7 @@ interface DefaultIcon extends IconProps {
   help?: Omit<TooltipProps, "children">
 }
 
-const Default = memo((props: DefaultIcon) => {
+const Default = forwardRef<any, DefaultIcon>((props, ref) => {
   const { name, help, ...other } = props
 
   const weight = useAppSelector((state: RootState) => state.settings.weightIcon)
@@ -81,6 +82,7 @@ const Default = memo((props: DefaultIcon) => {
 
   const renderIcon = (
     <Icon
+      ref={ref}
       className="material-symbols-outlined"
       style={{
         fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' 0, 'opsz' 24`,

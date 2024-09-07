@@ -4,7 +4,6 @@ import { altNamesSchema } from "entities/alt-name"
 import { tagsSchema } from "entities/tag"
 
 export const customCategorySchema = z.object({
-  id: z.number(),
   isShowPhotoWithGoods: z.boolean(),
   captionPosition: z.enum([
     "top-left",
@@ -21,7 +20,6 @@ export const customCategorySchema = z.object({
   bgColor: z.string(),
   blur: z.number(),
   activeImageId: z.string().nullable(),
-  categoryId: z.number(),
 })
 
 export type CustomCategory = z.infer<typeof customCategorySchema>
@@ -54,7 +52,7 @@ export const categorySchema = z.object({
   caption: z.string(),
   order: z.number().nullable(),
   media: z.array(mediaSchema),
-  custom: customCategorySchema.optional(),
+  custom: customCategorySchema.optional().nullable(),
   characteristics: characteristicsSchema.optional(),
   altNames: altNamesSchema.optional(),
   tags: tagsSchema.optional(),

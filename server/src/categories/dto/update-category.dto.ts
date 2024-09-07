@@ -7,7 +7,7 @@ export class UpdateCategoryDto extends CreateCategoryDto {
 
   custom: CustomCategory;
 
-  readonly items: {
+  readonly characteristics: {
     caption: string;
     unit: string | null;
     value: string;
