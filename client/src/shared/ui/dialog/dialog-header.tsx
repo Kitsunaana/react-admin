@@ -14,6 +14,7 @@ import {
   readOfClipboard,
 } from "shared/lib/utils"
 import { useFormContext, UseFormReset } from "react-hook-form"
+import { AccountMenu } from "shared/ui/test"
 
 interface DialogHeaderProps {
   title: string | ReactNode
@@ -21,11 +22,12 @@ interface DialogHeaderProps {
   setData?: (data: any) => void
   setValues?: UseFormReset<any>
   getValues?: ((() => any) | undefined)[]
+  settings?: ReactNode
 }
 
 export const DialogHeader = observer((props: DialogHeaderProps) => {
   const {
-    title, setData, setValues, getValues, hideActions = false,
+    title, setData, setValues, settings, getValues, hideActions = false,
   } = props
 
   const store = useEditDialogStore()
@@ -48,42 +50,43 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
       }}
     >
       <Text sx={{ display: "flex", justifyContent: "center", width: 1 }} caption={title} />
+      {settings}
       {!hideActions && (
-        <>
-          <IconButton
-            onClick={async () => {
-              const readData = getValues
-                ?.filter((fn): fn is () => any => typeof fn === "function")
-                .map((fn) => ({ ...fn() }))
-                .reduce((prev, current) => ({ ...prev, ...current }), {})
+      <>
+        <IconButton
+          onClick={async () => {
+            const readData = getValues
+              ?.filter((fn): fn is () => any => typeof fn === "function")
+              .map((fn) => ({ ...fn() }))
+              .reduce((prev, current) => ({ ...prev, ...current }), {})
 
-              const { id, ...otherProperties } = readData
-              await copyToClipboard({ ...otherProperties, copied: true })
-            }}
-            name="copy"
-            help={{
-              arrow: true,
-              disableInteractive: true,
-              title: <Text onlyText name="copy" />,
-            }}
-          />
-          <Vertical sx={{ m: 0 }} />
-          <IconButton
-            onClick={async () => {
-              const readDataOfClipboard = await readOfClipboard();
+            const { id, ...otherProperties } = readData
+            await copyToClipboard({ ...otherProperties, copied: true })
+          }}
+          name="copy"
+          help={{
+            arrow: true,
+            disableInteractive: true,
+            title: <Text onlyText name="copy" />,
+          }}
+        />
+        <Vertical sx={{ m: 0 }} />
+        <IconButton
+          onClick={async () => {
+            const readDataOfClipboard = await readOfClipboard();
 
-              [setData, setValues].forEach((callback) => (
-                typeof callback === "function" && callback(readDataOfClipboard)
-              ))
-            }}
-            name="paste"
-            help={{
-              arrow: true,
-              disableInteractive: true,
-              title: <Text onlyText name="paste" />,
-            }}
-          />
-        </>
+            [setData, setValues].forEach((callback) => (
+              typeof callback === "function" && callback(readDataOfClipboard)
+            ))
+          }}
+          name="paste"
+          help={{
+            arrow: true,
+            disableInteractive: true,
+            title: <Text onlyText name="paste" />,
+          }}
+        />
+      </>
       )}
       <Vertical sx={{ m: 0 }} />
       <IconButton
