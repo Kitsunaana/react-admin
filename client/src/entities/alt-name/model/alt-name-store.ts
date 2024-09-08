@@ -46,16 +46,16 @@ export class AltNamesStore {
     return locales.filter((locale) => (busyLocales.includes(locale.code) ? null : locale))
   }
 
-  setIsLoading(isLoading) {
+  setIsLoading(isLoading: boolean) {
     this.isLoading = isLoading
   }
 
   isLoading = false
   translate(category: { caption: string; description: string | null }, locales: Locale[]) {
     if (!category.caption) return
-
     this.isLoading = true
 
+    console.log(this.getFreeLocale(locales))
     Promise.all(
       this.getFreeLocale(locales)
         .map((locale) => altNameApi.translate(locale, category)),

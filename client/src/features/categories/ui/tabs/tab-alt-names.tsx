@@ -3,7 +3,7 @@ import { Box, BoxProps } from "shared/ui/box"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { EmptyList } from "shared/ui/empty-list"
 import { Vertical } from "shared/ui/divider"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { useFormContext } from "react-hook-form"
@@ -34,8 +34,12 @@ export const TabAltNames = observer(() => {
   const methods = useFormContext()
 
   const [disabled, setDisabled] = useState(() => (
-    ((methods.getValues("caption") as string) ?? "").length !== 3
+    ((methods.getValues("caption") as string) ?? "").length < 3
   ))
+
+  useEffect(() => {
+    setDisabled(methods.getValues("caption").length < 3)
+  }, [methods.getValues("caption")])
 
   const { localesData } = useGetLocales()
 

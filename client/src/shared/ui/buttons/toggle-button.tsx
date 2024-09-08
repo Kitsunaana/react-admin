@@ -36,7 +36,7 @@ interface ToggleButtonGroupProps {
   defaultValue: string
 }
 
-export function CustomizedDividers(props: ToggleButtonGroupProps) {
+export function ButtonGroup(props: ToggleButtonGroupProps) {
   const { name, onChangeSettings, defaultValue } = props
 
   const [alignment, setAlignment] = React.useState(defaultValue)

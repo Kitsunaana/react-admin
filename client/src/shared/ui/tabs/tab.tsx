@@ -8,17 +8,18 @@ import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context
 import { observer } from "mobx-react-lite"
 
 interface TabProps extends Omit<BaseTabProps, "id"> {
-  isError: boolean
+  isError?: boolean
   caption: string
   icon?: string
   id: number
   langBase?: string
   isActive: boolean
+  changeTab: (tab: number) => void
 }
 
 export const Tab = observer((props: TabProps) => {
   const {
-    id, isError, icon, caption, langBase: langBaseProps, isActive, ...other
+    id, isError, icon, caption, changeTab, langBase: langBaseProps, isActive, sx, ...other
   } = props
 
   const lang = useLang()
@@ -30,14 +31,11 @@ export const Tab = observer((props: TabProps) => {
     color: icon === "done" && !isError ? palette.success.main : undefined,
   }), [icon, isError, palette])
 
-  const { changeTab } = useEditDialogStore()
-
   return (
     <MUITab
       onClick={() => changeTab(id)}
       {...other}
       value={id}
-      key={id}
       sx={{
         position: "relative",
         p: 1.2,
@@ -60,6 +58,7 @@ export const Tab = observer((props: TabProps) => {
           top: 0,
           borderRadius: 2,
         },
+        ...sx,
       }}
       label={(
         <TabLabel

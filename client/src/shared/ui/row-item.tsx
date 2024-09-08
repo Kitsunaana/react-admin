@@ -24,7 +24,7 @@ export const RowItem = styled((props: RowItemProps) => {
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  padding: 0px 8px;
+  padding: 6px;
   margin-bottom: ${({ disableMargin }) => (disableMargin ? "0px" : "4px")};
   border-radius: ${({ eachRadius = true }) => (eachRadius ? "8px" : "0px")};
   transition: .3s;
@@ -53,9 +53,11 @@ export const RowItem = styled((props: RowItemProps) => {
   border-left: ${({ warning, theme: { palette } }) => (
     warning ? `5px solid ${palette.warning.main}` : null)};
   
-  background-image: ${({ errorBg, theme: { background } }) => (errorBg ? background.hatch.error : null)};
+  background-image: ${({ errorBg, theme: { background } }) => (
+    errorBg ? background.hatch.error : null)};
     
-  background-image: ${({ primaryBg, theme: { background } }) => (primaryBg ? background.hatch.primary : null)};
+  background-image: ${({ primaryBg, theme: { background } }) => (
+    primaryBg ? background.hatch.primary : null)};
   
   &:hover {
     background-color: ${({ theme: { palette } }) => (

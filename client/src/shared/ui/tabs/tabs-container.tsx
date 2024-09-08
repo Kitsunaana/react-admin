@@ -40,7 +40,7 @@ export const TabsContainer = observer((props: TabsProps) => {
     tabs, langBase, requiredFields = [],
   } = props
 
-  const { tab } = useEditDialogStore()
+  const { tab, changeTab } = useEditDialogStore()
 
   const tabsWithWarning = useTabsWarning(tabs, requiredFields)
 
@@ -56,6 +56,7 @@ export const TabsContainer = observer((props: TabsProps) => {
         caption={item.caption}
         id={item.id}
         icon={item.icon}
+        changeTab={changeTab}
       />
     )
   }), [tabsWithWarning, tab])

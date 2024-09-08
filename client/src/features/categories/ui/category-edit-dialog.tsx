@@ -15,7 +15,7 @@ import { UseCategoryFormProps } from "features/categories/model/types"
 import { createCategoryOptions, updateCategoryOptions } from "features/categories/queries/queries"
 import { ContentContainer } from "features/categories/ui/content-container"
 import { TABS } from "features/categories/model/constants"
-import { AccountMenu } from "shared/ui/test"
+import { CopySettings } from "shared/ui/test"
 
 export const EditDialog = observer(() => {
   const langBase = "catalog.dialog"
@@ -42,14 +42,14 @@ export const EditDialog = observer(() => {
           setData={rootStore.setData}
           storeReset={rootStore.destroy}
           getCopyData={rootStore.getCopyData}
+          container={<ContentContainer />}
           settings={(
-            <AccountMenu
+            <CopySettings
               buttonGroups={["images", "characteristics", "altNames", "tags"]}
               onChangeSettings={rootStore.onChangePasteSettings}
               settings={rootStore.settings}
             />
           )}
-          container={<ContentContainer />}
           tabs={(
             <TabsContainer
               langBase={langBase}

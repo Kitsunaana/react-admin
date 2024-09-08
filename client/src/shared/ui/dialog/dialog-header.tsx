@@ -6,15 +6,12 @@ import { Vertical } from "shared/ui/divider"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { useTranslation } from "react-i18next"
-import { useLang } from "shared/context/Lang"
 import { ReactNode } from "react"
 import {
   copyToClipboard,
   readOfClipboard,
 } from "shared/lib/utils"
-import { useFormContext, UseFormReset } from "react-hook-form"
-import { AccountMenu } from "shared/ui/test"
+import { UseFormReset } from "react-hook-form"
 
 interface DialogHeaderProps {
   title: string | ReactNode
@@ -50,44 +47,45 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
       }}
     >
       <Text sx={{ display: "flex", justifyContent: "center", width: 1 }} caption={title} />
-      {settings}
       {!hideActions && (
-      <>
-        <IconButton
-          onClick={async () => {
-            const readData = getValues
-              ?.filter((fn): fn is () => any => typeof fn === "function")
-              .map((fn) => ({ ...fn() }))
-              .reduce((prev, current) => ({ ...prev, ...current }), {})
+        <>
+          <IconButton
+            onClick={async () => {
+              const readData = getValues
+                ?.filter((fn): fn is () => any => typeof fn === "function")
+                .map((fn) => ({ ...fn() }))
+                .reduce((prev, current) => ({ ...prev, ...current }), {})
 
-            const { id, ...otherProperties } = readData
-            await copyToClipboard({ ...otherProperties, copied: true })
-          }}
-          name="copy"
-          help={{
-            arrow: true,
-            disableInteractive: true,
-            title: <Text onlyText name="copy" />,
-          }}
-        />
-        <Vertical sx={{ m: 0 }} />
-        <IconButton
-          onClick={async () => {
-            const readDataOfClipboard = await readOfClipboard();
+              const { id, ...otherProperties } = readData
+              await copyToClipboard({ ...otherProperties, copied: true })
+            }}
+            name="copy"
+            help={{
+              arrow: true,
+              disableInteractive: true,
+              title: <Text onlyText name="copy" />,
+            }}
+          />
+          <Vertical sx={{ m: 0 }} />
+          <IconButton
+            onClick={async () => {
+              const readDataOfClipboard = await readOfClipboard();
 
-            [setData, setValues].forEach((callback) => (
-              typeof callback === "function" && callback(readDataOfClipboard)
-            ))
-          }}
-          name="paste"
-          help={{
-            arrow: true,
-            disableInteractive: true,
-            title: <Text onlyText name="paste" />,
-          }}
-        />
-      </>
+              [setData, setValues].forEach((callback) => (
+                typeof callback === "function" && callback(readDataOfClipboard)
+              ))
+            }}
+            name="paste"
+            help={{
+              arrow: true,
+              disableInteractive: true,
+              title: <Text onlyText name="paste" />,
+            }}
+          />
+        </>
       )}
+      {settings && <Vertical sx={{ m: 0 }} />}
+      {settings}
       <Vertical sx={{ m: 0 }} />
       <IconButton
         onClick={() => store.setFullScreen((fullScreen) => !fullScreen)}

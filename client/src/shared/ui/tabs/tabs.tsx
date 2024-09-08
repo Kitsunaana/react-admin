@@ -15,7 +15,7 @@ interface TabsProps extends BaseTabsProps {
 
 export const Tabs = memo((props: TabsProps) => {
   const {
-    tab, hasError, tabs, ...other
+    tab, hasError, tabs, sx, ...other
   } = props
 
   const { palette } = useTheme()
@@ -47,6 +47,7 @@ export const Tabs = memo((props: TabsProps) => {
               opacity: "0.25 !important",
             },
           },
+          ...sx,
         }}
       >
         {tabs}

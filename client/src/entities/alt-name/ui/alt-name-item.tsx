@@ -60,7 +60,7 @@ export const AltNameItem = (props: AltNameItemProps) => {
     >
       <Text caption={caption} />
 
-      <Box flex row ai>
+      <Box flex row ai sx={{ height: 1 }}>
         <Mark>{locale.caption}</Mark>
         <Vertical />
         <IconButtonEdit onClick={onOpenEditDialog} />

@@ -1,15 +1,14 @@
 import * as React from "react"
 import Box from "@mui/material/Box"
-import Avatar from "@mui/material/Avatar"
 import Menu from "@mui/material/Menu"
-import MenuItem from "@mui/material/MenuItem"
-import ListItemIcon from "@mui/material/ListItemIcon"
 import Divider from "@mui/material/Divider"
-import Typography from "@mui/material/Typography"
-import Tooltip from "@mui/material/Tooltip"
-import { Icon } from "shared/ui/icon"
-import { CustomizedDividers } from "shared/ui/buttons/toggle-button"
+import { ButtonGroup } from "shared/ui/buttons/toggle-button"
 import { IconButton } from "shared/ui/buttons/icon-button"
+import { Text } from "shared/ui/text"
+import { Icon } from "shared/ui/icon"
+import { useState } from "react"
+import { Tab } from "shared/ui/tabs/tab"
+import { Tabs } from "shared/ui/tabs/tabs"
 
 interface AccountMenuProps {
   onChangeSettings: (name: string, value: string) => void
@@ -17,7 +16,7 @@ interface AccountMenuProps {
   settings: Record<string, string>
 }
 
-export function AccountMenu(props: AccountMenuProps) {
+export function CopySettings(props: AccountMenuProps) {
   const { buttonGroups, onChangeSettings, settings } = props
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -30,6 +29,8 @@ export function AccountMenu(props: AccountMenuProps) {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const [selectedTab, setSelectedTab] = useState(0)
 
   return (
     <>
@@ -77,16 +78,36 @@ export function AccountMenu(props: AccountMenuProps) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {buttonGroups.map((groups) => (
-          <div key={groups}>
-            <Divider sx={{ fontSize: 12, textTransform: "uppercase" }}>{groups}</Divider>
-            <CustomizedDividers
-              name={groups}
-              onChangeSettings={onChangeSettings}
-              defaultValue={settings[groups]}
+        <Tabs
+          hasError={false}
+          tab={selectedTab}
+          tabs={[{ id: 0, caption: "rows" }, { id: 1, caption: "inputs" }].map((tab) => (
+            <Tab
+              key={tab.id}
+              id={tab.id}
+              caption={tab.caption}
+              icon={tab.caption}
+              isActive={tab.id === selectedTab}
+              changeTab={setSelectedTab}
+              sx={{ width: "50%" }}
             />
-          </div>
-        ))}
+          ))}
+        />
+
+        <Box sx={{ mt: 1 }}>
+          {buttonGroups.map((groups) => (
+            <div key={groups}>
+              <Divider sx={{ fontSize: 12, textTransform: "lowercase" }}>
+                <Text name={groups} />
+              </Divider>
+              <ButtonGroup
+                name={groups}
+                onChangeSettings={onChangeSettings}
+                defaultValue={settings[groups]}
+              />
+            </div>
+          ))}
+        </Box>
       </Menu>
     </>
   )

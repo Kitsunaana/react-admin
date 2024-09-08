@@ -65,7 +65,10 @@ export class CharacteristicsStore {
 
     const actions = {
       add: () => filteredCharacteristics.map(this.create),
-      replace: () => (this.items = []) && filteredCharacteristics.map(this.create),
+      replace: () => {
+        this.items.map(({ id }) => this.remove(id))
+        data.map(this.create)
+      },
       none: () => {},
     }
 
