@@ -240,8 +240,10 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
 
   const onClose = () => store.closeDialog()
 
-  const { data, isLoading, isFetching } = useQuery(onGetByIdOptions(store.id as number))
-  const { mutate: onUpdate, isPending: isPendingUpdate, isSuccess } = useMutation(
+  const {
+    data, isLoading, isFetching,
+  } = useQuery(onGetByIdOptions(store.id as number))
+  const { mutate: onUpdate, isPending: isPendingUpdate, isSuccess: isSuccessUpdate } = useMutation(
     onUpdateOptions(store.id as number, () => {}),
   )
   const { mutate: onCreate, isPending: isPendingCreate } = useMutation(onCreateOptions(() => {}))
@@ -249,8 +251,8 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
   const isShowSkeleton = isFetching || isLoading || isPendingUpdate || isPendingCreate
 
   useEffect(() => {
-    // if (isSuccess) onClose()
-  }, [isSuccess])
+    if (isSuccessUpdate) onClose()
+  }, [isSuccessUpdate])
 
   useEffect(() => {
     if (!store.open) {

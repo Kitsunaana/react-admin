@@ -7,18 +7,20 @@ import { TCategory } from "features/categories/model/schemas"
 
 export type DeleteCategoryOptions = UseMutationOptions<any, any, number | null>
 
+export const deleteCategory = (id: number | null): Promise<[]> => (
+  $axios.delete(`/categories/${id}`).then(({ data }) => data)
+)
+
 export const deleteCategoryOptions = (id: number | null): DeleteCategoryOptions => ({
   mutationKey: ["category", id],
-  mutationFn: (id: null | number) => $axios.delete(`/categories/${id}`),
+  mutationFn: deleteCategory,
   onSuccess: () => {
     queryClient.setQueryData(
       ["categories", categoriesUrlStore.searchParams],
-      (oldData: TCategory[]) => {
-        console.log(oldData.filter((category) => category.id !== id))
-        return [
-          ...oldData.filter((category) => category.id !== id),
-        ]
-      },
+      (oldData: { count: number; rows: TCategory[] }) => ({
+        ...oldData,
+        rows: oldData.rows.filter((category) => category.id !== id),
+      }),
     )
   },
 })

@@ -1,14 +1,17 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
 import { validation } from "shared/lib/validation"
-import { characteristicsSchema, createCharacteristicsSchema, transformCharacteristics } from "./schemas"
+import { RootStore } from "features/categories/model/stores/dialog-store"
+import {
+  characteristicsSchema, createCharacteristicsSchema, TCharacteristic, transformCharacteristics,
+} from "./schemas"
 import { ICharacteristic } from "./types"
 
 export class CharacteristicsStore {
   items: Array<ICharacteristic> = []
 
-  constructor() {
-    makeAutoObservable(this, {}, { autoBind: true })
+  constructor(private getCopyAction: () => string) {
+    makeAutoObservable(this, { applyActions: false }, { autoBind: true })
   }
 
   create(data: ICharacteristic) {
@@ -54,20 +57,31 @@ export class CharacteristicsStore {
     }
   }
 
+  applyActions(data: ICharacteristic[]) {
+    const action = this.getCopyAction()
+
+    const captionItems = this.items.map((item) => item.caption)
+    const filteredCharacteristics = data.filter((item) => !captionItems.includes(item.caption))
+
+    const actions = {
+      add: () => filteredCharacteristics.map(this.create),
+      replace: () => (this.items = []) && filteredCharacteristics.map(this.create),
+      none: () => {},
+    }
+
+    return actions[action]
+  }
+
+  setCopiedCharacteristics(characteristics: any) {
+    const validatedCharacteristics = validation(createCharacteristicsSchema, characteristics)
+
+    this.applyActions(validatedCharacteristics)()
+  }
+
   setCharacteristics(characteristics: any) {
     if (!characteristics) return
 
-    const parsedCharacteristics = createCharacteristicsSchema.parse(characteristics)
-    if (parsedCharacteristics) {
-      const itemsIds = this.items.map((item) => item.id)
-      const characteristicsFiltered = parsedCharacteristics.filter((item) => !itemsIds.includes(item.id))
-
-      this.items = [...this.items, ...characteristicsFiltered]
-    } else {
-      const data = validation(characteristicsSchema, characteristics)
-      const transformedData = transformCharacteristics(data)
-
-      this.items = [...this.items, ...transformedData]
-    }
+    const data = validation(characteristicsSchema, characteristics)
+    this.items = transformCharacteristics(data)
   }
 }

@@ -9,7 +9,6 @@ export class FilesService {
   constructor(@InjectModel(Media) private mediaRepository: typeof Media) {}
 
   async saveUploadedMedia(media: Media[], categoryId: number) {
-    console.log(media);
     await Promise.all(
       media.map(async ({ id, ...otherProperties }) => {
         return await this.mediaRepository.findOrCreate({
@@ -50,7 +49,6 @@ export class FilesService {
   }
 
   async deleteMedia(media?: Media[]): Promise<void[]> {
-    // console.log(media);
     return await Promise.all(
       media?.map(async ({ path, id }) => {
         await this.mediaRepository.destroy({ where: { id } });
@@ -69,9 +67,20 @@ export class FilesService {
   async updateOrder(media: Media[]) {
     return await Promise.all(
       media.map(async (file) => {
-        console.log(file);
         return await this.mediaRepository.update(file, { where: { id: file.id } });
       }),
     );
   }
 }
+
+/*
+[{
+  "id": "naEoW2lv9IbEqIzmw2Cyy",
+  "originalName": "Screenshot_6.png",
+  "path": "uploads\\1725781173657-716857790Screenshot_6.png",
+  "order": null,
+  "filename": "1725781173657-716857790Screenshot_6.png",
+  "mimetype": "image/png",
+  "size": 778240,
+  "deleted": true
+}]*/

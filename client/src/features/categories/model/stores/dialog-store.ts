@@ -31,7 +31,7 @@ export class RootStore {
     this.photos = new PhotosStore(this)
     this.altNames = new AltNamesStore()
     this.photoPosition = new PhotoPositionStore(this)
-    this.characteristics = new CharacteristicsStore()
+    this.characteristics = new CharacteristicsStore(() => this.settings.characteristics)
   }
 
   constructor() {
@@ -48,10 +48,20 @@ export class RootStore {
     let validatedData = data
     if (!data?.copied) validatedData = validation(categorySchema, data)
 
-    this.photos.setMedia(validatedData.media)
-    this.photos.setImages(validatedData?.images)
+    if (data?.copied) {
+      this.photos.setCopiedMedia(validatedData.media)
+      this.photos.setCopiedImages(validatedData?.images)
+    } else {
+      this.photos.setMedia(validatedData.media)
+    }
+
     this.photoPosition.setPhotoPosition(validatedData?.custom)
-    this.characteristics.setCharacteristics(validatedData?.characteristics)
+
+    if (data?.copied) {
+      this.characteristics.setCopiedCharacteristics(validatedData?.characteristics)
+    } else {
+      this.characteristics.setCharacteristics(validatedData?.characteristics)
+    }
     this.altNames.setAltNames(validatedData?.altNames)
     this.tags.setTags(validatedData?.tags)
   }
@@ -80,9 +90,8 @@ export class RootStore {
   getCopyData = () => {
     const data = this.getData(true)
     const { custom, ...otherProperties } = data as { custom: CustomCategory }
-    const { id, ...otherCustomProperties } = custom
 
-    return { custom: otherCustomProperties, ...otherProperties }
+    return { custom, ...otherProperties }
   }
 
   settings = initialSettings
@@ -91,7 +100,9 @@ export class RootStore {
     Value extends Actions | string
   >(name: Name, value: Value) {
     const isValidName = (name: string): name is Setting => name in this.settings
-    const isValidValue = (value: string): value is Actions => ["add", "replace", "none"].includes(value)
+    const isValidValue = (value: string): value is Actions => (
+      ["add", "replace", "none"].includes(value)
+    )
 
     if (!isValidName(name)) return
     if (!isValidValue(value)) return

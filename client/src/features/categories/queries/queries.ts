@@ -10,17 +10,15 @@ type CreateUseCategoryOptions = {} & UpdateUseCategoryOptions
 export const updateCategoryOptions = (id: number | null, onClose: () => void): UpdateUseCategoryOptions => ({
   mutationKey: ["category", id],
   mutationFn: (data) => categoriesApi.patch(id, data),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["categories"] })
-    onClose()
+  onSuccess: async () => {
+    await queryClient.invalidateQueries({ queryKey: ["categories"] })
   },
 })
 
 export const createCategoryOptions = (onClose: () => void): CreateUseCategoryOptions => ({
   mutationKey: ["category"],
   mutationFn: (data) => categoriesApi.post(data),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["categories"] })
-    onClose()
+  onSuccess: async () => {
+    await queryClient.invalidateQueries({ queryKey: ["categories"] })
   },
 })

@@ -15,7 +15,7 @@ export class CreateCategoryDto {
   readonly imagesIds: Array<{ id: string; caption: string }>;
 
   @Transform(({ value }) => JSON.parse(value))
-  media: Media[];
+  media: Array<Media & { deleted?: boolean }>;
 
   order: number | null;
 

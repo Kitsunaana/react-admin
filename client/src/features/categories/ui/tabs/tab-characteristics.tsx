@@ -27,7 +27,6 @@ export const TabCharacteristics = observer(() => {
   const editStore = useEditDialogStore()
 
   const { characteristics } = useStores()
-  console.log(characteristics.filteredItems)
   const { fullScreen } = useEditDialogStore()
 
   return (

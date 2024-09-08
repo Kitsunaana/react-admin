@@ -62,7 +62,11 @@ export class CategoriesController {
 
     await this.localesService.create(dto.altNames, category.id);
     await this.characteristicsService.create(dto.characteristics, category);
-    if (dto?.media) await this.filesService.saveUploadedMedia(dto.media, category.id);
+    if (dto?.media)
+      await this.filesService.saveUploadedMedia(
+        dto.media.filter((media) => !media.deleted),
+        category.id,
+      );
     await this.filesService.saveMedia(files, dto.imagesIds, { categoryId: category.id });
     await this.tagsService.create(dto.tags, category.id);
 

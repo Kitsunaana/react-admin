@@ -14,7 +14,7 @@ export const characteristicSchema = z.object({
 })
 
 export const createCharacteristicSchema = z.object({
-  id: z.string(),
+  id: z.string().or(z.number()),
   value: z.string(),
   hideClient: z.boolean(),
   caption: z.string(),
