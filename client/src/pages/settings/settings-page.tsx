@@ -12,10 +12,10 @@ const SettingsPage = () => (
 
     <ChangeTheme />
 
-    <Divider><Text name="icons" /></Divider>
+    <Divider><Text name="iconSettings" /></Divider>
 
     <Box sx={{ px: 2.5 }}>
-      <Text name="icon-thickness" />
+      <Text name="iconThickness" />
 
       <ChangeIconSettingWeight />
 

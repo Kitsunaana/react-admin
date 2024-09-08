@@ -22,7 +22,7 @@ export const ChangeIconSettingFill = () => {
           checked={!!fillIcon}
         />
       )}
-      label={<Text name="fill-icons" onlyText />}
+      label={<Text name="fillIcons" onlyText />}
     />
   )
 }

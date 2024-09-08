@@ -37,7 +37,7 @@ export const ChangeTheme = () => {
 
   return (
     <Box>
-      <Text name="change-theme" sx={{ mb: 1 }} />
+      <Text name="changeTheme" sx={{ mb: 1 }} />
 
       <Box
         row
@@ -45,7 +45,7 @@ export const ChangeTheme = () => {
           border: ({ palette }) => `1px solid ${alpha(palette.grey["400"], mode === "light" ? 1 : 0.5)}`,
           p: 0.5,
           display: "inline-flex",
-          borderRadius: 1,
+          borderRadius: 3,
           gap: 0.5,
         }}
       >
@@ -57,7 +57,7 @@ export const ChangeTheme = () => {
               fontSize: 16,
               userSelect: "none",
               textTransform: "uppercase",
-              borderRadius: 1,
+              borderRadius: 2,
               px: 1,
               pt: 1,
               pb: 0.25,
