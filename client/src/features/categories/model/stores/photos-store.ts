@@ -8,7 +8,7 @@ export class PhotosStore {
   media: TMediaForm[] = []
 
   constructor(public rootStore: RootStore) {
-    makeAutoObservable(this, {}, { autoBind: true })
+    makeAutoObservable(this, { applyActions: false }, { autoBind: true })
   }
 
   get mergedImages() {
@@ -43,23 +43,36 @@ export class PhotosStore {
     this.images = [...this.images, ...files]
   }
 
-  setMedia(media: TMedia[]) {
-    const action = this.rootStore.settings.images
+  getFilteredData<T extends TMedia | TImage>(data: Array<T>): Array<T> {
+    const captionImage = this.mergedImages
+      .map((image) => image?.caption || image?.originalName)
 
-    if (action === "add") this.media = [...this.media, ...media]
-    else if (action === "replace") this.media = media
+    return data.filter((image) => (
+      !captionImage.includes(image?.caption || image?.originalName)
+    ))
   }
 
-  setImages(images?: TImage[]) {
-    if (!images) return
+  setMedia(media?: TMedia[]) {
+    if (!media) return
+    this.media = media
+  }
 
-    const imageIds = this.images.map((image) => image.id)
-    const filteredImages = images.filter((image) => !imageIds.includes(image.id))
+  setCopiedImages = (images?: TImage[]) => this.applyActions(images)("images")
+  setCopiedMedia = (media?: TMedia[]) => this.applyActions(media)("media")
 
+  applyActions<T extends TImage | TMedia>(data?: Array<T>) {
+    if (!data) return () => {}
+
+    const filteredData = this.getFilteredData(data)
     const action = this.rootStore.settings.images
 
-    if (action === "add") this.images = [...this.images, ...filteredImages]
-    else if (action === "replace") this.images = filteredImages
+    const actions = {
+      add: (name: string) => this[name] = [...this[name], ...filteredData],
+      replace: (name: string) => this[name] = data,
+      none: () => {},
+    }
+
+    return actions[action]
   }
 
   getData() {
