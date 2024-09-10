@@ -1,21 +1,22 @@
 import { Checkbox, FormControlLabel } from "@mui/material"
-import { observer } from "mobx-react-lite"
 import { Text } from "shared/ui/text"
-import { useStores } from "../../../model/context"
+import { Controller } from "react-hook-form"
 
-export const CheckboxShowPhoto = observer(() => {
-  const { photoPosition } = useStores()
-
-  return (
-    <FormControlLabel
-      label={<Text onlyText name="forms.showPhotoInListGoods" />}
-      control={(
-        <Checkbox
-          sx={{ ml: 1, mr: 1, p: 0.75 }}
-          onChange={photoPosition.changeShowPhoto}
-          checked={photoPosition.isShowPhotoWithGoods}
-        />
+export const CheckboxShowPhoto = () => (
+  <FormControlLabel
+    label={<Text onlyText name="forms.showPhotoInListGoods" />}
+    control={(
+      <Controller
+        defaultValue
+        name="isShowPhotoWithGoods"
+        render={({ field }) => (
+          <Checkbox
+            sx={{ ml: 1, mr: 1, p: 0.75 }}
+            checked={field.value}
+            {...field}
+          />
+        )}
+      />
       )}
-    />
-  )
-})
+  />
+)

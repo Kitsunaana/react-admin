@@ -17,6 +17,11 @@ const initialSettings: Record<Tabs, Actions> = {
   tags: "add",
 }
 
+const initialSettingInputs = {
+  caption: true,
+  description: false,
+}
+
 type Setting = keyof typeof initialSettings
 
 export class RootStore {
@@ -45,8 +50,8 @@ export class RootStore {
   destroy() { this.createStores() }
 
   setData(data: any) {
-    let validatedData = data
-    if (!data?.copied) validatedData = validation(categorySchema, data)
+    const validatedData = data
+    // if (!data?.copied) validatedData = validation(categorySchema, data)
 
     if (data?.copied) {
       this.photos.setCopiedMedia(validatedData.media)
@@ -55,7 +60,10 @@ export class RootStore {
       this.photos.setMedia(validatedData.media)
     }
 
-    this.photoPosition.setPhotoPosition(validatedData?.custom)
+    this.photoPosition.setPhotoPosition({
+      activeImageId: validatedData.activeImageId,
+      captionPosition: validatedData.captionPosition,
+    })
 
     if (data?.copied) {
       this.characteristics.setCopiedCharacteristics(validatedData?.characteristics)
@@ -92,6 +100,11 @@ export class RootStore {
     const { custom, ...otherProperties } = data as { custom: CustomCategory }
 
     return { custom, ...otherProperties }
+  }
+
+  settingInputs = initialSettingInputs
+  onChangeSettingInput(name: string, value: boolean) {
+    console.log({ name, value })
   }
 
   settings = initialSettings

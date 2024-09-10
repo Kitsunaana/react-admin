@@ -49,8 +49,8 @@ export const TabAltNames = observer(() => {
   const isShowSkeletons = freeLocales.length > 0 && altNames.isLoading
   const isShowEmptyList = altNames.filteredItems.length === 0 && !altNames.isLoading
 
-  eventBus.on(updateCaption, (event) => {
-    if (event.payload.caption.length < 3) setDisabled(true)
+  eventBus.on(updateCaption, ({ payload }) => {
+    if ((payload?.caption ?? "").length < 3) setDisabled(true)
     else setDisabled(false)
   })
 

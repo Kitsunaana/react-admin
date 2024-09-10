@@ -11,7 +11,7 @@ import {
   copyToClipboard,
   readOfClipboard,
 } from "shared/lib/utils"
-import { UseFormReset } from "react-hook-form"
+import { useFormContext, UseFormReset } from "react-hook-form"
 
 interface DialogHeaderProps {
   title: string | ReactNode
@@ -20,15 +20,18 @@ interface DialogHeaderProps {
   setValues?: UseFormReset<any>
   getValues?: ((() => any) | undefined)[]
   settings?: ReactNode
+  settingInputs?: Record<string, boolean>
 }
 
 export const DialogHeader = observer((props: DialogHeaderProps) => {
   const {
-    title, setData, setValues, settings, getValues, hideActions = false,
+    title, setData, setValues, settings, settingInputs, getValues, hideActions = false,
   } = props
 
   const store = useEditDialogStore()
   const fullscreenState = store.fullScreen ? "fullscreenClose" : "fullscreenOpen"
+
+  const methods = useFormContext()
 
   return (
     <Box
@@ -69,7 +72,23 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
           <Vertical sx={{ m: 0 }} />
           <IconButton
             onClick={async () => {
-              const readDataOfClipboard = await readOfClipboard();
+              let readDataOfClipboard = await readOfClipboard()
+
+              if (settingInputs) {
+                const filteredReadData = Object
+                  .entries(readDataOfClipboard)
+                  .filter(([key, value]) => {
+                    if (settingInputs[key] === false) return null
+                    return [key, value]
+                  })
+
+                readDataOfClipboard = Object.fromEntries(filteredReadData)
+              }
+
+              const setValues = (data: any) => {
+                Object.entries(data)
+                  .forEach(([key, value]) => methods.setValue(key, value))
+              }
 
               [setData, setValues].forEach((callback) => (
                 typeof callback === "function" && callback(readDataOfClipboard)

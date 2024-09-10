@@ -11,8 +11,15 @@ interface CommonTabProps {
   langBase?: string
 }
 
+interface UpdateCaption {
+  caption?: string,
+  bgColor?: string,
+  color?: string
+  blur?: number
+}
+
 export const updateCaption = createRoute("updateCaption")
-  .withParams<{ caption: string }>()
+  .withParams<UpdateCaption>()
 
 export const TabCommon = (props: CommonTabProps) => {
   const { langBase: langBaseProps } = props
@@ -33,9 +40,7 @@ export const TabCommon = (props: CommonTabProps) => {
             {...field}
             onChange={(event) => {
               field.onChange(event)
-              eventBus.emit(updateCaption({
-                caption: event.target.value,
-              }))
+              eventBus.emit(updateCaption({ caption: event.target.value }))
             }}
             size="small"
             fullWidth

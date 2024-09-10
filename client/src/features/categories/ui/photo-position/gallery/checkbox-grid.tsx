@@ -12,7 +12,7 @@ export const CheckBoxGrid = observer(() => {
   return (
     <>
       {GRID_CHECKBOX.map((row) => (
-        <Box key={row.id} flex ai row jc_sp>
+        <Box key={row.id} flex ai row jc_sp sx={{ height: "33.33333333%" }}>
           {row.data.map(({ id, content, position }) => (
             <Box
               flex

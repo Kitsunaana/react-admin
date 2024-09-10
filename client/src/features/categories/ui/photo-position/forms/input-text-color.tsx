@@ -1,17 +1,22 @@
-import { observer } from "mobx-react-lite"
 import { ColorInput } from "shared/ui/form/input-color"
 import { Text } from "shared/ui/text"
-import { useStores } from "../../../model/context"
+import { Controller } from "react-hook-form"
+import { eventBus } from "shared/lib/event-bus"
+import { updateCaption } from "features/categories/ui/tabs/tab-common"
 
-export const InputTextColor = observer(() => {
-  const { photoPosition } = useStores()
-
-  return (
-    <ColorInput
-      onChange={photoPosition.changeColor}
-      value={photoPosition.color}
-      label={<Text onlyText name="forms.textColor" />}
-      fullWidth
-    />
-  )
-})
+export const InputTextColor = () => (
+  <Controller
+    name="color"
+    render={({ field }) => (
+      <ColorInput
+        {...field}
+        fullWidth
+        label={<Text onlyText name="forms.textColor" />}
+        onChange={(value) => {
+          field.onChange(value)
+          eventBus.emit(updateCaption({ color: value }))
+        }}
+      />
+    )}
+  />
+)

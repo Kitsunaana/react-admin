@@ -42,12 +42,15 @@ export const EditDialog = observer(() => {
           setData={rootStore.setData}
           storeReset={rootStore.destroy}
           getCopyData={rootStore.getCopyData}
+          settingInputs={rootStore.settingInputs}
           container={<ContentContainer />}
           settings={(
             <CopySettings
               buttonGroups={["images", "characteristics", "altNames", "tags"]}
               onChangeSettings={rootStore.onChangePasteSettings}
+              onChangeSettingInput={rootStore.onChangeSettingInput}
               settings={rootStore.settings}
+              settingInputs={rootStore.settingInputs}
             />
           )}
           tabs={(

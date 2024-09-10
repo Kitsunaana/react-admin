@@ -9,15 +9,22 @@ import { Icon } from "shared/ui/icon"
 import { useState } from "react"
 import { Tab } from "shared/ui/tabs/tab"
 import { Tabs } from "shared/ui/tabs/tabs"
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material"
 
 interface AccountMenuProps {
   onChangeSettings: (name: string, value: string) => void
+  onChangeSettingInput: (name: string, value: boolean) => void
   buttonGroups: string[]
   settings: Record<string, string>
+  settingInputs: Record<string, boolean>
 }
 
 export function CopySettings(props: AccountMenuProps) {
-  const { buttonGroups, onChangeSettings, settings } = props
+  const {
+    buttonGroups, onChangeSettings, onChangeSettingInput, settings, settingInputs,
+  } = props
+
+  // console.log(JSON.parse(JSON.stringify(settingInputs)))
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -42,9 +49,6 @@ export function CopySettings(props: AccountMenuProps) {
         id="account-menu"
         open={open}
         onClose={handleClose}
-        sx={{
-          p: 10,
-        }}
         slotProps={{
           paper: {
             elevation: 0,
@@ -95,18 +99,37 @@ export function CopySettings(props: AccountMenuProps) {
         />
 
         <Box sx={{ mt: 1 }}>
-          {buttonGroups.map((groups) => (
-            <div key={groups}>
-              <Divider sx={{ fontSize: 12, textTransform: "lowercase" }}>
-                <Text name={groups} />
-              </Divider>
-              <ButtonGroup
-                name={groups}
-                onChangeSettings={onChangeSettings}
-                defaultValue={settings[groups]}
-              />
-            </div>
-          ))}
+          {selectedTab === 0 && (
+            buttonGroups.map((groups) => (
+              <div key={groups}>
+                <Divider sx={{ fontSize: 12, textTransform: "lowercase" }}>
+                  <Text name={groups} />
+                </Divider>
+                <ButtonGroup
+                  name={groups}
+                  onChangeSettings={onChangeSettings}
+                  defaultValue={settings[groups]}
+                />
+              </div>
+            ))
+          )}
+          {selectedTab === 1 && (
+            <FormGroup sx={{ mx: 1 }}>
+              {Object.entries(settingInputs).map(([key, value]) => (
+                <FormControlLabel
+                  key={key}
+                  label={key}
+                  control={(
+                    <Checkbox
+                      size="small"
+                      checked={value}
+                      onChange={(_, checked) => onChangeSettingInput(key, checked)}
+                    />
+                  )}
+                />
+              ))}
+            </FormGroup>
+          )}
         </Box>
       </Menu>
     </>

@@ -25,7 +25,7 @@ export class CategoriesService {
 
   async create(dto: CreateCategoryDto) {
     const category = await this.categoryRepository.create(dto);
-    const customCategory = await this.customCategoryRepository.create(dto.custom);
+    const customCategory = await this.customCategoryRepository.create(dto);
 
     await category.$set('custom', customCategory);
 
@@ -42,7 +42,7 @@ export class CategoriesService {
       { where: { id } },
     );
 
-    await this.customCategoryRepository.update(dto.custom, {
+    await this.customCategoryRepository.update(dto, {
       where: { categoryId: id },
     });
   }
@@ -99,34 +99,43 @@ export class CategoriesService {
   }
 
   async getById(id: number) {
-    return await this.categoryRepository.findOne({
-      where: { id },
-      attributes: {
-        exclude: ['createdAt', 'updatedAt'],
-      },
-      include: [
-        {
-          model: Media,
-          as: 'media',
-          attributes: {
-            exclude: ['updatedAt', 'createdAt', 'categoryId', 'goodId'],
+    return await this.categoryRepository
+      .findOne({
+        where: { id },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt'],
+        },
+        include: [
+          {
+            model: Media,
+            as: 'media',
+            attributes: {
+              exclude: ['updatedAt', 'createdAt', 'categoryId', 'goodId'],
+            },
           },
-        },
-        { model: CustomCategory, attributes: { exclude: ['id', 'categoryId'] } },
-        { model: CategoryCharacteristic, include: [Characteristic, Unit] },
-        { model: AltNameCategory, include: [Locale] },
-        {
-          model: CategoryTag,
-          include: [Tag],
-          attributes: { exclude: ['tagId', 'categoryId'] },
-        },
-      ],
-      order: [
-        [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],
-        [Sequelize.col('media.order'), 'desc'],
-        [Sequelize.col('media.createdAt'), 'desc'],
-      ],
-    });
+          { model: CustomCategory, attributes: { exclude: ['id', 'categoryId'] } },
+          { model: CategoryCharacteristic, include: [Characteristic, Unit] },
+          { model: AltNameCategory, include: [Locale] },
+          {
+            model: CategoryTag,
+            include: [Tag],
+            attributes: { exclude: ['tagId', 'categoryId'] },
+          },
+        ],
+        order: [
+          [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],
+          [Sequelize.col('media.order'), 'desc'],
+          [Sequelize.col('media.createdAt'), 'desc'],
+        ],
+      })
+      .then((category) => {
+        const { custom, ...other } = JSON.parse(JSON.stringify(category)) as Category;
+
+        return {
+          ...other,
+          ...custom,
+        };
+      });
   }
 
   async updateOrder(dto: UpdateOrderCategoryDto) {

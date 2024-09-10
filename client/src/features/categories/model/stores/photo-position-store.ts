@@ -4,11 +4,7 @@ import { RootStore } from "features/categories/model/stores/dialog-store"
 import { CustomCategory } from "features/categories/model/schemas"
 
 export class PhotoPositionStore {
-  color = "red"
-  bgColor = "blue"
-  blur = 5
   captionPosition: TPosition = "center-center"
-  isShowPhotoWithGoods = true
   activeImageId: null | string = null
 
   _indexActiveImage = 0
@@ -30,11 +26,7 @@ export class PhotoPositionStore {
     )
   }
 
-  changeShowPhoto() {
-    this.isShowPhotoWithGoods = !this.isShowPhotoWithGoods
-  }
-
-  setPhotoPosition(data?: CustomCategory) {
+  setPhotoPosition(data?: Partial<CustomCategory>) {
     if (!data) return
     Object.assign(this, data)
     if (!data.activeImageId) return
@@ -83,18 +75,6 @@ export class PhotoPositionStore {
       : mergedImages.length - 1
   }
 
-  changeColor(newColor: string) {
-    this.color = newColor
-  }
-
-  changeBgColor(newBgColor: string) {
-    this.bgColor = newBgColor
-  }
-
-  changeBlur(newBlur: number) {
-    this.blur = newBlur
-  }
-
   changeCaptionPosition(newCaptionPosition: TPosition) {
     this.captionPosition = newCaptionPosition
   }
@@ -103,13 +83,11 @@ export class PhotoPositionStore {
     return this.rootStore.photos.mergedImages.length > 1
   }
 
-  getData(all: boolean = false) {
-    const { rootStore, ...otherProperties } = this
+  getData() {
+    const { rootStore, _indexActiveImage, ...otherProperties } = this
 
     return {
-      custom: {
-        ...otherProperties,
-      },
+      ...otherProperties,
     }
   }
 }

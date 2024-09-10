@@ -101,6 +101,7 @@ export class CategoriesController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() dto: UpdateCategoryDto,
   ) {
+    console.log(dto);
     const categoryId = (<any>dto).id;
 
     await this.filesService.updateOrder(dto.media);

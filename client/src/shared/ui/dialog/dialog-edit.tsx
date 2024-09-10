@@ -210,6 +210,7 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   defaultValues?: DeepPartial<any>
   getCopyData?: () => any
   settings?: ReactNode
+  settingInputs?: Record<string, boolean>
 }
 
 export const DialogEditV2 = observer((props: DialogPropsV2) => {
@@ -223,6 +224,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
     tabs,
     container,
     settings,
+    settingInputs,
     setData,
     getData,
     storeReset,
@@ -308,6 +310,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
           <Skeleton sx={{ borderRadius: 2, my: 1 }} variant="rectangular" height={40.19} />
         ) : (
           <DialogHeader
+            settingInputs={settingInputs}
             settings={settings}
             hideActions={!!hideActions}
             setData={setData}

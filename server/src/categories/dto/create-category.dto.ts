@@ -19,8 +19,19 @@ export class CreateCategoryDto {
 
   order: number | null;
 
-  @Transform(({ value }) => JSON.parse(value))
-  readonly custom: CustomCategory;
+  @Transform(({ value }) => value === 'true')
+  readonly isShowPhotoWithGoods: boolean;
+
+  readonly bgColor: string;
+
+  readonly color: string;
+
+  @Transform(({ value }) => parseInt(value))
+  readonly blur: number;
+
+  readonly captionPosition: Position;
+
+  readonly activeImageId: string;
 
   @Transform(({ value }) => JSON.parse(value))
   readonly characteristics: {
