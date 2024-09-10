@@ -53,6 +53,10 @@ export function CopySettings(props: AccountMenuProps) {
           paper: {
             elevation: 0,
             sx: {
+              backgroundColor: ({ palette }) => (palette.mode === "dark"
+                ? palette.grey[900]
+                : palette.common.white),
+              backgroundImage: ({ background }) => background.sectionBackground,
               px: 0.5,
               overflow: "visible",
               filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
@@ -72,7 +76,10 @@ export function CopySettings(props: AccountMenuProps) {
                 right: 14,
                 width: 10,
                 height: 10,
-                bgcolor: "background.paper",
+                backgroundColor: ({ palette }) => (palette.mode === "dark"
+                  ? palette.grey[900]
+                  : palette.common.white),
+                backgroundImage: ({ background }) => background.sectionBackground,
                 transform: "translateY(-50%) rotate(45deg)",
                 zIndex: 0,
               },

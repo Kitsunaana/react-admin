@@ -7,7 +7,7 @@ import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from "@mui/material/ToggleButtonGroup"
 import { Icon } from "shared/ui/icon"
-import { ExtendButtonBase } from "@mui/material"
+import { alpha, ExtendButtonBase } from "@mui/material"
 
 interface ToggleButtonProps extends ToggleButtonPropsBase {
   help: string
@@ -20,7 +20,20 @@ export const ToggleButton = (props: ToggleButtonProps) => {
   } = props
 
   return (
-    <ToggleButtonBase sx={{ p: 0.5, ...sx }} {...other}>
+    <ToggleButtonBase
+      sx={{
+        p: 0.5,
+        backgroundColor: ({ palette }) => (palette.mode === "dark"
+          ? alpha(palette.common.black, 0.55)
+          : palette.common.white),
+        backgroundImage: ({ background }) => background.sectionBackground,
+        "&:hover": {
+          border: "unset",
+        },
+        ...sx,
+      }}
+      {...other}
+    >
       <Icon
         help={{ arrow: true, title: help }}
         fontSize="small"
