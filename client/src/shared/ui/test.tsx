@@ -10,6 +10,9 @@ import { useState } from "react"
 import { Tab } from "shared/ui/tabs/tab"
 import { Tabs } from "shared/ui/tabs/tabs"
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useStores } from "features/categories/model/context"
+import { observer } from "mobx-react-lite"
 
 interface AccountMenuProps {
   onChangeSettings: (name: string, value: string) => void
@@ -19,11 +22,12 @@ interface AccountMenuProps {
   settingInputs: Record<string, boolean>
 }
 
-export function CopySettings(props: AccountMenuProps) {
+export const CopySettings = observer((props: AccountMenuProps) => {
   const {
-    buttonGroups, onChangeSettings, onChangeSettingInput, settings, settingInputs,
+    buttonGroups, onChangeSettings, settings,
   } = props
 
+  const { settingInputs, onChangeSettingInput } = useStores()
   // console.log(JSON.parse(JSON.stringify(settingInputs)))
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -141,4 +145,4 @@ export function CopySettings(props: AccountMenuProps) {
       </Menu>
     </>
   )
-}
+})

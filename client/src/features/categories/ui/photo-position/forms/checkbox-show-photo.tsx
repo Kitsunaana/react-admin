@@ -3,20 +3,20 @@ import { Text } from "shared/ui/text"
 import { Controller } from "react-hook-form"
 
 export const CheckboxShowPhoto = () => (
-  <FormControlLabel
-    label={<Text onlyText name="forms.showPhotoInListGoods" />}
-    control={(
-      <Controller
-        defaultValue
-        name="isShowPhotoWithGoods"
-        render={({ field }) => (
+  <Controller
+    defaultValue
+    name="isShowPhotoWithGoods"
+    render={({ field }) => (
+      <FormControlLabel
+        label={<Text onlyText name="forms.showPhotoInListGoods" />}
+        control={(
           <Checkbox
             sx={{ ml: 1, mr: 1, p: 0.75 }}
             checked={field.value}
             {...field}
           />
-        )}
+          )}
       />
-      )}
+    )}
   />
 )

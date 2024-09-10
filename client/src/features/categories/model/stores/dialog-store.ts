@@ -5,6 +5,7 @@ import { validation } from "shared/lib/validation"
 import { AltNamesStore } from "entities/alt-name"
 import { PhotosStore } from "features/categories/model/stores/photos-store"
 import { categorySchema, CustomCategory } from "features/categories/model/schemas"
+import { z, ZodSchema } from "zod"
 import { PhotoPositionStore } from "./photo-position-store"
 
 type Actions = "add" | "replace" | "none"
@@ -17,9 +18,35 @@ const initialSettings: Record<Tabs, Actions> = {
   tags: "add",
 }
 
+const enumActions = z.enum(["add", "replace", "none"])
+
+const settingsSchema = z.object({
+  altNames: enumActions,
+  characteristics: enumActions,
+  images: enumActions,
+  tags: enumActions,
+})
+
+const settingInputsSchema = z.object({
+  activeImageId: z.boolean(),
+  bgColor: z.boolean(),
+  blur: z.boolean(),
+  caption: z.boolean(),
+  captionPosition: z.boolean(),
+  color: z.boolean(),
+  description: z.boolean(),
+  isShowPhotoWithGoods: z.boolean(),
+})
+
 const initialSettingInputs = {
   caption: true,
   description: false,
+  blur: false,
+  bgColor: true,
+  color: false,
+  isShowPhotoWithGoods: false,
+  activeImageId: true,
+  captionPosition: true,
 }
 
 type Setting = keyof typeof initialSettings
@@ -43,6 +70,23 @@ export class RootStore {
     this.createStores()
 
     makeAutoObservable(this, {}, { autoBind: true })
+
+    // const settings = localStorage.getItem("settings")
+    // const parsedSettings = settingsSchema.safeParse(JSON.parse(settings ?? "{}"))
+    // if (parsedSettings.data) this.settings = parsedSettings.data
+
+    // const settingInputs = localStorage.getItem("settingInputs")
+    // const parsedSettingInputs = settingInputsSchema.safeParse(JSON.parse(settingInputs ?? "{}"))
+    // if (parsedSettingInputs.data) this.settingInputs = parsedSettingInputs.data
+
+    const getLocalStorageData = (name: string, schema: ZodSchema) => {
+      const data = localStorage.getItem(name)
+      const parsedData = schema.safeParse(JSON.parse(data ?? "{}"))
+      if (parsedData.data) this[name] = parsedData.data
+    }
+
+    getLocalStorageData("settings", settingsSchema)
+    getLocalStorageData("settingInputs", settingInputsSchema)
   }
 
   private stores = ["photoPosition", "photos", "characteristics", "altNames", "tags"]
@@ -104,23 +148,14 @@ export class RootStore {
 
   settingInputs = initialSettingInputs
   onChangeSettingInput(name: string, value: boolean) {
-    console.log({ name, value })
+    this.settingInputs[name] = value
+    localStorage.setItem("settingInputs", JSON.stringify(this.settingInputs))
   }
 
   settings = initialSettings
-  onChangePasteSettings<
-    Name extends Setting | string,
-    Value extends Actions | string
-  >(name: Name, value: Value) {
-    const isValidName = (name: string): name is Setting => name in this.settings
-    const isValidValue = (value: string): value is Actions => (
-      ["add", "replace", "none"].includes(value)
-    )
-
-    if (!isValidName(name)) return
-    if (!isValidValue(value)) return
-
+  onChangePasteSettings(name: string, value: string) {
     this.settings[name] = value
+    localStorage.setItem("settings", JSON.stringify(this.settings))
   }
 }
 

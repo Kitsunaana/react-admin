@@ -14,6 +14,7 @@ export const CustomizeCaption = () => {
   }))
 
   eventBus.on(updateCaption, ({ payload }) => {
+    console.log(payload)
     setCaption((prevState) => (
       Object.entries(prevState).reduce((prev, [key, value]) => {
         prev[key] = payload[key] ?? value

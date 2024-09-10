@@ -27,9 +27,7 @@ export const ToggleButton = (props: ToggleButtonProps) => {
           ? alpha(palette.common.black, 0.55)
           : palette.common.white),
         backgroundImage: ({ background }) => background.sectionBackground,
-        "&:hover": {
-          border: "unset",
-        },
+        borderRadius: 2,
         ...sx,
       }}
       {...other}
