@@ -4,7 +4,7 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import styled from "styled-components"
 import { Image } from "./image"
 import { CheckBoxGrid } from "./checkbox-grid"
-import { useStores } from "../../../model/context"
+import { useStores } from "../../model/context"
 
 const ActiveImageContainer = styled(Box)`
   display: flex;

@@ -1,9 +1,9 @@
 import { observer } from "mobx-react-lite"
 import { Box } from "shared/ui/box"
 import { Checkbox } from "@mui/material"
-import { GRID_CHECKBOX } from "../../../model/constants"
+import { GRID_CHECKBOX } from "../../model/constants"
 import { CustomizeCaption } from "./customize-caption"
-import { useStores } from "../../../model/context"
+import { useStores } from "../../model/context"
 
 export const CheckBoxGrid = observer(() => {
   const { photoPosition } = useStores()

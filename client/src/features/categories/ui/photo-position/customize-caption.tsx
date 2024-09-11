@@ -14,7 +14,6 @@ export const CustomizeCaption = () => {
   }))
 
   eventBus.on(updateCaption, ({ payload }) => {
-    console.log(payload)
     setCaption((prevState) => (
       Object.entries(prevState).reduce((prev, [key, value]) => {
         prev[key] = payload[key] ?? value
@@ -28,6 +27,11 @@ export const CustomizeCaption = () => {
     <Text
       caption={caption.caption}
       sx={{
+        display: "-webkit-box",
+        "-webkit-box-orient": "vertical",
+        "-webkit-line-clamp": "3",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
         textAlign: "center",
         fontSize: 20,
         lineHeight: 1.5,
@@ -36,7 +40,7 @@ export const CustomizeCaption = () => {
         padding: "4px 8px",
         background: caption.bgColor,
         borderRadius: "8px",
-        boxShadow: "rgba(255, 255, 255, 0.25) 0px 4px 30px",
+        boxShadow: `${caption.bgColor} 0px 4px 30px`,
         backdropFilter: `blur(${caption.blur}px)`,
         border: "1px solid rgba(255, 255, 255, 0.12)",
       }}
