@@ -28,13 +28,13 @@ export class PhotoPositionStore {
 
   setPhotoPosition(data?: Partial<CustomCategory>) {
     if (!data) return
+
     const filteredData = Object
       .entries(data)
       .filter(([key, value]) => (value === undefined ? null : [key, value]))
     const cleanedObject = Object.fromEntries(filteredData)
     const mergedObject = { ...this, ...cleanedObject }
 
-    console.log(mergedObject)
     Object.assign(this, mergedObject)
     if (!data.activeImageId) return
 

@@ -1,8 +1,10 @@
 import { makeAutoObservable } from "mobx"
 
+type Id = null | string | number
+
 export class DialogStore {
   open = false
-  id: null | string | number = null
+  id: Id = null
   localData?: Record<string, any>
   tab = 0
 
@@ -13,7 +15,7 @@ export class DialogStore {
     makeAutoObservable(this, { }, { autoBind: true })
   }
 
-  openDialog(id: number | string | null, localData?: Record<string, any>) {
+  openDialog(id: Id, localData?: Record<string, any>) {
     this.open = true
     this.id = id
     this.localData = localData
@@ -22,6 +24,7 @@ export class DialogStore {
   closeDialog() {
     this.id = null
     this.open = false
+    this.tab = 0
   }
 
   setFullScreen(fullScreen: boolean | ((fullScreen: boolean) => boolean)) {

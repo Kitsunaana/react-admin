@@ -33,6 +33,7 @@ export const TagItem = (props: TagItemProps) => {
     })
   }
 
+  console.log(edited, local)
   return (
     <RowItem theme={theme} success={edited || local}>
       <Tag caption={tag.caption} icon={icon} color={tagColor} />

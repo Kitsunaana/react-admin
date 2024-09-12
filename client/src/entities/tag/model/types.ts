@@ -9,7 +9,7 @@ interface ITagAction {
   action?: "create" | "update" | "remove"
 }
 
-export interface ITag extends ITagAction{
+export interface ITag extends ITagAction {
   id: string | number
 
   tag: ITagBase
@@ -17,7 +17,7 @@ export interface ITag extends ITagAction{
   tagColor: string
 }
 
-export interface ITagCreate{
+export interface ITagCreate {
   tag: ITagBase
   icon: string | null
   tagColor: string

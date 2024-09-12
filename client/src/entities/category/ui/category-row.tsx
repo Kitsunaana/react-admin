@@ -34,6 +34,7 @@ const CustomRowItem = styled(RowItem)`
   margin-bottom: 0px;
   min-height: 48px;
   border-radius: 0px;
+  gap: 10px;
     
   &:last-child {
     border-bottom-left-radius: 8px;
@@ -75,7 +76,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
       onContextMenu={menu.open}
       theme={theme}
     >
-      {caption}
+      <Text caption={caption} />
       {menu.isOpen && (
         <LangContext lang="category.contextMenu">
           <CategoryContextMenu
@@ -87,8 +88,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
           />
         </LangContext>
       )}
-
-      <Box flex row ai>
+      <Box flex row ai sx={{ height: 1 }}>
         <TooltipImageView images={images} />
         <Vertical />
         <IconButton

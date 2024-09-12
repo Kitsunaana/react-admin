@@ -39,13 +39,18 @@ export class TagsService {
 
   async updateCategoryTag({ tag, icon, tagColor, id }: TagCreateDto) {
     const tags = await this.categoryTagRepository.findAll({
-      include: [{ model: Tag, where: { id } }],
+      include: [{ model: Tag, where: { caption: tag.caption } }],
     });
 
     let tagId = null;
     if (tags.length === 1) {
-      tagId = id;
-      await this.tagRepository.update({ caption: tag.caption }, { where: { id: tagId } });
+      await this.tagRepository.update(
+        { caption: tag.caption },
+        { where: { caption: tag.caption } },
+      );
+
+      const findTag = await this.tagRepository.findOne({ where: { caption: tag.caption } });
+      tagId = findTag.id;
     } else {
       const newTag = await this.tagRepository.create({ caption: tag.caption });
       tagId = newTag.id;

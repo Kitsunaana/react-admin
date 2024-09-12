@@ -1,18 +1,16 @@
 import { makeAutoObservable } from "mobx"
 import { CharacteristicsStore } from "entities/characteristic/model/store"
 import { TagsStore } from "entities/tag"
-import { validation } from "shared/lib/validation"
 import { AltNamesStore } from "entities/alt-name"
 import { PhotosStore } from "features/categories/model/stores/photos-store"
-import { categorySchema, CustomCategory } from "features/categories/model/schemas"
+import { CustomCategory } from "features/categories/model/schemas"
 import { z, ZodSchema } from "zod"
 import { PhotoPositionStore } from "./photo-position-store"
 
 type Actions = "add" | "replace" | "none"
-type Tabs = "altNames" | "characteristics" | "images" | "tags"
+type Tabs = "characteristics" | "images" | "tags"
 
 const initialSettings: Record<Tabs, Actions> = {
-  altNames: "add",
   characteristics: "add",
   images: "add",
   tags: "add",
@@ -21,7 +19,6 @@ const initialSettings: Record<Tabs, Actions> = {
 const enumActions = z.enum(["add", "replace", "none"])
 
 const settingsSchema = z.object({
-  altNames: enumActions,
   characteristics: enumActions,
   images: enumActions,
   tags: enumActions,
@@ -59,7 +56,7 @@ export class RootStore {
   characteristics!: CharacteristicsStore
 
   createStores() {
-    this.tags = new TagsStore()
+    this.tags = new TagsStore(this)
     this.photos = new PhotosStore(this)
     this.altNames = new AltNamesStore()
     this.photoPosition = new PhotoPositionStore(this)
@@ -70,15 +67,6 @@ export class RootStore {
     this.createStores()
 
     makeAutoObservable(this, {}, { autoBind: true })
-
-    // const settings = localStorage.getItem("settings")
-    // const parsedSettings = settingsSchema.safeParse(JSON.parse(settings ?? "{}"))
-    // if (parsedSettings.data) this.settings = parsedSettings.data
-
-    // const settingInputs = localStorage.getItem("settingInputs")
-    // const parsedSettingInputs = settingInputsSchema.safeParse(JSON.parse(settingInputs ?? "{}"))
-    // if (parsedSettingInputs.data) this.settingInputs = parsedSettingInputs.data
-
     const getLocalStorageData = (name: string, schema: ZodSchema) => {
       const data = localStorage.getItem(name)
       const parsedData = schema.safeParse(JSON.parse(data ?? "{}"))
@@ -95,9 +83,27 @@ export class RootStore {
 
   setData(data: any) {
     const validatedData = data
-    // if (!data?.copied) validatedData = validation(categorySchema, data)
 
+    console.log(data)
     if (data?.copied) {
+      this.photos.setCopiedMedia(validatedData.media)
+      this.photos.setCopiedImages(validatedData?.images)
+      this.characteristics.setCopiedCharacteristics(validatedData?.characteristics)
+      this.tags.setCopiedTags(validatedData?.tags)
+    } else {
+      this.photos.setMedia(validatedData.media)
+      this.characteristics.setCharacteristics(validatedData?.characteristics)
+      this.tags.setTags(validatedData?.tags)
+    }
+
+    this.photoPosition.setPhotoPosition({
+      activeImageId: validatedData.activeImageId,
+      captionPosition: validatedData.captionPosition,
+    })
+
+    this.altNames.setAltNames(validatedData?.altNames)
+
+    /* if (data?.copied) {
       this.photos.setCopiedMedia(validatedData.media)
       this.photos.setCopiedImages(validatedData?.images)
     } else {
@@ -115,24 +121,20 @@ export class RootStore {
       this.characteristics.setCharacteristics(validatedData?.characteristics)
     }
     this.altNames.setAltNames(validatedData?.altNames)
-    this.tags.setTags(validatedData?.tags)
+
+    if (data?.copied) {
+      this.tags.setCopiedTags(validatedData?.tags)
+    } else {
+      this.tags.setTags(validatedData?.tags)
+    } */
   }
 
   getData(all: boolean = false) {
     return this.stores.reduce((parentPrev, parentCurrent) => {
-      const result = Object.keys(this[parentCurrent]).reduce((prev, current) => {
-        if (this[parentCurrent][current] instanceof RootStore) return prev
+      const result = Object.keys(this[parentCurrent]).reduce(() => {
+        if (typeof this[parentCurrent]?.getData !== "function") return
 
-        if (typeof this[parentCurrent]?.getData === "function") {
-          const data = this[parentCurrent].getData(all)
-
-          if (data?.rootStore && data?.rootStore instanceof RootStore) delete data.rootStore
-
-          return data
-        }
-
-        // prev[current] = this[parentCurrent][current]
-        return prev
+        return this[parentCurrent].getData(all)
       }, {})
 
       return { ...parentPrev, ...result }
@@ -141,7 +143,7 @@ export class RootStore {
 
   getCopyData = () => {
     const data = this.getData(true)
-    const { custom, ...otherProperties } = data as { custom: CustomCategory }
+    const { custom, order, ...otherProperties } = data as { custom: CustomCategory, order: number }
 
     return { custom, ...otherProperties }
   }

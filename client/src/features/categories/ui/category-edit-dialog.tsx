@@ -5,7 +5,6 @@ import {
 } from "react-hook-form"
 import { TabsContainer } from "shared/ui/tabs/tabs-container"
 import { DialogEditV2 } from "shared/ui/dialog/dialog-edit"
-
 import { useMemo } from "react"
 import { observer } from "mobx-react-lite"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
@@ -25,6 +24,8 @@ export const EditDialog = observer(() => {
   const defaultValues: DeepPartial<UseCategoryFormProps> = {
     caption: "",
     description: "",
+    bgColor: "",
+    color: "",
   }
 
   const methods = useForm<UseCategoryFormProps>({ defaultValues })
@@ -46,7 +47,7 @@ export const EditDialog = observer(() => {
           container={<ContentContainer />}
           settings={(
             <CopySettings
-              buttonGroups={["images", "characteristics", "altNames", "tags"]}
+              buttonGroups={["images", "characteristics", "tags"]}
               onChangeSettings={rootStore.onChangePasteSettings}
               onChangeSettingInput={rootStore.onChangeSettingInput}
               settings={rootStore.settings}

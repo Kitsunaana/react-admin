@@ -103,7 +103,7 @@ export class CategoriesService {
       .findOne({
         where: { id },
         attributes: {
-          exclude: ['createdAt', 'updatedAt'],
+          exclude: ['createdAt', 'updatedAt', 'order'],
         },
         include: [
           {
