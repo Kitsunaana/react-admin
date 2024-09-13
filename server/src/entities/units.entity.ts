@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { CategoryCharacteristic, Characteristic } from './characteristic.entity';
 
 @Table({ timestamps: false })
 export class Unit extends Model<Unit> {
@@ -7,4 +8,7 @@ export class Unit extends Model<Unit> {
 
   @Column({ type: DataType.STRING, unique: true })
   caption: string;
+
+  @BelongsToMany(() => Characteristic, () => CategoryCharacteristic)
+  characteristics: Characteristic[];
 }

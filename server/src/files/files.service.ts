@@ -11,14 +11,16 @@ export class FilesService {
   async saveUploadedMedia(media: Media[], categoryId: number) {
     await Promise.all(
       media.map(async ({ id, ...otherProperties }) => {
-        return await this.mediaRepository.findOrCreate({
-          where: { id, categoryId },
-          defaults: {
-            ...otherProperties,
-            categoryId,
-            id: v4(),
-          },
-        });
+        if (fs.existsSync(otherProperties.path)) {
+          return await this.mediaRepository.findOrCreate({
+            where: { id, categoryId },
+            defaults: {
+              ...otherProperties,
+              categoryId,
+              id: v4(),
+            },
+          });
+        }
       }),
     );
   }

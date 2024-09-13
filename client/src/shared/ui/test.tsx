@@ -24,11 +24,10 @@ interface AccountMenuProps {
 
 export const CopySettings = observer((props: AccountMenuProps) => {
   const {
-    buttonGroups, onChangeSettings, settings,
+    buttonGroups, onChangeSettings, settings, onChangeSettingInput,
   } = props
 
-  const { settingInputs, onChangeSettingInput } = useStores()
-  // console.log(JSON.parse(JSON.stringify(settingInputs)))
+  const { settingInputs } = useStores()
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)

@@ -3,7 +3,6 @@ import { CharacteristicsStore } from "entities/characteristic/model/store"
 import { TagsStore } from "entities/tag"
 import { AltNamesStore } from "entities/alt-name"
 import { PhotosStore } from "features/categories/model/stores/photos-store"
-import { CustomCategory } from "features/categories/model/schemas"
 import { z, ZodSchema } from "zod"
 import { PhotoPositionStore } from "./photo-position-store"
 
@@ -46,8 +45,6 @@ const initialSettingInputs = {
   captionPosition: true,
 }
 
-type Setting = keyof typeof initialSettings
-
 export class RootStore {
   tags!: TagsStore
   photos!: PhotosStore
@@ -84,7 +81,6 @@ export class RootStore {
   setData(data: any) {
     const validatedData = data
 
-    console.log(data)
     if (data?.copied) {
       this.photos.setCopiedMedia(validatedData.media)
       this.photos.setCopiedImages(validatedData?.images)
@@ -94,39 +90,13 @@ export class RootStore {
       this.photos.setMedia(validatedData.media)
       this.characteristics.setCharacteristics(validatedData?.characteristics)
       this.tags.setTags(validatedData?.tags)
+      this.altNames.setAltNames(validatedData?.altNames)
     }
 
     this.photoPosition.setPhotoPosition({
       activeImageId: validatedData.activeImageId,
       captionPosition: validatedData.captionPosition,
     })
-
-    this.altNames.setAltNames(validatedData?.altNames)
-
-    /* if (data?.copied) {
-      this.photos.setCopiedMedia(validatedData.media)
-      this.photos.setCopiedImages(validatedData?.images)
-    } else {
-      this.photos.setMedia(validatedData.media)
-    }
-
-    this.photoPosition.setPhotoPosition({
-      activeImageId: validatedData.activeImageId,
-      captionPosition: validatedData.captionPosition,
-    })
-
-    if (data?.copied) {
-      this.characteristics.setCopiedCharacteristics(validatedData?.characteristics)
-    } else {
-      this.characteristics.setCharacteristics(validatedData?.characteristics)
-    }
-    this.altNames.setAltNames(validatedData?.altNames)
-
-    if (data?.copied) {
-      this.tags.setCopiedTags(validatedData?.tags)
-    } else {
-      this.tags.setTags(validatedData?.tags)
-    } */
   }
 
   getData(all: boolean = false) {
@@ -143,9 +113,9 @@ export class RootStore {
 
   getCopyData = () => {
     const data = this.getData(true)
-    const { custom, order, ...otherProperties } = data as { custom: CustomCategory, order: number }
+    const { order, ...otherProperties } = data as { order: number }
 
-    return { custom, ...otherProperties }
+    return { ...otherProperties }
   }
 
   settingInputs = initialSettingInputs

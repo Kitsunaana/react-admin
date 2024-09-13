@@ -1,6 +1,6 @@
 import { Box } from "shared/ui/box"
 import { Text } from "shared/ui/text"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller } from "react-hook-form"
 import { Checkbox, FormControlLabel, Slider } from "@mui/material"
 import { ColorInput } from "shared/ui/form/input-color"
 import { eventBus } from "shared/lib/event-bus"

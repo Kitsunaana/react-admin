@@ -10,6 +10,7 @@ import { Unit } from '../entities/units.entity';
 import { Category } from '../entities/category.entity';
 import { CreateCharacteristicsDto } from './dto/create-characteristics-dto';
 import { UpdatedCharacteristicsDto } from './dto/update-characteristics-dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class CharacteristicsService {
@@ -67,7 +68,7 @@ export class CharacteristicsService {
     const [unit] = await this.findOrCreateUnit(data.unit);
     const [characteristic] = await this.findOrCreateCharacteristic(data.caption);
 
-    return await this.updateCategoryCharacteristic({
+    await this.updateCategoryCharacteristic({
       id: data.id,
       value: data.value,
       hideClient: data.hideClient,
@@ -75,6 +76,30 @@ export class CharacteristicsService {
       unitId: unit.id,
       categoryId: categoryId,
     });
+
+    const rows = await this.characteristicsRepository.findAll({
+      include: [{ model: Category }],
+    });
+
+    await Promise.all(
+      rows.map(async (row) => {
+        if (row.categories.length === 0) {
+          await this.characteristicsRepository.destroy({ where: { id: row.id } });
+        }
+      }),
+    );
+
+    const usedUnitIds = await this.categoryCharacteristicsRepository
+      .findAll({
+        include: [{ model: Unit }],
+      })
+      .then((data) => data.map((item) => item.unitId));
+
+    const freeUnits = await this.unitsRepository.findAll({
+      where: { id: { [Op.notIn]: usedUnitIds } },
+    });
+
+    await Promise.all(freeUnits.map(async (unit) => unit.destroy()));
   }
 
   async destroyUnit(unit: string | null) {

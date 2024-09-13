@@ -9,17 +9,19 @@ import { useMemo } from "react"
 import { observer } from "mobx-react-lite"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
 import { LangContext } from "shared/context/Lang"
-import { StoreProvider, useStores } from "features/categories/model/context"
+import { useStores } from "features/categories/model/context"
 import { UseCategoryFormProps } from "features/categories/model/types"
 import { createCategoryOptions, updateCategoryOptions } from "features/categories/queries/queries"
 import { ContentContainer } from "features/categories/ui/content-container"
 import { TABS } from "features/categories/model/constants"
 import { CopySettings } from "shared/ui/test"
+import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 
 export const EditDialog = observer(() => {
   const langBase = "catalog.dialog"
 
   const rootStore = useStores()
+  const { fullScreen } = useEditDialogStore()
 
   const defaultValues: DeepPartial<UseCategoryFormProps> = {
     caption: "",
@@ -61,6 +63,11 @@ export const EditDialog = observer(() => {
               requiredFields={requiredFields}
             />
           )}
+          PaperProps={{
+            sx: {
+              ...(fullScreen ? { borderRadius: 0 } : {}),
+            },
+          }}
         />
       </LangContext>
     </FormProvider>

@@ -1,17 +1,33 @@
 import { Text } from "shared/ui/text"
-import { useFormContext } from "react-hook-form"
-import { useState } from "react"
+import { FieldValues, useFormContext, UseFormGetValues } from "react-hook-form"
+import { useEffect, useState } from "react"
 import { eventBus } from "shared/lib/event-bus"
 import { updateCaption } from "features/categories/ui/tabs/tab-common"
 
+type FieldsRecord = {
+  caption: string
+  bgColor: string
+  color: string
+  blur: number
+}
+
+const fields: Array<keyof FieldsRecord> = ["caption", "bgColor", "color", "blur"]
+
+const getFnSetValues = <Key extends keyof FieldsRecord, >(fields: Array<Key>) => (
+  (getValues: UseFormGetValues<FieldValues>) => (
+    fields.reduce((prev, current) => {
+      prev[current] = getValues(current)
+
+      return prev
+    }, {} as FieldsRecord)
+  )
+)
+
+const setCaptionValues = getFnSetValues(fields)
+
 export const CustomizeCaption = () => {
   const { getValues } = useFormContext()
-  const [caption, setCaption] = useState(() => ({
-    caption: getValues("caption"),
-    bgColor: getValues("bgColor"),
-    color: getValues("color"),
-    blur: getValues("blur"),
-  }))
+  const [caption, setCaption] = useState(() => setCaptionValues(getValues))
 
   eventBus.on(updateCaption, ({ payload }) => {
     setCaption((prevState) => (
@@ -22,6 +38,11 @@ export const CustomizeCaption = () => {
       }, {} as typeof caption)
     ))
   })
+
+  useEffect(
+    () => { setCaption(setCaptionValues(getValues)) },
+    [getValues("caption")],
+  )
 
   if (!caption.caption) return null
 
