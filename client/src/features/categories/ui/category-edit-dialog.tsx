@@ -18,7 +18,7 @@ import { CopySettingsPopup } from "shared/ui/copy-settings-popup"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { CopySettings } from "features/categories/ui/copy-settings/copy-settings"
 
-export const EditDialog = observer(() => {
+export const CategoryEditDialog = observer(() => {
   const langBase = "catalog.dialog"
 
   const rootStore = useStores()
@@ -78,7 +78,3 @@ export const EditDialog = observer(() => {
     </FormProvider>
   )
 })
-
-export const CategoryEditDialog = () => (
-  <EditDialog />
-)

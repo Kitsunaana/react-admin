@@ -14,7 +14,9 @@ class UrlStore {
   }
 
   setSearchParams<T extends {}>(data: T) {
+    console.log(data)
     this.searchParams = queryString.stringify(data)
+    console.log(this.searchParams)
   }
 }
 

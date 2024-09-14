@@ -8,6 +8,7 @@ import { Box } from "shared/ui/box"
 import { Input } from "shared/ui/form/input"
 import { BackButton } from "shared/ui/back-button"
 import { categoriesUrlStore } from "entities/category"
+import queryString from "query-string"
 
 export interface SearchForm {
   search: string
@@ -36,6 +37,8 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
 
   useEffect(() => {
     setValue(INPUTS.search, searchParams.get(INPUTS.search) ?? "")
+
+    categoriesUrlStore.setSearchParams(queryString.parseUrl(window.location.href).query)
   }, [searchParams])
 
   useEvent("keydown", (event: KeyboardEvent) => {
@@ -43,7 +46,10 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
     if (!(event.code === "Enter" && search !== null && isFocused)) return
 
     categoriesUrlStore.setSearchParams(getValues())
-    setSearchParams(`?search=${search}`)
+    setSearchParams((prev) => {
+      prev.set("search", search)
+      return prev
+    })
   })
 
   const onClear = () => {
@@ -72,7 +78,10 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
       <Box flex ai row>
         {refetchButton}
         {createButton}
-        <BackButton />
+        <BackButton onClick={() => {
+          console.log(searchParams.toString())
+        }}
+        />
       </Box>
     </Box>
   )
