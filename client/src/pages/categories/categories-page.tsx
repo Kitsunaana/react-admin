@@ -13,14 +13,24 @@ import { Spinner } from "shared/ui/spinner"
 import { RefetchButton } from "shared/ui/buttons/refresh-button"
 import { Pagination } from "shared/ui/pagination"
 import { CategoryDialog } from "features/categories"
+import { useTheme } from "@mui/material"
 
 const CategoriesPage = observer(() => {
   const { data, isLoading, refetch } = categoriesStore.categoriesQuery.result
+  const { palette } = useTheme()
 
   const renderContent = () => {
     const isShowEmptyList = (!data || data?.rows.length === 0) && !isLoading
 
-    if (isLoading) return <Spinner />
+    if (isLoading) {
+      return (
+        <Spinner
+          color={palette.warning.dark}
+          height={100}
+          width={100}
+        />
+      )
+    }
     if (isShowEmptyList) return <EmptyList />
     if (!data) return null
 

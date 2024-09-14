@@ -14,8 +14,9 @@ import { UseCategoryFormProps } from "features/categories/model/types"
 import { createCategoryOptions, updateCategoryOptions } from "features/categories/queries/queries"
 import { ContentContainer } from "features/categories/ui/content-container"
 import { TABS } from "features/categories/model/constants"
-import { CopySettings } from "shared/ui/test"
+import { CopySettingsPopup } from "shared/ui/copy-settings-popup"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { CopySettings } from "features/categories/ui/copy-settings/copy-settings"
 
 export const EditDialog = observer(() => {
   const langBase = "catalog.dialog"
@@ -48,12 +49,16 @@ export const EditDialog = observer(() => {
           settingInputs={rootStore.settingInputs}
           container={<ContentContainer />}
           settings={(
-            <CopySettings
-              buttonGroups={["images", "characteristics", "tags"]}
-              onChangeSettings={rootStore.onChangePasteSettings}
-              onChangeSettingInput={rootStore.onChangeSettingInput}
-              settings={rootStore.settings}
-              settingInputs={rootStore.settingInputs}
+            <CopySettingsPopup
+              content={(
+                <CopySettings
+                  buttonGroups={["images", "characteristics", "tags"]}
+                  onChangeSettings={rootStore.onChangePasteSettings}
+                  onChangeSettingInput={rootStore.onChangeSettingInput}
+                  settings={rootStore.settings}
+                  settingInputs={rootStore.settingInputs}
+                />
+              )}
             />
           )}
           tabs={(
