@@ -39,11 +39,12 @@ export class CategoriesService {
         caption: dto.caption,
         description: dto.description,
       },
-      { where: { id } },
+      { where: { id }, returning: false },
     );
 
     await this.customCategoryRepository.update(dto, {
       where: { categoryId: id },
+      returning: true,
     });
   }
 
@@ -57,41 +58,46 @@ export class CategoriesService {
   async getAll(query: GetCategoryDto) {
     const limit = 25;
 
-    return await this.categoryRepository.findAndCountAll({
-      include: [
-        {
-          model: Media,
-          separate: true,
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'goodId', 'categoryId'],
-          },
-          order: [
-            [Sequelize.col('Media.order'), 'desc'],
-            [Sequelize.col('Media.createdAt'), 'asc'],
-          ],
-        },
-      ],
-      attributes: {
-        exclude: ['updatedAt'],
-      },
-      where: query?.search
-        ? {
-            [Op.or]: [
-              { caption: { [Op.like]: `%${query.search}%` } },
-              { description: { [Op.like]: `%${query.search}%` } },
+    const count = await this.categoryRepository.count();
+
+    return await this.categoryRepository
+      .findAll({
+        include: [
+          {
+            model: Media,
+            separate: true,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'goodId', 'categoryId'],
+            },
+            order: [
+              [Sequelize.col('Media.order'), 'desc'],
+              [Sequelize.col('Media.createdAt'), 'asc'],
             ],
-          }
-        : {},
-      limit,
-      ...(query?.page ? { offset: (query.page - 1) * limit } : {}),
-      order: [['order', 'DESC']],
-    });
+          },
+        ],
+        attributes: {
+          exclude: ['updatedAt'],
+        },
+        where: query?.search
+          ? {
+              [Op.or]: [
+                { caption: { [Op.like]: `%${query.search}%` } },
+                { description: { [Op.like]: `%${query.search}%` } },
+              ],
+            }
+          : {},
+        limit,
+        ...(query?.page ? { offset: (query.page - 1) * limit } : {}),
+        order: [['order', 'DESC']],
+      })
+      .then((rows) => ({ count, rows }));
   }
 
   async delete(id: number) {
     const category = await this.categoryRepository.findOne({
       where: { id },
       include: [{ model: Media }],
+      rejectOnEmpty: false,
     });
 
     await this.filesService.deleteMedia(category.media);
@@ -99,46 +105,50 @@ export class CategoriesService {
   }
 
   async getById(id: number) {
-    return await this.categoryRepository
-      .findOne({
-        where: { id },
-        attributes: {
-          exclude: ['createdAt', 'updatedAt', 'order'],
+    const category = await this.categoryRepository.findOne({
+      where: { id },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'order'],
+      },
+      rejectOnEmpty: false,
+      include: [
+        {
+          model: Media,
+          as: 'media',
+          attributes: {
+            exclude: ['updatedAt', 'createdAt', 'categoryId', 'goodId'],
+          },
         },
-        include: [
-          {
-            model: Media,
-            as: 'media',
-            attributes: {
-              exclude: ['updatedAt', 'createdAt', 'categoryId', 'goodId'],
-            },
-          },
-          { model: CustomCategory, attributes: { exclude: ['id', 'categoryId'] } },
-          { model: CategoryCharacteristic, include: [Characteristic, Unit] },
-          { model: AltNameCategory, include: [Locale] },
-          {
-            model: CategoryTag,
-            include: [Tag],
-            attributes: { exclude: ['tagId', 'categoryId'] },
-          },
-        ],
-        order: [
-          [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],
-          [Sequelize.col('media.order'), 'desc'],
-          [Sequelize.col('media.createdAt'), 'desc'],
-        ],
-      })
-      .then((category) => {
-        const { custom, ...other } = JSON.parse(JSON.stringify(category)) as Category;
+        { model: CustomCategory, attributes: { exclude: ['id', 'categoryId'] } },
+        { model: CategoryCharacteristic, include: [Characteristic, Unit] },
+        { model: AltNameCategory, include: [Locale] },
+        {
+          model: CategoryTag,
+          include: [Tag],
+          attributes: { exclude: ['tagId', 'categoryId'] },
+        },
+      ],
+      order: [
+        [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],
+        [Sequelize.col('media.order'), 'desc'],
+        [Sequelize.col('media.createdAt'), 'desc'],
+      ],
+    });
 
-        return {
-          ...other,
-          ...custom,
-        };
-      });
+    if (category) {
+      const { custom, ...other } = category.toJSON();
+
+      return {
+        ...other,
+        ...custom,
+      };
+    }
   }
 
   async updateOrder(dto: UpdateOrderCategoryDto) {
-    return await this.categoryRepository.update({ order: dto.order }, { where: { id: dto.id } });
+    return await this.categoryRepository.update(
+      { order: dto.order },
+      { where: { id: 1 }, returning: true },
+    );
   }
 }

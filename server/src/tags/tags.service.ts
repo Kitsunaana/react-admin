@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Tag, TagCreate } from '../entities/tag.entity';
 import { CategoryTag } from '../entities/category-tag.entity';
 
-class TagCreateDto extends TagCreate {
+export class TagCreateDto extends TagCreate {
   id: number;
   action?: 'create' | 'update' | 'remove';
 }
@@ -22,7 +22,7 @@ export class TagsService {
     });
   }
 
-  async createCategoryTag(data: TagCreateDto, categoryId: number) {
+  async createCategoryTag(data: TagCreate, categoryId: number) {
     const [tag] = await this.findOrCreateTag(data.tag);
 
     return await this.categoryTagRepository.create({
@@ -33,7 +33,7 @@ export class TagsService {
     });
   }
 
-  async create(tags: TagCreateDto[], categoryId: number) {
+  async create(tags: TagCreate[], categoryId: number) {
     await Promise.all(tags.map(async (item) => await this.createCategoryTag(item, categoryId)));
   }
 

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Injectable,
+  NestInterceptor,
   Param,
   Patch,
   Post,
@@ -27,7 +28,7 @@ import { TagsService } from '../tags/tags.service';
 
 @Injectable()
 export class CustomFilesInterceptor {
-  static imagesInterceptor() {
+  static imagesInterceptor(): NestInterceptor {
     return FilesInterceptor('images', 100, {
       storage: diskStorage({
         destination: './uploads',
@@ -40,10 +41,9 @@ export class CustomFilesInterceptor {
           callback(null, uniqueSuffix + file.originalname);
         },
       }),
-    });
+    }) as NestInterceptor;
   }
 }
-
 @Controller('categories')
 export class CategoriesController {
   constructor(
@@ -52,7 +52,7 @@ export class CategoriesController {
     private characteristicsService: CharacteristicsService,
     private localesService: LocalesService,
     private tagsService: TagsService,
-  ) {}
+  ) { }
 
   @Post('')
   @UsePipes(new ValidationPipe({ transform: true }))
