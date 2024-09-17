@@ -22,7 +22,7 @@ import { LangContext, useLang } from "shared/context/lang"
 const CategoriesPage = observer(() => {
   const { data, isLoading, refetch } = categoriesStore.categoriesQuery.result
   const { palette } = useTheme()
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   const renderContent = () => {
     const isShowEmptyList = (!data || data?.rows.length === 0) && !isLoading

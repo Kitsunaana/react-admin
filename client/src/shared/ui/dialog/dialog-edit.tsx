@@ -60,7 +60,7 @@ export const DialogEdit = observer((props: DialogProps) => {
   const store = useEditDialogStore()
 
   const lang = useLang()
-  const langBase = langBaseProps ?? lang?.lang
+  const langBase = langBaseProps ?? lang
 
   const { t } = useTranslation("translation", { keyPrefix: langBase })
   const methods = useFormContext()
@@ -235,7 +235,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
   } = props
 
   const store = useEditDialogStore()
-  const langBase = langBaseProps ?? useLang()?.lang
+  const langBase = langBaseProps ?? useLang()
   const methods = useFormContext()
   const [isEdit, setIsEdit] = useState(false)
 

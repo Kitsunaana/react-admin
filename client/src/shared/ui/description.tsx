@@ -28,7 +28,7 @@ export const Preview = () => {
 export const DescriptionInput = () => {
   const { register } = useFormContext()
 
-  const langBase = useLang()?.lang
+  const langBase = useLang()
 
   return (
     <Input

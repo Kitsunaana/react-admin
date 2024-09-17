@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next"
 import { useLang } from "shared/context/lang"
 
 export const CreateEditForm = () => {
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   const { characteristics, characteristicsIsLoading } = useGetCharacteristics()
   const { units, unitsIsLoading } = useGetUnits()

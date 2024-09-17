@@ -31,7 +31,7 @@ interface HeaderProps {
 export const Header = (props: HeaderProps) => {
   const { refetchButton, backButton } = props
 
-  const langBase = useLang()?.lang ?? "global"
+  const langBase = useLang()
   const { t } = useTranslation("translation", { keyPrefix: langBase })
 
   const [searchParams, setSearchParams] = useSearchParams()

@@ -21,7 +21,7 @@ export const TagInputCaption = (props: TagInputProps) => {
 
   const methods = useFormContext()
   const lang = useLang()
-  const { t } = useTranslation("translation", { keyPrefix: lang?.lang })
+  const { t } = useTranslation("translation", { keyPrefix: lang })
 
   const onChangeAutocomplete = (option: string, field: TField<"tag.caption">) => {
     field.onChange(option)

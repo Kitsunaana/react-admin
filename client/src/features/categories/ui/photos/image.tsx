@@ -81,7 +81,7 @@ export const Image = memo((props: ImageProps) => {
 
   const theme = useTheme()
   const src = useImage(url ?? file)
-  const langBase = useLang()?.lang
+  const langBase = useLang()
 
   const isShowUpdateOrder = onUpdateOrder && order !== undefined
 

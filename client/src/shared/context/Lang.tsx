@@ -18,7 +18,9 @@ class LangStore {
 
 const context = createContext<LangStore | null>(null)
 
-export const useLang = () => useContext(context)
+const createLangStore = (lang: string) => new LangStore(lang)
+
+export const useLang = (defaultValue: string = "global") => useContext(context)?.lang ?? defaultValue
 
 interface LangContextProps {
   children: ReactNode
@@ -30,7 +32,7 @@ export const LangContext = (props: LangContextProps) => {
 
   return (
     <context.Provider
-      value={new LangStore(lang)}
+      value={createLangStore(lang)}
       {...other}
     />
   )

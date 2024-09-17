@@ -23,7 +23,7 @@ export const Tab = observer((props: TabProps) => {
   } = props
 
   const lang = useLang()
-  const langBase = langBaseProps ?? lang?.lang
+  const langBase = langBaseProps ?? lang
 
   const { palette, background: { gradient: { warning, primary } } } = useTheme()
 

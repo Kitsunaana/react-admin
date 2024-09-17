@@ -24,7 +24,7 @@ export const updateCaption = createRoute("updateCaption")
 export const TabCommon = (props: CommonTabProps) => {
   const { langBase: langBaseProps } = props
 
-  const langBase = langBaseProps ?? useLang()?.lang
+  const langBase = langBaseProps ?? useLang()
   const { t } = useTranslation("translation", { keyPrefix: `${langBase}.validate` })
 
   return (

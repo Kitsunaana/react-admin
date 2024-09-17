@@ -16,7 +16,7 @@ export const CharacteristicEditDialog = (props: CharacteristicEditDialogProps) =
   const { characteristics } = props
   const store = useEditDialogStore()
 
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   const methods = useForm<UseCharacteristicsFormProps>({
     defaultValues: {

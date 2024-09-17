@@ -40,7 +40,7 @@ export const TabsContainer = observer((props: TabsProps) => {
     tabs, requiredFields = [],
   } = props
 
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   const { tab, changeTab } = useEditDialogStore()
 

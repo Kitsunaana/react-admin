@@ -29,7 +29,7 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   const { openDialog } = useEditDialogStore()
   const { openDialog: openDeleteDialog } = useDeleteDialogStore()
   const theme = useTheme()
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   const onOpenEditDialog = () => openDialog(id, {
     unit, hideClient, value, caption, id,

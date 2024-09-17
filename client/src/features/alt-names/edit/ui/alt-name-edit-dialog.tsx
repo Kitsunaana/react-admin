@@ -14,7 +14,7 @@ export const AltNameEditDialog = (props: AltNameEditDialogProps) => {
   const { altNames } = props
 
   const store = useEditDialogStore()
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   const methods = useForm({
     defaultValues: {

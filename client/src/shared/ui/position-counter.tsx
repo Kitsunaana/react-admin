@@ -88,7 +88,7 @@ export const Position = memo((props: PositionProps) => {
     />
   )
 
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   return (
     <Container width={width} open={open} sx={sx}>

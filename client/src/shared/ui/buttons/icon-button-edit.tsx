@@ -13,7 +13,7 @@ interface IconButtonEditProps extends Omit<IconButtonProps, "name"> {
 export const IconButtonEdit = (props: IconButtonEditProps) => {
   const { help = true, ...other } = props
 
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   return (
     <IconButton

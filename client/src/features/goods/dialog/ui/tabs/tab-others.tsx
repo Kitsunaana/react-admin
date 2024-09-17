@@ -11,7 +11,7 @@ const checkboxes = [
 ]
 
 export const TabOthers = () => {
-  const readLangBase = useLang()?.lang ?? "global"
+  const readLangBase = useLang()
   const langBase = `${readLangBase}.forms`
 
   return (

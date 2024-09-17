@@ -31,7 +31,7 @@ export const CategoryEditDialog = observer(() => {
 
   const methods = useForm<UseCategoryFormProps>({ defaultValues })
   const requiredFields = useMemo(() => ["caption"], [])
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   return (
     <FormProvider {...methods}>

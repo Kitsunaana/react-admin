@@ -63,7 +63,7 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
 
   const [open, setOpen] = useState(false)
   const [order, setOrder] = useState(orderProps ?? 0)
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   useEffect(() => { setOrder(orderProps ?? 0) }, [orderProps])
 

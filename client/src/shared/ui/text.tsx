@@ -25,7 +25,7 @@ export const Text = memo((props: TextProps) => {
   useAppSelector((state: RootState) => state.settings.language)
 
   const lang = useLang()
-  const langBase = langBaseProps ?? lang?.lang
+  const langBase = langBaseProps ?? lang
 
   const translate = !!name && (
     <Trans

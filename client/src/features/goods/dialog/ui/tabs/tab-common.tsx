@@ -11,7 +11,7 @@ import { useGetAllCategories } from "features/goods/filters/ui/filters"
 import { Skeleton } from "@mui/material"
 
 export const TabCommon = () => {
-  const langBase = useLang()?.lang ?? "global"
+  const langBase = useLang()
   const { t } = useTranslation("translation", { keyPrefix: `${langBase}.validate` })
 
   const { categories, isLoading } = useGetAllCategories()

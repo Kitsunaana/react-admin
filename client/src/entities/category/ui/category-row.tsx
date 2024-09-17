@@ -55,7 +55,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
   const deleteStore = useDeleteDialogStore()
   const editStore = useEditDialogStore()
 
-  const langBase = useLang()?.lang
+  const langBase = useLang()
 
   const navigate = useNavigateGoods(caption)
 

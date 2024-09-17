@@ -21,7 +21,7 @@ export const TagItem = (props: TagItemProps) => {
   const theme = useTheme()
   const editStore = useEditDialogStore()
   const deleteStore = useDeleteDialogStore()
-  const langBase = useLang()?.lang ?? ""
+  const langBase = useLang()
 
   const onOpenEditDialog = () => {
     editStore.openDialog(id, {
