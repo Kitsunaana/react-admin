@@ -8,7 +8,7 @@ import { DialogEditV2 } from "shared/ui/dialog/dialog-edit"
 import { useMemo } from "react"
 import { observer } from "mobx-react-lite"
 import { getByIdCategoryOptions } from "entities/category/queries/use-category"
-import { LangContext } from "shared/context/Lang"
+import { LangContext, useLang } from "shared/context/Lang"
 import { useStores } from "features/categories/model/context"
 import { UseCategoryFormProps } from "features/categories/model/types"
 import { createCategoryOptions, updateCategoryOptions } from "features/categories/queries/queries"
@@ -19,8 +19,6 @@ import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context
 import { CopySettings } from "features/categories/ui/copy-settings/copy-settings"
 
 export const CategoryEditDialog = observer(() => {
-  const langBase = "catalog.dialog"
-
   const rootStore = useStores()
   const { fullScreen } = useEditDialogStore()
 
@@ -33,10 +31,11 @@ export const CategoryEditDialog = observer(() => {
 
   const methods = useForm<UseCategoryFormProps>({ defaultValues })
   const requiredFields = useMemo(() => ["caption"], [])
+  const langBase = useLang()?.lang ?? ""
 
   return (
     <FormProvider {...methods}>
-      <LangContext lang="global.dialog">
+      <LangContext lang={`${langBase}.dialog`}>
         <DialogEditV2
           defaultValues={defaultValues}
           onCreateOptions={createCategoryOptions}
@@ -62,11 +61,12 @@ export const CategoryEditDialog = observer(() => {
             />
           )}
           tabs={(
-            <TabsContainer
-              langBase={langBase}
-              tabs={TABS}
-              requiredFields={requiredFields}
-            />
+            <LangContext lang={`${langBase}.dialog.tabs`}>
+              <TabsContainer
+                tabs={TABS}
+                requiredFields={requiredFields}
+              />
+            </LangContext>
           )}
           PaperProps={{
             sx: {

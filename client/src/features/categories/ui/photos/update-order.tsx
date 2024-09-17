@@ -5,6 +5,7 @@ import styled from "styled-components"
 import { Icon } from "shared/ui/icon"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { Text } from "shared/ui/text"
+import { useLang } from "shared/context/lang"
 
 interface ContainerProps extends BoxProps {
   width: number
@@ -62,6 +63,7 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
 
   const [open, setOpen] = useState(false)
   const [order, setOrder] = useState(orderProps ?? 0)
+  const langBase = useLang()?.lang ?? ""
 
   useEffect(() => { setOrder(orderProps ?? 0) }, [orderProps])
 
@@ -78,7 +80,7 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
         title: (
           <Text
             onlyText
-            langBase="global"
+            langBase={`${langBase}.forms`}
             name={direction === 1 ? "moveUp" : "moveDown"}
           />
         ),
@@ -108,7 +110,7 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
             title: (
               <Text
                 onlyText
-                langBase="global"
+                langBase={`${langBase}.forms`}
                 name="displayAccordingCreationDate"
               />
             ),

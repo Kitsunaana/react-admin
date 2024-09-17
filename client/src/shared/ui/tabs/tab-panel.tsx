@@ -17,9 +17,16 @@ export const TabPanel = (props: TabPanelProps) => {
 
   return (
     <div
-      style={{ height: "100%" }}
+      style={{
+        height: "100%",
+        width: "100%",
+        opacity: value !== index ? 0 : 1,
+        transition: "0.3s",
+        position: "absolute",
+        right: 0,
+        visibility: value !== index ? "hidden" : "visible",
+      }}
       role="tabpanel"
-      hidden={value !== index}
       {...other}
     >
       {children}

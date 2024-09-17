@@ -7,6 +7,7 @@ import React from "react"
 import { useTheme } from "@mui/material"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
+import { LangContext, useLang } from "shared/context/lang"
 import { ITag } from "../model/types"
 import { Tag } from "./tag"
 
@@ -20,6 +21,7 @@ export const TagItem = (props: TagItemProps) => {
   const theme = useTheme()
   const editStore = useEditDialogStore()
   const deleteStore = useDeleteDialogStore()
+  const langBase = useLang()?.lang ?? ""
 
   const onOpenEditDialog = () => {
     editStore.openDialog(id, {
@@ -33,16 +35,17 @@ export const TagItem = (props: TagItemProps) => {
     })
   }
 
-  console.log(edited, local)
   return (
-    <RowItem theme={theme} success={edited || local}>
-      <Tag caption={tag.caption} icon={icon} color={tagColor} />
+    <LangContext lang={`${langBase}.rows`}>
+      <RowItem theme={theme} success={edited || local}>
+        <Tag caption={tag.caption} icon={icon} color={tagColor} />
 
-      <Box flex row ai>
-        <Vertical />
-        <IconButtonEdit onClick={onOpenEditDialog} />
-        <IconButtonDelete onClick={onOpenDeleteDialog} />
-      </Box>
-    </RowItem>
+        <Box flex row ai>
+          <Vertical />
+          <IconButtonEdit onClick={onOpenEditDialog} />
+          <IconButtonDelete onClick={onOpenDeleteDialog} />
+        </Box>
+      </RowItem>
+    </LangContext>
   )
 }

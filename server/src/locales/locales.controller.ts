@@ -8,7 +8,10 @@ export class LocalesController {
   @Get('/:lng')
   getLanguage(@Param() lng: string) {
     return {
-      catalog: { rows: { count: 'Всего <strong>{{value}}</strong> элементов' } },
+      catalog: {
+        // top: { search: 'Поиск' },
+        // rows: { count: 'Всего <strong>{{value}}</strong> элементов' },
+      },
       goods: { table: { row: { category: 'Категория <strong>{{value}}</strong>' } } },
     };
   }

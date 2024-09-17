@@ -40,7 +40,7 @@ export const Text = memo((props: TextProps) => {
   }
 
   return (
-    <Typography sx={{ ...sx }} {...other}>
+    <Typography sx={{ fontSize: "inherit", ...sx }} {...other}>
       {caption}
       {translate}
     </Typography>

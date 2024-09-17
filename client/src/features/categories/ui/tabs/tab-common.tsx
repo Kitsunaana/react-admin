@@ -28,7 +28,7 @@ export const TabCommon = (props: CommonTabProps) => {
   const { t } = useTranslation("translation", { keyPrefix: `${langBase}.validate` })
 
   return (
-    <Box flex ai gap sx={{ mt: 1 }}>
+    <Box flex ai gap sx={{ mt: 1, mx: 1 }}>
       <Controller
         name="caption"
         rules={{
@@ -38,15 +38,15 @@ export const TabCommon = (props: CommonTabProps) => {
         render={({ field, fieldState: { error } }) => (
           <Input
             {...field}
-            onChange={(event) => {
-              field.onChange(event)
-              eventBus.emit(updateCaption({ caption: event.target.value }))
-            }}
             size="small"
             fullWidth
             error={!!error}
             label={<Text onlyText name="forms.caption" />}
             helperText={error?.message ? t(error.message, { value: 3 }) : ""}
+            onChange={(event) => {
+              field.onChange(event)
+              eventBus.emit(updateCaption({ caption: event.target.value }))
+            }}
           />
         )}
       />

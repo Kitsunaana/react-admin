@@ -56,7 +56,7 @@ export const TabAltNames = observer(() => {
 
   return (
     <>
-      <Box flex row grow sx={{ height: 1 }}>
+      <Box flex row grow sx={{ height: 1, mx: 1 }}>
         {!isShowEmptyList ? (
           <CharacteristicsContainer fullScreen={fullScreen}>
             {isShowCharacteristics && altNames.filteredItems.map((altName) => (
@@ -83,13 +83,13 @@ export const TabAltNames = observer(() => {
             name="add"
             isLoading={altNames.isLoading}
             onClick={() => openEditDialog(null)}
-            help={{ title: <Text onlyText name="add" />, arrow: true }}
+            help={{ title: <Text onlyText name="actions.add" />, arrow: true }}
           />
           <IconButton
             name="translate"
             disabled={disabled}
             isLoading={altNames.isLoading}
-            help={{ title: <Text onlyText name="translate" />, arrow: true }}
+            help={{ title: <Text onlyText name="actions.translate" />, arrow: true }}
             onClick={() => {
               const caption = methods.getValues("caption")
               const description = methods.getValues("description")

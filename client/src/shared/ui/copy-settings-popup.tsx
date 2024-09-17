@@ -3,6 +3,7 @@ import Box from "@mui/material/Box"
 import Menu from "@mui/material/Menu"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { ReactNode, useState } from "react"
+import { Text } from "shared/ui/text"
 
 interface CopySettingsPopupProps {
   content: ReactNode
@@ -23,7 +24,14 @@ export const CopySettingsPopup = (props: CopySettingsPopupProps) => {
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <IconButton name="settings_v2" onClick={handleClick} />
+        <IconButton
+          name="settings_v2"
+          onClick={handleClick}
+          help={{
+            arrow: true,
+            title: <Text onlyText langBase="global.dialog" name="copySettings" />,
+          }}
+        />
       </Box>
       <Menu
         anchorEl={anchorEl}

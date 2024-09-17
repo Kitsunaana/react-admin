@@ -14,7 +14,7 @@ import { useTheme } from "@mui/material"
 import { useContextMenu } from "shared/hooks/use-context-menu"
 import { CategoryContextMenu } from "entities/category/ui/context-menu"
 import styled from "styled-components"
-import { LangContext } from "shared/context/lang"
+import { LangContext, useLang } from "shared/context/lang"
 import { Text } from "shared/ui/text"
 import { TMedia } from "features/categories/model/types"
 
@@ -55,6 +55,8 @@ export const CategoryRow = (props: CategoryRowProps) => {
   const deleteStore = useDeleteDialogStore()
   const editStore = useEditDialogStore()
 
+  const langBase = useLang()?.lang
+
   const navigate = useNavigateGoods(caption)
 
   const theme = useTheme()
@@ -78,7 +80,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
     >
       <Text caption={caption} />
       {menu.isOpen && (
-        <LangContext lang="category.contextMenu">
+        <LangContext lang={`${langBase}.actions`}>
           <CategoryContextMenu
             id={id}
             ref={menu.ref}

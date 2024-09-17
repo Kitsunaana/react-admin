@@ -2,7 +2,7 @@ import { DialogEdit } from "shared/ui/dialog/dialog-edit"
 import { FormProvider, useForm } from "react-hook-form"
 import * as React from "react"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { LangContext } from "shared/context/Lang"
+import { LangContext, useLang } from "shared/context/Lang"
 import { AltNamesStore } from "entities/alt-name"
 import { CreateEditForm } from "./alt-name-edit-form"
 
@@ -14,6 +14,7 @@ export const AltNameEditDialog = (props: AltNameEditDialogProps) => {
   const { altNames } = props
 
   const store = useEditDialogStore()
+  const langBase = useLang()?.lang ?? ""
 
   const methods = useForm({
     defaultValues: {
@@ -23,7 +24,7 @@ export const AltNameEditDialog = (props: AltNameEditDialogProps) => {
   })
 
   return (
-    <LangContext lang="global.dialog">
+    <LangContext lang={`${langBase}.dialog`}>
       <FormProvider {...methods}>
         <DialogEdit
           hideActions

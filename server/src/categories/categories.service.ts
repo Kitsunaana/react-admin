@@ -74,6 +74,13 @@ export class CategoriesService {
               [Sequelize.col('Media.createdAt'), 'asc'],
             ],
           },
+          {
+            model: AltNameCategory,
+            attributes: {
+              exclude: ['localeId', 'categoryId'],
+            },
+            include: [Locale],
+          },
         ],
         attributes: {
           exclude: ['updatedAt'],

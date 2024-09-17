@@ -31,7 +31,7 @@ export const TabCharacteristics = observer(() => {
 
   return (
     <>
-      <Box flex row grow sx={{ height: 1 }}>
+      <Box flex row grow sx={{ height: 1, mx: 1 }}>
         {characteristics.filteredItems.length > 0 ? (
           <CharacteristicsContainer fullScreen={fullScreen}>
             {characteristics.filteredItems.map((characteristic) => (
@@ -49,7 +49,7 @@ export const TabCharacteristics = observer(() => {
             onClick={() => editStore.openDialog(null)}
             help={{
               arrow: true,
-              title: <Text onlyText name="add" />,
+              title: <Text onlyText name="actions.add" />,
             }}
           />
         </Box>

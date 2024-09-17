@@ -6,6 +6,8 @@ import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"
 import { useMutation, UseMutationOptions } from "@tanstack/react-query"
+import { useLang } from "shared/context/lang"
+import { Text } from "shared/ui/text"
 
 interface ContainerProps extends BoxProps {
   width: number
@@ -13,35 +15,35 @@ interface ContainerProps extends BoxProps {
 }
 
 const Count = styled(Box)<BoxProps>`
-    position: relative;
-    z-index: 0;
-    cursor: pointer;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
 `
 
 const ArrowUpButton = styled(Box)<Omit<ContainerProps, "width">>`
-    transition: .3s;
-    transform: rotate(180deg);
-    position: absolute;
-    z-index: 2;
-    left: ${({ open }) => (open ? "-5px" : "0px")};
-    opacity: ${({ open }) => (open ? 1 : 0)};
-    visibility: ${({ open }) => (open ? "visible" : "hidden")};
+  transition: .3s;
+  transform: rotate(180deg);
+  position: absolute;
+  z-index: 2;
+  left: ${({ open }) => (open ? "-5px" : "0px")};
+  opacity: ${({ open }) => (open ? 1 : 0)};
+  visibility: ${({ open }) => (open ? "visible" : "hidden")};
 `
 
 const ArrowDownButton = styled(Box)<Omit<ContainerProps, "width">>`
-    transition: .3s;
-    position: absolute;
-    z-index: 2;
-    right: ${({ open }) => (open ? "-5px" : "0px")};
-    opacity: ${({ open }) => (open ? 1 : 0)};
-    visibility: ${({ open }) => (open ? "visible" : "hidden")};
+  transition: .3s;
+  position: absolute;
+  z-index: 2;
+  right: ${({ open }) => (open ? "-5px" : "0px")};
+  opacity: ${({ open }) => (open ? 1 : 0)};
+  visibility: ${({ open }) => (open ? "visible" : "hidden")};
 `
 
 const Container = styled((props: ContainerProps) => <Box flex ai row gap jc {...props} />)`
-    transition: .3s;
-    margin: 0 4px;
-    position: relative;
-    min-width: ${({ open, width }) => (open ? `${width * 10 + 60}px` : "24px")};
+  transition: .3s;
+  margin: 0 4px;
+  position: relative;
+  min-width: ${({ open, width }) => (open ? `${width * 10 + 60}px` : "24px")};
 `
 
 interface PositionProps {
@@ -68,7 +70,7 @@ export const Position = memo((props: PositionProps) => {
 
   const { isPending, mutate } = useMutation({
     ...updatePositionOptions(id),
-    onSuccess: (data) => {
+    onSuccess: () => {
       setOrder((prevState) => prevState + direction)
     },
   })
@@ -86,13 +88,21 @@ export const Position = memo((props: PositionProps) => {
     />
   )
 
+  const langBase = useLang()?.lang ?? ""
+
   return (
     <Container width={width} open={open} sx={sx}>
-      <ArrowUpButton open={open}>
+      <ArrowUpButton
+        open={open}
+        help={{ arrow: true, title: <Text langBase={`${langBase}`} name="moveUp" /> }}
+      >
         {renderIconButton(1)}
       </ArrowUpButton>
       <Count onClick={onToggle}>{order}</Count>
-      <ArrowDownButton open={open}>
+      <ArrowDownButton
+        open={open}
+        help={{ arrow: true, title: <Text langBase={`${langBase}`} name="moveDown" /> }}
+      >
         {renderIconButton(-1)}
       </ArrowDownButton>
     </Container>

@@ -25,7 +25,7 @@ interface DialogHeaderProps {
 
 export const DialogHeader = observer((props: DialogHeaderProps) => {
   const {
-    title, setData, setValues, settings, settingInputs, getValues, hideActions = false,
+    title, setData, settings, settingInputs, getValues, hideActions = false,
   } = props
 
   const store = useEditDialogStore()
@@ -49,7 +49,10 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
         border: ({ palette }) => `1px solid ${alpha(palette.grey["500"], 0.25)}`,
       }}
     >
-      <Text sx={{ display: "flex", justifyContent: "center", width: 1 }} caption={title} />
+      <Text
+        sx={{ display: "flex", justifyContent: "center", width: 1 }}
+        caption={title}
+      />
       {!hideActions && (
         <>
           <IconButton
@@ -66,7 +69,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
             help={{
               arrow: true,
               disableInteractive: true,
-              title: <Text onlyText name="copy" />,
+              title: <Text onlyText langBase="global.dialog" name="copy" />,
             }}
           />
           <Vertical sx={{ m: 0 }} />
@@ -98,7 +101,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
             help={{
               arrow: true,
               disableInteractive: true,
-              title: <Text onlyText name="paste" />,
+              title: <Text onlyText langBase="global.dialog" name="paste" />,
             }}
           />
         </>
@@ -111,7 +114,7 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
         name={fullscreenState}
         help={{
           arrow: true,
-          title: <Text onlyText name={fullscreenState} />,
+          title: <Text onlyText langBase="global.dialog" name={fullscreenState} />,
         }}
       />
     </Box>

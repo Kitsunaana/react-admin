@@ -12,7 +12,7 @@ import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
-import { useLang } from "shared/context/Lang"
+import { LangContext, useLang } from "shared/context/Lang"
 import { Text } from "shared/ui/text"
 import { useStores } from "features/categories/model/context"
 
@@ -29,6 +29,7 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   const { openDialog } = useEditDialogStore()
   const { openDialog: openDeleteDialog } = useDeleteDialogStore()
   const theme = useTheme()
+  const langBase = useLang()?.lang ?? ""
 
   const onOpenEditDialog = () => openDialog(id, {
     unit, hideClient, value, caption, id,
@@ -39,28 +40,30 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   const hasConflict = characteristics.getConflict({ id, caption })
 
   return (
-    <RowItem
-      onDoubleClick={onOpenEditDialog}
-      theme={theme}
-      errorBg={hasConflict}
-      error={hasConflict}
-      warning={local}
-    >
-      <Box flex row ai>
-        <HiddenIndicator hidden={hideClient} />
-        <Caption caption={caption} unit={unit} value={value} />
-      </Box>
-      <Box flex ai row>
-        <Icon
-          name="allowCategory"
-          fontSize="small"
-          color="success"
-          help={{ title: <Text onlyText name="forCategory" />, arrow: true }}
-        />
-        <Vertical />
-        <IconButtonEdit onClick={onOpenEditDialog} />
-        <IconButtonDelete onClick={onOpenDeleteDialog} />
-      </Box>
-    </RowItem>
+    <LangContext lang={`${langBase}.rows`}>
+      <RowItem
+        onDoubleClick={onOpenEditDialog}
+        theme={theme}
+        errorBg={hasConflict}
+        error={hasConflict}
+        warning={local}
+      >
+        <Box flex row ai>
+          <HiddenIndicator hidden={hideClient} />
+          <Caption caption={caption} unit={unit} value={value} />
+        </Box>
+        <Box flex ai row>
+          <Icon
+            name="allowCategory"
+            fontSize="small"
+            color="success"
+            help={{ title: <Text onlyText name="forCategory" />, arrow: true }}
+          />
+          <Vertical />
+          <IconButtonEdit onClick={onOpenEditDialog} />
+          <IconButtonDelete onClick={onOpenDeleteDialog} />
+        </Box>
+      </RowItem>
+    </LangContext>
   )
 })

@@ -30,7 +30,7 @@ export const TabTags = observer(() => {
 
   return (
     <>
-      <Box flex row grow sx={{ height: 1 }}>
+      <Box flex row grow sx={{ height: 1, px: 1 }}>
         {tags.filteredTags.length > 0 ? (
           <TagsContainer fullScreen={fullScreen}>
             {tags.filteredTags.map((tag) => (<TagItem key={tag.id} {...tag} />))}
@@ -40,7 +40,7 @@ export const TabTags = observer(() => {
         <Box sx={{ pt: 1 }}>
           <IconButton
             name="add"
-            help={{ title: <Text onlyText name="add" />, arrow: true }}
+            help={{ title: <Text onlyText name="actions.add" />, arrow: true }}
             onClick={() => openDialog(null)}
           />
         </Box>

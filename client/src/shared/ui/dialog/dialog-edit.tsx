@@ -18,7 +18,6 @@ import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { Text } from "shared/ui/text"
-import { getFormSubmissionInfo } from "react-router-dom/dist/dom"
 
 interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string

@@ -1,6 +1,7 @@
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import React from "react"
+import { Text } from "shared/ui/text"
 
 interface HiddenIndicatorProps {
   hidden: boolean
@@ -17,7 +18,7 @@ export const HiddenIndicator = (props: HiddenIndicatorProps) => {
       ai
       row
       sx={{ mr: 1 }}
-      help={{ title: "Скрыть у клиента", arrow: true }}
+      help={{ title: <Text name="hiddenForClient" />, arrow: true }}
     >
       <Icon
         name="invisible"

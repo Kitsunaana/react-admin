@@ -9,14 +9,16 @@ import { Input } from "shared/ui/form/input"
 import { BackButton } from "shared/ui/back-button"
 import { categoriesUrlStore } from "entities/category"
 import queryString from "query-string"
+import { Text } from "shared/ui/text"
 
 export interface SearchForm {
   search: string
 }
 
 interface CategoryHeaderProps {
-  createButton: ReactNode
-  refetchButton: ReactNode
+  // createButton: ReactNode
+  // refetchButton: ReactNode
+  actions: ReactNode
 }
 
 const INPUTS: Record<string, keyof SearchForm> = {
@@ -24,10 +26,7 @@ const INPUTS: Record<string, keyof SearchForm> = {
 }
 
 export const CategoryHeader = (props: CategoryHeaderProps) => {
-  const { createButton, refetchButton } = props
-
-  const langBase = useLang()?.lang ?? "global"
-  const { t } = useTranslation("translation", { keyPrefix: langBase })
+  const { actions } = props
 
   const [isFocused, setIsFocused] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
@@ -38,7 +37,8 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
   useEffect(() => {
     setValue(INPUTS.search, searchParams.get(INPUTS.search) ?? "")
 
-    categoriesUrlStore.setSearchParams(queryString.parseUrl(window.location.href).query)
+    const parsedUrl = queryString.parseUrl(window.location.href)
+    categoriesUrlStore.setSearchParams(parsedUrl.query)
   }, [searchParams])
 
   useEvent("keydown", (event: KeyboardEvent) => {
@@ -52,10 +52,7 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
     })
   })
 
-  const onClear = () => {
-    categoriesUrlStore.setSearchParams({})
-    setSearchParams("")
-  }
+  const onClear = () => setSearchParams("")
 
   return (
     <Box flex ai row gap>
@@ -66,7 +63,7 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
           <Input
             {...field}
             sx={{ width: 1 }}
-            label={t(INPUTS.search)}
+            label={<Text name="search" />}
             size="small"
             InputProps={{ fullWidth: true }}
             onClear={onClear}
@@ -76,12 +73,7 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
         )}
       />
       <Box flex ai row>
-        {refetchButton}
-        {createButton}
-        <BackButton onClick={() => {
-          console.log(searchParams.toString())
-        }}
-        />
+        {actions}
       </Box>
     </Box>
   )

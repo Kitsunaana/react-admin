@@ -5,6 +5,7 @@ import { useFormContext, useFormState } from "react-hook-form"
 import { Tab } from "shared/ui/tabs/tab"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useLang } from "shared/context/lang"
 
 export interface ITab {
   id: number
@@ -16,7 +17,6 @@ export interface ITab {
 interface TabsProps {
   tabs: ITab[]
   requiredFields?: string[]
-  langBase: string
 }
 
 export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
@@ -37,8 +37,10 @@ export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
 
 export const TabsContainer = observer((props: TabsProps) => {
   const {
-    tabs, langBase, requiredFields = [],
+    tabs, requiredFields = [],
   } = props
+
+  const langBase = useLang()?.lang ?? ""
 
   const { tab, changeTab } = useEditDialogStore()
 

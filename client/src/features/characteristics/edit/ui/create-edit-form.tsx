@@ -7,13 +7,10 @@ import { Checkbox, FormControlLabel } from "@mui/material"
 import * as React from "react"
 import { useGetCharacteristics, useGetUnits } from "entities/characteristic"
 import { useTranslation } from "react-i18next"
+import { useLang } from "shared/context/lang"
 
-interface CreateEditFormProps {
-  langBase?: string
-}
-
-export const CreateEditForm = (props: CreateEditFormProps) => {
-  const { langBase } = props
+export const CreateEditForm = () => {
+  const langBase = useLang()?.lang ?? ""
 
   const { characteristics, characteristicsIsLoading } = useGetCharacteristics()
   const { units, unitsIsLoading } = useGetUnits()

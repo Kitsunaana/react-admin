@@ -9,7 +9,7 @@ import { Icon } from "shared/ui/icon"
 import { Gallery } from "../photo-position/gallery"
 
 export const TabPhotoPosition = () => (
-  <Box sx={{ mt: 1 }}>
+  <Box sx={{ mt: 1, mx: 1 }}>
     <Controller
       defaultValue
       name="isShowPhotoWithGoods"

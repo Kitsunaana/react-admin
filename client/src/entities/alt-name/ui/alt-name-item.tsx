@@ -10,6 +10,7 @@ import { alpha, useTheme } from "@mui/material"
 import { IAltName } from "entities/alt-name/model/types"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
+import { LangContext, useLang } from "shared/context/lang"
 
 interface AltNameItemProps extends IAltName {
   disabled?: boolean
@@ -23,6 +24,7 @@ export const AltNameItem = (props: AltNameItemProps) => {
   const theme = useTheme()
   const editStore = useEditDialogStore()
   const deleteStore = useDeleteDialogStore()
+  const langBase = useLang()?.lang ?? ""
 
   const onOpenEditDialog = () => {
     editStore.openDialog(id, {
@@ -37,35 +39,37 @@ export const AltNameItem = (props: AltNameItemProps) => {
   }
 
   return (
-    <RowItem
-      theme={theme}
-      success={edited}
-      sx={{
-        ...(!disabled ? {} : {
-          position: "relative",
-          "&::after": {
-            position: "absolute",
-            content: "''",
-            width: "100%",
-            height: "100%",
-            top: 0,
-            left: 0,
-            borderRadius: 2,
-            background: ({ palette }) => (palette.mode === "light"
-              ? alpha(palette.common.black, 0.15)
-              : alpha(palette.common.white, 0.15)),
-          },
-        }),
-      }}
-    >
-      <Text caption={caption} />
+    <LangContext lang={`${langBase}.rows`}>
+      <RowItem
+        theme={theme}
+        success={edited}
+        sx={{
+          ...(!disabled ? {} : {
+            position: "relative",
+            "&::after": {
+              position: "absolute",
+              content: "''",
+              width: "100%",
+              height: "100%",
+              top: 0,
+              left: 0,
+              borderRadius: 2,
+              background: ({ palette }) => (palette.mode === "light"
+                ? alpha(palette.common.black, 0.15)
+                : alpha(palette.common.white, 0.15)),
+            },
+          }),
+        }}
+      >
+        <Text caption={caption} />
 
-      <Box flex row ai sx={{ height: 1 }}>
-        <Mark>{locale.caption}</Mark>
-        <Vertical />
-        <IconButtonEdit onClick={onOpenEditDialog} />
-        <IconButtonDelete onClick={onOpenDeleteDialog} />
-      </Box>
-    </RowItem>
+        <Box flex row ai sx={{ height: 1 }}>
+          <Mark>{locale.caption}</Mark>
+          <Vertical />
+          <IconButtonEdit onClick={onOpenEditDialog} />
+          <IconButtonDelete onClick={onOpenDeleteDialog} />
+        </Box>
+      </RowItem>
+    </LangContext>
   )
 }
