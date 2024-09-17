@@ -148,7 +148,7 @@ export class CategoriesService {
   async updateOrder(dto: UpdateOrderCategoryDto) {
     return await this.categoryRepository.update(
       { order: dto.order },
-      { where: { id: 1 }, returning: true },
+      { where: { id: dto.id }, returning: false },
     );
   }
 }

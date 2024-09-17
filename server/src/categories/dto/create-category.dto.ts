@@ -1,8 +1,9 @@
-import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { TagCreate } from '../../entities/tag.entity';
-import { CustomCategory, Position } from '../../entities/custom-category';
+import { Position } from '../../entities/custom-category';
 import { Media } from '../../entities/media.entity';
+import { TagCreateDto } from '../../tags/tags.service';
 
 export class CreateCategoryDto {
   @IsString()
@@ -42,10 +43,7 @@ export class CreateCategoryDto {
   }[];
 
   @Transform(({ value }) => JSON.parse(value))
-  readonly tags: ({
-    id: number;
-    action?: 'create' | 'update' | 'remove';
-  } & TagCreate)[];
+  readonly tags: TagCreateDto[];
 
   @Transform(({ value }) => JSON.parse(value))
   readonly altNames: {

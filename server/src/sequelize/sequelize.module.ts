@@ -8,10 +8,10 @@ import { Models } from '../entities';
       useFactory: () => ({
         username: 'postgres',
         password: 'postgres',
-        database: 'kitsunaana',
+        database: 'postgres',
         host: '127.0.0.1',
         dialect: 'postgres',
-        port: 5432,
+        port: 8913,
         models: Models,
         autoLoadModels: true,
         synchronize: true,
@@ -24,4 +24,4 @@ import { Models } from '../entities';
     }),
   ],
 })
-export class SequelizeModule {}
+export class SequelizeModule { }

@@ -14,7 +14,8 @@ import { Unit } from './units.entity';
 
 @Table({ timestamps: false })
 export class Characteristic extends Model<Characteristic> {
-  @Column({ unique: true, type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
+  // @Column({ unique: true, type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
+  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   id: number;
 
   @Column({ type: DataType.STRING, unique: true })
@@ -50,21 +51,21 @@ export class CategoryCharacteristic extends Model<
   id: number;
 
   @ForeignKey(() => Characteristic)
-  @Column
+  @Column({ unique: false, allowNull: true })
   characteristicId: number;
 
   @BelongsTo(() => Characteristic)
   characteristic: Characteristic;
 
   @ForeignKey(() => Category)
-  @Column
+  @Column({ unique: false, allowNull: true })
   categoryId: number;
 
   @BelongsTo(() => Category)
   category: Category;
 
   @ForeignKey(() => Unit)
-  @Column
+  @Column({ unique: false, allowNull: true })
   unitId: number;
 
   @BelongsTo(() => Unit)

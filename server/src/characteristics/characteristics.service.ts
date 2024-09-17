@@ -55,6 +55,31 @@ export class CharacteristicsService {
     const [unit] = await this.findOrCreateUnit(data.unit);
     const [characteristic] = await this.findOrCreateCharacteristic(data.caption);
 
+    console.log(
+      JSON.parse(
+        JSON.stringify({
+          unit,
+          characteristic,
+        }),
+      ),
+    );
+
+    console.log({
+      characteristicId: characteristic.id,
+      categoryId: categoryId,
+      unitId: unit.id,
+      value: data.value,
+      hideClient: data.hideClient,
+    });
+
+    // return await this.categoryCharacteristicsRepository.create({
+    //   characteristicId: characteristic.id,
+    //   categoryId: categoryId,
+    //   unitId: unit.id,
+    //   value: data.value,
+    //   hideClient: data.hideClient,
+    // });
+
     return await this.findOrCreateCategoryCharacteristic({
       characteristicId: characteristic.id,
       categoryId: categoryId,
@@ -147,9 +172,35 @@ export class CharacteristicsService {
   }
 
   async delete(categoryId: number) {
-    await this.categoryCharacteristicsRepository.destroy({
+    const categoryCharacteristics = await this.categoryCharacteristicsRepository.findAll({
       where: { categoryId },
     });
+
+    await this.categoryCharacteristicsRepository.destroy({ where: { categoryId } });
+
+    await Promise.all(
+      categoryCharacteristics.map(async (categoryCharacteristic) => {
+        const characteristics = await this.categoryCharacteristicsRepository.findAll({
+          include: [
+            { model: Characteristic, where: { id: categoryCharacteristic.characteristicId } },
+          ],
+        });
+
+        const units = await this.categoryCharacteristicsRepository.findAll({
+          include: [{ model: Unit, where: { id: categoryCharacteristic.unitId } }],
+        });
+
+        if (characteristics.length === 0) {
+          await this.characteristicsRepository.destroy({
+            where: { id: categoryCharacteristic.characteristicId },
+          });
+        }
+
+        if (units.length === 0) {
+          await this.unitsRepository.destroy({ where: { id: categoryCharacteristic.unitId } });
+        }
+      }),
+    );
   }
 
   async getAllCharacteristics() {
