@@ -28,7 +28,7 @@ export const TabCommon = (props: CommonTabProps) => {
   const { t } = useTranslation("translation", { keyPrefix: `${langBase}.validate` })
 
   return (
-    <Box flex ai gap sx={{ mt: 1, mx: 1 }}>
+    <Box flex ai gap sx={{ mt: 1 }}>
       <Controller
         name="caption"
         rules={{

@@ -31,7 +31,7 @@ export const TabCharacteristics = observer(() => {
 
   return (
     <>
-      <Box flex row grow sx={{ height: 1, mx: 1 }}>
+      <Box flex row grow sx={{ height: 1 }}>
         {characteristics.filteredItems.length > 0 ? (
           <CharacteristicsContainer fullScreen={fullScreen}>
             {characteristics.filteredItems.map((characteristic) => (

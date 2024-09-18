@@ -30,7 +30,7 @@ export const TabPhotos = observer(() => {
   const { photos } = useStores()
 
   return (
-    <Box sx={{ mt: 1, mx: 1 }}>
+    <Box sx={{ mt: 1 }}>
       <Box sx={{ pb: 1 }}>
         <InputFile
           caption=""

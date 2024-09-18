@@ -7,11 +7,9 @@ const getPath = (data: unknown) => (typeof data === "string"
 export const useImage = (data?: string | File): string => {
   const [src, setSrc] = useState(getPath(data))
 
-  useEffect(() => {
-    setSrc(getPath(data))
-  }, [data])
-
   if (data === undefined) return ""
+
+  useEffect(() => { setSrc(getPath(data)) }, [data])
 
   useEffect(() => {
     if (!(data instanceof File)) return

@@ -30,7 +30,7 @@ export const TabTags = observer(() => {
 
   return (
     <>
-      <Box flex row grow sx={{ height: 1, px: 1 }}>
+      <Box flex row grow sx={{ height: 1 }}>
         {tags.filteredTags.length > 0 ? (
           <TagsContainer fullScreen={fullScreen}>
             {tags.filteredTags.map((tag) => (<TagItem key={tag.id} {...tag} />))}

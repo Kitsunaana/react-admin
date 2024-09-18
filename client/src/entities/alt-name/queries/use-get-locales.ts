@@ -1,19 +1,24 @@
-import { useQuery } from "@tanstack/react-query"
 import { validation } from "shared/lib/validation"
+import { MobxQuery } from "shared/lib/mobx-react-query"
+import { queryClient } from "app/providers/query-client"
+import { makeAutoObservable } from "mobx"
 import { altNameApi } from "../api/alt-name-api"
-import { Locale } from "../model/types"
 import { localesSchema } from "../model/schemas"
 
-export const useGetLocales = () => {
-  const { data, isLoading, isFetching } = useQuery<Locale[]>({
-    queryKey: ["locales"],
-    queryFn: altNameApi.getAll,
-  })
+export class LocaleStore {
+  localeQuery = new MobxQuery(
+    () => ({
+      queryKey: ["locales"],
+      queryFn: altNameApi.getAll,
+    }),
+    queryClient,
+  )
 
-  validation(localesSchema, data)
+  constructor() { makeAutoObservable(this) }
 
-  return {
-    localesData: data,
-    localesIsLoading: isLoading || isFetching,
-  }
+  get locale() { return validation(localesSchema, this.localeQuery.data) }
+  get isLoading() { return this.localeQuery.result.isLoading }
 }
+
+export const createLocaleStore = () => new LocaleStore()
+export const localeStore = createLocaleStore()

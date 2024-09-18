@@ -7,8 +7,7 @@ import React from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { useFormContext } from "react-hook-form"
-import { AltNameItem } from "entities/alt-name"
-import { useGetLocales } from "entities/alt-name/queries/use-get-locales"
+import { AltNameItem, localeStore } from "entities/alt-name"
 import { AltNameEditDialog, AltNameDeleteDialog } from "features/alt-names"
 import { Text } from "shared/ui/text"
 import { Skeleton } from "@mui/material"
@@ -30,11 +29,9 @@ export const TabAltNames = observer(() => {
   const { altNames } = useStores()
   const { fullScreen, openDialog: openEditDialog } = useEditDialogStore()
 
-  const { localesData } = useGetLocales()
-
   const methods = useFormContext()
   const [caption, description] = methods.watch(["caption", "description"])
-  const freeLocales = altNames.getFreeLocale(localesData ?? [])
+  const freeLocales = altNames.getFreeLocale(localeStore.locale ?? [])
 
   const isShowCharacteristics = altNames.filteredItems.length > 0
   const isShowSkeletons = freeLocales.length > 0 && altNames.isLoading

@@ -1,3 +1,5 @@
+import React from "react"
+import { alpha, useTheme } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Box } from "shared/ui/box"
 import { Mark } from "shared/ui/mark"
@@ -5,12 +7,10 @@ import { Vertical } from "shared/ui/divider"
 import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { RowItem } from "shared/ui/row-item"
-import React from "react"
-import { alpha, useTheme } from "@mui/material"
-import { IAltName } from "entities/alt-name/model/types"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { LangContext, useLang } from "shared/context/lang"
+import { IAltName } from "../model/types"
 
 interface AltNameItemProps extends IAltName {
   disabled?: boolean
@@ -54,15 +54,13 @@ export const AltNameItem = (props: AltNameItemProps) => {
               top: 0,
               left: 0,
               borderRadius: 2,
-              background: ({ palette }) => (palette.mode === "light"
-                ? alpha(palette.common.black, 0.15)
-                : alpha(palette.common.white, 0.15)),
+              background: ({ palette }) => alpha(palette
+                .common[palette.mode === "light" ? "black" : "white"], 0.15),
             },
           }),
         }}
       >
         <Text caption={caption} />
-
         <Box flex row ai sx={{ height: 1 }}>
           <Mark>{locale.caption}</Mark>
           <Vertical />

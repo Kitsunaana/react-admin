@@ -14,8 +14,8 @@ export interface IAltNameAction {
 export interface IAltName extends IAltNameAction {
   id: number | string
   caption: string
-  locale: Locale
   description?: string | null
+  locale: Locale
 }
 
 export interface IAltNameCreate {

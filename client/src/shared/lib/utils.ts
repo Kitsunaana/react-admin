@@ -27,35 +27,12 @@ export const stringifiedParams = <TParams extends object>(data: TParams) => {
   return searchParams && `?${searchParams}`
 }
 
-/* export const copyToClipboard = async (data: unknown) => {
-  try {
-    await navigator.clipboard.writeText(JSON.stringify(data))
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-export const readOfClipboard = async () => {
-  try {
-    const readText = await navigator.clipboard.readText()
-    return await JSON.parse(readText)
-  } catch (error) {
-    console.log(error)
-  }
-} */
-
 const fileToBase64 = (file: File) => new Promise<string | ArrayBuffer>((resolve, reject) => {
   const reader = new FileReader()
   reader.onloadend = () => reader.result !== null && resolve(reader.result)
   reader.onerror = reject
   reader.readAsDataURL(file)
 })
-
-interface Options {
-  images: {
-    path: string
-  }
-}
 
 export const copyToClipboard = async (data: Record<string, any>) => {
   const { images, ...other } = data

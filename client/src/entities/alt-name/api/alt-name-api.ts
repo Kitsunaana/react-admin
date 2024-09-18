@@ -23,9 +23,9 @@ const createConfig = (host: string, key: string) => ({
 })
 
 export const altNameApi = {
-  getAll: () => $axios.get(URL).then(({ data }) => data),
+  getAll: async (): Promise<Locale[]> => $axios.get(URL).then(({ data }) => data),
 
-  translate: (locale: Locale, category: ICategoryTranslate) => {
+  translate: async (locale: Locale, category: ICategoryTranslate) => {
     const data = createData(locale, category)
     const config = createConfig(HOST, KEY)
 

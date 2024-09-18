@@ -7,8 +7,7 @@ import React, { useEffect, useState } from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { useFormContext } from "react-hook-form"
-import { AltNameItem } from "entities/alt-name"
-import { useGetLocales } from "entities/alt-name/queries/use-get-locales"
+import { AltNameItem, localeStore } from "entities/alt-name"
 import { AltNameEditDialog, AltNameDeleteDialog } from "features/alt-names"
 import { Text } from "shared/ui/text"
 import { Skeleton } from "@mui/material"
@@ -41,9 +40,7 @@ export const TabAltNames = observer(() => {
     setDisabled(methods.getValues("caption").length < 3)
   }, [methods.getValues("caption")])
 
-  const { localesData } = useGetLocales()
-
-  const freeLocales = altNames.getFreeLocale(localesData ?? [])
+  const freeLocales = altNames.getFreeLocale(localeStore.locale ?? [])
 
   const isShowCharacteristics = altNames.filteredItems.length > 0
   const isShowSkeletons = freeLocales.length > 0 && altNames.isLoading
@@ -56,7 +53,7 @@ export const TabAltNames = observer(() => {
 
   return (
     <>
-      <Box flex row grow sx={{ height: 1, mx: 1 }}>
+      <Box flex row grow sx={{ height: 1 }}>
         {!isShowEmptyList ? (
           <CharacteristicsContainer fullScreen={fullScreen}>
             {isShowCharacteristics && altNames.filteredItems.map((altName) => (

@@ -55,7 +55,6 @@ export class AltNamesStore {
     if (!category.caption) return
     this.isLoading = true
 
-    console.log(this.getFreeLocale(locales))
     Promise.all(
       this.getFreeLocale(locales)
         .map((locale) => altNameApi.translate(locale, category)),

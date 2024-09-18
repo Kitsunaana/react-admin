@@ -16,7 +16,7 @@ export const ContentContainer = observer(() => {
   const { tab } = useEditDialogStore()
 
   return (
-    <>
+    <Box sx={{ position: "relative", height: 1 }}>
       <TabPanel value={tab} index={0}><TabCommon /></TabPanel>
       <TabPanel value={tab} index={1}><TabPhotos /></TabPanel>
       <TabPanel value={tab} index={2}><TabPhotoPosition /></TabPanel>
@@ -41,6 +41,6 @@ export const ContentContainer = observer(() => {
           </LangContext>
         </RootDialogProvider>
       </TabPanel>
-    </>
+    </Box>
   )
 })
