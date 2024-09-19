@@ -2,6 +2,7 @@ import Divider from "@mui/material/Divider"
 import { Text } from "shared/ui/text"
 import { ButtonGroup } from "shared/ui/buttons/toggle-button"
 import * as React from "react"
+import { forwardRef } from "react"
 
 interface RowSettingsProps {
   buttonGroups: string[]
@@ -9,25 +10,23 @@ interface RowSettingsProps {
   onChangeSettings: (name: string, value: string) => void
 }
 
-export const RowSettings = (props: RowSettingsProps) => {
+export const RowSettings = forwardRef<HTMLDivElement, RowSettingsProps>((props, ref) => {
   const { buttonGroups, settings, onChangeSettings } = props
 
   return (
-    <>
-      {
-        buttonGroups.map((groups) => (
-          <div key={groups}>
-            <Divider sx={{ fontSize: 12, textTransform: "lowercase" }}>
-              <Text name={groups} />
-            </Divider>
-            <ButtonGroup
-              name={groups}
-              onChangeSettings={onChangeSettings}
-              defaultValue={settings[groups]}
-            />
-          </div>
-        ))
-      }
-    </>
+    <div ref={ref}>
+      {buttonGroups.map((groups) => (
+        <div key={groups}>
+          <Divider sx={{ fontSize: 12, textTransform: "uppercase" }}>
+            <Text name={groups} sx={{ my: 0.5 }} />
+          </Divider>
+          <ButtonGroup
+            name={groups}
+            onChangeSettings={onChangeSettings}
+            defaultValue={settings[groups]}
+          />
+        </div>
+      ))}
+    </div>
   )
-}
+})
