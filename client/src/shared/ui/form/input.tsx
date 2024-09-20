@@ -45,13 +45,11 @@ export const Input = forwardRef<HTMLDivElement, InputProps>((props, ref) => {
     clear = true, name, onClear, setValue, onChange, InputProps, value, ...other
   } = props
 
-  const { t } = useTranslation()
-
   const clearButton = (clear && value) ? (
     <IconButton
       help={{
         arrow: true,
-        title: <Text name="forms.clear" onlyText />,
+        title: <Text langBase="global.forms" name="clear" onlyText />,
       }}
       fontSize={20}
       name="clear"

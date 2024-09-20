@@ -49,74 +49,75 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
         border: ({ palette }) => `1px solid ${alpha(palette.grey["500"], 0.25)}`,
       }}
     >
-      <Text
-        sx={{ display: "flex", justifyContent: "center", width: 1 }}
-        caption={title}
-      />
-      {!hideActions && (
-        <>
-          <IconButton
-            onClick={async () => {
-              const readData = getValues
-                ?.filter((fn): fn is () => any => typeof fn === "function")
-                .map((fn) => ({ ...fn() }))
-                .reduce((prev, current) => ({ ...prev, ...current }), {})
+      {/* <Box sx={{ display: "flex", justifyContent: "center", width: 1 }}> */}
+      {title}
+      {/* </Box> */}
+      <div style={{ display: "flex", marginRight: "0px" }}>
+        {!hideActions && (
+          <>
+            <IconButton
+              onClick={async () => {
+                const readData = getValues
+                  ?.filter((fn): fn is () => any => typeof fn === "function")
+                  .map((fn) => ({ ...fn() }))
+                  .reduce((prev, current) => ({ ...prev, ...current }), {})
 
-              const { id, ...otherProperties } = readData
-              await copyToClipboard({ ...otherProperties, copied: true })
-            }}
-            name="copy"
-            help={{
-              arrow: true,
-              disableInteractive: true,
-              title: <Text onlyText langBase="global.dialog" name="copy" />,
-            }}
-          />
-          <Vertical sx={{ m: 0 }} />
-          <IconButton
-            onClick={async () => {
-              let readDataOfClipboard = await readOfClipboard()
+                const { id, ...otherProperties } = readData
+                await copyToClipboard({ ...otherProperties, copied: true })
+              }}
+              name="copy"
+              help={{
+                arrow: true,
+                disableInteractive: true,
+                title: <Text onlyText langBase="global.dialog" name="copy" />,
+              }}
+            />
+            <Vertical sx={{ m: 0 }} />
+            <IconButton
+              onClick={async () => {
+                let readDataOfClipboard = await readOfClipboard()
 
-              if (settingInputs) {
-                const filteredReadData = Object
-                  .entries(readDataOfClipboard)
-                  .filter(([key, value]) => {
-                    if (settingInputs[key] === false) return null
-                    return [key, value]
-                  })
+                if (settingInputs) {
+                  const filteredReadData = Object
+                    .entries(readDataOfClipboard)
+                    .filter(([key, value]) => {
+                      if (settingInputs[key] === false) return null
+                      return [key, value]
+                    })
 
-                readDataOfClipboard = Object.fromEntries(filteredReadData)
-              }
+                  readDataOfClipboard = Object.fromEntries(filteredReadData)
+                }
 
-              const setValues = (data: any) => {
-                Object.entries(data)
-                  .forEach(([key, value]) => methods.setValue(key, value))
-              }
+                const setValues = (data: any) => {
+                  Object.entries(data)
+                    .forEach(([key, value]) => methods.setValue(key, value))
+                }
 
-              [setData, setValues].forEach((callback) => (
-                typeof callback === "function" && callback(readDataOfClipboard)
-              ))
-            }}
-            name="paste"
-            help={{
-              arrow: true,
-              disableInteractive: true,
-              title: <Text onlyText langBase="global.dialog" name="paste" />,
-            }}
-          />
-        </>
-      )}
-      {settings && <Vertical sx={{ m: 0 }} />}
-      {settings}
-      <Vertical sx={{ m: 0 }} />
-      <IconButton
-        onClick={() => store.setFullScreen((fullScreen) => !fullScreen)}
-        name={fullscreenState}
-        help={{
-          arrow: true,
-          title: <Text onlyText langBase="global.dialog" name={fullscreenState} />,
-        }}
-      />
+                [setData, setValues].forEach((callback) => (
+                  typeof callback === "function" && callback(readDataOfClipboard)
+                ))
+              }}
+              name="paste"
+              help={{
+                arrow: true,
+                disableInteractive: true,
+                title: <Text onlyText langBase="global.dialog" name="paste" />,
+              }}
+            />
+          </>
+        )}
+        {settings && <Vertical sx={{ m: 0 }} />}
+        {settings}
+        <Vertical sx={{ m: 0 }} />
+        <IconButton
+          onClick={() => store.setFullScreen((fullScreen) => !fullScreen)}
+          name={fullscreenState}
+          help={{
+            arrow: true,
+            title: <Text onlyText langBase="global.dialog" name={fullscreenState} />,
+          }}
+        />
+      </div>
     </Box>
   )
 })

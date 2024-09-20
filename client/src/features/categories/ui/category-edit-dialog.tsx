@@ -50,13 +50,15 @@ export const CategoryEditDialog = observer(() => {
           settings={(
             <CopySettingsPopup
               content={(
-                <CopySettings
-                  buttonGroups={["images", "characteristics", "tags"]}
-                  onChangeSettings={rootStore.onChangePasteSettings}
-                  onChangeSettingInput={rootStore.onChangeSettingInput}
-                  settings={rootStore.settings}
-                  settingInputs={rootStore.settingInputs}
-                />
+                <LangContext lang={`${langBase}.dialog.copySettings`}>
+                  <CopySettings
+                    buttonGroups={["images", "characteristics", "tags"]}
+                    onChangeSettings={rootStore.onChangePasteSettings}
+                    onChangeSettingInput={rootStore.onChangeSettingInput}
+                    settings={rootStore.settings}
+                    settingInputs={rootStore.settingInputs}
+                  />
+                </LangContext>
               )}
             />
           )}

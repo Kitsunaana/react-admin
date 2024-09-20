@@ -27,9 +27,7 @@ export const DialogDelete = observer((props: DialogProps) => {
   const store = useDeleteDialogStore()
 
   const lang = useLang()
-  const langBase = langBaseProps ?? lang?.lang
-
-  const { t } = useTranslation("translation", { keyPrefix: langBase })
+  const langBase = langBaseProps ?? lang
 
   let onDelete
   if (onDeleteOptions) {
@@ -61,7 +59,11 @@ export const DialogDelete = observer((props: DialogProps) => {
       <Box sx={{ mx: 1 }}>
         <DialogHeader
           hideActions
-          title={t("title.delete")}
+          title={(
+            <Text
+              name="dialog.title.delete"
+            />
+          )}
         />
       </Box>
       <MUIDialogContent sx={{ height: 1, p: 1, mb: 2 }}>

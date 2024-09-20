@@ -12,6 +12,7 @@ import { Route, Routes } from "react-router-dom"
 import { Spinner } from "shared/ui/spinner"
 import { Gallery } from "widgets/galerry"
 import { Backdrop } from "shared/ui/backdrop"
+import { Text } from "shared/ui/text"
 
 export const Pages = () => {
   const { palette } = useTheme()
@@ -60,37 +61,11 @@ export const App = () => {
   const { palette } = useTheme()
 
   useEffect(() => {
-    const font = new FontFace(
-      "Nunito Sans",
-      "url(https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200..1000&display=swap)",
-    )
+    const event = () => setFontsLoaded(true)
 
-    font.load().then(() => {
-      document.fonts.add(font)
-      setFontsLoaded(true)
-    }).catch((error) => {
-      console.error(error)
-      setFontsLoaded(true)
-    })
+    window.addEventListener("load", event)
+    return () => window.removeEventListener("load", event)
   }, [])
-
-  if (!fontsLoaded) {
-    return (
-      <Box sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%,-50%)",
-      }}
-      >
-        <Spinner
-          color={palette.warning.dark}
-          height={100}
-          width={100}
-        />
-      </Box>
-    )
-  }
 
   return (
     <Box sx={{
@@ -100,16 +75,47 @@ export const App = () => {
       gap: 1.5,
     }}
     >
+      <Box sx={{
+        height: "100vh",
+        width: "100vw",
+        position: "absolute",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 100000000,
+        top: 0,
+        right: 0,
+        visibility: fontsLoaded ? "hidden" : "visible",
+      }}
+      >
+        <Box sx={{ fontSize: 32 }}>Подождите, идет загрузка</Box>
+      </Box>
+
       <CssBaseline />
 
-      <LangContext lang="sidebar">
-        <Sidebar menu={menu} menuBottom={menuBottom} />
-      </LangContext>
+      <Box sx={{
+        display: "flex",
+        transition: "0.5s",
+        width: 1,
+        gap: 1.5,
+        ...(fontsLoaded ? {
+          visibility: "visible",
+          opacity: 1,
+        } : {
+          visibility: "hidden",
+          opacity: 0,
+        }),
+      }}
+      >
+        <LangContext lang="sidebar">
+          <Sidebar menu={menu} menuBottom={menuBottom} />
+        </LangContext>
 
-      <Gallery />
-      <Backdrop />
+        <Gallery />
+        <Backdrop />
 
-      <Pages />
+        <Pages />
+      </Box>
     </Box>
   )
 }

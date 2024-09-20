@@ -7,14 +7,12 @@ import { Checkbox, FormControlLabel } from "@mui/material"
 import * as React from "react"
 import { useGetCharacteristics, useGetUnits } from "entities/characteristic"
 import { useTranslation } from "react-i18next"
-import { useLang } from "shared/context/lang"
+import { Text } from "shared/ui/text"
 
 export const CreateEditForm = () => {
-  const langBase = useLang()
-
   const { characteristics, characteristicsIsLoading } = useGetCharacteristics()
   const { units, unitsIsLoading } = useGetUnits()
-  const { t } = useTranslation("translation", { keyPrefix: langBase ?? "" })
+  const { t } = useTranslation("translation", { keyPrefix: "global.forms" })
 
   return (
     <Box flex gap sx={{ pt: 1 }}>
@@ -34,8 +32,8 @@ export const CreateEditForm = () => {
             InputProps={{
               ...field,
               error: !!error,
-              helperText: error?.message ? t(`validate.${error.message}`) : null,
-              label: t("forms.caption"),
+              helperText: error?.message ? t(`validate.${error.message}`, { value: 3 }) : null,
+              label: <Text name="forms.caption" />,
               onChange: (event) => {
                 field.onChange(event)
               },
@@ -56,7 +54,7 @@ export const CreateEditForm = () => {
               .filter((option) => Boolean(option.caption))
               .map((option) => option.caption)}
             InputProps={{
-              label: t("forms.unit"),
+              label: <Text name="forms.unit" />,
               ...field,
             }}
           />
@@ -70,7 +68,7 @@ export const CreateEditForm = () => {
           <Input
             {...field}
             size="small"
-            label={t("forms.value")}
+            label={<Text name="forms.value" />}
             error={!!error}
             helperText={error?.message ? t(`validate.${error.message}`) : null}
           />
@@ -84,7 +82,7 @@ export const CreateEditForm = () => {
             <FormControlLabel
               sx={{ alignSelf: "start" }}
               control={<Checkbox {...field} sx={{ p: 0.75, mr: 1 }} checked={field.value} />}
-              label={t("forms.hideClient")}
+              label={<Text name="forms.hideClient" />}
             />
           )}
         />

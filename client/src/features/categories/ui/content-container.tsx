@@ -36,7 +36,7 @@ export const ContentContainer = observer(() => {
       </TabPanel>
       <TabPanel value={tab} index={5}>
         <RootDialogProvider>
-          <LangContext lang="tags">
+          <LangContext lang="tag">
             <TabTags />
           </LangContext>
         </RootDialogProvider>

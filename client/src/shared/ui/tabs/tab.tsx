@@ -37,6 +37,7 @@ export const Tab = observer((props: TabProps) => {
       {...other}
       value={id}
       sx={{
+        textWrap: "nowrap",
         position: "relative",
         p: 1.2,
         minHeight: 0,

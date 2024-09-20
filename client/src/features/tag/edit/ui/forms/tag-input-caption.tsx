@@ -19,9 +19,7 @@ type EventInput = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 export const TagInputCaption = (props: TagInputProps) => {
   const { options } = props
 
-  const methods = useFormContext()
-  const lang = useLang()
-  const { t } = useTranslation("translation", { keyPrefix: lang })
+  const { t } = useTranslation("translation", { keyPrefix: "global.forms" })
 
   const onChangeAutocomplete = (option: string, field: TField<"tag.caption">) => {
     field.onChange(option)

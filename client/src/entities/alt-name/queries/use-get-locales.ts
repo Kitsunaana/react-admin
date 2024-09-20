@@ -10,6 +10,7 @@ export class LocaleStore {
     () => ({
       queryKey: ["locales"],
       queryFn: altNameApi.getAll,
+      placeholderData: [],
     }),
     queryClient,
   )

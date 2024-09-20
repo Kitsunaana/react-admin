@@ -11,12 +11,10 @@ type TField<TPath extends string> = ControllerRenderProps<FieldValues, TPath>
 type EventInput = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 
 export const AltNameInputCaption = () => {
-  const { t } = useTranslation("translation", { keyPrefix: "global.dialog.validate" })
-  const methods = useFormContext()
+  const { t } = useTranslation("translation", { keyPrefix: "global.forms.validate" })
 
   const onChangeInput = (event: EventInput, field: TField<"caption">) => {
     field.onChange(event)
-    methods.trigger("caption")
   }
 
   return (
@@ -33,7 +31,7 @@ export const AltNameInputCaption = () => {
           onChange={(event) => onChangeInput(event, field)}
           error={!!error}
           label={<Text onlyText name="forms.caption" />}
-          helperText={error?.message ? t(error.message, { defaultValue: 3 }) : null}
+          helperText={error?.message ? t(error.message, { value: 3 }) : null}
         />
       )}
     />

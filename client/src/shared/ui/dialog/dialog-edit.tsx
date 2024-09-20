@@ -18,6 +18,7 @@ import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { Text } from "shared/ui/text"
+import { Mark } from "shared/ui/mark"
 
 interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   langBase?: string
@@ -158,7 +159,23 @@ export const DialogEdit = observer((props: DialogProps) => {
         ) : (
           <DialogHeader
             hideActions={!!hideActions}
-            title={t(`title.${isEdit ? "edit" : "create"}`, { value: title ?? "" })}
+            title={(
+              <Text
+                sx={{
+                  textWrap: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  marginX: "auto",
+                }}
+                name={`title.${isEdit ? "edit" : "create"}`}
+                value={data?.caption ?? ""}
+                translateOptions={{
+                  components: {
+                    strong: <Mark />,
+                  },
+                }}
+              />
+            )}
           />
         )}
 
@@ -294,6 +311,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
         sx: {
           display: "flex",
           borderRadius: 4,
+          transition: ".2s",
           ...(store.fullScreen ? {} : {
             maxWidth: 900,
             width: 1,
@@ -317,9 +335,19 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
             getValues={memoizedGetValuesFn}
             title={(
               <Text
-                onlyText
+                sx={{
+                  textWrap: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  marginX: "auto",
+                }}
                 name={`title.${isEdit ? "edit" : "create"}`}
-                value={title ?? ""}
+                value={data?.caption ?? ""}
+                translateOptions={{
+                  components: {
+                    strong: <Mark />,
+                  },
+                }}
               />
             )}
           />

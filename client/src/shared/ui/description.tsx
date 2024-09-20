@@ -9,7 +9,6 @@ import { useLang } from "shared/context/Lang"
 
 export const Preview = () => {
   const { watch } = useFormContext()
-
   const description = watch("description")
 
   return description && (
@@ -25,16 +24,15 @@ export const Preview = () => {
   )
 }
 
-export const DescriptionInput = () => {
+export const DescriptionInput = ({ langBase: langBaseProps }: { langBase?: string }) => {
   const { register } = useFormContext()
-
-  const langBase = useLang()
+  const langBase = langBaseProps ?? useLang()
 
   return (
     <Input
       {...register("description")}
       fullWidth
-      label={`${langBase}.description`}
+      label={<Text langBase={langBase} name="description" />}
       multiline
       rows="10"
       sx={{

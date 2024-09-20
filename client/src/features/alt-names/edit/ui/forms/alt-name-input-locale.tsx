@@ -16,24 +16,18 @@ interface AltNameInputLocaleProps extends Omit<AutocompleteProps<any, any, any, 
 export const AltNameInputLocale = (props: AltNameInputLocaleProps) => {
   const { options, ...other } = props
 
-  const methods = useFormContext()
-  const { t } = useTranslation("translation", { keyPrefix: "global.dialog.validate" })
-
-  const onChangeAutocomplete = (option: IAltName, field: TField<"locale">) => {
-    field.onChange(option)
-    methods.trigger("locale")
-  }
+  const { t } = useTranslation("translation", { keyPrefix: "global.forms.validate" })
 
   return (
     <Controller
       name="locale"
-      rules={{ required: "required" }}
+      rules={{ required: "requiredSelect" }}
       defaultValue={null}
       render={({ field, fieldState: { error } }) => (
         <Autocomplete
           size="small"
           value={field.value}
-          onChange={(_, option) => onChangeAutocomplete(option, field)}
+          onChange={(_, option) => field.onChange(option)}
           options={options}
           getOptionLabel={(option) => (option ? option.caption : "")}
           isOptionEqualToValue={(option, value) => option?.caption === value?.caption}

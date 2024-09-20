@@ -1,5 +1,6 @@
 import React, { forwardRef, memo } from "react"
 import {
+  Fade,
   Icon, IconProps, Tooltip, TooltipProps,
 } from "@mui/material"
 import { useAppSelector } from "shared/lib/hooks"
@@ -81,16 +82,18 @@ const Default = forwardRef<any, DefaultIcon>((props, ref) => {
   const icon = other.children ?? (iconData[name ?? ""] || iconData.defIcon)
 
   const renderIcon = (
-    <Icon
-      ref={ref}
-      className="material-symbols-outlined"
-      style={{
-        fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' 0, 'opsz' 24`,
-      }}
-      {...other}
-    >
-      {icon}
-    </Icon>
+    <Fade in className="material-symbols-outlined">
+      <Icon
+        ref={ref}
+        className="material-symbols-outlined"
+        style={{
+          fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' 0, 'opsz' 24`,
+        }}
+        {...other}
+      >
+        {icon}
+      </Icon>
+    </Fade>
   )
 
   if (help) {

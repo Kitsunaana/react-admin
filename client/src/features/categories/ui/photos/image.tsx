@@ -120,7 +120,7 @@ export const Image = memo((props: ImageProps) => {
               <Text
                 onlyText
                 langBase={langBase}
-                name="clear"
+                name="forms.clear"
               />
             ),
           }}

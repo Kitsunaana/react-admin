@@ -80,7 +80,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
     >
       <Text caption={caption} />
       {menu.isOpen && (
-        <LangContext lang={`${langBase}.actions`}>
+        <LangContext lang={`${langBase}.menuActions`}>
           <CategoryContextMenu
             id={id}
             ref={menu.ref}

@@ -1,7 +1,6 @@
 import * as React from "react"
 import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { useLang } from "shared/context/Lang"
 import { Input } from "shared/ui/form/input"
 import { Box } from "shared/ui/box"
 import { Text } from "shared/ui/text"
@@ -22,10 +21,7 @@ export const updateCaption = createRoute("updateCaption")
   .withParams<UpdateCaption>()
 
 export const TabCommon = (props: CommonTabProps) => {
-  const { langBase: langBaseProps } = props
-
-  const langBase = langBaseProps ?? useLang()
-  const { t } = useTranslation("translation", { keyPrefix: `${langBase}.validate` })
+  const { t } = useTranslation("translation", { keyPrefix: "global.forms.validate" })
 
   return (
     <Box flex ai gap sx={{ mt: 1 }}>

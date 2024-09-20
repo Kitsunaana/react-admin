@@ -21,7 +21,7 @@ export const TabLabel = memo((props: TabLabelProps) => {
   return (
     <Box flex ai gap row sx={sx}>
       <Icon name={icon} sx={{ fontSize: 20, ...sxIcon }} />
-      <Text caption={caption} sx={{ fontSize: 14, textTransform: "none", ...sxText }} />
+      <Text langBase="" name={caption} sx={{ fontSize: 14, textTransform: "none", ...sxText }} />
     </Box>
   )
 })

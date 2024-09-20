@@ -18,7 +18,7 @@ export const TagEditDialog = ({ tags }: { tags: TagsStore }) => {
   })
 
   return (
-    <LangContext lang="global.dialog">
+    <LangContext lang="tag.dialog">
       <FormProvider {...methods}>
         <DialogEdit
           hideActions
