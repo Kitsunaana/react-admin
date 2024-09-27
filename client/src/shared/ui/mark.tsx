@@ -1,4 +1,4 @@
-import React, { CSSProperties, PropsWithChildren } from "react"
+import { CSSProperties, PropsWithChildren } from "react"
 import { alpha, useTheme } from "@mui/material"
 
 interface MarkProps extends PropsWithChildren {

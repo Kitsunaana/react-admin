@@ -1,7 +1,5 @@
-import { Box } from "shared/ui/box"
 import { alpha } from "@mui/material"
 import { Text } from "shared/ui/text"
-import * as React from "react"
 import { Vertical } from "shared/ui/divider"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
@@ -12,112 +10,169 @@ import {
   readOfClipboard,
 } from "shared/lib/utils"
 import { useFormContext, UseFormReset } from "react-hook-form"
+import { styled } from "@mui/material/styles"
+import { Mark } from "shared/ui/mark"
+import { Box } from "shared/ui/box"
 
-interface DialogHeaderProps {
+const HeaderContainer = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  backgroundImage: theme.background.hatch.warning,
+  backgroundSize: "7px 7px",
+  borderRadius: 8,
+  padding: 8,
+  marginTop: 8,
+  marginBottom: 4,
+  height: 38,
+  border: `1px solid ${alpha(theme.palette.grey["500"], 0.25)}`,
+}))
+
+interface DialogHeaderCaptionProps {
+  name: string
+  value?: string
+}
+
+export const DialogHeaderCaption = (props: DialogHeaderCaptionProps) => {
+  const { name, value } = props
+
+  return (
+    <Text
+      name={name}
+      value={value}
+      sx={{
+        textWrap: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        marginX: "auto",
+      }}
+      translateOptions={{
+        components: {
+          strong: <Mark />,
+        },
+      }}
+    />
+  )
+}
+
+export interface DialogHeaderProps {
   title: string | ReactNode
-  hideActions?: boolean
-  setData?: (data: any) => void
-  setValues?: UseFormReset<any>
-  getValues?: ((() => any) | undefined)[]
+  showActions?: boolean
+
+  setRows?: (data: any) => void
+  setFields?: UseFormReset<any>
+
+  getCopyRows?: () => any
+  getCopyFields?: () => any
+
   settings?: ReactNode
-  settingInputs?: Record<string, boolean>
+  settingsFields?: Record<string, boolean>
 }
 
 export const DialogHeader = observer((props: DialogHeaderProps) => {
   const {
-    title, setData, settings, settingInputs, getValues, hideActions = false,
+    title,
+    settings,
+    settingsFields,
+    setRows,
+    setFields,
+    getCopyFields,
+    getCopyRows,
+    showActions = false,
   } = props
 
-  const store = useEditDialogStore()
-  const fullscreenState = store.fullScreen ? "fullscreenClose" : "fullscreenOpen"
-
   const methods = useFormContext()
+  const store = useEditDialogStore()
+
+  const fullscreenState = store.fullScreen
+    ? "fullscreenClose"
+    : "fullscreenOpen"
+
+  const handleCopy = async () => {
+    const readData = [getCopyRows, getCopyFields ?? methods.getValues]
+      ?.filter((fn): fn is () => any => typeof fn === "function")
+      .map((fn) => ({ ...fn() }))
+      .reduce((prev, current) => ({ ...prev, ...current }), {})
+
+    const { id, ...otherProperties } = readData
+    await copyToClipboard({ ...otherProperties, copied: true })
+  }
+
+  const handlePaste = async () => {
+    let readDataOfClipboard = await readOfClipboard()
+
+    if (settingsFields) {
+      const filteredReadData = Object
+        .entries(readDataOfClipboard)
+        .filter(([key, value]) => {
+          if (settingsFields[key] === false) return null
+          return [key, value]
+        })
+
+      readDataOfClipboard = Object.fromEntries(filteredReadData)
+    }
+
+    const setValues = (data: any) => {
+      Object.entries(data)
+        .forEach(([key, value]) => methods.setValue(key, value))
+    }
+
+    [setRows, setFields ?? setValues].forEach((callback) => (
+      typeof callback === "function" && callback(readDataOfClipboard)
+    ))
+  }
 
   return (
-    <Box
-      flex
-      ai
-      row
-      sx={{
-        backgroundImage: ({ background }) => background.hatch.warning,
-        backgroundSize: "7px 7px",
-        borderRadius: 2,
-        p: 1,
-        mt: 1,
-        mb: 0.5,
-        height: 38,
-        border: ({ palette }) => `1px solid ${alpha(palette.grey["500"], 0.25)}`,
-      }}
-    >
-      {/* <Box sx={{ display: "flex", justifyContent: "center", width: 1 }}> */}
+    <HeaderContainer>
       {title}
-      {/* </Box> */}
-      <div style={{ display: "flex", marginRight: "0px" }}>
-        {!hideActions && (
+      <Box flex row ai sx={{ mr: 0 }}>
+        {showActions && (
           <>
             <IconButton
-              onClick={async () => {
-                const readData = getValues
-                  ?.filter((fn): fn is () => any => typeof fn === "function")
-                  .map((fn) => ({ ...fn() }))
-                  .reduce((prev, current) => ({ ...prev, ...current }), {})
-
-                const { id, ...otherProperties } = readData
-                await copyToClipboard({ ...otherProperties, copied: true })
-              }}
+              onClick={handleCopy}
               name="copy"
               help={{
-                arrow: true,
-                disableInteractive: true,
-                title: <Text onlyText langBase="global.dialog" name="copy" />,
+                title: (
+                  <Text
+                    onlyText
+                    langBase="global.dialog"
+                    name="copy"
+                  />
+                ),
               }}
             />
-            <Vertical sx={{ m: 0 }} />
+            <Vertical disableMargin />
             <IconButton
-              onClick={async () => {
-                let readDataOfClipboard = await readOfClipboard()
-
-                if (settingInputs) {
-                  const filteredReadData = Object
-                    .entries(readDataOfClipboard)
-                    .filter(([key, value]) => {
-                      if (settingInputs[key] === false) return null
-                      return [key, value]
-                    })
-
-                  readDataOfClipboard = Object.fromEntries(filteredReadData)
-                }
-
-                const setValues = (data: any) => {
-                  Object.entries(data)
-                    .forEach(([key, value]) => methods.setValue(key, value))
-                }
-
-                [setData, setValues].forEach((callback) => (
-                  typeof callback === "function" && callback(readDataOfClipboard)
-                ))
-              }}
+              onClick={handlePaste}
               name="paste"
               help={{
-                arrow: true,
-                disableInteractive: true,
-                title: <Text onlyText langBase="global.dialog" name="paste" />,
+                title: (
+                  <Text
+                    onlyText
+                    langBase="global.dialog"
+                    name="paste"
+                  />
+                ),
               }}
             />
           </>
         )}
-        {settings && <Vertical sx={{ m: 0 }} />}
+        {settings && <Vertical disableMargin />}
         {settings}
-        <Vertical sx={{ m: 0 }} />
+        <Vertical disableMargin />
         <IconButton
-          onClick={() => store.setFullScreen((fullScreen) => !fullScreen)}
+          onClick={store.onToggleSizeScreen}
           name={fullscreenState}
           help={{
-            arrow: true,
-            title: <Text onlyText langBase="global.dialog" name={fullscreenState} />,
+            title: (
+              <Text
+                onlyText
+                langBase="global.dialog"
+                name={fullscreenState}
+              />
+            ),
           }}
         />
-      </div>
-    </Box>
+      </Box>
+    </HeaderContainer>
   )
 })

@@ -9,6 +9,7 @@ const URL = "/categories"
 export const categoriesApi = {
   post: async (data: z.infer<typeof createCategorySchema>) => {
     try {
+      console.log(data)
       validation(createCategorySchema, data)
 
       const imagesIds = data.images?.map(({ id, caption }) => ({ id, caption }))

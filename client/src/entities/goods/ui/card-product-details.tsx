@@ -1,7 +1,6 @@
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import React from "react"
 import { Mark } from "shared/ui/mark"
 
 export const CardProductDetails = () => (

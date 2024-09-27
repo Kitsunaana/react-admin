@@ -1,4 +1,3 @@
-import * as React from "react"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { observer } from "mobx-react-lite"
 import { TabCommon } from "features/categories/ui/tabs/tab-common"

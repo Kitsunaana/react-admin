@@ -8,12 +8,13 @@ interface CategoryContextMenuProps {
   id: number
   onEdit: () => void
   onDelete: () => void
-  onGoodsCategory: () => void
 }
 
-export const CategoryContextMenu = forwardRef<HTMLDivElement, CategoryContextMenuProps>((props, ref) => {
+export const GoodContextMenu = forwardRef<
+  HTMLDivElement, CategoryContextMenuProps
+>((props, ref) => {
   const {
-    id, onEdit, onDelete, onGoodsCategory,
+    id, onEdit, onDelete,
   } = props
 
   return (
@@ -29,11 +30,6 @@ export const CategoryContextMenu = forwardRef<HTMLDivElement, CategoryContextMen
             onClick={onEdit}
           />
           <Divider />
-          <ContextMenuItem
-            caption="goodsCategory"
-            icon="goods"
-            onClick={onGoodsCategory}
-          />
           <ContextMenuItem
             caption="additional"
             icon="additional"

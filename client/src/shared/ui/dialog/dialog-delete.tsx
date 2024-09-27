@@ -58,7 +58,7 @@ export const DialogDelete = observer((props: DialogProps) => {
     >
       <Box sx={{ mx: 1 }}>
         <DialogHeader
-          hideActions
+          showActions
           title={(
             <Text
               name="dialog.title.delete"

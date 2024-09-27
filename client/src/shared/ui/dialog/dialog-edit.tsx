@@ -3,12 +3,11 @@ import {
   ReactNode, useEffect, useMemo, useState,
 } from "react"
 import { useTranslation } from "react-i18next"
-import { DeepPartial, useForm, useFormContext } from "react-hook-form"
+import { DeepPartial, useFormContext } from "react-hook-form"
 import {
-  Button, Dialog as MUIDialog, DialogProps as MUIDialogProps, Skeleton,
+  Dialog as MUIDialog, DialogProps as MUIDialogProps, Skeleton,
 } from "@mui/material"
 import { Box } from "shared/ui/box"
-import * as React from "react"
 import {
   useMutation, UseMutationOptions, useQuery, UseQueryOptions,
 } from "@tanstack/react-query"
@@ -35,7 +34,7 @@ interface DialogProps extends Omit<MUIDialogProps, "container" | "open"> {
   onSave?: (data: any) => void
   onEdit?: (data: any) => void
   height?: number | string
-  hideActions?: boolean
+  showActions?: boolean
 }
 
 export const DialogEdit = observer((props: DialogProps) => {
@@ -46,7 +45,7 @@ export const DialogEdit = observer((props: DialogProps) => {
     title,
     container,
     tabs,
-    hideActions,
+    showActions,
     onGetByIdOptions,
     onUpdateOptions,
     onCreateOptions,
@@ -63,7 +62,6 @@ export const DialogEdit = observer((props: DialogProps) => {
   const lang = useLang()
   const langBase = langBaseProps ?? lang
 
-  const { t } = useTranslation("translation", { keyPrefix: langBase })
   const methods = useFormContext()
 
   const [isEdit, setIsEdit] = useState(false)
@@ -158,7 +156,7 @@ export const DialogEdit = observer((props: DialogProps) => {
           <Skeleton sx={{ borderRadius: 2, my: 1 }} variant="rectangular" height={40.19} />
         ) : (
           <DialogHeader
-            hideActions={!!hideActions}
+            showActions={!!showActions}
             title={(
               <Text
                 sx={{
@@ -222,7 +220,7 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   storeReset?: () => void
   size?: "auto"
   height?: number | string
-  hideActions?: boolean
+  showActions?: boolean
   defaultValues?: DeepPartial<any>
   getCopyData?: () => any
   settings?: ReactNode
@@ -236,7 +234,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
     height,
     size,
     defaultValues,
-    hideActions,
+    showActions,
     tabs,
     container,
     settings,
@@ -293,6 +291,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
 
   const onSubmit = () => {
     methods.handleSubmit((data) => {
+      console.log(data)
       const mergedData = { ...data, ...getData?.() }
 
       if (store.id) onUpdate(mergedData)
@@ -329,7 +328,7 @@ export const DialogEditV2 = observer((props: DialogPropsV2) => {
           <DialogHeader
             settingInputs={settingInputs}
             settings={settings}
-            hideActions={!!hideActions}
+            showActions={!!showActions}
             setData={setData}
             setValues={methods.reset}
             getValues={memoizedGetValuesFn}

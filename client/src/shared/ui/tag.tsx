@@ -1,6 +1,5 @@
 import { alpha, useTheme } from "@mui/material"
 import { Text } from "shared/ui/text"
-import React from "react"
 import { Mark } from "shared/ui/mark"
 
 type PaletteColor = "primary" | "secondary" | "error" | "warning" | "info" | "success"

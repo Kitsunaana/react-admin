@@ -1,17 +1,16 @@
 import Divider from "@mui/material/Divider"
 import { Text } from "shared/ui/text"
 import { ButtonGroup } from "shared/ui/buttons/toggle-button"
-import * as React from "react"
 import { forwardRef } from "react"
 
 interface RowSettingsProps {
   buttonGroups: string[]
   settings: Record<string, string>
-  onChangeSettings: (name: string, value: string) => void
+  onChangeSettingsRows: (name: string, value: string) => void
 }
 
 export const RowSettings = forwardRef<HTMLDivElement, RowSettingsProps>((props, ref) => {
-  const { buttonGroups, settings, onChangeSettings } = props
+  const { buttonGroups, settings, onChangeSettingsRows } = props
 
   return (
     <div ref={ref}>
@@ -22,7 +21,7 @@ export const RowSettings = forwardRef<HTMLDivElement, RowSettingsProps>((props, 
           </Divider>
           <ButtonGroup
             name={groups}
-            onChangeSettings={onChangeSettings}
+            onChangeSettings={onChangeSettingsRows}
             defaultValue={settings[groups]}
           />
         </div>

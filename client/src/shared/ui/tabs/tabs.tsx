@@ -1,7 +1,4 @@
-import * as React from "react"
-import {
-  memo, ReactNode,
-} from "react"
+import { memo, ReactNode } from "react"
 import {
   Tabs as MUITabs, useTheme, TabsProps as BaseTabsProps, Box,
 } from "@mui/material"
@@ -9,19 +6,19 @@ import { Divider } from "shared/ui/divider"
 
 interface TabsProps extends BaseTabsProps {
   tab: number
-  hasError: boolean
+  hasError?: boolean
   tabs: ReactNode
 }
 
 export const Tabs = memo((props: TabsProps) => {
   const {
-    tab, hasError, tabs, sx, ...other
+    tab, hasError = false, tabs, sx, ...other
   } = props
 
   const { palette } = useTheme()
 
   return (
-    <Box>
+    <>
       <MUITabs
         {...other}
         value={tab}
@@ -53,6 +50,6 @@ export const Tabs = memo((props: TabsProps) => {
         {tabs}
       </MUITabs>
       <Divider />
-    </Box>
+    </>
   )
 })

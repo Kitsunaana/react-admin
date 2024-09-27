@@ -1,7 +1,7 @@
 import AccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary"
 import { Box } from "shared/ui/box"
 import {
-  Accordion as MUIAccordion, IconButton, Theme, useTheme,
+  Accordion as MUIAccordion, AccordionProps as MUIAccordionProps, IconButton, Theme, useTheme,
 } from "@mui/material"
 import { Icon } from "shared/ui/icon"
 import { Divider, Vertical } from "shared/ui/divider"
@@ -58,11 +58,12 @@ export type AccordionProps = {
   contentTitle?: ReactNode | string
   details?: ReactNode
   expanded?: boolean
-}
+  children?: ReactNode
+} & MUIAccordionProps
 
 export const Accordion = (props: AccordionProps) => {
   const {
-    caption, description, tags, actions, contentTitle, details, ...other
+    caption, description, children, tags, actions, contentTitle, details, ...other
   } = props
 
   const theme = useTheme()
@@ -100,6 +101,42 @@ export const Accordion = (props: AccordionProps) => {
       </Summary>
       <AccordionDetails>
         <Divider textAlign="right">{contentTitle}</Divider>
+        {details}
+      </AccordionDetails>
+    </AccordionContainer>
+  )
+}
+
+interface AccordionPropsV2 extends MUIAccordionProps{
+  summary?: ReactNode
+  details?: ReactNode
+  onOpenContextMenu: (event: React.MouseEvent<Element, MouseEvent>) => void
+}
+
+export const AccordionV2 = (props: AccordionPropsV2) => {
+  const {
+    summary, details, onOpenContextMenu, ...other
+  } = props
+
+  const theme = useTheme()
+  const [isExpanded, setIdExpanded] = useState(false)
+
+  return (
+    <AccordionContainer
+      {...other}
+      theme={theme}
+      expanded={isExpanded}
+      onClick={(event) => {
+        setIdExpanded((prevState) => !prevState)
+        onOpenContextMenu(event)
+      }}
+    >
+      <Summary
+        theme={theme}
+      >
+        {summary}
+      </Summary>
+      <AccordionDetails>
         {details}
       </AccordionDetails>
     </AccordionContainer>

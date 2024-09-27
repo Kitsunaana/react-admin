@@ -6,11 +6,11 @@ import { ReactNode, useState } from "react"
 import { Text } from "shared/ui/text"
 
 interface CopySettingsPopupProps {
-  content: ReactNode
+  children: ReactNode
 }
 
 export const CopySettingsPopup = (props: CopySettingsPopupProps) => {
-  const { content } = props
+  const { children } = props
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -78,7 +78,7 @@ export const CopySettingsPopup = (props: CopySettingsPopupProps) => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {content}
+        {children}
       </Menu>
     </>
   )

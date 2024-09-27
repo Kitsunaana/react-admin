@@ -33,7 +33,7 @@ export const CharacteristicEditDialog = (props: CharacteristicEditDialogProps) =
         <DialogEdit
           height="auto"
           size="auto"
-          hideActions
+          showActions
           onSave={characteristics.create}
           onEdit={characteristics.edit}
           container={<CreateEditForm />}

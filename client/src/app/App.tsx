@@ -57,11 +57,14 @@ export const Pages = () => {
 }
 
 export const App = () => {
-  const [fontsLoaded, setFontsLoaded] = useState(false)
-  const { palette } = useTheme()
+  const [fontsLoaded, setFontsLoaded] = useState(true)
 
   useEffect(() => {
-    const event = () => setFontsLoaded(true)
+    const event = () => {
+      console.log("load")
+
+      setFontsLoaded(true)
+    }
 
     window.addEventListener("load", event)
     return () => window.removeEventListener("load", event)

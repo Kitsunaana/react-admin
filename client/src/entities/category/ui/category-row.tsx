@@ -1,7 +1,6 @@
 import { Vertical } from "shared/ui/divider"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
 import { Position } from "shared/ui/position-counter"
-import React from "react"
 import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 import { UseMutationOptions } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
@@ -54,11 +53,8 @@ export const CategoryRow = (props: CategoryRowProps) => {
 
   const deleteStore = useDeleteDialogStore()
   const editStore = useEditDialogStore()
-
   const langBase = useLang()
-
   const navigate = useNavigateGoods(caption)
-
   const theme = useTheme()
   const menu = useContextMenu()
 

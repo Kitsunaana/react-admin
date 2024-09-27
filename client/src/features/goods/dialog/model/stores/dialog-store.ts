@@ -18,7 +18,7 @@ export class RootStore {
 
   createStores() {
     this.photos = new PhotosStore(this)
-    this.characteristics = new CharacteristicsStore()
+    this.characteristics = new CharacteristicsStore(() => "none")
     this.altNames = new AltNamesStore()
   }
 
@@ -26,15 +26,16 @@ export class RootStore {
 
   setData(data: any) {}
 
-  getData() {
-    return ["photos", "characteristics", "altNames"]
-      .reduce((prev, current) => {
-        if (typeof this[current]?.getData === "function") {
-          prev[current] = this[current]?.getData()
-        }
+  getData(all: boolean = false) {
+    return this.stores.reduce((parentPrev, parentCurrent) => {
+      const result = Object.keys(this[parentCurrent]).reduce(() => {
+        if (typeof this[parentCurrent]?.getData !== "function") return
 
-        return prev
+        return this[parentCurrent].getData(all)
       }, {})
+
+      return { ...parentPrev, ...result }
+    }, {})
   }
 }
 

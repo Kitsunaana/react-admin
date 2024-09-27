@@ -1,6 +1,5 @@
 import { IconButtonBase as BaseIconButton, IconButtonProps } from "shared/ui/buttons/icon-button-base"
 import { Box } from "shared/ui/box"
-import React from "react"
 import {
   Badge as MUIBadge, BadgeProps, CircularProgress, TooltipProps,
 } from "@mui/material"
@@ -33,7 +32,17 @@ export const IconButton = (props: ButtonProps) => {
   }
 
   if (help && !isLoading) {
-    return (<Box help={help}>{iconButton}</Box>)
+    return (
+      <Box
+        help={{
+          arrow: true,
+          disableInteractive: true,
+          ...help,
+        }}
+      >
+        {iconButton}
+      </Box>
+    )
   }
 
   if (isLoading) {

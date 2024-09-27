@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   UploadedFiles,
   UseInterceptors,
@@ -73,10 +74,16 @@ export class GoodsController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
   async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateGoodDto) {
-    console.log(dto);
-    // const good = await this.goodsService.create(dto);
+    const good = await this.goodsService.create(dto);
 
-    // await this.filesService.saveMedia(files, [], { goodId: good.id });
+    await this.filesService.saveMedia(files, [], { goodId: good.id });
+  }
+
+  @Get('/:id')
+  async getById(@Param() params: { id: string }) {
+    const id = parseInt(params.id);
+
+    return await this.goodsService.getById(id);
   }
 
   @Get()

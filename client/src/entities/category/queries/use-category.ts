@@ -8,4 +8,4 @@ export const getByIdCategoryOptions = (id: number | null): UseQueryOptions => ({
   queryFn: () => categoriesApi.getById(id as number),
 })
 
-export const useGetByIdCategory = (id: number) => useQuery(getByIdCategoryOptions(id))
+export const useGetByIdCategory = (id: number | null) => useQuery(getByIdCategoryOptions(id))

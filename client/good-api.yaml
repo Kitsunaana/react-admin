@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Good Api
+  description: Good Api
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3333'
+paths:
+  /goods:
+    get:
+      operationId: getGoods
+      tags:
+        - goods
+      responses:
+        200:
+          $ref: "#/components/responses/GetAllGoods"
+
+    post:
+      summary: Создание товара
+      operationId: createGood
+      tags:
+        - goods
+      requestBody:
+        $ref: "#/components/requestBodies/CreateGood"
+      responses:
+        200:
+          description: Успешно
+
+  /goods/{goodId}:
+    get:
+      operationId: getGoodById
+      tags:
+        - goods
+      parameters:
+        - $ref: "#/components/parameters/GoodId"
+      responses:
+        200:
+          $ref: "#/components/responses/GetByIdGood"
+
+
+
+components:
+  requestBodies:
+    CreateGood:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/CreateGoodBody"
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CreateGoodBody"
+
+
+  responses:
+    GetAllGoods:
+      description: Получение всех товаров
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/GoodDto"
+
+    GetByIdGood:
+      description: Получение товара по id
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GoodDto"
+
+  parameters:
+    GoodId:
+      in: path
+      name: goodId
+      required: true
+      schema:
+        type: number
+
+  schemas:
+    Image:
+      type: object
+      properties:
+        id:
+          type: string
+        caption:
+          type: string
+        data:
+          type: string
+          format: binary
+        type:
+          type: string
+      required:
+        - caption
+        - id
+        - data
+        - type
+
+    CreateGoodBody:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/Image"
+        article:
+          type: string
+        caption:
+          type: string
+        category:
+          $ref: "#/components/schemas/CategoryDto"
+        deliveryTime:
+          type: string
+        description:
+          type: string
+
+        isConsumable:
+          type: boolean
+        isHot:
+          type: boolean
+        isNew:
+          type: boolean
+        label:
+          type: string
+        notCalculation:
+          type: boolean
+      required:
+        - article
+        - caption
+        - category
+        - deliveryTime
+        - description
+        - isConsumable
+        - isHot
+        - isNew
+        - label
+        - notCalculation
+        - images
+
+
+    GoodDto:
+      type: object
+      properties:
+        id:
+          type: number
+        caption:
+          type: string
+        description:
+          type: string
+        category:
+          $ref: "#/components/schemas/CategoryDto"
+      required:
+        - id
+        - caption
+        - description
+        - category
+
+    CategoryDto:
+      type: object
+      properties:
+        id:
+          type: number
+        description:
+          type: string
+        caption:
+          type: string
+        order:
+          type: number
+      required:
+        - id
+        - caption
+        - description
+        - order

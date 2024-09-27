@@ -27,7 +27,7 @@ export const AltNameEditDialog = (props: AltNameEditDialogProps) => {
     <LangContext lang={`${langBase}.dialog`}>
       <FormProvider {...methods}>
         <DialogEdit
-          hideActions
+          showActions
           size="auto"
           height="auto"
           onSave={altNames.create}

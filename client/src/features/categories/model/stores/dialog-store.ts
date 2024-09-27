@@ -64,6 +64,7 @@ export class RootStore {
     this.createStores()
 
     makeAutoObservable(this, {}, { autoBind: true })
+
     const getLocalStorageData = (name: string, schema: ZodSchema) => {
       const data = localStorage.getItem(name)
       const parsedData = schema.safeParse(JSON.parse(data ?? "{}"))
@@ -118,17 +119,24 @@ export class RootStore {
     return { ...otherProperties }
   }
 
-  settingInputs = initialSettingInputs
-  onChangeSettingInput(name: string, value: boolean) {
-    this.settingInputs[name] = value
-    localStorage.setItem("settingInputs", JSON.stringify(this.settingInputs))
+  settingsFields = initialSettingInputs
+  handleChangeSettingsFields(name: string, value: boolean) {
+    this.settingsFields[name] = value
+    localStorage.setItem("settingInputs", JSON.stringify(this.settingsFields))
   }
 
-  settings = initialSettings
-  onChangePasteSettings(name: string, value: string) {
-    this.settings[name] = value
-    localStorage.setItem("settings", JSON.stringify(this.settings))
+  settingsRows = initialSettings
+  handleChangeSettingsRows(name: string, value: string) {
+    this.settingsRows[name] = value
+    localStorage.setItem("settings", JSON.stringify(this.settingsRows))
   }
 }
 
 export const createRootStore = () => new RootStore()
+
+/**
+ * settingsRows,
+ *     settingsFields,
+ *     handleChangeSettingsFields,
+ *     handleChangeSettingsRows,
+ */

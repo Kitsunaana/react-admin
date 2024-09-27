@@ -27,11 +27,15 @@ export class DialogStore {
     this.tab = 0
   }
 
-  setFullScreen(fullScreen: boolean | ((fullScreen: boolean) => boolean)) {
+  onToggleSizeScreen() {
+    this.fullScreen = !this.fullScreen
+  }
+
+  /* setFullScreen(fullScreen: boolean | ((fullScreen: boolean) => boolean)) {
     this.fullScreen = typeof fullScreen === "boolean"
       ? fullScreen
       : fullScreen(this.fullScreen)
-  }
+  } */
 
   changeTab(tab: number) {
     this.tab = tab
