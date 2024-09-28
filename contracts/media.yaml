@@ -1,0 +1,29 @@
+components:
+  schemas:
+    Media:
+      type: object
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        originalName:
+          type: string
+        path:
+          type: string
+        mimetype:
+          type: string
+        order:
+          oneOf:
+            - type: number
+            - nullable: true
+        size:
+          type: number
+      required:
+        - id
+        - filename
+        - originalName
+        - path
+        - mimetype
+        - order
+        - size

@@ -1,0 +1,37 @@
+components:
+  schemas:
+    Locale:
+      type: object
+      properties:
+        id:
+          type: number
+        code:
+          type: string
+        altName:
+          type: string
+        caption:
+          type: string
+      required:
+        - id
+        - code
+        - altName
+        - caption
+
+    AltName:
+      type: object
+      properties:
+        id:
+          type: number
+        caption:
+          type: string
+        description:
+          oneOf:
+            - type: string
+            - nullable: true
+        locale:
+          $ref: "#/components/schemas/Locale"
+      required:
+        - id
+        - caption
+        - locale
+        - description

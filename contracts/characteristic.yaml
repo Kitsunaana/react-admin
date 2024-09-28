@@ -1,0 +1,23 @@
+components:
+  schemas:
+    Characteristic:
+      type: object
+      properties:
+        id:
+          type: number
+        characteristic:
+          type: string
+        unit:
+          oneOf:
+            - type: string
+            - nullable: true
+        value:
+          type: string
+        hideClient:
+          type: boolean
+      required:
+        - id
+        - characteristic
+        - value
+        - hideClient
+        - unit

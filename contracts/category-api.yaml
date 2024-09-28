@@ -1,0 +1,99 @@
+openapi: 3.0.3
+info:
+  title: Category Api
+  description: Category Api
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3333'
+paths:
+  /categories:
+    get:
+      operationId: getCategories
+      tags:
+        - categories
+      responses:
+        200:
+          $ref: "#/components/responses/GetAllCategories"
+
+components:
+  responses:
+    GetAllCategories:
+      description: Получение всех категорий
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/CategoryDto"
+
+  parameters:
+    CategoryId:
+      in: path
+      name: categoryId
+      required: true
+      schema:
+        type: number
+
+  schemas:
+    CategoryDto:
+      type: object
+      properties:
+        id:
+          type: number
+        caption:
+          type: string
+        description:
+          type: string
+        isShowPhotoWithGoods:
+          type: boolean
+        bgColor:
+          type: string
+        color:
+          type: string
+        blur:
+          type: number
+        activeImageId:
+          oneOf:
+            - type: string
+            - nullable: true
+        captionPosition:
+          $ref: "#/components/schemas/CaptionPosition"
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltName"
+        characteristics:
+          type: array
+          items:
+            $ref: "./characteristic.yaml#/components/schemas/Characteristic"
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Media"
+      required:
+        - id
+        - caption
+        - description
+        - isShowPhotoWithGoods
+        - bgColor
+        - color
+        - blur
+        - activeImageId
+        - captionPosition
+        - altNames
+        - characteristics
+        - media
+
+
+    CaptionPosition:
+      type: string
+      enum:
+        - "top-left"
+        - "top-center"
+        - "top-right"
+        - "center-left"
+        - "center-center"
+        - "center-right"
+        - "bottom-left"
+        - "bottom-center"
+        - "bottom-right"
