@@ -206,6 +206,23 @@ const translate = {
       },
     },
     catalog: {
+      notify: {
+        find: {
+          success: 'Категория <strong>{{value}}</strong> найдена',
+          pending: 'Категория <strong>{{value}}</strong> загружается',
+          error: 'При поиске категории <strong>{{value}}</strong> произошла ошибка',
+        },
+        edit: {
+          success: 'Категория <strong>{{value}}</strong> обновлена',
+          pending: '',
+          error: '',
+        },
+        create: {
+          success: '',
+          pending: '',
+          error: '',
+        },
+      },
       top: {
         search: 'Поиск',
         refresh: 'Обновить',

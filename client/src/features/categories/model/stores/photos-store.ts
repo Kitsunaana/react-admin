@@ -64,7 +64,7 @@ export class PhotosStore {
     if (!data) return () => {}
 
     const filteredData = this.getFilteredData(data)
-    const action = this.rootStore.settings.images
+    const action = this.rootStore.settingsRows.images
 
     const actions = {
       add: (name: string) => this[name] = [...this[name], ...filteredData],
@@ -77,8 +77,8 @@ export class PhotosStore {
 
   getData() {
     return {
-      media: this.media,
-      images: this.images,
+      // media: this.media,
+      images: this.images ?? [],
     }
   }
 }

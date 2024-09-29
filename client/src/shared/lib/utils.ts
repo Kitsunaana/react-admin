@@ -78,3 +78,5 @@ export const readOfClipboard = async () => {
     console.log(error)
   }
 }
+
+export const getNumberOrNull = (value: unknown) => (typeof value === "number" ? value : null)

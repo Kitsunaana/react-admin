@@ -27,16 +27,17 @@ export const CreateEditForm = () => {
             disabled={characteristicsIsLoading}
             value={field.value}
             freeSolo
-            onChange={(event, option) => { field.onChange(option) }}
+            onChange={(_, option) => {
+              console.log(option)
+              field.onChange(option)
+            }}
             options={(characteristics || []).map((option) => option.caption)}
             InputProps={{
               ...field,
               error: !!error,
               helperText: error?.message ? t(`validate.${error.message}`, { value: 3 }) : null,
               label: <Text name="forms.caption" />,
-              onChange: (event) => {
-                field.onChange(event)
-              },
+              onChange: field.onChange,
             }}
           />
         )}
@@ -90,3 +91,26 @@ export const CreateEditForm = () => {
     </Box>
   )
 }
+
+const a = [
+  {
+    value: "1",
+    ideClient: true,
+    caption: "Объем",
+    unit: "Литров",
+    id: 34,
+  }, {
+    value: "да",
+    hideClient: true,
+    caption: "Количество",
+    unit: null,
+    id: 33,
+  }, {
+    caption: "new",
+    unit: "new",
+    value: "new",
+    hideClient: true,
+    local: true,
+    action: "create",
+  },
+]

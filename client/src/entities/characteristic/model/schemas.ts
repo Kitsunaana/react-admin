@@ -5,12 +5,8 @@ export const characteristicSchema = z.object({
   id: z.number(),
   value: z.string(),
   hideClient: z.boolean(),
-  characteristic: z.object({
-    caption: z.string(),
-  }),
-  unit: z.object({
-    caption: z.string().nullable(),
-  }),
+  characteristic: z.string(),
+  unit: z.string().nullable(),
 })
 
 export const createCharacteristicSchema = z.object({
@@ -32,8 +28,8 @@ export const transformCharacteristic = (characteristic: TCharacteristic) => {
     id: data.id,
     value: data.value,
     hideClient: data.hideClient,
-    caption: data.characteristic.caption,
-    unit: data.unit.caption,
+    caption: data.characteristic,
+    unit: data.unit,
   }
 }
 

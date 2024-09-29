@@ -10,10 +10,7 @@ const tagSchema = z.object({
   icon: z.string().nullable(),
   tagColor: z.string(),
   action: z.enum(["update", "create", "remove"]).optional(),
-  tag: z.object({
-    id: z.number().optional(),
-    caption: z.string(),
-  }),
+  tag: z.string(),
 })
 
 const tagsSchema = z.array(tagSchema)
@@ -71,9 +68,10 @@ export class TagsStore {
   }
 
   setTags(tags: unknown) {
-    const validatedTags = validation(tagsSchema, tags)
+    // const validatedTags = validation(tagsSchema, tags)
 
-    this.tags = validatedTags
+    console.log(tags)
+    this.tags = tags ?? []
   }
 
   setCopiedTags(tags: unknown) {

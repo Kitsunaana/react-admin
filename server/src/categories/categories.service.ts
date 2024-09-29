@@ -33,7 +33,7 @@ export class CategoriesService {
   }
 
   async update(id: number, dto: UpdateCategoryDto) {
-    await this.categoryRepository.update(
+    const category = await this.categoryRepository.update(
       {
         order: dto.order,
         caption: dto.caption,
@@ -44,8 +44,10 @@ export class CategoriesService {
 
     await this.customCategoryRepository.update(dto, {
       where: { categoryId: id },
-      returning: true,
+      returning: false,
     });
+
+    return category;
   }
 
   async getAllCategories() {
@@ -127,8 +129,16 @@ export class CategoriesService {
           },
         },
         { model: CustomCategory, attributes: { exclude: ['id', 'categoryId'] } },
-        { model: CategoryCharacteristic, include: [Characteristic, Unit] },
-        { model: AltNameCategory, include: [Locale] },
+        {
+          model: CategoryCharacteristic,
+          attributes: { exclude: ['unitId', 'characteristicId', 'categoryId'] },
+          include: [Characteristic, Unit],
+        },
+        {
+          model: AltNameCategory,
+          include: [Locale],
+          attributes: { exclude: ['categoryId', 'localeId'] },
+        },
         {
           model: CategoryTag,
           include: [Tag],
@@ -143,11 +153,20 @@ export class CategoriesService {
     });
 
     if (category) {
-      const { custom, ...other } = category.toJSON();
+      const { custom, characteristics, tags, ...other } = category.toJSON();
 
       return {
         ...other,
         ...custom,
+        characteristics: characteristics.map(({ characteristic, unit, ...other }) => ({
+          ...other,
+          characteristic: characteristic.caption,
+          unit: unit.caption,
+        })),
+        tags: tags.map(({ tag, ...other }) => ({
+          ...other,
+          tag: tag.caption,
+        })),
       };
     }
   }

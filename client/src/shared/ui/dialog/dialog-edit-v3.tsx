@@ -7,9 +7,9 @@ import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { Dialog as MUIDialog, Skeleton as MUIBaseSkeleton, SkeletonProps } from "@mui/material"
 import { Box } from "shared/ui/box"
-import { DialogHeaderCaption, DialogHeaderProps } from "shared/ui/dialog/dialog-header"
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
+import styled, { css } from "styled-components"
 
 interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   tabs?: ReactNode
@@ -18,13 +18,7 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   title?: string
   size?: "auto"
   height?: number | string
-  getData?: () => any
-  storeReset?: () => void
   header?: ReactNode
-  data: any
-  defaultValues: any
-  setData: (data: any) => any
-  clearData: () => any
   isLoading: boolean
   handleSubmit: (data: any) => void
 }
@@ -47,21 +41,47 @@ export const Skeleton = (props: SkeletonProps & { borderRadius?: number }) => {
   )
 }
 
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+  align-self: flex-end;
+  padding: 8px;
+`
+
+interface DialogWrapperProps extends MUIDialogProps {
+  fullScreen: boolean
+  size: "auto" | number
+}
+const DialogWrapper = styled((props: DialogWrapperProps) => {
+  const { size, ...other } = props
+
+  return <MUIDialog {...other} />
+})`
+  & .MuiPaper-root {
+    display: flex;
+    border-radius: 16px;
+    transition: .2s;
+    
+    ${({ fullScreen, size }) => (!fullScreen && css`
+      max-width: 900px;
+      width: 100%;
+      height: ${typeof size === "number" ? `${size}px` : size};
+      overflow: unset;
+    `)}
+  }
+`
+
 export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
   const {
     langBase: langBaseProps,
     title,
     height,
     size,
-    defaultValues,
     tabs,
     container,
-    getData,
-    storeReset,
     header,
-    data,
-    setData,
-    clearData,
     isLoading,
     handleSubmit,
     ...other
@@ -69,47 +89,35 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
 
   const store = useEditDialogStore()
   const methods = useFormContext()
-  const dialogStore = useEditDialogStore()
 
   const onClose = () => store.closeDialog()
 
   const onSubmit = () => {
-    methods.handleSubmit((data) => {
-      const mergedData = { ...data, ...getData?.() }
-
-      handleSubmit(mergedData)
-    })()
+    methods.handleSubmit(handleSubmit)()
   }
 
-  useEffect(() => {
-    methods.reset(data)
-    if (data) setData?.(data)
-
-    return () => {
-      methods.reset(defaultValues)
-      clearData?.()
-    }
-  }, [data, dialogStore.open])
-
+  console.log(other?.PaperProps?.sx)
   return (
-    <MUIDialog
+    <DialogWrapper
+      size={size ?? 580}
       fullScreen={store.fullScreen}
       open={store.open}
       {...other}
-      PaperProps={{
-        sx: {
-          display: "flex",
-          borderRadius: 4,
-          transition: ".2s",
-          ...(store.fullScreen ? {} : {
-            maxWidth: 900,
-            width: 1,
-            height: size ?? 580,
-            overflow: "unset",
-          }),
-          ...(other?.PaperProps?.sx ?? {}),
-        },
-      }}
+      PaperProps={{ sx: other?.PaperProps?.sx ?? {} }}
+      // PaperProps={{
+      //   sx: {
+      //     display: "flex",
+      //     borderRadius: 4,
+      //     transition: ".2s",
+      //     ...(store.fullScreen ? {} : {
+      //       maxWidth: 900,
+      //       width: 1,
+      //       height: size ?? 580,
+      //       overflow: "unset",
+      //     }),
+      //     ...(other?.PaperProps?.sx ?? {}),
+      //   },
+      // }}
     >
       <Box sx={{ mx: 1 }}>
         {isLoading ? (
@@ -146,16 +154,7 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
           </Box>
         </Box>
       </Box>
-      <Box
-        flex
-        ai
-        row
-        gap
-        sx={{
-          alignSelf: "flex-end",
-          p: 1,
-        }}
-      >
+      <ButtonContainer>
         <SaveButton
           onClick={onSubmit}
           disabled={isLoading}
@@ -164,7 +163,7 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
           onClick={onClose}
           disabled={isLoading}
         />
-      </Box>
-    </MUIDialog>
+      </ButtonContainer>
+    </DialogWrapper>
   )
 })

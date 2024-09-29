@@ -12,9 +12,7 @@ export const localesSchema = z.array(localeSchema).optional()
 export const altNameSchema = z.object({
   id: z.number(),
   caption: z.string(),
-  description: z.string(),
-  localeId: z.number().optional(),
-  categoryId: z.number().optional(),
+  description: z.string().nullable(),
   locale: localeSchema,
 })
 

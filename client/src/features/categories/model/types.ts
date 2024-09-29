@@ -1,3 +1,5 @@
+import { CategoryDto } from "shared/types/category"
+
 export type TMedia = {
   id: string
   originalName: string
@@ -33,9 +35,9 @@ export type TPosition =
 
 export interface UseCategoryFormProps {
   caption: string;
-  description?: string;
-  media: TMediaForm[]
-  images: TImage[]
+  description: string | null;
+  media?: CategoryDto.CategoryDto["media"]
+  images?: TImage[]
   bgColor: string
   color: string
   blur: number

@@ -5,7 +5,7 @@
  * Good Api
  * OpenAPI spec version: 1.0.0
  */
-import { z as zod } from "zod"
+import { z as zod } from "zod";
 
 export const getGoodsResponseItem = zod.object({
   id: zod.number(),
@@ -17,22 +17,21 @@ export const getGoodsResponseItem = zod.object({
     caption: zod.string(),
     order: zod.number(),
   }),
-})
-export const getGoodsResponse = zod.array(getGoodsResponseItem)
+});
+export const getGoodsResponse = zod.array(getGoodsResponseItem);
 
 /**
  * @summary Создание товара
  */
 export const createGoodBody = zod.object({
-  images: zod
-    .array(
-      zod.object({
-        id: zod.string(),
-        caption: zod.string(),
-        data: zod.string(),
-        type: zod.string(),
-      }),
-    ),
+  images: zod.array(
+    zod.object({
+      id: zod.string(),
+      caption: zod.string(),
+      data: zod.string(),
+      type: zod.string(),
+    })
+  ),
   article: zod.string(),
   caption: zod.string(),
   category: zod.object({
@@ -48,11 +47,11 @@ export const createGoodBody = zod.object({
   isNew: zod.boolean(),
   label: zod.string(),
   notCalculation: zod.boolean(),
-})
+});
 
 export const getGoodByIdParams = zod.object({
   goodId: zod.number(),
-})
+});
 
 export const getGoodByIdResponse = zod.object({
   id: zod.number(),
@@ -64,4 +63,4 @@ export const getGoodByIdResponse = zod.object({
     caption: zod.string(),
     order: zod.number(),
   }),
-})
+});

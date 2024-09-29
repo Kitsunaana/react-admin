@@ -20,10 +20,6 @@ root.render(
         <QueryClientProvider client={queryClient}>
           <ThemeProvider>
             <App />
-
-            <ToastContainer
-              autoClose={3000}
-            />
           </ThemeProvider>
         </QueryClientProvider>
       </Provider>

@@ -1,7 +1,6 @@
 import {
   CssBaseline, useTheme,
 } from "@mui/material"
-import * as React from "react"
 import { Box } from "shared/ui/box"
 import { menu, menuBottom } from "widgets/Sidebar/constants"
 import { Sidebar } from "widgets/Sidebar/ui/sidebar"
@@ -12,7 +11,8 @@ import { Route, Routes } from "react-router-dom"
 import { Spinner } from "shared/ui/spinner"
 import { Gallery } from "widgets/galerry"
 import { Backdrop } from "shared/ui/backdrop"
-import { Text } from "shared/ui/text"
+import { ToastContainer } from "react-toastify"
+import { useAppSelector } from "shared/lib/hooks"
 
 export const Pages = () => {
   const { palette } = useTheme()
@@ -58,6 +58,7 @@ export const Pages = () => {
 
 export const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(true)
+  const theme = useAppSelector((state) => state.settings.theme)
 
   useEffect(() => {
     const event = () => {
@@ -75,7 +76,6 @@ export const App = () => {
       height: "100vh",
       p: 1.5,
       display: "flex",
-      gap: 1.5,
     }}
     >
       <Box sx={{
@@ -119,6 +119,19 @@ export const App = () => {
 
         <Pages />
       </Box>
+
+      <ToastContainer
+        autoClose={3000}
+        closeOnClick
+        position="top-center"
+        toastStyle={{
+          maxWidth: "500px !important",
+        }}
+        style={{
+          width: "unset",
+        }}
+        theme={(() => (theme === "light" ? "light" : theme === "dark" ? "dark" : "light"))()}
+      />
     </Box>
   )
 }

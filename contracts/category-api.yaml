@@ -15,7 +15,63 @@ paths:
         200:
           $ref: "#/components/responses/GetAllCategories"
 
+  /categories/{categoryId}:
+    patch:
+      operationId: updateCategory
+      tags:
+        - categories
+      parameters:
+        - $ref: "#/components/parameters/CategoryId"
+      responses:
+        200:
+          $ref: "#/components/responses/PatchCategory"
+      requestBody:
+        $ref: "#/components/requestBodies/PatchCategory"
+
+    get:
+      operationId: getCategory
+      tags:
+        - categories
+      parameters:
+        - $ref: "#/components/parameters/CategoryId"
+      responses:
+        200:
+          $ref: "#/components/responses/GetByIdCategory"
+
+
+
 components:
+  requestBodies:
+    PatchCategory:
+      description: Редактирование категории
+      content:
+        multipart/form-data:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/CategoryDto"
+              - type: object
+                properties:
+                  imagesIds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        caption:
+                          type: string
+                      required:
+                        - id
+                        - caption
+                  images:
+                    type: array
+                    items:
+                      type: string
+                      format: binary
+                required:
+                  - imagesIds
+                  - images
+
   responses:
     GetAllCategories:
       description: Получение всех категорий
@@ -25,6 +81,22 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/CategoryDto"
+
+    GetByIdCategory:
+      description: Получение категории по id
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CategoryDto"
+
+    PatchCategory:
+      description: Изменение категории
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: number
 
   parameters:
     CategoryId:
@@ -84,7 +156,6 @@ components:
         - characteristics
         - media
 
-
     CaptionPosition:
       type: string
       enum:
@@ -97,3 +168,29 @@ components:
         - "bottom-left"
         - "bottom-center"
         - "bottom-right"
+
+    CategoryUpdateDto:
+      allOf:
+        - $ref: "#/components/schemas/CategoryDto"
+        - type: object
+          properties:
+            imagesIds:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  caption:
+                    type: string
+                required:
+                  - id
+                  - caption
+            images:
+              type: array
+              items:
+                $ref: "./media.yaml#/components/schemas/Image"
+
+          required:
+            - imagesIds
+            - images

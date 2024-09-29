@@ -7,7 +7,7 @@ const tagBaseSchema = z.object({
 
 const tagSchema = z.object({
   id: z.number(),
-  tag: tagBaseSchema,
+  tag: z.string(),
   icon: z.string(),
   tagColor: z.string(),
 })

@@ -27,3 +27,21 @@ components:
         - mimetype
         - order
         - size
+
+    Image:
+      type: object
+      properties:
+        id:
+          type: string
+        caption:
+          type: string
+        type:
+          type: string
+        data:
+          type: string
+          format: binary
+      required:
+        - id
+        - caption
+        - type
+        - data

@@ -52,7 +52,7 @@ export class CategoriesController {
     private characteristicsService: CharacteristicsService,
     private localesService: LocalesService,
     private tagsService: TagsService,
-  ) { }
+  ) {}
 
   @Post('')
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -111,7 +111,9 @@ export class CategoriesController {
     await this.localesService.updateAltNamesCategory(dto.altNames, id);
     await this.tagsService.update(dto.tags, id);
 
-    return this.categoryService.update(id, dto);
+    const category = await this.categoryService.update(id, dto);
+
+    return category;
   }
 
   @Delete('/:id')

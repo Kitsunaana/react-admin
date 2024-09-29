@@ -1,11 +1,11 @@
 import { defineConfig } from "orval"
 
 export default defineConfig({
-  good: {
-    input: "./good-api.yaml",
+  category: {
+    input: "../contracts/category-api.yaml",
     output: {
-      target: "./src/shared/types/good/schemas.ts",
-      schemas: "./src/shared/types/good/objects",
+      target: "./src/shared/types/category/schemas.ts",
+      schemas: "./src/shared/types/category/objects",
       mode: "single",
       client: "zod",
       prettier: true,

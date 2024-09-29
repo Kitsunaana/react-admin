@@ -13,6 +13,7 @@ import { useFormContext, UseFormReset } from "react-hook-form"
 import { styled } from "@mui/material/styles"
 import { Mark } from "shared/ui/mark"
 import { Box } from "shared/ui/box"
+import { toast } from "react-toastify"
 
 const HeaderContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -94,31 +95,42 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
       .reduce((prev, current) => ({ ...prev, ...current }), {})
 
     const { id, ...otherProperties } = readData
-    await copyToClipboard({ ...otherProperties, copied: true })
+
+    await toast.promise(copyToClipboard({ ...otherProperties, copied: true }), {
+      success: "Данные длдя перноса скопированы",
+      error: "При копировании данных произошла ошибка",
+    })
   }
 
   const handlePaste = async () => {
-    let readDataOfClipboard = await readOfClipboard()
+    try {
+      let readDataOfClipboard = await readOfClipboard()
 
-    if (settingsFields) {
-      const filteredReadData = Object
-        .entries(readDataOfClipboard)
-        .filter(([key, value]) => {
-          if (settingsFields[key] === false) return null
-          return [key, value]
-        })
+      if (settingsFields) {
+        const filteredReadData = Object
+          .entries(readDataOfClipboard)
+          .filter(([key, value]) => {
+            if (settingsFields[key] === false) return null
+            return [key, value]
+          })
 
-      readDataOfClipboard = Object.fromEntries(filteredReadData)
+        readDataOfClipboard = Object.fromEntries(filteredReadData)
+      }
+
+      const setValues = (data: any) => {
+        Object.entries(data)
+          .forEach(([key, value]) => methods.setValue(key, value))
+      }
+
+      [setRows, setFields ?? setValues].forEach((callback) => (
+        typeof callback === "function" && callback(readDataOfClipboard)
+      ))
+
+      toast.info("Данные вставлены")
+    } catch (error) {
+      toast.error("Не валидные данные для вставки")
+      console.error((error as Error).message)
     }
-
-    const setValues = (data: any) => {
-      Object.entries(data)
-        .forEach(([key, value]) => methods.setValue(key, value))
-    }
-
-    [setRows, setFields ?? setValues].forEach((callback) => (
-      typeof callback === "function" && callback(readDataOfClipboard)
-    ))
   }
 
   return (
