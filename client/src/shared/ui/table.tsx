@@ -1,5 +1,38 @@
-import React, { ReactNode } from "react"
+import { styled } from "@mui/material/styles"
+import { ReactNode } from "react"
 import { Box } from "shared/ui/box"
+
+const Container = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`
+
+const Bottom = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+`
+
+const Content = styled(Box)`
+  height: 100%;
+  margin: 0px 8px;
+  border-radius: 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
+`
+
+const Header = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+`
 
 interface TableProps {
   header?: ReactNode
@@ -11,34 +44,10 @@ export const Table = (props: TableProps) => {
   const { header, bottom, content } = props
 
   return (
-    <Box flex jc_sp sx={{ height: 1 }}>
-      <Box flex gap sx={{ p: 1 }}>
-        {header}
-      </Box>
-      <Box
-        sx={{
-          height: 1,
-          mx: 1,
-          borderRadius: 1,
-          overflowY: "auto",
-          overflowX: "hidden",
-        }}
-      >
-        {content}
-      </Box>
-      <Box
-        flex
-        row
-        jc_sp
-        ai
-        sx={{
-          p: 1,
-          borderBottomLeftRadius: 8,
-          borderBottomRightRadius: 8,
-        }}
-      >
-        {bottom}
-      </Box>
-    </Box>
+    <Container>
+      <Header>{header}</Header>
+      <Content>{content}</Content>
+      <Bottom>{bottom}</Bottom>
+    </Container>
   )
 }

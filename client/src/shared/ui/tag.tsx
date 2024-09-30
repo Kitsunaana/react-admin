@@ -1,25 +1,24 @@
-import { alpha, useTheme } from "@mui/material"
-import { Text } from "shared/ui/text"
+import { AlertColor, alpha, useTheme } from "@mui/material"
+import { Text as BaseText } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
-
-type PaletteColor = "primary" | "secondary" | "error" | "warning" | "info" | "success"
+import { styled } from "@mui/material/styles"
 
 interface TagProps {
   caption: string
-  variant?: PaletteColor
+  variant?: AlertColor
 }
+
+const Text = styled(BaseText)`
+  margin-right: 8px;
+  font-size: 12px;
+`
 
 export const Tag = (props: TagProps) => {
   const { variant, caption } = props
-
   const { palette } = useTheme()
 
   return (
     <Text
-      sx={{
-        mr: 1,
-        fontSize: 12,
-      }}
       caption={(
         <Mark
           style={{

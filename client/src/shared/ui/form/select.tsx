@@ -4,7 +4,6 @@ import {
   alpha, MenuItem, AutocompleteProps, TextFieldProps, MenuItemProps,
 } from "@mui/material"
 import { FieldError } from "react-hook-form"
-import * as React from "react"
 import { forwardRef, ReactNode } from "react"
 import { Input } from "shared/ui/form/input"
 
@@ -93,7 +92,6 @@ export const SelectItem = (props: MenuItemProps) => {
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-
         mx: 1,
         my: 0.75,
         px: "4px !important",

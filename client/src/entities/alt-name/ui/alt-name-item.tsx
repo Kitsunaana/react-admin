@@ -1,5 +1,4 @@
-import React from "react"
-import { alpha, useTheme } from "@mui/material"
+import { alpha } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Box } from "shared/ui/box"
 import { Mark } from "shared/ui/mark"
@@ -21,7 +20,6 @@ export const AltNameItem = (props: AltNameItemProps) => {
     caption, id, edited, locale, description, disabled,
   } = props
 
-  const theme = useTheme()
   const editStore = useEditDialogStore()
   const deleteStore = useDeleteDialogStore()
   const langBase = useLang()
@@ -41,8 +39,7 @@ export const AltNameItem = (props: AltNameItemProps) => {
   return (
     <LangContext lang={`${langBase}.rows`}>
       <RowItem
-        theme={theme}
-        success={edited}
+        color={edited ? "success" : undefined}
         sx={{
           ...(!disabled ? {} : {
             position: "relative",

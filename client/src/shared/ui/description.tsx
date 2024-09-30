@@ -1,53 +1,40 @@
-import { useFormContext } from "react-hook-form"
-import { memo } from "react"
-import { Divider } from "shared/ui/divider"
+import { Controller, useFormContext } from "react-hook-form"
 import { Input } from "shared/ui/form/input"
 import { Text } from "shared/ui/text"
 import { alpha } from "@mui/material"
-import * as React from "react"
-import { useLang } from "shared/context/Lang"
+import { styled } from "@mui/material/styles"
+
+const StyledPreview = styled(Text)(({ theme }) => ({
+  border: `1px solid ${alpha(theme.palette.grey["600"], 0.5)}`,
+  padding: 8,
+  borderRadius: 8,
+}))
 
 export const Preview = () => {
   const { watch } = useFormContext()
   const description = watch("description")
 
   return description && (
-    <Text
-      sx={{
-        border: ({ palette }) => `1px solid ${alpha(palette.grey["600"], 0.5)}`,
-        px: 1,
-        py: 1,
-        borderRadius: 1,
-      }}
-      caption={description}
-    />
+    <StyledPreview caption={description} />
   )
 }
 
-export const DescriptionInput = ({ langBase: langBaseProps }: { langBase?: string }) => {
-  const { register } = useFormContext()
-  const langBase = langBaseProps ?? useLang()
-
-  return (
-    <Input
-      {...register("description")}
-      fullWidth
-      label={<Text langBase={langBase} name="description" />}
-      multiline
-      rows="10"
-      sx={{
-        "& .MuiInputBase-root": {
-          py: 0.5,
-        },
-      }}
-    />
-  )
-}
-
-export const Description = memo(() => (
-  <>
-    <DescriptionInput />
-    <Divider sx={{ my: 1 }}>Предпросмотр</Divider>
-    <Preview />
-  </>
-))
+export const DescriptionInput = () => (
+  <Controller
+    name="description"
+    render={(({ field }) => (
+      <Input
+        {...field}
+        fullWidth
+        label={<Text name="description" />}
+        multiline
+        rows="10"
+        sx={{
+          "& .MuiInputBase-root": {
+            py: 0.5,
+          },
+        }}
+      />
+    ))}
+  />
+)

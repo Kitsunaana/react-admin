@@ -1,9 +1,19 @@
-import React, { memo, ReactNode } from "react"
-import { MenuItem } from "@mui/material"
+import { memo } from "react"
+import { AlertColor, MenuItem } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Icon } from "shared/ui/icon"
+import { styled } from "@mui/material/styles"
 
-type VariantTheme = "warning" | "danger" | "info" | "success" | "primary" | "secondary"
+const StyledMenuItem = styled(MenuItem)(() => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: 8,
+  borderRadius: 8,
+  margin: "0px 8px",
+}))
+
+type VariantTheme = AlertColor | "primary" | "secondary"
 
 interface MenuActionItemProps {
   onClick?: () => void
@@ -15,21 +25,15 @@ interface MenuActionItemProps {
 
 export const ContextMenuItem = memo((props: MenuActionItemProps) => {
   const {
-    caption, variantIcon, variantText, icon, onClick,
+    caption,
+    variantIcon,
+    variantText,
+    icon,
+    onClick,
   } = props
 
   return (
-    <MenuItem
-      onClick={onClick}
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 2,
-        borderRadius: 2,
-        mx: 1,
-      }}
-    >
+    <StyledMenuItem onClick={onClick}>
       <Text
         name={caption}
         sx={{
@@ -43,6 +47,6 @@ export const ContextMenuItem = memo((props: MenuActionItemProps) => {
           fontSize: 20,
         }}
       />
-    </MenuItem>
+    </StyledMenuItem>
   )
 })

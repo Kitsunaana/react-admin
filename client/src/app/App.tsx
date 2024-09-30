@@ -10,7 +10,6 @@ import { LangContext } from "shared/context/Lang"
 import { Route, Routes } from "react-router-dom"
 import { Spinner } from "shared/ui/spinner"
 import { Gallery } from "widgets/galerry"
-import { Backdrop } from "shared/ui/backdrop"
 import { ToastContainer } from "react-toastify"
 import { useAppSelector } from "shared/lib/hooks"
 
@@ -115,8 +114,6 @@ export const App = () => {
         </LangContext>
 
         <Gallery />
-        <Backdrop />
-
         <Pages />
       </Box>
 

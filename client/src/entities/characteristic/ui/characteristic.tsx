@@ -1,9 +1,7 @@
 import { observer } from "mobx-react-lite"
-import { useTheme } from "@mui/material"
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Vertical } from "shared/ui/divider"
-import React from "react"
 import { RowItem } from "shared/ui/row-item"
 import { ICharacteristic } from "entities/characteristic/model/types"
 import { Caption } from "entities/characteristic/ui/caption"
@@ -12,7 +10,7 @@ import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
-import { LangContext, useLang } from "shared/context/Lang"
+import { LangContext, useLang } from "shared/context/lang"
 import { Text } from "shared/ui/text"
 import { useStores } from "features/categories/model/context"
 
@@ -28,7 +26,6 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   const { characteristics } = useStores()
   const { openDialog } = useEditDialogStore()
   const { openDialog: openDeleteDialog } = useDeleteDialogStore()
-  const theme = useTheme()
   const langBase = useLang()
 
   const onOpenEditDialog = () => openDialog(id, {
@@ -43,10 +40,8 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
     <LangContext lang={`${langBase}.rows`}>
       <RowItem
         onDoubleClick={onOpenEditDialog}
-        theme={theme}
-        errorBg={hasConflict}
-        error={hasConflict}
-        warning={local}
+        bgColor={hasConflict ? "error" : undefined}
+        color={hasConflict ? "error" : local ? "warning" : undefined}
       >
         <Box flex row ai>
           <HiddenIndicator hidden={hideClient} />

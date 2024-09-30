@@ -1,5 +1,34 @@
 import { MuiColorInput, MuiColorInputProps } from "mui-color-input"
 import { forwardRef } from "react"
+import { styled } from "@mui/material/styles"
+import { inputBaseClasses, formLabelClasses } from "@mui/material"
+
+const StyledColorInput = styled(MuiColorInput)(() => ({
+  [`& .${inputBaseClasses.root}`]: {
+    borderRadius: 8,
+    paddingLeft: 8,
+  },
+
+  [`& .${inputBaseClasses.input}`]: {
+    padding: "8.5px 5px",
+    height: 18,
+  },
+
+  [`& .${formLabelClasses.root}`]: {
+    fontSize: 12,
+    top: 3,
+  },
+
+  "& .MuiColorInput-Button": {
+    height: 16,
+    width: 24,
+    padding: 0,
+  },
+
+  "& legend": {
+    fontSize: 8,
+  },
+}))
 
 type ColorInputProps = {} & MuiColorInputProps
 
@@ -7,8 +36,11 @@ export const ColorInput = forwardRef<HTMLDivElement, ColorInputProps>((props, re
   const { sx, ...other } = props
 
   return (
-    <MuiColorInput
+    <StyledColorInput
       ref={ref}
+      isAlphaHidden={false}
+      format="rgb"
+      size="small"
       PopoverProps={{
         anchorOrigin: {
           vertical: "top",
@@ -18,32 +50,6 @@ export const ColorInput = forwardRef<HTMLDivElement, ColorInputProps>((props, re
           vertical: "bottom",
           horizontal: "left",
         },
-      }}
-      isAlphaHidden={false}
-      format="rgb"
-      size="small"
-      sx={{
-        "& .MuiInputBase-root": {
-          borderRadius: 2,
-          pl: 1,
-        },
-        "& .MuiInputBase-input": {
-          padding: "8.5px 5px",
-          height: 18,
-        },
-        "& .MuiColorInput-Button": {
-          height: 16,
-          width: 24,
-          p: 0,
-        },
-        "& .MuiFormLabel-root": {
-          fontSize: 12,
-          top: 3,
-        },
-        "& legend": {
-          fontSize: 8,
-        },
-        ...sx,
       }}
       {...other}
     />

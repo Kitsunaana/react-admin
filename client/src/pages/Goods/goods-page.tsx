@@ -1,7 +1,7 @@
 import { CardProduct } from "entities/goods"
 import { Filters } from "features/goods/filters/ui/filters"
 import { Table } from "shared/ui/table"
-import { BottomPage } from "shared/ui/bottom-page"
+import { BottomPage_unstable } from "shared/ui/bottom-page_unstable"
 import { CreateButton } from "shared/ui/buttons/create-button"
 import { GoodDialog } from "features/goods/dialog"
 import { EmptyList } from "shared/ui/empty-list"
@@ -47,7 +47,7 @@ const GoodsPage = () => {
       <Table
         header={<Filters createButton={<CreateButton />} />}
         content={renderContent()}
-        bottom={<BottomPage />}
+        bottom={<BottomPage_unstable />}
       />
       <GoodDialog />
     </>

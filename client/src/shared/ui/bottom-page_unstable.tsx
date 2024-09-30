@@ -2,9 +2,8 @@ import { Box } from "shared/ui/box"
 import { alpha, IconButton, Pagination } from "@mui/material"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import React from "react"
 
-export const BottomPage = () => (
+export const BottomPage_unstable = () => (
   <>
     <Box>
       <IconButton>
@@ -27,7 +26,7 @@ export const BottomPage = () => (
         count={3}
         variant="outlined"
         shape="rounded"
-        onChange={(event, page) => {
+        onChange={(_, page) => {
           console.log(page)
         }}
       />

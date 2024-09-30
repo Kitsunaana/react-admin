@@ -1,19 +1,15 @@
 import * as React from "react"
-import Autocomplete from "@mui/material/Autocomplete"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import { useTheme } from "@mui/material/styles"
 import { VariableSizeList, ListChildComponentProps } from "react-window"
-import { Input } from "shared/ui/form/input"
-
 import { SelectItem } from "shared/ui/form/select"
 import { Text } from "shared/ui/text"
 import { Icon } from "shared/ui/icon"
 import { forwardRef, HTMLAttributes } from "react"
-import { AutocompleteProps } from "@mui/material"
 
-const LISTBOX_PADDING = 8 // px
+const LISTBOX_PADDING = 8
 
-function renderRow(props: ListChildComponentProps) {
+const renderRow = (props: ListChildComponentProps) => {
   const { data, index, style } = props
 
   const dataSet = data[index]
@@ -31,7 +27,11 @@ function renderRow(props: ListChildComponentProps) {
   const { key, ...optionProps } = dataSet[0]
 
   return (
-    <SelectItem key={key} {...optionProps} style={inlineStyle}>
+    <SelectItem
+      key={key}
+      {...optionProps}
+      style={inlineStyle}
+    >
       <Icon>{dataSet[1]}</Icon>
       <Text caption={dataSet[1]} />
     </SelectItem>
@@ -42,6 +42,7 @@ const OuterElementContext = React.createContext({})
 
 const OuterElementType = React.forwardRef<HTMLDivElement>((props, ref) => {
   const outerProps = React.useContext(OuterElementContext)
+
   return <div ref={ref} {...props} {...outerProps} />
 })
 
@@ -73,7 +74,7 @@ export const ListboxComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLEl
   const itemCount = itemData.length
   const itemSize = smUp ? 40 : 48
 
-  const getChildSize = (child: React.ReactElement) => itemSize
+  const getChildSize = () => itemSize
 
   const getHeight = () => {
     if (itemCount > 8) return 6 * itemSize
@@ -91,7 +92,7 @@ export const ListboxComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLEl
           width="100%"
           ref={gridRef}
           outerElementType={OuterElementType}
-          itemSize={(index) => getChildSize(itemData[index])}
+          itemSize={() => getChildSize()}
           overscanCount={5}
           itemCount={itemCount}
         >
@@ -101,24 +102,3 @@ export const ListboxComponent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLEl
     </div>
   )
 })
-
-interface SelectVirtualizeProps extends Omit<AutocompleteProps<any, any, any, any>, "renderInput"> {}
-
-export const SelectVirtualize = (props: SelectVirtualizeProps) => {
-  const { options, ...other } = props
-
-  return (
-    <Autocomplete
-      open
-      size="small"
-      id="virtualize-demo"
-      sx={{ width: "70%" }}
-      disableListWrap
-      ListboxComponent={ListboxComponent}
-      options={options}
-      renderInput={(params) => <Input {...params} label="10,000 options" />}
-      renderOption={(props, option, state) => [props, option, state.index] as React.ReactNode}
-      {...other}
-    />
-  )
-}

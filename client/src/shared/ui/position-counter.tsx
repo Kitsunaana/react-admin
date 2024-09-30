@@ -1,6 +1,4 @@
-import React, {
-  memo, useState,
-} from "react"
+import { memo, useState } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { SxProps, Theme } from "@mui/material"
@@ -25,18 +23,24 @@ const ArrowUpButton = styled(Box)<Omit<ContainerProps, "width">>`
   transform: rotate(180deg);
   position: absolute;
   z-index: 2;
-  left: ${({ open }) => (open ? "-5px" : "0px")};
-  opacity: ${({ open }) => (open ? 1 : 0)};
-  visibility: ${({ open }) => (open ? "visible" : "hidden")};
+    
+  ${({ open }) => ({
+    left: open ? "-5px" : "0px",
+    opacity: open ? 1 : 0,
+    visibility: open ? "visible" : "hidden",
+  })}
 `
 
 const ArrowDownButton = styled(Box)<Omit<ContainerProps, "width">>`
   transition: .3s;
   position: absolute;
   z-index: 2;
-  right: ${({ open }) => (open ? "-5px" : "0px")};
-  opacity: ${({ open }) => (open ? 1 : 0)};
-  visibility: ${({ open }) => (open ? "visible" : "hidden")};
+
+  ${({ open }) => ({
+    right: open ? "-5px" : "0px",
+    opacity: open ? 1 : 0,
+    visibility: open ? "visible" : "hidden",
+  })}
 `
 
 const Container = styled((props: ContainerProps) => <Box flex ai row gap jc {...props} />)`
@@ -55,18 +59,18 @@ interface PositionProps {
 
 export const Position = memo((props: PositionProps) => {
   const {
-    order: orderProps, sx, id, updatePositionOptions,
+    id,
+    sx,
+    updatePositionOptions,
+    order: orderProps,
   } = props
 
   const [open, setOpen] = useState(false)
   const [order, setOrder] = useState(orderProps ?? 0)
   const [direction, setDirection] = useState(1)
+  const langBase = useLang()
 
-  const onToggle = () => {
-    setOpen((prevState) => !prevState)
-  }
-
-  const width = String(order).split("").length
+  const onToggle = () => setOpen((prevState) => !prevState)
 
   const { isPending, mutate } = useMutation({
     ...updatePositionOptions(id),
@@ -74,6 +78,8 @@ export const Position = memo((props: PositionProps) => {
       setOrder((prevState) => prevState + direction)
     },
   })
+
+  const width = String(order).split("").length
 
   const renderIconButton = (direction: number) => (
     <IconButtonBase
@@ -88,20 +94,32 @@ export const Position = memo((props: PositionProps) => {
     />
   )
 
-  const langBase = useLang()
-
   return (
     <Container width={width} open={open} sx={sx}>
       <ArrowUpButton
         open={open}
-        help={{ arrow: true, title: <Text langBase={`${langBase}`} name="moveUp" /> }}
+        help={{
+          title: (
+            <Text
+              langBase={langBase}
+              name="moveUp"
+            />
+          ),
+        }}
       >
         {renderIconButton(1)}
       </ArrowUpButton>
       <Count onClick={onToggle}>{order}</Count>
       <ArrowDownButton
         open={open}
-        help={{ arrow: true, title: <Text langBase={`${langBase}`} name="moveDown" /> }}
+        help={{
+          title: (
+            <Text
+              langBase={langBase}
+              name="moveDown"
+            />
+          ),
+        }}
       >
         {renderIconButton(-1)}
       </ArrowDownButton>

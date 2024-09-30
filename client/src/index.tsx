@@ -8,7 +8,6 @@ import { store } from "app/providers/store"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "app/providers/query-client"
 import { BrowserRouter } from "react-router-dom"
-import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
 const container = document.getElementById("root")

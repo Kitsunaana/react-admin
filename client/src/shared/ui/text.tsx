@@ -1,6 +1,6 @@
 import { Typography, TypographyProps } from "@mui/material"
 import { Trans, TransProps, useTranslation } from "react-i18next"
-import { useLang } from "shared/context/Lang"
+import { useLang } from "shared/context/lang"
 import { memo, ReactNode } from "react"
 import { useAppSelector } from "shared/lib/hooks"
 import { RootState } from "app/providers/store"
@@ -12,7 +12,6 @@ interface TextProps extends TypographyProps {
   value?: string
   langBase?: string
   onlyText?: boolean
-
   translateOptions?: TransProps<string>
 }
 
@@ -35,9 +34,7 @@ export const Text = memo((props: TextProps) => {
     />
   )
 
-  if (onlyText && translate) {
-    return translate
-  }
+  if (onlyText && translate) return translate
 
   return (
     <Typography sx={{ fontSize: "inherit", ...sx }} {...other}>

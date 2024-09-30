@@ -15,7 +15,6 @@ export const Mark = (props: MarkProps) => {
       style={{
         fontWeight: "unset",
         padding: "2px 8px",
-        // display: "inline-flex",
         display: "inline",
         borderRadius: "4px",
         backgroundColor: alpha(palette.mode === "dark"

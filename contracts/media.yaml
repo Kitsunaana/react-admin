@@ -1,3 +1,6 @@
+info:
+  title: Common
+
 components:
   schemas:
     Media:

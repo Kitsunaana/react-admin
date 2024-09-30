@@ -1,8 +1,6 @@
 import { DialogProps as MUIDialogProps } from "@mui/material/Dialog/Dialog"
-import {
-  FC, ReactNode, useEffect,
-} from "react"
-import { DeepPartial, useFormContext } from "react-hook-form"
+import { FC, ReactNode } from "react"
+import { useFormContext } from "react-hook-form"
 import { observer } from "mobx-react-lite"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { Dialog as MUIDialog, Skeleton as MUIBaseSkeleton, SkeletonProps } from "@mui/material"
@@ -10,6 +8,7 @@ import { Box } from "shared/ui/box"
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import styled, { css } from "styled-components"
+import { Skeleton } from "shared/ui/skeleton"
 
 interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   tabs?: ReactNode
@@ -21,24 +20,6 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   header?: ReactNode
   isLoading: boolean
   handleSubmit: (data: any) => void
-}
-
-export const Skeleton = (props: SkeletonProps & { borderRadius?: number }) => {
-  const { sx, borderRadius, ...other } = props
-
-  return (
-    <MUIBaseSkeleton
-      sx={{
-        padding: 1,
-        borderRadius: borderRadius ?? 2,
-        margin: "8px 0px 4px",
-        transformOrigin: "top",
-        transform: "unset",
-        ...sx,
-      }}
-      {...other}
-    />
-  )
 }
 
 const ButtonContainer = styled.div`
@@ -54,11 +35,7 @@ interface DialogWrapperProps extends MUIDialogProps {
   fullScreen: boolean
   size: "auto" | number
 }
-const DialogWrapper = styled((props: DialogWrapperProps) => {
-  const { size, ...other } = props
-
-  return <MUIDialog {...other} />
-})`
+const DialogWrapper = styled(({ size, ...other }: DialogWrapperProps) => <MUIDialog {...other} />)`
   & .MuiPaper-root {
     display: flex;
     border-radius: 16px;
@@ -91,33 +68,14 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
   const methods = useFormContext()
 
   const onClose = () => store.closeDialog()
+  const onSubmit = () => methods.handleSubmit(handleSubmit)()
 
-  const onSubmit = () => {
-    methods.handleSubmit(handleSubmit)()
-  }
-
-  console.log(other?.PaperProps?.sx)
   return (
     <DialogWrapper
-      size={size ?? 580}
       fullScreen={store.fullScreen}
+      size={size ?? 580}
       open={store.open}
       {...other}
-      PaperProps={{ sx: other?.PaperProps?.sx ?? {} }}
-      // PaperProps={{
-      //   sx: {
-      //     display: "flex",
-      //     borderRadius: 4,
-      //     transition: ".2s",
-      //     ...(store.fullScreen ? {} : {
-      //       maxWidth: 900,
-      //       width: 1,
-      //       height: size ?? 580,
-      //       overflow: "unset",
-      //     }),
-      //     ...(other?.PaperProps?.sx ?? {}),
-      //   },
-      // }}
     >
       <Box sx={{ mx: 1 }}>
         {isLoading ? (

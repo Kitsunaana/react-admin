@@ -1,20 +1,20 @@
 import {
   DetailedHTMLProps, ImgHTMLAttributes, useState,
 } from "react"
-import { Box, BoxProps } from "shared/ui/box"
-import { alpha, CircularProgress, useTheme } from "@mui/material"
-import styled from "styled-components"
+import { Box } from "shared/ui/box"
+import { alpha, CircularProgress } from "@mui/material"
+import { styled } from "@mui/material/styles"
 
-const ImageLoader = styled(Box)<BoxProps>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  z-index: 30;
-  width: 100%;
-  height: 100%;
-  background-color: ${({ theme }) => alpha(theme.palette.common.black, 0.1)};
-`
+const ImageLoader = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  position: "absolute",
+  zIndex: 30,
+  width: "100%",
+  height: "100%",
+  backgroundColor: alpha(theme.palette.common.black, 0.1),
+}))
 
 interface ImageProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>{
   src: string
@@ -24,17 +24,14 @@ interface ImageProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElemen
 export const Image = (props: ImageProps) => {
   const { src, className, ...other } = props
 
-  const theme = useTheme()
   const [loading, setLoading] = useState(true)
 
-  const handleImageLoad = () => {
-    setLoading(false)
-  }
+  const handleImageLoad = () => setLoading(false)
 
   return (
     <>
       {loading && (
-        <ImageLoader theme={theme}>
+        <ImageLoader>
           <CircularProgress />
         </ImageLoader>
       )}

@@ -1,111 +1,48 @@
-import AccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary"
-import { Box } from "shared/ui/box"
+import AccordionSummary, { accordionSummaryClasses } from "@mui/material/AccordionSummary"
 import {
-  Accordion as MUIAccordion, AccordionProps as MUIAccordionProps, IconButton, Theme, useTheme,
+  Accordion as MUIAccordion, AccordionProps as MUIAccordionProps, accordionClasses,
 } from "@mui/material"
-import { Icon } from "shared/ui/icon"
-import { Divider, Vertical } from "shared/ui/divider"
 import AccordionDetails from "@mui/material/AccordionDetails"
-import React, {
-  ReactNode, useState,
-} from "react"
-import styled from "styled-components"
+import React, { ReactNode, useState } from "react"
+import { styled } from "@mui/material/styles"
 
-export const AccordionContainer = styled(MUIAccordion)`
-    box-shadow: 0px 0px 0px rgba(0,0,0,0);
-    border: ${({ theme }) => `1px solid ${theme.palette.grey["700"]}`};
-    background-image: ${({ theme }) => `${theme.background.sectionBackground} !important`};
-    
-    &.Mui-expanded {
-        margin-top: ${({ theme }) => `${theme.spacing(0.5)} !important`};
-        margin-bottom: ${({ theme }) => `${theme.spacing(0.5)} !important`};
-        border-radius: ${({ theme }) => theme.spacing(1)};
-    }
+export const AccordionContainer = styled(MUIAccordion)(({ theme }) => ({
+  boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+  border: `1px solid ${theme.palette.grey[700]}`,
+  backgroundImage: theme.background.sectionBackground,
 
-    &:first-of-type {
-        border-top-left-radius: 8px !important;
-        border-top-right-radius: 8px !important;;
-    }
-`
+  [`&.${accordionClasses.expanded}`]: {
+    margin: "4px 0px",
+    borderRadius: 8,
+  },
 
-export const Summary = styled(AccordionSummary)<AccordionSummaryProps & { theme: Theme }>`
-    padding-left: ${({ theme }) => `${theme.spacing(1)} !important`};
-    padding-right: ${({ theme }) => `${theme.spacing(1)} !important`};
-    
-    & .MuiAccordionSummary-content {
-        margin-top: 0;
-        margin-bottom: 0;
+  "&:first-of-type": {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
 
-        padding-top: ${({ theme }) => theme.spacing(0.5)};
-        padding-bottom: ${({ theme }) => theme.spacing(0.5)};
-        
-        &.Mui-expanded {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-    }
+  "&:last-child": {
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+}))
 
-    &.Mui-expanded {
-        min-height: unset !important;
-    }
-`
+export const Summary = styled(AccordionSummary)(() => ({
+  padding: "0px 8px",
 
-export type AccordionProps = {
-  caption?: ReactNode
-  description?: ReactNode
-  tags?: ReactNode
-  actions?: ReactNode
-  contentTitle?: ReactNode | string
-  details?: ReactNode
-  expanded?: boolean
-  children?: ReactNode
-} & MUIAccordionProps
+  [`& .${accordionSummaryClasses.content}`]: {
+    margin: "0px",
+    padding: "4px 0px",
 
-export const Accordion = (props: AccordionProps) => {
-  const {
-    caption, description, children, tags, actions, contentTitle, details, ...other
-  } = props
+    [`&.${accordionSummaryClasses.expanded}`]: {
+      margin: "0px",
+    },
+  },
 
-  const theme = useTheme()
-  const [isExpanded, setIdExpanded] = useState(false)
-
-  return (
-    <AccordionContainer
-      theme={theme}
-      {...other}
-      expanded={isExpanded}
-      onClick={() => setIdExpanded((prevState) => !prevState)}
-    >
-      <Summary theme={theme}>
-        <Box flex row jc_sp ai sx={{ width: 1 }}>
-          <Box>
-            {caption}
-            {description}
-          </Box>
-          <Box flex ai row sx={{ height: 1 }} onClick={(event) => event.stopPropagation()}>
-            {tags}
-            {actions}
-            <Vertical sx={{ mx: 0.75 }} />
-            <IconButton
-              sx={{
-                p: 0.5,
-                transform: `rotate(${isExpanded ? 180 : 0}deg)`,
-                transition: ".3s",
-              }}
-              onClick={() => setIdExpanded((prevState) => !prevState)}
-            >
-              <Icon sx={{ fontSize: 20 }} name="expand" />
-            </IconButton>
-          </Box>
-        </Box>
-      </Summary>
-      <AccordionDetails>
-        <Divider textAlign="right">{contentTitle}</Divider>
-        {details}
-      </AccordionDetails>
-    </AccordionContainer>
-  )
-}
+  [`&.${accordionSummaryClasses.expanded}`]: {
+    minHeight: "unset !important",
+  },
+}))
 
 interface AccordionPropsV2 extends MUIAccordionProps{
   summary?: ReactNode
@@ -115,28 +52,26 @@ interface AccordionPropsV2 extends MUIAccordionProps{
 
 export const AccordionV2 = (props: AccordionPropsV2) => {
   const {
-    summary, details, onOpenContextMenu, ...other
+    summary,
+    details,
+    onOpenContextMenu,
+    ...other
   } = props
 
-  const theme = useTheme()
   const [isExpanded, setIdExpanded] = useState(false)
 
   return (
     <AccordionContainer
       {...other}
-      theme={theme}
       expanded={isExpanded}
       onClick={(event) => {
         setIdExpanded((prevState) => !prevState)
         onOpenContextMenu(event)
       }}
     >
-      <Summary
-        theme={theme}
-      >
-        {summary}
-      </Summary>
+      <Summary>{summary}</Summary>
       <AccordionDetails>
+        s
         {details}
       </AccordionDetails>
     </AccordionContainer>

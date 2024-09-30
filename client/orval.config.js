@@ -11,4 +11,14 @@ export default defineConfig({
       prettier: true,
     },
   },
+  common: {
+    input: "../contracts/media.yaml",
+    output: {
+      target: "./src/shared/types/common/schemas.ts",
+      schemas: "./src/shared/types/common/objects",
+      mode: "single",
+      client: "zod",
+      prettier: true,
+    },
+  },
 })

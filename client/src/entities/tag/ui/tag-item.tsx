@@ -3,8 +3,6 @@ import { Vertical } from "shared/ui/divider"
 import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { RowItem } from "shared/ui/row-item"
-import React from "react"
-import { useTheme } from "@mui/material"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { LangContext, useLang } from "shared/context/lang"
@@ -18,7 +16,6 @@ export const TagItem = (props: TagItemProps) => {
     tagColor, tag, edited, local, id, icon,
   } = props
 
-  const theme = useTheme()
   const editStore = useEditDialogStore()
   const deleteStore = useDeleteDialogStore()
   const langBase = useLang()
@@ -37,7 +34,7 @@ export const TagItem = (props: TagItemProps) => {
 
   return (
     <LangContext lang={`${langBase}.rows`}>
-      <RowItem theme={theme} success={edited || local}>
+      <RowItem color={(edited || local) ? "success" : undefined}>
         <Tag caption={tag.caption} icon={icon} color={tagColor} />
 
         <Box flex row ai>

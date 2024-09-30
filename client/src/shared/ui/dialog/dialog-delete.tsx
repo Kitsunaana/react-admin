@@ -1,10 +1,8 @@
-import { useLang } from "shared/context/Lang"
-import { useTranslation } from "react-i18next"
+import { useLang } from "shared/context/lang"
 import MUIDialog from "@mui/material/Dialog"
 import { Box } from "shared/ui/box"
 import MUIDialogContent from "@mui/material/DialogContent"
 import MUIDialogActions from "@mui/material/DialogActions"
-import * as React from "react"
 import { DialogHeader } from "shared/ui/dialog/dialog-header"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { Button } from "@mui/material"
@@ -21,13 +19,11 @@ interface DialogProps {
 
 export const DialogDelete = observer((props: DialogProps) => {
   const {
-    langBase: langBaseProps, onDeleteOptions, onDeleteLocal,
+    onDeleteOptions,
+    onDeleteLocal,
   } = props
 
   const store = useDeleteDialogStore()
-
-  const lang = useLang()
-  const langBase = langBaseProps ?? lang
 
   let onDelete
   if (onDeleteOptions) {

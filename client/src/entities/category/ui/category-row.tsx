@@ -9,18 +9,17 @@ import { Box } from "shared/ui/box"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { RowItem } from "shared/ui/row-item"
-import { useTheme } from "@mui/material"
 import { useContextMenu } from "shared/hooks/use-context-menu"
 import { CategoryContextMenu } from "entities/category/ui/context-menu"
 import styled from "styled-components"
 import { LangContext, useLang } from "shared/context/lang"
 import { Text } from "shared/ui/text"
-import { TMedia } from "features/categories/model/types"
+import { Common } from "shared/types/common"
 
 interface CategoryRowProps {
   id: number
   caption: string
-  images?: TMedia[]
+  images?: Common.Media[]
   order: number | null
 }
 
@@ -55,7 +54,6 @@ export const CategoryRow = (props: CategoryRowProps) => {
   const editStore = useEditDialogStore()
   const langBase = useLang()
   const navigate = useNavigateGoods(caption)
-  const theme = useTheme()
   const menu = useContextMenu()
 
   const handleOnEdit = () => {
@@ -70,9 +68,8 @@ export const CategoryRow = (props: CategoryRowProps) => {
 
   return (
     <CustomRowItem
-      primaryBg={menu.isOpen}
+      bgColor={menu.isOpen ? "primary" : undefined}
       onContextMenu={menu.open}
-      theme={theme}
     >
       <Text caption={caption} />
       {menu.isOpen && (

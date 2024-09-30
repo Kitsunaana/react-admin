@@ -1,4 +1,4 @@
-import { Accordion, AccordionV2 } from "shared/ui/accordion"
+import { AccordionV2 } from "shared/ui/accordion"
 import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
 import { Box } from "shared/ui/box"

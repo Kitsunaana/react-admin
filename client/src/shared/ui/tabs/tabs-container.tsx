@@ -1,5 +1,4 @@
-import * as React from "react"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { Tabs } from "shared/ui/tabs/tabs"
 import { useFormContext, useFormState } from "react-hook-form"
 import { Tab } from "shared/ui/tabs/tab"
@@ -41,24 +40,22 @@ export const TabsContainer = observer((props: TabsProps) => {
   } = props
 
   const langBase = useLang()
-
-  const { tab, changeTab } = useEditDialogStore()
-
   const tabsWithWarning = useTabsWarning(tabs, requiredFields)
+  const { tab, changeTab } = useEditDialogStore()
 
   const memoizedTabsArray = useMemo(() => tabs.map((item) => {
     const isError = tabsWithWarning.includes(item.id)
 
     return (
       <Tab
-        isActive={tab === item.id}
-        langBase={langBase}
         key={item.id}
-        isError={isError}
-        caption={item.caption}
         id={item.id}
+        caption={item.caption}
         icon={item.icon}
+        isError={isError}
+        isActive={tab === item.id}
         changeTab={changeTab}
+        langBase={langBase}
       />
     )
   }), [tabsWithWarning, tab])

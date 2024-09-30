@@ -1,31 +1,46 @@
 import { useMemo } from "react"
-import * as React from "react"
 import { Tab as MUITab, useTheme } from "@mui/material"
 import { TabProps as BaseTabProps } from "@mui/material/Tab/Tab"
-import { useLang } from "shared/context/Lang"
+import { useLang } from "shared/context/lang"
 import { TabLabel } from "shared/ui/tabs/tab-label"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { observer } from "mobx-react-lite"
 
 interface TabProps extends Omit<BaseTabProps, "id"> {
-  isError?: boolean
+  id: number
   caption: string
   icon?: string
-  id: number
-  langBase?: string
+  isError?: boolean
   isActive: boolean
   changeTab: (tab: number) => void
+  langBase?: string
 }
 
 export const Tab = observer((props: TabProps) => {
   const {
-    id, isError, icon, caption, changeTab, langBase: langBaseProps, isActive, sx, ...other
+    id,
+    caption,
+    icon,
+    isError,
+    isActive,
+    sx,
+    changeTab,
+    langBase: langBaseProps,
+    ...other
   } = props
 
   const lang = useLang()
   const langBase = langBaseProps ?? lang
 
-  const { palette, background: { gradient: { warning, primary } } } = useTheme()
+  const {
+    palette,
+    background:
+      {
+        gradient: {
+          warning,
+          primary,
+        },
+      },
+  } = useTheme()
 
   const memoizedIconSx = useMemo(() => ({
     color: icon === "done" && !isError ? palette.success.main : undefined,
@@ -37,25 +52,28 @@ export const Tab = observer((props: TabProps) => {
       {...other}
       value={id}
       sx={{
+        p: 1.2,
         textWrap: "nowrap",
         position: "relative",
-        p: 1.2,
         minHeight: 0,
-        backgroundImage: isError ? warning : null,
-        color: isError ? palette.warning.main : null,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
+
+        backgroundImage: isError ? warning : null,
+        color: isError ? palette.warning.main : null,
+
         "&.Mui-selected": {
           backgroundImage: isError ? warning : primary,
           color: isError ? palette.warning.main : null,
         },
+
         "&::before": {
           position: "absolute",
           content: "''",
           width: isActive ? "calc(100% - 16px)" : 0,
           height: 3,
           transition: ".3s",
-          backgroundColor: ({ palette }) => (isError ? palette.warning.main : palette.primary.main),
+          backgroundColor: isError ? palette.warning.main : palette.primary.main,
           top: 0,
           borderRadius: 2,
         },

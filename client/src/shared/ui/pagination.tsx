@@ -1,4 +1,3 @@
-import React from "react"
 import { Pagination as MUIPagination, PaginationProps as MUIPaginationProps } from "@mui/material"
 import { useSearchParams } from "react-router-dom"
 

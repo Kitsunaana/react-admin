@@ -27,19 +27,9 @@ export class DialogStore {
     this.tab = 0
   }
 
-  onToggleSizeScreen() {
-    this.fullScreen = !this.fullScreen
-  }
+  onToggleSizeScreen() { this.fullScreen = !this.fullScreen }
 
-  /* setFullScreen(fullScreen: boolean | ((fullScreen: boolean) => boolean)) {
-    this.fullScreen = typeof fullScreen === "boolean"
-      ? fullScreen
-      : fullScreen(this.fullScreen)
-  } */
-
-  changeTab(tab: number) {
-    this.tab = tab
-  }
+  changeTab(tab: number) { this.tab = tab }
 }
 
 export const createDialogStore = () => new DialogStore()

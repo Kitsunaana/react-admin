@@ -1,8 +1,22 @@
-import React, { forwardRef, ReactNode } from "react"
-import { Backdrop } from "@mui/material"
+import { forwardRef, ReactNode } from "react"
 import { Box } from "shared/ui/box"
 import { Text } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
+import { styled } from "@mui/material/styles"
+
+const Menu = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  zIndex: 10,
+  position: "absolute",
+  padding: "8px 0px",
+  borderRadius: 12,
+  backgroundImage: theme.background.sectionBackground,
+  boxShadow: theme.shadows["6"],
+  backgroundColor: theme.palette.mode === "dark"
+    ? theme.palette.grey["900"]
+    : "white",
+}))
 
 interface CategoryContextMenuProps {
   id?: number
@@ -15,21 +29,7 @@ export const ContextMenu = forwardRef<
   const { id, actionsList } = props
 
   return (
-    <Box
-      ref={ref}
-      flex
-      sx={{
-        zIndex: 10,
-        position: "absolute",
-        py: 1,
-        borderRadius: 3,
-        backgroundColor: ({ palette }) => (palette.mode === "dark"
-          ? palette.grey["900"]
-          : "white"),
-        backgroundImage: ({ background }) => background.sectionBackground,
-        boxShadow: ({ shadows }) => shadows["6"],
-      }}
-    >
+    <Menu ref={ref}>
       {actionsList}
       {id && (
         <Text
@@ -42,6 +42,6 @@ export const ContextMenu = forwardRef<
           )}
         />
       )}
-    </Box>
+    </Menu>
   )
 })

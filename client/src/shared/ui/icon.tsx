@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from "react"
+import { forwardRef } from "react"
 import {
   Fade,
   Icon, IconProps, Tooltip, TooltipProps,
@@ -68,18 +68,24 @@ const iconData = {
   settings_v2: "settings",
 }
 
+export type IconKeys = keyof typeof iconData
+
 interface DefaultIcon extends IconProps {
-  name?: string
+  name?: IconKeys | string
   help?: Omit<TooltipProps, "children">
 }
 
 const Default = forwardRef<any, DefaultIcon>((props, ref) => {
-  const { name, help, ...other } = props
+  const { name = "", help, ...other } = props
 
   const weight = useAppSelector((state: RootState) => state.settings.weightIcon)
   const fill = useAppSelector((state: RootState) => state.settings.fillIcon)
 
-  const icon = other.children ?? (iconData[name ?? ""] || iconData.defIcon)
+  const icon = other.children ?? (
+    name in iconData
+      ? iconData[name as IconKeys]
+      : iconData.defIcon
+  )
 
   const renderIcon = (
     <Fade in className="material-symbols-outlined">

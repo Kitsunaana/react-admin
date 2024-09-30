@@ -1,6 +1,9 @@
 import { memo, ReactNode } from "react"
 import {
-  Tabs as MUITabs, useTheme, TabsProps as BaseTabsProps, Box,
+  Tabs as MUITabs,
+  TabsProps as BaseTabsProps,
+  tabsClasses,
+  tabScrollButtonClasses,
 } from "@mui/material"
 import { Divider } from "shared/ui/divider"
 
@@ -12,10 +15,12 @@ interface TabsProps extends BaseTabsProps {
 
 export const Tabs = memo((props: TabsProps) => {
   const {
-    tab, hasError = false, tabs, sx, ...other
+    tab,
+    tabs,
+    sx,
+    hasError = false,
+    ...other
   } = props
-
-  const { palette } = useTheme()
 
   return (
     <>
@@ -29,21 +34,22 @@ export const Tabs = memo((props: TabsProps) => {
             top: 0,
             height: 3,
             borderRadius: 2,
-            ...(hasError ? {
-              backgroundColor: palette.warning.main,
-            } : {}),
             display: "none",
+            backgroundColor: ({ palette }) => (hasError ? palette.warning.main : undefined),
           },
         }}
         sx={{
           minHeight: 0,
-          "& .MuiTabScrollButton-root": {
-            opacity: "0.75 !important",
+
+          [`& .${tabsClasses.scrollButtons}`]: {
+            opacity: 0.75,
             width: "auto",
-            "&.Mui-disabled": {
+
+            [`&.${tabScrollButtonClasses.disabled}`]: {
               opacity: "0.25 !important",
             },
           },
+
           ...sx,
         }}
       >

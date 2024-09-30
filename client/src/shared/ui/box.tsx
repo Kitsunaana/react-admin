@@ -75,7 +75,8 @@ export const Box = forwardRef((props: BoxProps, ref) => {
   const renderBox = <MUIBox ref={ref} sx={{ ...newSx, ...sx }} {...other} />
 
   if (help) {
-    return <Tooltip {...help}>{renderBox}</Tooltip>
+    const props = { arrow: true, disableInteractive: true, ...help }
+    return <Tooltip {...props}>{renderBox}</Tooltip>
   }
 
   return renderBox

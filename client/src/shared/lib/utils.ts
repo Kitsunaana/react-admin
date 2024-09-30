@@ -80,3 +80,5 @@ export const readOfClipboard = async () => {
 }
 
 export const getNumberOrNull = (value: unknown) => (typeof value === "number" ? value : null)
+
+export const getImageUrl = (name: string) => `http://localhost:3333/uploads/${name}`

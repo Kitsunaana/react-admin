@@ -2,27 +2,25 @@ import { ChangeEvent, memo, useRef } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import * as React from "react"
-import { useTheme } from "@mui/material"
-import styled from "styled-components"
+import { styled } from "@mui/material/styles"
 import { nanoid } from "nanoid"
 import { TImage } from "features/categories/model/types"
 
-const InputFileContainer = styled(Box)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 35px;
-  border-radius: 8px;
-  padding: 0px 4px;
-  cursor: pointer;
-  transition: 0.2s;
-  border: ${({ theme }) => `1px solid ${theme.palette.action.disabled}`};
-  
-  &:hover {
-    border: ${({ theme }) => `1px solid ${theme.palette.action.active}`};
-  }
-`
+const InputFileContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  minHeight: 35,
+  borderRadius: 8,
+  padding: "0px 4px",
+  cursor: "pointer",
+  transition: "0.2s",
+  border: `1px solid ${theme.palette.action.disabled}`,
+
+  "&:hover": {
+    border: `1px solid ${theme.palette.action.active}`,
+  },
+}))
 
 interface InputFileProps extends BoxProps {
   accept: string
@@ -35,11 +33,16 @@ interface InputFileProps extends BoxProps {
 
 export const InputFile = memo((props: InputFileProps) => {
   const {
-    accept, caption, multiple, name, disabled, onFilesUpload, ...other
+    accept,
+    caption,
+    multiple,
+    name,
+    disabled,
+    onFilesUpload,
+    ...other
   } = props
 
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const theme = useTheme()
 
   const onClick = () => {
     if (inputRef?.current) inputRef.current?.click()
@@ -64,7 +67,6 @@ export const InputFile = memo((props: InputFileProps) => {
 
   return (
     <InputFileContainer
-      theme={theme}
       onClick={onClick}
       {...other}
     >
@@ -77,7 +79,10 @@ export const InputFile = memo((props: InputFileProps) => {
         onChange={handleFileUpload}
         disabled={disabled}
       />
-      <Icon name="file" sx={{ mr: 1 }} />
+      <Icon
+        name="file"
+        sx={{ mr: 1 }}
+      />
       <Text
         name={name}
         value={caption}
