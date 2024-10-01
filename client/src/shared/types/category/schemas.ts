@@ -7,56 +7,36 @@
  */
 import { z as zod } from "zod";
 
-export const getCategoriesResponseItem = zod.object({
-  id: zod.number(),
-  caption: zod.string(),
-  description: zod.string(),
-  isShowPhotoWithGoods: zod.boolean(),
-  bgColor: zod.string(),
-  color: zod.string(),
-  blur: zod.number(),
-  activeImageId: zod.string().or(zod.any().nullable()),
-  captionPosition: zod.enum([
-    "top-left",
-    "top-center",
-    "top-right",
-    "center-left",
-    "center-center",
-    "center-right",
-    "bottom-left",
-    "bottom-center",
-    "bottom-right",
-  ]),
-  altNames: zod.array(
+export const getCategoriesResponse = zod.object({
+  rows: zod.array(
     zod.object({
       id: zod.number(),
+      description: zod.string(),
       caption: zod.string(),
-      description: zod.string().or(zod.any().nullable()),
-      locale: zod.any(),
+      order: zod.number(),
+      altNames: zod.array(
+        zod.object({
+          id: zod.number(),
+          caption: zod.string(),
+          description: zod.string().or(zod.any().nullable()),
+          locale: zod.any(),
+        })
+      ),
+      media: zod.array(
+        zod.object({
+          id: zod.string(),
+          filename: zod.string(),
+          originalName: zod.string(),
+          path: zod.string(),
+          mimetype: zod.string(),
+          order: zod.number().or(zod.any().nullable()),
+          size: zod.number(),
+        })
+      ),
     })
   ),
-  characteristics: zod.array(
-    zod.object({
-      id: zod.number(),
-      characteristic: zod.string(),
-      unit: zod.string().or(zod.any().nullable()),
-      value: zod.string(),
-      hideClient: zod.boolean(),
-    })
-  ),
-  media: zod.array(
-    zod.object({
-      id: zod.string(),
-      filename: zod.string(),
-      originalName: zod.string(),
-      path: zod.string(),
-      mimetype: zod.string(),
-      order: zod.number().or(zod.any().nullable()),
-      size: zod.number(),
-    })
-  ),
+  count: zod.number(),
 });
-export const getCategoriesResponse = zod.array(getCategoriesResponseItem);
 
 export const updateCategoryParams = zod.object({
   categoryId: zod.number(),
@@ -77,6 +57,7 @@ export const getCategoryResponse = zod.object({
   bgColor: zod.string(),
   color: zod.string(),
   blur: zod.number(),
+  order: zod.number().optional(),
   activeImageId: zod.string().or(zod.any().nullable()),
   captionPosition: zod.enum([
     "top-left",

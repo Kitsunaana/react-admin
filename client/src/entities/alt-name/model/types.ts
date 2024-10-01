@@ -1,43 +1,18 @@
-export interface Locale {
-  id: number
-  caption: string
-  altName: string
-  code: string
-}
+import { Common } from "shared/types/common"
 
-export interface IAltNameAction {
-  local?: boolean
-  edited?: boolean
-  action?: "create" | "update" | "remove"
-}
+export type Action = "update" | "create" | "remove"
 
-export interface IAltName extends IAltNameAction {
-  id: number | string
-  caption: string
-  description?: string | null
-  locale: Locale
-}
-
-export interface IAltNameCreate {
-  caption: string
-  locale: Locale
-  description?: string | null
-}
-
-export interface IAltNameEdit extends IAltNameCreate {
+export type AltName = Omit<Common.AltName, "id"> & {
   id: string | number
+  action?: Action
 }
+
+export type AltNameCreate = Omit<Common.AltName, "id">
+
+export type DataTranslation = Pick<Common.AltName, "description" | "caption">
 
 interface ITranslate {
-  trans: {
-    caption: string
-    description?: string | null
-  }
+  trans: DataTranslation
 }
 
-export interface ICategoryTranslate {
-  description: string | null
-  caption: string
-}
-
-export type FetchTranslateData = Array<{ data: ITranslate, locale: Locale }>
+export type FetchTranslateData = Array<{ data: ITranslate, locale: Common.Locale }>

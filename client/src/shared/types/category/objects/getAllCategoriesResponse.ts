@@ -5,9 +5,9 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryDto } from "./categoryDto";
+import type { CategoryPreview } from "./categoryPreview";
 
-/**
- * Получение всех категорий
- */
-export type GetAllCategoriesResponse = CategoryDto[];
+export type GetAllCategoriesResponse = {
+  count: number;
+  rows: CategoryPreview[];
+};

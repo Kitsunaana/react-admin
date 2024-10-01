@@ -10,6 +10,7 @@ export * from "./captionPosition";
 export * from "./categoryDto";
 export * from "./categoryDtoActiveImageId";
 export * from "./categoryDtoActiveImageIdOneOf";
+export * from "./categoryPreview";
 export * from "./categoryUpdateDto";
 export * from "./categoryUpdateDtoAllOf";
 export * from "./categoryUpdateDtoAllOfImagesIdsItem";

@@ -1,57 +1,67 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
+import { Common } from "shared/types/common"
+import { toast } from "react-toastify"
+import { isEqual, isNumber, isString } from "shared/lib/utils"
 import { altNameApi } from "../api/alt-name-api"
 import {
-  FetchTranslateData, IAltName, IAltNameCreate, IAltNameEdit, Locale,
+  AltName,
+  AltNameCreate,
+  DataTranslation,
+  FetchTranslateData,
 } from "../model/types"
 
 export class AltNamesStore {
-  items: IAltName[] = []
+  isLoading = false
+  altNames: AltName[] = []
 
   constructor() {
     makeAutoObservable(this, { selectedLocale: false }, { autoBind: true })
   }
 
-  create(data: IAltNameCreate) {
-    this.items.push({
-      ...data, action: "create", id: Date.now(), local: true,
-    })
+  create(data: AltNameCreate) {
+    this.altNames.push({ ...data, action: "create", id: nanoid() })
   }
 
-  edit(data: IAltNameEdit) {
-    this.items = this.items.map((item) => (item.id === data.id ? {
-      ...item, ...data, action: "update", edited: true,
-    } : item))
-  }
-
-  remove(id: number) {
-    this.items = this.items
-      .map((altName): IAltName | null => {
-        if (altName.id === id) {
-          return altName.local ? null : { ...altName, action: "remove" }
+  edit(data: AltName) {
+    this.altNames = this.altNames.map((item) => (
+      item.id !== data.id
+        ? item
+        : {
+          ...item,
+          ...data,
+          action: "update",
         }
+    ))
+  }
+
+  remove(id: number | string) {
+    this.altNames = this.altNames
+      .map((altName): AltName | null => {
+        if (isNumber(id) && isEqual(altName.id, id)) return { ...altName, action: "remove" }
+        if (isString(id) && isEqual(altName.id, id)) return null
 
         return altName
       })
-      .filter((altName): altName is IAltName => altName !== null)
+      .filter((altName): altName is AltName => altName !== null)
   }
 
   get filteredItems() {
-    return this.items.filter((item) => item.action !== "remove")
+    return this.altNames.filter((item) => item.action !== "remove")
   }
 
-  getFreeLocale(locales: Locale[]) {
-    const busyLocales = this.filteredItems.map((item) => item.locale.code)
+  getFreeLocale(locales: Common.Locale[]) {
+    const usedLocales = this.filteredItems.map((item) => item.locale.code)
 
-    return locales.filter((locale) => (busyLocales.includes(locale.code) ? null : locale))
+    return locales.filter((locale) => (
+      usedLocales.includes(locale.code)
+        ? null
+        : locale))
   }
 
-  setIsLoading(isLoading: boolean) {
-    this.isLoading = isLoading
-  }
+  setIsLoading(isLoading: boolean) { this.isLoading = isLoading }
 
-  isLoading = false
-  translate(category: { caption: string; description: string | null }, locales: Locale[]) {
+  translate(category: DataTranslation, locales: Common.Locale[]) {
     if (!category.caption) return
     this.isLoading = true
 
@@ -60,32 +70,28 @@ export class AltNamesStore {
         .map((locale) => altNameApi.translate(locale, category)),
     )
       .then(this.addTranslateAltNames)
-      .catch(console.log)
-      .finally(() => { this.setIsLoading(false) })
+      .catch((error) => error instanceof Error && toast.error(error.message))
+      .finally(() => this.setIsLoading(false))
   }
 
-  addTranslateAltNames(altNames: FetchTranslateData) {
-    const items: IAltName[] = altNames.map((item) => ({
-      ...item.data.trans,
-      id: nanoid(),
-      locale: item.locale,
-      local: true,
-      action: "create",
+  addTranslateAltNames(translates: FetchTranslateData) {
+    translates.map(({ data, locale }) => this.create({
+      ...data.trans,
+      locale,
     }))
-
-    this.items = [...this.items, ...items]
   }
 
-  selectedLocale: Locale | null = null
-  exclude(altNames: Locale[], nonExclude: Locale | null) {
-    const haveAltNames = this.filteredItems.map((item) => item.locale.code)
+  selectedLocale: Common.Locale | null = null
+  exclude(altNames: Common.Locale[], nonExclude: Common.Locale | null) {
+    const localeCodes = this.filteredItems.map((item) => item.locale.code)
 
     if (nonExclude !== null) this.selectedLocale = nonExclude
 
     return altNames.map((item) => {
-      if (haveAltNames.includes(item.code) && this.selectedLocale?.code !== item.code) {
-        return { ...item, disabled: true }
-      }
+      const isCodesNotEqual = this.selectedLocale?.code !== item.code
+      const isCodeNotAvailable = localeCodes.includes(item.code)
+
+      if (isCodeNotAvailable && isCodesNotEqual) return { ...item, disabled: true }
 
       return item
     })
@@ -93,16 +99,17 @@ export class AltNamesStore {
 
   getData() {
     return {
-      altNames: this.items.map(({ id, ...other }) => ({
+      altNames: this.altNames.map(({ id, ...other }) => ({
         ...other,
-        ...(other.local ? { } : { id }),
+        ...(other.action === "create" ? { } : { id }),
       })),
     }
   }
 
-  setAltNames(altNames?: IAltName[]) {
+  setAltNames(altNames?: Common.AltName[]) {
     if (!altNames) return
+    console.log(altNames)
 
-    this.items = altNames
+    this.altNames = altNames
   }
 }

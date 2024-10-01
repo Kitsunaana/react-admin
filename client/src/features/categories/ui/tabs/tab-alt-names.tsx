@@ -51,6 +51,8 @@ export const TabAltNames = observer(() => {
     else setDisabled(false)
   })
 
+  console.log(altNames.filteredItems)
+
   return (
     <>
       <Box flex row grow sx={{ height: 1 }}>

@@ -78,9 +78,17 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/CategoryDto"
+            type: object
+            properties:
+              rows:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryPreview"
+              count:
+                type: number
+            required:
+              - rows
+              - count
 
     GetByIdCategory:
       description: Получение категории по id
@@ -107,6 +115,33 @@ components:
         type: number
 
   schemas:
+    CategoryPreview:
+      type: object
+      properties:
+        id:
+          type: number
+        description:
+          type: string
+        caption:
+          type: string
+        order:
+          type: number
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltName"
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Media"
+      required: 
+        - id
+        - description
+        - caption
+        - order
+        - altNames
+        - media
+    
     CategoryDto:
       type: object
       properties:
@@ -123,6 +158,8 @@ components:
         color:
           type: string
         blur:
+          type: number
+        order:
           type: number
         activeImageId:
           oneOf:

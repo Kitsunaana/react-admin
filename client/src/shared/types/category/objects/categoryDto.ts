@@ -24,4 +24,5 @@ export interface CategoryDto {
   id: number;
   isShowPhotoWithGoods: boolean;
   media: Media[];
+  order?: number;
 }

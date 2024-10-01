@@ -1,11 +1,15 @@
 import { $axios } from "shared/config/axios"
-import axios from "axios"
-import { ICategoryTranslate, Locale } from "../model/types"
+// import axios from "axios"
+import { DataTranslation } from "entities/alt-name/model/alt-name-store"
+import { Locale } from "../model/types"
 import {
-  KEY, HOST, URL_TRANSLATE, URL,
+  KEY,
+  HOST,
+  URL_TRANSLATE,
+  URL,
 } from "../model/config"
 
-const createData = (locale: Locale, category: ICategoryTranslate) => ({
+const getData = (locale: Locale, category: DataTranslation) => ({
   from: "auto",
   to: locale.code,
   json: {
@@ -14,7 +18,7 @@ const createData = (locale: Locale, category: ICategoryTranslate) => ({
   },
 })
 
-const createConfig = (host: string, key: string) => ({
+const getConfig = (host: string, key: string) => ({
   headers: {
     "Content-Type": "application/json",
     "x-rapidapi-host": host,
@@ -25,11 +29,16 @@ const createConfig = (host: string, key: string) => ({
 export const altNameApi = {
   getAll: async (): Promise<Locale[]> => $axios.get(URL).then(({ data }) => data),
 
-  translate: async (locale: Locale, category: ICategoryTranslate) => {
-    const data = createData(locale, category)
-    const config = createConfig(HOST, KEY)
+  translate: async (locale: Locale, category: DataTranslation) => {
+    try {
+      const data = getData(locale, category)
+      const config = getConfig(HOST, KEY)
 
-    return axios.post(URL_TRANSLATE, data, config)
-      .then(({ data }) => ({ data, locale }))
+      throw new Error("Fake error")
+      // return $axios.post(URL_TRANSLATE, data, config)
+      //   .then(({ data }) => ({ data, locale }))
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
   },
 }

@@ -53,8 +53,6 @@ export const Input = forwardRef<HTMLDivElement, InputProps>((props, ref) => {
     ...other
   } = props
 
-  console.log(inputBaseClasses.input)
-
   const clearButton = (clear && value) ? (
     <IconButton
       help={{

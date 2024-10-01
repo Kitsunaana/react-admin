@@ -1,21 +1,19 @@
 import { useQuery } from "@tanstack/react-query"
+import { categoriesUrlStore } from "entities/category"
 import { categoriesApi } from "entities/category/api/categories-api"
-import { IParams } from "entities/category/api/types"
 
-export const useCategories = (options: IParams) => {
-  const { search, page } = options
-
-  const {
-    data, isLoading, isFetching, error, refetch,
-  } = useQuery({
-    queryKey: ["categories", search, page],
-    queryFn: () => categoriesApi.getAll(options),
+export const useCategories = () => {
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ["categories", categoriesUrlStore.searchParams, categoriesUrlStore.page],
+    queryFn: () => categoriesApi.getAll({
+      page: categoriesUrlStore.page,
+      search: categoriesUrlStore.searchParams,
+    }),
   })
 
   return {
-    categoriesData: data,
-    categoriesError: error,
-    categoriesIsLoading: isLoading || isFetching,
+    categories: data,
+    isLoadingCategories: isFetching,
     refetchCategories: refetch,
   }
 }

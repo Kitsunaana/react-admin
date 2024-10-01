@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query"
 import { categoriesApi } from "entities/category/api/categories-api"
 import { toast } from "react-toastify"
 import { CategoryDto, CategorySchemas } from "shared/types/category"
-import { Text } from "shared/ui/text"
-import { Mark } from "shared/ui/mark"
 import { validation } from "shared/lib/validation"
 
 export const useGetCategory = (id: number | null) => {
@@ -19,39 +17,7 @@ export const useGetCategory = (id: number | null) => {
           .then(resolve)
       }, 1000)
     }), {
-      success: {
-        autoClose: 1000,
-        render({ data }) {
-          return (
-            <Text
-              langBase="catalog.notify.find"
-              name="success"
-              value={data.caption}
-              translateOptions={{
-                components: {
-                  strong: <Mark />,
-                },
-              }}
-            />
-          )
-        },
-      },
-      pending: {
-        render() {
-          return (
-            <Text
-              langBase="catalog.notify.find"
-              name="pending"
-              value={String(id) ?? ""}
-              translateOptions={{
-                components: {
-                  strong: <Mark />,
-                },
-              }}
-            />
-          )
-        },
-      },
+      error: "Error",
     }),
   })
 

@@ -1,12 +1,10 @@
-import {
-  CssBaseline, useTheme,
-} from "@mui/material"
+import { CssBaseline, useTheme } from "@mui/material"
 import { Box } from "shared/ui/box"
-import { menu, menuBottom } from "widgets/Sidebar/constants"
-import { Sidebar } from "widgets/Sidebar/ui/sidebar"
+import { menu, menuBottom } from "widgets/sidebar/constants"
+import { Sidebar } from "widgets/sidebar/ui/sidebar"
 import { Suspense, useEffect, useState } from "react"
 import { routeConfig } from "shared/config/route-config"
-import { LangContext } from "shared/context/Lang"
+import { LangContext } from "shared/context/lang"
 import { Route, Routes } from "react-router-dom"
 import { Spinner } from "shared/ui/spinner"
 import { Gallery } from "widgets/galerry"
@@ -60,11 +58,7 @@ export const App = () => {
   const theme = useAppSelector((state) => state.settings.theme)
 
   useEffect(() => {
-    const event = () => {
-      console.log("load")
-
-      setFontsLoaded(true)
-    }
+    const event = () => setFontsLoaded(true)
 
     window.addEventListener("load", event)
     return () => window.removeEventListener("load", event)
@@ -120,14 +114,14 @@ export const App = () => {
       <ToastContainer
         autoClose={3000}
         closeOnClick
-        position="top-center"
-        toastStyle={{
-          maxWidth: "500px !important",
-        }}
-        style={{
-          width: "unset",
-        }}
-        theme={(() => (theme === "light" ? "light" : theme === "dark" ? "dark" : "light"))()}
+        position="top-right"
+        theme={(
+          theme === "light"
+            ? "light"
+            : theme === "dark"
+              ? "dark"
+              : "light"
+        )}
       />
     </Box>
   )
