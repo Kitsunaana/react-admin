@@ -108,7 +108,6 @@ export class AltNamesStore {
 
   setAltNames(altNames?: Common.AltName[]) {
     if (!altNames) return
-    console.log(altNames)
 
     this.altNames = altNames
   }

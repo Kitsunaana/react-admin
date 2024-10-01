@@ -1,23 +1,49 @@
-import { alpha } from "@mui/material"
+import { alpha, styled } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Box } from "shared/ui/box"
 import { Mark } from "shared/ui/mark"
 import { Vertical } from "shared/ui/divider"
 import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
-import { RowItem } from "shared/ui/row-item"
+import { RowItem, RowItemProps } from "shared/ui/row-item"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { LangContext, useLang } from "shared/context/lang"
-import { IAltName } from "../model/types"
+import { AltName } from "../model/types"
 
-interface AltNameItemProps extends IAltName {
+const StyledAltNameItem = styled((props: RowItemProps & { disabled: boolean }) => {
+  const { disabled, ...other } = props
+  return <RowItem {...other} />
+})(({ theme, disabled }) => ({
+  ...(disabled ? {
+    position: "relative",
+    "&::after": {
+      position: "absolute",
+      content: "''",
+      width: "100%",
+      height: "100%",
+      top: 0,
+      left: 0,
+      borderRadius: 2,
+      background: alpha(theme.palette.common[
+        theme.palette.mode === "light" ? "black" : "white"
+      ], 0.15),
+    },
+  } : {}),
+}))
+
+interface AltNameItemProps extends AltName {
   disabled?: boolean
 }
 
 export const AltNameItem = (props: AltNameItemProps) => {
   const {
-    caption, id, edited, locale, description, disabled,
+    id,
+    description,
+    caption,
+    locale,
+    action,
+    disabled,
   } = props
 
   const editStore = useEditDialogStore()
@@ -38,24 +64,9 @@ export const AltNameItem = (props: AltNameItemProps) => {
 
   return (
     <LangContext lang={`${langBase}.rows`}>
-      <RowItem
-        color={edited ? "success" : undefined}
-        sx={{
-          ...(!disabled ? {} : {
-            position: "relative",
-            "&::after": {
-              position: "absolute",
-              content: "''",
-              width: "100%",
-              height: "100%",
-              top: 0,
-              left: 0,
-              borderRadius: 2,
-              background: ({ palette }) => alpha(palette
-                .common[palette.mode === "light" ? "black" : "white"], 0.15),
-            },
-          }),
-        }}
+      <StyledAltNameItem
+        disabled={Boolean(disabled)}
+        color={["update", "create"].includes(action ?? "") ? "success" : undefined}
       >
         <Text caption={caption} />
         <Box flex row ai sx={{ height: 1 }}>
@@ -64,7 +75,7 @@ export const AltNameItem = (props: AltNameItemProps) => {
           <IconButtonEdit onClick={onOpenEditDialog} />
           <IconButtonDelete onClick={onOpenDeleteDialog} />
         </Box>
-      </RowItem>
+      </StyledAltNameItem>
     </LangContext>
   )
 }

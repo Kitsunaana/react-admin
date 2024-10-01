@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { categoriesApi } from "entities/category/api/categories-api"
 import { toast } from "react-toastify"
-import { CategoryDto, CategorySchemas } from "shared/types/category"
-import { validation } from "shared/lib/validation"
+import { CategoryDto } from "shared/types/category"
 
 export const useGetCategory = (id: number | null) => {
   const { data, isPending, isFetching } = useQuery({
@@ -13,7 +12,7 @@ export const useGetCategory = (id: number | null) => {
 
       setTimeout(() => {
         categoriesApi
-          .getById(validation(CategorySchemas.getCategoryParams, { categoryId: id }))
+          .getById({ categoryId: id })
           .then(resolve)
       }, 1000)
     }), {

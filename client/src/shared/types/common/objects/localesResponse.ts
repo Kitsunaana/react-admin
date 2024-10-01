@@ -5,8 +5,9 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
+import type { Locale } from "./locale";
 
 /**
- * @nullable
+ * Получение всех локалей
  */
-export type AltNameDescriptionOneOf = unknown | null;
+export type LocalesResponse = Locale[];

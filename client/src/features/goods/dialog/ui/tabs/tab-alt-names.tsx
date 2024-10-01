@@ -3,11 +3,10 @@ import { Box, BoxProps } from "shared/ui/box"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { EmptyList } from "shared/ui/empty-list"
 import { Vertical } from "shared/ui/divider"
-import React from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { useFormContext } from "react-hook-form"
-import { AltNameItem, localeStore } from "entities/alt-name"
+import { AltNameItem, useLocales } from "entities/alt-name"
 import { AltNameEditDialog, AltNameDeleteDialog } from "features/alt-names"
 import { Text } from "shared/ui/text"
 import { Skeleton } from "@mui/material"
@@ -28,10 +27,11 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
 export const TabAltNames = observer(() => {
   const { altNames } = useStores()
   const { fullScreen, openDialog: openEditDialog } = useEditDialogStore()
+  const { locales } = useLocales()
 
   const methods = useFormContext()
   const [caption, description] = methods.watch(["caption", "description"])
-  const freeLocales = altNames.getFreeLocale(localeStore.locale ?? [])
+  const freeLocales = altNames.getFreeLocale(locales ?? [])
 
   const isShowCharacteristics = altNames.filteredItems.length > 0
   const isShowSkeletons = freeLocales.length > 0 && altNames.isLoading

@@ -77,7 +77,7 @@ export class PhotosStore {
 
   getData() {
     return {
-      // media: this.media,
+      media: this.media,
       images: this.images ?? [],
     }
   }

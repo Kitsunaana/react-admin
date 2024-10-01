@@ -1,4 +1,31 @@
+openapi: 3.0.3
+info:
+  title: API Admin
+  description: Category Api
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3333/api'
+paths:
+  /locales:
+    get:
+      operationId: getLocales
+      tags:
+        - locales
+      responses:
+        200:
+          $ref: "#/components/responses/Locales"
+
 components:
+  responses:
+    Locales:
+      description: Получение всех локалей
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Locale"
+
   schemas:
     Locale:
       type: object

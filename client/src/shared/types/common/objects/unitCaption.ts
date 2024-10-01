@@ -5,8 +5,6 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
+import type { UnitCaptionOneOf } from "./unitCaptionOneOf";
 
-/**
- * @nullable
- */
-export type AltNameDescriptionOneOf = unknown | null;
+export type UnitCaption = string | UnitCaptionOneOf;

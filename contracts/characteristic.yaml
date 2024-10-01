@@ -1,5 +1,65 @@
+openapi: 3.0.3
+info:
+  title: API Admin
+  description: Category Api
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3333/api'
+
+paths:
+  /characteristics:
+    get:
+      operationId: getCharacteristics
+      tags:
+        - characteristics
+      responses:
+        200:
+          $ref: "#/components/responses/Characteristics"
+          
+  /units:
+    get:
+      operationId: getUnits
+      tags:
+        - units
+      responses:
+        200:
+          $ref: "#/components/responses/Units"
+
+
 components:
+  responses:
+    Characteristics:
+      description: Получение всех характеристик
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Characteristic"
+              
+    Units:
+      description: Получение всех единиц измерения
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Unit"
+
   schemas:
+    Unit:
+      type: object
+      properties: 
+        id:
+          type: string
+        caption:
+          oneOf:
+            - type: string
+            - nullable: true
+      required: 
+        - id
+        - caption
+
     Characteristic:
       type: object
       properties:

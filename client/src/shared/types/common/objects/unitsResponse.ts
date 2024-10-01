@@ -5,8 +5,9 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
+import type { Unit } from "./unit";
 
 /**
- * @nullable
+ * Получение всех единиц измерения
  */
-export type AltNameDescriptionOneOf = unknown | null;
+export type UnitsResponse = Unit[];

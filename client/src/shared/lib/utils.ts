@@ -27,12 +27,29 @@ export const stringifiedParams = <TParams extends object>(data: TParams) => {
   return searchParams && `?${searchParams}`
 }
 
-const fileToBase64 = (file: File) => new Promise<string | ArrayBuffer>((resolve, reject) => {
+/* export const fileToBase64 = (file: File) => new Promise<string | ArrayBuffer>((resolve, reject) => {
   const reader = new FileReader()
   reader.onloadend = () => reader.result !== null && resolve(reader.result)
   reader.onerror = reject
   reader.readAsDataURL(file)
-})
+}) */
+
+export const fileToBase64 = async (file: File): Promise<string | ArrayBuffer> => {
+  const reader = new FileReader()
+
+  return new Promise<string | ArrayBuffer>((resolve, reject) => {
+    reader.onloadend = () => {
+      if (reader.result !== null) resolve(reader.result)
+      else reject(new Error("File read unsuccessful"))
+    }
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
+export const copyToClipboardV2 = async (data: object) => {
+  await navigator.clipboard.writeText(JSON.stringify(data))
+}
 
 export const copyToClipboard = async (data: Record<string, any>) => {
   const { images, ...other } = data
@@ -58,6 +75,15 @@ export const base64ToFile = (base64String: string, filename: string) => {
   }
 
   return new File([u8arr], filename, { type: mime })
+}
+
+export const readOfClipboardV2 = async () => {
+  try {
+    const readText = await navigator.clipboard.readText()
+    return JSON.parse(readText)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export const readOfClipboard = async () => {
@@ -86,3 +112,25 @@ export const getImageUrl = (name: string) => `http://localhost:3333/uploads/${na
 export const isString = (value: unknown) => typeof value === "string"
 export const isNumber = (value: unknown) => typeof value === "number"
 export const isEqual = (right: unknown, left: unknown) => right === left
+
+export const exclude = <T extends object, K extends keyof T>(data: T, keys: K[]) => {
+  const entries = Object
+    .entries(data)
+    .filter(([key, value]) => {
+      if (keys.includes(key as K)) return null
+      return [key, value]
+    })
+
+  return Object.fromEntries(entries)
+}
+
+export const include = <T extends object, K extends keyof T>(data: T, keys: K[]) => {
+  const entries = Object
+    .entries(data)
+    .filter(([key, value]) => {
+      if (keys.includes(key as K)) return [key, value]
+      return null
+    })
+
+  return Object.fromEntries(entries)
+}

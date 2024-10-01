@@ -15,9 +15,12 @@ import { UpsertDialog } from "shared/ui/dialog/dialog-edit-v3"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { useGetCategory } from "entities/category/queries/use-category"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { CategoryDto } from "shared/types/category"
+import { CategoryDto, CategorySchemas } from "shared/types/category"
 import { useEditCategory } from "features/categories/queries/use-edit-category"
-import { getNumberOrNull } from "shared/lib/utils"
+import {
+  copyToClipboardV2, exclude, fileToBase64, getNumberOrNull, readOfClipboardV2,
+} from "shared/lib/utils"
+import { validation } from "shared/lib/validation"
 
 const defaultValues: DeepPartial<UseCategoryFormProps> = {
   caption: "",
@@ -28,6 +31,11 @@ const defaultValues: DeepPartial<UseCategoryFormProps> = {
   blur: 8,
 }
 
+const copiedCategorySchema = CategorySchemas.getCategoryResponse.omit({
+  id: true,
+  media: true,
+})
+
 export const CategoryEditDialog = observer(() => {
   const methods = useForm<UseCategoryFormProps>({ defaultValues })
   const dialogStore = useEditDialogStore()
@@ -36,13 +44,51 @@ export const CategoryEditDialog = observer(() => {
   const { category, isLoadingGet } = useGetCategory(getNumberOrNull(dialogStore.id))
   const { onEdit, isLoadingEdit } = useEditCategory(getNumberOrNull(dialogStore.id))
 
-  useSetDialogValues({
+  const { apply, clear } = useSetDialogValues({
     data: category,
     defaults: defaultValues,
-    setData: [categoryStore.setData, methods.reset],
+    setData: [
+      categoryStore.setData,
+      (data) => data && methods.reset(exclude(
+        data,
+        ["characteristics", "altNames", "media", "id", "activeImageId"],
+      ))],
     clearData: [categoryStore.destroy, methods.reset],
     shouldHandle: [dialogStore.open],
   })
+
+  const handleCopyToClipboard = async () => {
+    const fields = methods.getValues()
+    const rows = categoryStore.getData()
+
+    const stringifyImages = async (images: [{ data: File }]) => await Promise.all(
+      images.map(async (image: { data: File }) => {
+        const base64string = await fileToBase64(image.data)
+
+        return {
+          ...image,
+          data: base64string,
+        }
+      }),
+    )
+
+    const mergedData = {
+      ...fields,
+      ...rows,
+      images: await stringifyImages(rows.images),
+    }
+
+    await copyToClipboardV2(mergedData)
+  }
+
+  const handlePaste = async () => {
+    const readDataOfClipboard = await readOfClipboardV2()
+
+    console.log(readDataOfClipboard)
+    validation(copiedCategorySchema, readDataOfClipboard)
+
+    apply(readDataOfClipboard)
+  }
 
   return (
     <FormProvider {...methods}>
@@ -54,6 +100,9 @@ export const CategoryEditDialog = observer(() => {
         container={<ContentContainer />}
         header={(
           <DialogHeader
+            onCopyClick={handleCopyToClipboard}
+            onPasteClick={handlePaste}
+            onClearClick={clear}
             showActions
             settings={(
               <CopySettingsPopup>

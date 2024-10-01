@@ -1,6 +1,4 @@
 import { z } from "zod"
-import { characteristicsSchema } from "entities/characteristic"
-import { altNamesSchema } from "entities/alt-name"
 import { tagsSchema } from "entities/tag"
 
 export const customCategorySchema = z.object({
@@ -53,8 +51,8 @@ export const categorySchema = z.object({
   order: z.number().nullable(),
   media: z.array(mediaSchema),
   custom: customCategorySchema.optional().nullable(),
-  characteristics: characteristicsSchema.optional(),
-  altNames: altNamesSchema.optional(),
+  characteristics: z.any(),
+  altNames: z.any(),
   tags: tagsSchema.optional(),
 })
 

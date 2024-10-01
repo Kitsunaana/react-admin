@@ -10,3 +10,4 @@ export * from "./altName";
 export * from "./altNameDescription";
 export * from "./altNameDescriptionOneOf";
 export * from "./locale";
+export * from "./localesResponse";

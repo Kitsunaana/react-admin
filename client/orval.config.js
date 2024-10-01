@@ -24,7 +24,20 @@ export default defineConfig({
   altName: {
     input: "../contracts/alt-name.yaml",
     output: {
+      target: "./src/shared/types/common/schemas.ts",
       schemas: "./src/shared/types/common/objects",
+      client: "zod",
+      mode: "single",
+      prettier: true,
+    },
+  },
+
+  characteristics: {
+    input: "../contracts/characteristic.yaml",
+    output: {
+      target: "./src/shared/types/common/schemas.ts",
+      schemas: "./src/shared/types/common/objects",
+      client: "zod",
       mode: "single",
       prettier: true,
     },

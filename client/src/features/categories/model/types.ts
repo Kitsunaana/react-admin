@@ -35,7 +35,7 @@ export type TPosition =
 
 export interface UseCategoryFormProps {
   caption: string;
-  description: string | null;
+  description: CategoryDto.CategoryDto["description"];
   media?: CategoryDto.CategoryDto["media"]
   images?: TImage[]
   bgColor: string

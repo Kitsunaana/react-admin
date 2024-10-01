@@ -24,7 +24,7 @@ components:
           type: number
       required:
         - id
-        - filename
+        - filename 
         - originalName
         - path
         - mimetype

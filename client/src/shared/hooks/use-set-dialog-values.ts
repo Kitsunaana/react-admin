@@ -19,7 +19,11 @@ const applyFn = (
 
 export const useSetDialogValues = <T, >(options: Options<T>) => {
   const {
-    clearData, setData, defaults, data, shouldHandle = [],
+    clearData,
+    setData,
+    defaults,
+    data,
+    shouldHandle = [],
   } = options
 
   useEffect(() => {
@@ -27,4 +31,9 @@ export const useSetDialogValues = <T, >(options: Options<T>) => {
 
     return () => applyFn(clearData, defaults)
   }, [options.data, ...shouldHandle])
+
+  return {
+    apply: (data: DeepPartial<T>) => applyFn(setData, data),
+    clear: () => applyFn(clearData, defaults),
+  }
 }

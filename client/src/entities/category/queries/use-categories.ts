@@ -4,7 +4,7 @@ import { categoriesApi } from "entities/category/api/categories-api"
 
 export const useCategories = () => {
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ["categories", categoriesUrlStore.searchParams, categoriesUrlStore.page],
+    queryKey: ["categories", categoriesUrlStore.searchParams],
     queryFn: () => categoriesApi.getAll({
       page: categoriesUrlStore.page,
       search: categoriesUrlStore.searchParams,

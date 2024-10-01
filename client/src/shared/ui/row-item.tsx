@@ -2,7 +2,7 @@ import { Box, BoxProps } from "shared/ui/box"
 import { AlertColor, alpha } from "@mui/material"
 import { styled } from "@mui/material/styles"
 
-interface RowItemPropsV2 extends BoxProps {
+export interface RowItemProps extends BoxProps {
   color?: AlertColor | "primary" | "secondary"
   bgColor?: AlertColor | "primary" | "secondary"
   disableMargin?: boolean
@@ -10,7 +10,7 @@ interface RowItemPropsV2 extends BoxProps {
   height?: number
 }
 
-export const RowItem = styled((props: RowItemPropsV2) => {
+export const RowItem = styled((props: RowItemProps) => {
   const {
     color,
     bgColor,

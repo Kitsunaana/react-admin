@@ -15,4 +15,6 @@ interface ITranslate {
   trans: DataTranslation
 }
 
-export type FetchTranslateData = Array<{ data: ITranslate, locale: Common.Locale }>
+export type FetchTranslateResponse = { data: ITranslate, locale: Common.Locale }
+
+export type FetchTranslateData = Array<FetchTranslateResponse>

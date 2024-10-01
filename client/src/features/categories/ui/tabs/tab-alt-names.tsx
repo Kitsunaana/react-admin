@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { useFormContext } from "react-hook-form"
-import { AltNameItem, localeStore } from "entities/alt-name"
+import { AltNameItem, useLocales } from "entities/alt-name"
 import { AltNameEditDialog, AltNameDeleteDialog } from "features/alt-names"
 import { Text } from "shared/ui/text"
 import { Skeleton } from "@mui/material"
@@ -31,6 +31,7 @@ export const TabAltNames = observer(() => {
   const { altNames } = useStores()
   const { fullScreen, openDialog: openEditDialog } = useEditDialogStore()
   const methods = useFormContext()
+  const { locales } = useLocales()
 
   const [disabled, setDisabled] = useState(() => (
     (methods.getValues("caption") as string ?? "").length < 3
@@ -40,7 +41,7 @@ export const TabAltNames = observer(() => {
     setDisabled((methods.getValues("caption") ?? "").length < 3)
   }, [methods.getValues("caption")])
 
-  const freeLocales = altNames.getFreeLocale(localeStore.locale ?? [])
+  const freeLocales = altNames.getFreeLocale(locales ?? [])
 
   const isShowCharacteristics = altNames.filteredItems.length > 0
   const isShowSkeletons = freeLocales.length > 0 && altNames.isLoading
@@ -50,8 +51,6 @@ export const TabAltNames = observer(() => {
     if ((payload?.caption ?? "").length < 3) setDisabled(true)
     else setDisabled(false)
   })
-
-  console.log(altNames.filteredItems)
 
   return (
     <>

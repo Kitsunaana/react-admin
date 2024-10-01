@@ -1,7 +1,8 @@
 import { $axios } from "shared/config/axios"
-// import axios from "axios"
-import { DataTranslation } from "entities/alt-name/model/alt-name-store"
-import { Locale } from "../model/types"
+import { Common, Schemas } from "shared/types/common"
+import { DataTranslation, FetchTranslateResponse } from "entities/alt-name/model/types"
+import { validation } from "shared/lib/validation"
+import { translateSchema } from "entities/alt-name/model/schemas"
 import {
   KEY,
   HOST,
@@ -9,7 +10,7 @@ import {
   URL,
 } from "../model/config"
 
-const getData = (locale: Locale, category: DataTranslation) => ({
+const getData = (locale: Common.Locale, category: DataTranslation) => ({
   from: "auto",
   to: locale.code,
   json: {
@@ -27,16 +28,23 @@ const getConfig = (host: string, key: string) => ({
 })
 
 export const altNameApi = {
-  getAll: async (): Promise<Locale[]> => $axios.get(URL).then(({ data }) => data),
+  getAll: async (): Promise<Common.Locale[]> => (
+    $axios.get(URL).then(({ data }) => validation(Schemas.getLocalesResponse, data))
+  ),
 
-  translate: async (locale: Locale, category: DataTranslation) => {
+  translate: async (
+    locale: Common.Locale,
+    category: DataTranslation,
+  ): Promise<FetchTranslateResponse> => {
     try {
       const data = getData(locale, category)
       const config = getConfig(HOST, KEY)
 
-      throw new Error("Fake error")
-      // return $axios.post(URL_TRANSLATE, data, config)
-      //   .then(({ data }) => ({ data, locale }))
+      return $axios.post(URL_TRANSLATE, data, config)
+        .then(({ data }) => ({
+          data: validation(translateSchema, data),
+          locale,
+        }))
     } catch (error) {
       throw new Error((error as Error).message)
     }

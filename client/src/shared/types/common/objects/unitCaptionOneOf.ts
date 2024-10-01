@@ -9,4 +9,4 @@
 /**
  * @nullable
  */
-export type AltNameDescriptionOneOf = unknown | null;
+export type UnitCaptionOneOf = unknown | null;

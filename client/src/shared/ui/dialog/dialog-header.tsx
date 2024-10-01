@@ -59,29 +59,23 @@ export interface DialogHeaderProps {
   title: string | ReactNode
   showActions?: boolean
 
-  setRows?: (data: any) => void
-  setFields?: UseFormReset<any>
-
-  getCopyRows?: () => any
-  getCopyFields?: () => any
-
   settings?: ReactNode
-  settingsFields?: Record<string, boolean>
+
+  onCopyClick: () => Promise<void>
+  onPasteClick: () => Promise<void>
+  onClearClick: () => void
 }
 
 export const DialogHeader = observer((props: DialogHeaderProps) => {
   const {
     title,
     settings,
-    settingsFields,
-    setRows,
-    setFields,
-    getCopyFields,
-    getCopyRows,
+    onCopyClick,
+    onPasteClick,
+    onClearClick,
     showActions = false,
   } = props
 
-  const methods = useFormContext()
   const store = useEditDialogStore()
 
   const fullscreenState = store.fullScreen
@@ -89,52 +83,35 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
     : "fullscreenOpen"
 
   const handleCopy = async () => {
-    const readData = [getCopyRows, getCopyFields ?? methods.getValues]
-      ?.filter((fn): fn is () => any => typeof fn === "function")
-      .map((fn) => ({ ...fn() }))
-      .reduce((prev, current) => ({ ...prev, ...current }), {})
-
-    const { id, ...otherProperties } = readData
-
-    await toast.promise(copyToClipboard({ ...otherProperties, copied: true }), {
-      success: "Данные длдя перноса скопированы",
+    await toast.promise(onCopyClick(), {
+      success: "Данные для перноса скопированы",
       error: "При копировании данных произошла ошибка",
     })
   }
 
   const handlePaste = async () => {
-    try {
-      let readDataOfClipboard = await readOfClipboard()
-
-      if (settingsFields) {
-        const filteredReadData = Object
-          .entries(readDataOfClipboard)
-          .filter(([key, value]) => {
-            if (settingsFields[key] === false) return null
-            return [key, value]
-          })
-
-        readDataOfClipboard = Object.fromEntries(filteredReadData)
-      }
-
-      const setValues = (data: any) => {
-        Object.entries(data)
-          .forEach(([key, value]) => methods.setValue(key, value))
-      }
-
-      [setRows, setFields ?? setValues].forEach((callback) => (
-        typeof callback === "function" && callback(readDataOfClipboard)
-      ))
-
-      toast.info("Данные вставлены")
-    } catch (error) {
-      toast.error("Не валидные данные для вставки")
-      console.error((error as Error).message)
-    }
+    await toast.promise(onPasteClick(), {
+      success: "Данные успешно вставлены",
+      error: "Не валидные данные для вставки",
+    })
   }
 
   return (
     <HeaderContainer>
+      <IconButton
+        onClick={onClearClick}
+        name="delete"
+        color="error"
+        help={{
+          title: (
+            <Text
+              onlyText
+              langBase="global.dialog"
+              name="clear"
+            />
+          ),
+        }}
+      />
       {title}
       <Box flex row ai sx={{ mr: 0 }}>
         {showActions && (
