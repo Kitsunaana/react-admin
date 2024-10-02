@@ -45,7 +45,7 @@ export class CustomCategory extends Model<CustomCategory> {
   blur: number;
 
   @Column({ allowNull: true })
-  activeImageId: string;
+  activeImageId: string | null;
 
   @Column
   @ForeignKey(() => Category)

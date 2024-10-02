@@ -16,8 +16,6 @@ export interface SearchForm {
 }
 
 interface CategoryHeaderProps {
-  // createButton: ReactNode
-  // refetchButton: ReactNode
   actions: ReactNode
 }
 

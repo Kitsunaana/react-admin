@@ -3,7 +3,7 @@ import { useEffect } from "react"
 
 interface Options<T> {
   data: T
-  defaults: DeepPartial<T>
+  defaults?: DeepPartial<T>
   setData?: ((data: T) => void) | Array<(data: T) => void>
   clearData?: ((data: DeepPartial<T>) => void) | Array<(data: DeepPartial<T>) => void>
   shouldHandle?: Array<unknown>
@@ -29,11 +29,17 @@ export const useSetDialogValues = <T, >(options: Options<T>) => {
   useEffect(() => {
     if (data) applyFn(setData, data)
 
-    return () => applyFn(clearData, defaults)
+    return () => defaults && applyFn(clearData, defaults)
   }, [options.data, ...shouldHandle])
 
   return {
-    apply: (data: DeepPartial<T>) => applyFn(setData, data),
+    apply: <T>(options: Options<T>) => {
+      const newSetData = options.setData === undefined
+        ? setData
+        : options.setData
+
+      return applyFn(newSetData, options.data)
+    },
     clear: () => applyFn(clearData, defaults),
   }
 }

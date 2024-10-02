@@ -9,25 +9,24 @@ import { UseCategoryFormProps } from "features/categories/model/types"
 import { ContentContainer } from "features/categories/ui/content-container"
 import { TABS } from "features/categories/model/constants"
 import { CopySettingsPopup } from "shared/ui/copy-settings-popup"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { CopySettings } from "features/categories/ui/copy-settings/copy-settings"
 import { UpsertDialog } from "shared/ui/dialog/dialog-edit-v3"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
-import { useGetCategory } from "entities/category/queries/use-category"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { CategoryDto, CategorySchemas } from "shared/types/category"
-import { useEditCategory } from "features/categories/queries/use-edit-category"
 import {
-  copyToClipboardV2, exclude, fileToBase64, getNumberOrNull, readOfClipboardV2,
+  copyToClipboardV2, fileToBase64, readOfClipboardV2,
 } from "shared/lib/utils"
 import { validation } from "shared/lib/validation"
+import { useCreateCategory } from "features/categories/queries/use-create-category"
+import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
 
-const defaultValues: DeepPartial<UseCategoryFormProps> = {
+const defaultValues: UseCategoryFormProps = {
   caption: "",
   description: "",
   bgColor: "",
   color: "",
-  captionPosition: "center-right",
+  captionPosition: "center-left",
   blur: 8,
 }
 
@@ -35,23 +34,16 @@ const copiedCategorySchema = CategorySchemas.getCategoryResponse.omit({
   id: true,
 })
 
-export const CategoryEditDialog = observer(() => {
+export const CategoryCreateDialog = observer(() => {
   const methods = useForm<UseCategoryFormProps>({ defaultValues })
-  const dialogStore = useEditDialogStore()
+  const dialogStore = useCreateDialogStore()
   const categoryStore = useStores()
 
-  const { category, isLoadingGet } = useGetCategory(getNumberOrNull(dialogStore.id))
-  const { onEdit, isLoadingEdit } = useEditCategory(getNumberOrNull(dialogStore.id))
+  const { onCreate, isLoadingCreate } = useCreateCategory()
 
-  const { apply, clear } = useSetDialogValues<CategoryDto.CategoryDto | undefined>({
-    data: category,
+  const { apply, clear } = useSetDialogValues({
+    data: defaultValues,
     defaults: defaultValues,
-    setData: [
-      categoryStore.setData,
-      (data) => data && methods.reset(exclude(
-        data,
-        ["characteristics", "altNames", "media", "id", "activeImageId"],
-      ))],
     clearData: [categoryStore.destroy, methods.reset],
     shouldHandle: [dialogStore.open],
   })
@@ -85,9 +77,12 @@ export const CategoryEditDialog = observer(() => {
 
     validation(copiedCategorySchema, readDataOfClipboard)
 
-    apply({
-      data: readDataOfClipboard,
-      setData: [methods.reset, categoryStore.setCopiedData],
+    apply<CategoryDto.CategoryDto>({
+      data: validation(copiedCategorySchema, readDataOfClipboard) as CategoryDto.CategoryDto,
+      setData: [
+        methods.reset,
+        (data) => categoryStore.setCopiedData(data),
+      ],
     })
   }
 
@@ -95,10 +90,11 @@ export const CategoryEditDialog = observer(() => {
     <FormProvider {...methods}>
       <UpsertDialog
         store={dialogStore}
-        handleSubmit={(data: CategoryDto.CategoryDto) => (
-          onEdit({ ...data, ...categoryStore.getData() } as CategoryDto.CategoryUpdateDto)
-        )}
-        isLoading={(isLoadingGet || isLoadingEdit) && dialogStore.id !== null}
+        handleSubmit={(data: CategoryDto.CategoryDto) => onCreate({
+          ...data,
+          ...categoryStore.getData(),
+        })}
+        isLoading={isLoadingCreate}
         container={<ContentContainer />}
         header={(
           <DialogHeader
@@ -114,7 +110,7 @@ export const CategoryEditDialog = observer(() => {
             )}
             title={(
               <DialogHeaderCaption
-                name="title.edit"
+                name="title.create"
                 value="Пиццы"
               />
             )}

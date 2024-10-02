@@ -4,6 +4,8 @@ import { TagsStore } from "entities/tag"
 import { AltNamesStore } from "entities/alt-name"
 import { PhotosStore } from "features/categories/model/stores/photos-store"
 import { z, ZodSchema } from "zod"
+import { CategorySchemas, CategoryDto } from "shared/types/category"
+import { validation } from "shared/lib/validation"
 import { PhotoPositionStore } from "./photo-position-store"
 
 type Actions = "add" | "replace" | "none"
@@ -45,6 +47,23 @@ const initialSettingInputs = {
   captionPosition: true,
 }
 
+const categoryStoreSchema = CategorySchemas.getCategoryResponse.pick({
+  activeImageId: true,
+  altNames: true,
+  captionPosition: true,
+  media: true,
+  characteristics: true,
+})
+
+type SetCategoryStore = Pick<
+  CategoryDto.CategoryDto,
+  "activeImageId" |
+  "altNames" |
+  "captionPosition" |
+  "media" |
+  "characteristics"
+>
+
 export class RootStore {
   tags!: TagsStore
   photos!: PhotosStore
@@ -79,20 +98,24 @@ export class RootStore {
 
   destroy() { this.createStores() }
 
-  setData(data: any) {
-    const validatedData = data
+  setCopiedData(data: SetCategoryStore | undefined) {
+    if (data === undefined) return
 
-    if (data?.copied) {
-      this.photos.setCopiedMedia(validatedData.media)
-      this.photos.setCopiedImages(validatedData?.images)
-      this.characteristics.setCopiedCharacteristics(validatedData?.characteristics)
-      this.tags.setCopiedTags(validatedData?.tags)
-    } else {
-      this.photos.setMedia(validatedData.media)
-      this.characteristics.setCharacteristics(validatedData?.characteristics)
-      this.tags.setTags(validatedData?.tags)
-      this.altNames.setAltNames(validatedData?.altNames)
-    }
+    console.log(data)
+    const validatedData = validation(categoryStoreSchema, data) as SetCategoryStore
+
+    // this.photos.setCopiedData({
+    // })
+  }
+
+  setData(data: SetCategoryStore | undefined) {
+    if (data === undefined) return
+
+    const validatedData = validation(categoryStoreSchema, data) as SetCategoryStore
+
+    this.photos.setMedia(validatedData.media)
+    this.characteristics.setCharacteristics(validatedData.characteristics)
+    this.altNames.setAltNames(validatedData.altNames)
 
     this.photoPosition.setPhotoPosition({
       activeImageId: validatedData.activeImageId,
@@ -112,13 +135,6 @@ export class RootStore {
     }, {})
   }
 
-  getCopyData = () => {
-    const data = this.getData(true)
-    const { order, ...otherProperties } = data as { order: number }
-
-    return { ...otherProperties }
-  }
-
   settingsFields = initialSettingInputs
   handleChangeSettingsFields(name: string, value: boolean) {
     this.settingsFields[name] = value
@@ -133,10 +149,3 @@ export class RootStore {
 }
 
 export const createRootStore = () => new RootStore()
-
-/**
- * settingsRows,
- *     settingsFields,
- *     handleChangeSettingsFields,
- *     handleChangeSettingsRows,
- */

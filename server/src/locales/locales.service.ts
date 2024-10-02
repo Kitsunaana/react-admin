@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { AltNameCategory, Locale } from '../entities/locale.entity';
-import { CreateAltNameCategoryDto } from './dto/create-alt-name-category-dto';
+import { Common } from '../shared/types/common';
 
 @Injectable()
 export class LocalesService {
@@ -24,28 +24,31 @@ export class LocalesService {
     return await this.altNameCategoryRepository.destroy({ where: { id } });
   }
 
-  async createAltName(data: CreateAltNameCategoryDto, categoryId: number) {
+  async createAltName(data: Common.AltNameCreate, categoryId: number) {
     return await this.altNameCategoryRepository.create({
       categoryId,
       caption: data.caption,
-      description: data.description,
+      description: data.description as string | null,
       localeId: data.locale.id,
     });
   }
 
-  async updateAltName(data: CreateAltNameCategoryDto, categoryId: number) {
+  async updateAltName(data: Common.AltNameCreate, categoryId: number) {
     return await this.altNameCategoryRepository.update(
       {
         categoryId,
         caption: data.caption,
-        description: data.description,
+        description: data.description as string | null,
         localeId: data.locale.id,
       },
-      { where: { id: data.id } },
+      {
+        where: { id: data.id },
+        returning: false,
+      },
     );
   }
 
-  async updateAltNamesCategory(altNames: CreateAltNameCategoryDto[], categoryId: number) {
+  async updateAltNamesCategory(altNames: Common.AltNameCreate[], categoryId: number) {
     await Promise.all(
       altNames.map(async (altName) => {
         if (altName.action === 'update') return this.updateAltName(altName, categoryId);
@@ -55,12 +58,13 @@ export class LocalesService {
     );
   }
 
-  async create(altNames: CreateAltNameCategoryDto[], categoryId: number) {
+  async create(altNames: Common.AltNameCreate[], categoryId: number) {
     await Promise.all(
       altNames.map(async ({ locale, ...other }) => {
         return await this.altNameCategoryRepository.create({
-          ...other,
           localeId: locale.id,
+          caption: other.caption,
+          description: other.description as string | null,
           categoryId,
         });
       }),

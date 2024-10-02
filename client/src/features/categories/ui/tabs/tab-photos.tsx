@@ -48,7 +48,7 @@ export const TabPhotos = observer(() => {
               id={item.id}
               url={item.path}
               name={item.originalName}
-              order={item.order}
+              order={item.order as number | null}
               onClear={photos.clearMedia}
               onOpenGallery={photos.openGallery}
               onUpdateOrder={photos.updateOrder}
@@ -59,7 +59,7 @@ export const TabPhotos = observer(() => {
               local
               key={item.id}
               id={item.id}
-              file={item.data}
+              file={item.data as File}
               name={item.caption}
               onClearLocal={photos.clearImage}
               onOpenGallery={photos.openGallery}

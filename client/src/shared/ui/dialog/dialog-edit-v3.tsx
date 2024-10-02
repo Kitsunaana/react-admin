@@ -2,13 +2,13 @@ import { DialogProps as MUIDialogProps } from "@mui/material/Dialog/Dialog"
 import { FC, ReactNode } from "react"
 import { useFormContext } from "react-hook-form"
 import { observer } from "mobx-react-lite"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { Dialog as MUIDialog } from "@mui/material"
 import { Box } from "shared/ui/box"
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import styled, { css } from "styled-components"
 import { Skeleton } from "shared/ui/skeleton"
+import { DialogStore } from "shared/ui/dialog/model/dialog-store"
 
 interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   tabs?: ReactNode
@@ -20,6 +20,7 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   header?: ReactNode
   isLoading: boolean
   handleSubmit: (data: any) => void
+  store: DialogStore
 }
 
 const ButtonContainer = styled.div`
@@ -61,10 +62,10 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
     header,
     isLoading,
     handleSubmit,
+    store,
     ...other
   } = props
 
-  const store = useEditDialogStore()
   const methods = useFormContext()
 
   const onClose = () => store.closeDialog()
@@ -72,9 +73,9 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
 
   return (
     <DialogWrapper
-      fullScreen={store.fullScreen}
-      size={size ?? 580}
       open={store.open}
+      fullScreen={store.fullScreen}
+      size={size ?? "auto"}
       {...other}
     >
       <Box sx={{ mx: 1 }}>

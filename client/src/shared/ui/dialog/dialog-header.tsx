@@ -2,18 +2,13 @@ import { alpha } from "@mui/material"
 import { Text } from "shared/ui/text"
 import { Vertical } from "shared/ui/divider"
 import { observer } from "mobx-react-lite"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { ReactNode } from "react"
-import {
-  copyToClipboard,
-  readOfClipboard,
-} from "shared/lib/utils"
-import { useFormContext, UseFormReset } from "react-hook-form"
 import { styled } from "@mui/material/styles"
 import { Mark } from "shared/ui/mark"
 import { Box } from "shared/ui/box"
 import { toast } from "react-toastify"
+import { DialogStore } from "shared/ui/dialog/model/dialog-store"
 
 const HeaderContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -64,6 +59,8 @@ export interface DialogHeaderProps {
   onCopyClick: () => Promise<void>
   onPasteClick: () => Promise<void>
   onClearClick: () => void
+  store: DialogStore
+
 }
 
 export const DialogHeader = observer((props: DialogHeaderProps) => {
@@ -74,9 +71,8 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
     onPasteClick,
     onClearClick,
     showActions = false,
+    store,
   } = props
-
-  const store = useEditDialogStore()
 
   const fullscreenState = store.fullScreen
     ? "fullscreenClose"

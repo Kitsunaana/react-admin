@@ -5,12 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { AltNameDescription } from "./altNameDescription";
-import type { Locale } from "./locale";
+import type { AltNameBase } from "./altNameBase";
+import type { AltNameAllOf } from "./altNameAllOf";
 
-export interface AltName {
-  caption: string;
-  description: AltNameDescription;
-  id: number;
-  locale: Locale;
-}
+export type AltName = AltNameBase & AltNameAllOf;

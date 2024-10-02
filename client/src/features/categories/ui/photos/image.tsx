@@ -7,7 +7,7 @@ import { Image as BaseImage } from "shared/ui/image"
 import styled from "styled-components"
 import { memo } from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { useLang } from "shared/context/Lang"
+import { useLang } from "shared/context/lang"
 import { UpdateOrder } from "./update-order"
 
 interface ImageProps extends Omit<BoxProps, "id" | "order"> {
@@ -115,7 +115,6 @@ export const Image = memo((props: ImageProps) => {
           fontSize={20}
           onClick={handleOnClear}
           help={{
-            arrow: true,
             title: (
               <Text
                 onlyText

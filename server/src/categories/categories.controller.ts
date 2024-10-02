@@ -25,6 +25,7 @@ import { FilesService } from '../files/files.service';
 import { CharacteristicsService } from '../characteristics/characteristics.service';
 import { LocalesService } from '../locales/locales.service';
 import { TagsService } from '../tags/tags.service';
+import { CategoryDto } from './types';
 
 @Injectable()
 export class CustomFilesInterceptor {
@@ -55,22 +56,26 @@ export class CategoriesController {
   ) {}
 
   @Post('')
-  @UsePipes(new ValidationPipe({ transform: true }))
-  @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
-  async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateCategoryDto) {
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
+  async create(@Body() dto: CategoryDto.PostCategoryBody) {
     const category = await this.categoryService.create(dto);
 
     await this.localesService.create(dto.altNames, category.id);
-    await this.characteristicsService.create(dto.characteristics, category);
-    if (dto?.media)
-      await this.filesService.saveUploadedMedia(
-        dto.media.filter((media) => !media.deleted),
-        category.id,
-      );
-    await this.filesService.saveMedia(files, dto.imagesIds, { categoryId: category.id });
-    await this.tagsService.create(dto.tags, category.id);
+    await this.filesService.create(dto.media, category.id);
+    // await this.characteristicsService.create(dto.characteristics, category);
+    // if (dto?.media)
+    //   await this.filesService.saveUploadedMedia(
+    //     dto.media.filter((media) => !media.deleted),
+    //     category.id,
+    //   );
+    // await this.filesService.saveMedia(files, dto.imagesIds, { categoryId: category.id });
+    // await this.tagsService.create(dto.tags, category.id);
+    //
+    // return category;
 
     return category;
+    console.log(dto);
   }
 
   @Get()

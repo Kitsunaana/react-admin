@@ -8,12 +8,22 @@ import { GetCategoryDto } from './dto/get-category-dto';
 import { Op, Sequelize } from 'sequelize';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { Media } from '../entities/media.entity';
-import { CustomCategory } from '../entities/custom-category';
+import { CustomCategory, Position } from '../entities/custom-category';
 import { CategoryCharacteristic, Characteristic } from '../entities/characteristic.entity';
 import { Unit } from '../entities/units.entity';
 import { AltNameCategory, Locale } from '../entities/locale.entity';
 import { Tag } from '../entities/tag.entity';
 import { CategoryTag } from '../entities/category-tag.entity';
+import { CategoryDto } from './types';
+
+export class CreateCategoryDto {
+  isShowPhotoWithGoods: boolean;
+  bgColor: string;
+  color: string;
+  blur: number;
+  captionPosition: Position;
+  activeImageId: string;
+}
 
 @Injectable()
 export class CategoriesService {
@@ -23,11 +33,18 @@ export class CategoriesService {
     private filesService: FilesService,
   ) {}
 
-  async create(dto: CreateCategoryDto) {
+  async create(dto: CategoryDto.PostCategoryBody) {
     const category = await this.categoryRepository.create(dto);
-    const customCategory = await this.customCategoryRepository.create(dto);
 
-    await category.$set('custom', customCategory);
+    await this.customCategoryRepository.create({
+      isShowPhotoWithGoods: dto.isShowPhotoWithGoods,
+      bgColor: dto.bgColor,
+      color: dto.color,
+      blur: dto.blur,
+      captionPosition: dto.captionPosition,
+      activeImageId: dto.activeImageId as string | null,
+      categoryId: category.id,
+    });
 
     return category;
   }

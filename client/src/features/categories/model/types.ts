@@ -36,12 +36,10 @@ export type TPosition =
 export interface UseCategoryFormProps {
   caption: string;
   description: CategoryDto.CategoryDto["description"];
-  media?: CategoryDto.CategoryDto["media"]
-  images?: TImage[]
   bgColor: string
   color: string
   blur: number
-  captionPosition: TPosition
+  captionPosition: CategoryDto.CategoryDto["captionPosition"]
 }
 
 export interface ITab {

@@ -1,11 +1,11 @@
 import { makeAutoObservable } from "mobx"
 import { dispatch } from "shared/lib/event"
 import { RootStore } from "features/categories/model/stores/dialog-store"
-import { TImage, TMedia, TMediaForm } from "features/categories/model/types"
+import { Common } from "shared/types/common"
 
 export class PhotosStore {
-  images: TImage[] = []
-  media: TMediaForm[] = []
+  images: Common.Image[] = []
+  media: (Common.Media & { deleted?: boolean })[] = []
 
   constructor(public rootStore: RootStore) {
     makeAutoObservable(this, { applyActions: false }, { autoBind: true })
@@ -39,36 +39,45 @@ export class PhotosStore {
     return this.media.filter((media) => !media.deleted)
   }
 
-  setUploadedFiles(files: TImage[]) {
+  setUploadedFiles(files: Common.Image[]) {
     this.images = [...this.images, ...files]
   }
 
-  getFilteredData<T extends TMedia | TImage>(data: Array<T>): Array<T> {
-    const captionImage = this.mergedImages
-      .map((image) => image?.caption || image?.originalName)
+  getFilteredData<T extends Common.Media | Common.Image>(data: Array<T>): Array<T> {
+    const captionImages = this.mergedImages
+      .map((image) => {
+        if ("caption" in image) return image.caption
+        if ("originalName" in image) return image.originalName
 
-    return data.filter((image) => (
-      !captionImage.includes(image?.caption || image?.originalName)
-    ))
+        return null
+      })
+      .filter((image): image is string => image !== null)
+
+    return data.filter((image) => {
+      if ("caption" in image) return !captionImages.includes(image.caption)
+      if ("originalName" in image) return !captionImages.includes(image.originalName)
+
+      return null
+    })
   }
 
-  setMedia(media?: TMedia[]) {
+  setMedia(media?: Common.Media[]) {
     if (!media) return
     this.media = media
   }
 
-  setCopiedImages = (images?: TImage[]) => this.applyActions(images)("images")
-  setCopiedMedia = (media?: TMedia[]) => this.applyActions(media)("media")
+  setCopiedData(payload: { media: Common.Media[], images: Common.Image[] }) {
+    this.applyActions(payload.images)("images")
+    this.applyActions(payload.media)("media")
+  }
 
-  applyActions<T extends TImage | TMedia>(data?: Array<T>) {
-    if (!data) return () => {}
-
+  applyActions<T extends Common.Media | Common.Image>(data: Array<T>) {
     const filteredData = this.getFilteredData(data)
     const action = this.rootStore.settingsRows.images
 
     const actions = {
-      add: (name: string) => this[name] = [...this[name], ...filteredData],
-      replace: (name: string) => this[name] = data,
+      add: (name: "images" | "media") => this[name] = [...this[name], ...filteredData] as any,
+      replace: (name: "images" | "media") => this[name] = data as any,
       none: () => {},
     }
 
@@ -78,7 +87,7 @@ export class PhotosStore {
   getData() {
     return {
       media: this.media,
-      images: this.images ?? [],
+      images: this.images,
     }
   }
 }

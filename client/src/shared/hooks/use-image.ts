@@ -9,7 +9,7 @@ export const useImage = (data?: string | File): string => {
 
   if (data === undefined) return ""
 
-  useEffect(() => { setSrc(getPath(data)) }, [data])
+  useEffect(() => { setSrc(data as string) }, [data])
 
   useEffect(() => {
     if (!(data instanceof File)) return

@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Media } from '../entities/media.entity';
 import * as fs from 'fs';
 import { v4 } from 'uuid';
+import { Common } from '../shared/types/common';
 
 @Injectable()
 export class FilesService {
@@ -69,20 +70,28 @@ export class FilesService {
   async updateOrder(media: Media[]) {
     return await Promise.all(
       media.map(async (file) => {
-        return await this.mediaRepository.update(file, { where: { id: file.id } });
+        return await this.mediaRepository.update(file, {
+          where: { id: file.id },
+          returning: false,
+        });
+      }),
+    );
+  }
+
+  async create(media: Common.Media[], categoryId: number) {
+    return await Promise.all(
+      media.map(async (item) => {
+        return await this.mediaRepository.create({
+          id: item.id,
+          filename: item.filename,
+          originalName: item.originalName,
+          size: item.size,
+          mimetype: item.mimetype,
+          path: item.path,
+          order: item.order as number | null,
+          categoryId,
+        });
       }),
     );
   }
 }
-
-/*
-[{
-  "id": "naEoW2lv9IbEqIzmw2Cyy",
-  "originalName": "Screenshot_6.png",
-  "path": "uploads\\1725781173657-716857790Screenshot_6.png",
-  "order": null,
-  "filename": "1725781173657-716857790Screenshot_6.png",
-  "mimetype": "image/png",
-  "size": 778240,
-  "deleted": true
-}]*/
