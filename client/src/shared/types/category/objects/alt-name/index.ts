@@ -7,6 +7,13 @@
  */
 
 export * from "./altName";
+export * from "./altNameAllOf";
+export * from "./altNameBase";
+export * from "./altNameBaseDescription";
+export * from "./altNameBaseDescriptionOneOf";
+export * from "./altNameCreate";
+export * from "./altNameCreateAllOf";
+export * from "./altNameCreateAllOfAction";
 export * from "./altNameDescription";
 export * from "./altNameDescriptionOneOf";
 export * from "./locale";

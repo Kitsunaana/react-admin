@@ -7,6 +7,14 @@
  */
 
 export * from "./captionPosition";
+export * from "./categoryBase";
+export * from "./categoryBaseActiveImageId";
+export * from "./categoryBaseActiveImageIdOneOf";
+export * from "./categoryCreate";
+export * from "./categoryCreateActiveImageId";
+export * from "./categoryCreateActiveImageIdOneOf";
+export * from "./categoryCreateAltNamesItem";
+export * from "./categoryCreateAltNamesItemAllOf";
 export * from "./categoryDto";
 export * from "./categoryDtoActiveImageId";
 export * from "./categoryDtoActiveImageIdOneOf";
@@ -20,3 +28,5 @@ export * from "./patchCategoryBody";
 export * from "./patchCategoryBodyAllOf";
 export * from "./patchCategoryBodyAllOfImagesIdsItem";
 export * from "./patchCategoryResponse";
+export * from "./postCategoryBody";
+export * from "./postCategoryResponse";

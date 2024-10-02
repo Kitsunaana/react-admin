@@ -15,12 +15,11 @@ export const getCategoriesResponse = zod.object({
       caption: zod.string(),
       order: zod.number(),
       altNames: zod.array(
-        zod.object({
-          id: zod.number(),
-          caption: zod.string(),
-          description: zod.string().or(zod.any().nullable()),
-          locale: zod.any(),
-        })
+        zod.any().and(
+          zod.object({
+            id: zod.number(),
+          })
+        )
       ),
       media: zod.array(
         zod.object({
@@ -36,6 +35,80 @@ export const getCategoriesResponse = zod.object({
     })
   ),
   count: zod.number(),
+});
+
+export const createCategoriesBody = zod.object({
+  caption: zod.string(),
+  description: zod.string(),
+  isShowPhotoWithGoods: zod.boolean(),
+  bgColor: zod.string(),
+  color: zod.string(),
+  blur: zod.number(),
+  activeImageId: zod.string().or(zod.any().nullable()),
+  captionPosition: zod.enum([
+    "top-left",
+    "top-center",
+    "top-right",
+    "center-left",
+    "center-center",
+    "center-right",
+    "bottom-left",
+    "bottom-center",
+    "bottom-right",
+  ]),
+  altNames: zod.array(
+    zod.any().and(
+      zod.object({
+        id: zod.number().optional(),
+        action: zod.enum(["update", "create", "remove"]),
+      })
+    )
+  ),
+  characteristics: zod.array(
+    zod.object({
+      id: zod.number(),
+      characteristic: zod.string(),
+      unit: zod.string().or(zod.any().nullable()),
+      value: zod.string(),
+      hideClient: zod.boolean(),
+    })
+  ),
+  media: zod.array(
+    zod.object({
+      id: zod.string(),
+      filename: zod.string(),
+      originalName: zod.string(),
+      path: zod.string(),
+      mimetype: zod.string(),
+      order: zod.number().or(zod.any().nullable()),
+      size: zod.number(),
+    })
+  ),
+});
+
+export const createCategoriesResponse = zod.object({
+  id: zod.number(),
+  description: zod.string(),
+  caption: zod.string(),
+  order: zod.number(),
+  altNames: zod.array(
+    zod.any().and(
+      zod.object({
+        id: zod.number(),
+      })
+    )
+  ),
+  media: zod.array(
+    zod.object({
+      id: zod.string(),
+      filename: zod.string(),
+      originalName: zod.string(),
+      path: zod.string(),
+      mimetype: zod.string(),
+      order: zod.number().or(zod.any().nullable()),
+      size: zod.number(),
+    })
+  ),
 });
 
 export const updateCategoryParams = zod.object({
@@ -71,12 +144,11 @@ export const getCategoryResponse = zod.object({
     "bottom-right",
   ]),
   altNames: zod.array(
-    zod.object({
-      id: zod.number(),
-      caption: zod.string(),
-      description: zod.string().or(zod.any().nullable()),
-      locale: zod.any(),
-    })
+    zod.any().and(
+      zod.object({
+        id: zod.number(),
+      })
+    )
   ),
   characteristics: zod.array(
     zod.object({

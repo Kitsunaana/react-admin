@@ -43,12 +43,10 @@ components:
         - code
         - altName
         - caption
-
-    AltName:
+    
+    AltNameBase:
       type: object
       properties:
-        id:
-          type: number
         caption:
           type: string
         description:
@@ -58,7 +56,32 @@ components:
         locale:
           $ref: "#/components/schemas/Locale"
       required:
-        - id
         - caption
         - locale
         - description
+    
+    AltNameCreate:
+      allOf:
+        - $ref: "#/components/schemas/AltNameBase"
+        - type: object
+          properties:
+            id: 
+              type: number
+            action:
+              type: string
+              enum:
+                - "update"
+                - "create"
+                - "remove"
+          required: 
+            - action
+
+    AltName:
+      allOf:
+        - $ref: "#/components/schemas/AltNameBase"
+        - type: object
+          properties:
+            id:
+              type: number
+          required:
+            - id

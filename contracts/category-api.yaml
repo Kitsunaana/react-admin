@@ -4,7 +4,7 @@ info:
   description: Category Api
   version: 1.0.0
 servers:
-  - url: 'http://localhost:3333'
+  - url: "http://localhost:3333"
 paths:
   /categories:
     get:
@@ -14,6 +14,15 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/GetAllCategories"
+    post:
+      operationId: createCategories
+      tags:
+        - categories
+      requestBody:
+        $ref: "#/components/requestBodies/PostCategory"
+      responses:
+        200:
+          $ref: "#/components/responses/PostCategory"
 
   /categories/{categoryId}:
     patch:
@@ -37,8 +46,6 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/GetByIdCategory"
-
-
 
 components:
   requestBodies:
@@ -72,7 +79,21 @@ components:
                   - imagesIds
                   - images
 
+    PostCategory:
+      description: Создание категории
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CategoryCreate"
+
   responses:
+    PostCategory:
+      description: Созданная категория
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CategoryPreview"
+
     GetAllCategories:
       description: Получение всех категорий
       content:
@@ -134,14 +155,63 @@ components:
           type: array
           items:
             $ref: "./media.yaml#/components/schemas/Media"
-      required: 
+      required:
         - id
         - description
         - caption
         - order
         - altNames
         - media
-    
+
+    CategoryBase:
+      type: object
+      properties:
+        caption:
+          type: string
+        description:
+          type: string
+        isShowPhotoWithGoods:
+          type: boolean
+        bgColor:
+          type: string
+        color:
+          type: string
+        blur:
+          type: number
+        activeImageId:
+          oneOf:
+            - type: string
+            - nullable: true
+        captionPosition:
+          $ref: "#/components/schemas/CaptionPosition"
+
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
+
+        characteristics:
+          type: array
+          items:
+            $ref: "./characteristic.yaml#/components/schemas/Characteristic"
+
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Media"
+      required:
+        - caption
+        - description
+        - isShowPhotoWithGoods
+        - bgColor
+        - color
+        - blur
+        - activeImageId
+        - captionPosition
+        - altNames
+        - characteristics
+        - media
+
     CategoryDto:
       type: object
       properties:
@@ -171,6 +241,54 @@ components:
           type: array
           items:
             $ref: "./alt-name.yaml#/components/schemas/AltName"
+        characteristics:
+          type: array
+          items:
+            $ref: "./characteristic.yaml#/components/schemas/Characteristic"
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Media"
+      required:
+        - id
+        - caption
+        - description
+        - isShowPhotoWithGoods
+        - bgColor
+        - color
+        - blur
+        - activeImageId
+        - captionPosition
+        - altNames
+        - characteristics
+        - media
+
+    CategoryCreate:
+      type: object
+      properties:
+        caption:
+          type: string
+        description:
+          type: string
+        isShowPhotoWithGoods:
+          type: boolean
+        bgColor:
+          type: string
+        color:
+          type: string
+        blur:
+          type: number
+        activeImageId:
+          oneOf:
+            - type: string
+            - nullable: true
+        captionPosition:
+          $ref: "#/components/schemas/CaptionPosition"
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
+
         characteristics:
           type: array
           items:

@@ -23,7 +23,7 @@ export class Media extends Model<Media> {
   path: string;
 
   @Column({ defaultValue: null, allowNull: true })
-  order: number;
+  order: number | null;
 
   @Column
   @ForeignKey(() => Category)

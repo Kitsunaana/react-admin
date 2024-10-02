@@ -68,6 +68,7 @@
     "@tanstack/react-query": "^5.51.15",
     "@typescript-eslint/parser": "^7.17.0",
     "axios": "^1.7.2",
+    "cloudinary": "^2.5.0",
     "i18next-browser-languagedetector": "^8.0.0",
     "i18next-http-backend": "^2.5.2",
     "mobx": "^6.13.1",
