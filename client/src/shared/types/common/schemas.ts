@@ -7,13 +7,18 @@
  */
 import { z as zod } from "zod";
 
-export const getCharacteristicsResponseItem = zod.object({
-  id: zod.number(),
-  characteristic: zod.string(),
-  unit: zod.string().or(zod.any().nullable()),
-  value: zod.string(),
-  hideClient: zod.boolean(),
-});
+export const getCharacteristicsResponseItem = zod
+  .object({
+    characteristic: zod.string(),
+    unit: zod.string().or(zod.any().nullable()),
+    value: zod.string(),
+    hideClient: zod.boolean(),
+  })
+  .and(
+    zod.object({
+      id: zod.number(),
+    })
+  );
 export const getCharacteristicsResponse = zod.array(
   getCharacteristicsResponseItem
 );

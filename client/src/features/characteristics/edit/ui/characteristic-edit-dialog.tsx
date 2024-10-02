@@ -9,6 +9,7 @@ import { UseCharacteristicsFormProps } from "features/characteristics/edit/model
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { LangContext, useLang } from "shared/context/Lang"
 import { CharacteristicsStore } from "entities/characteristic/model/store"
+import { UpsertDialog } from "shared/ui/dialog/dialog-edit-v3"
 
 interface CharacteristicEditDialogProps { characteristics: CharacteristicsStore }
 
@@ -30,12 +31,12 @@ export const CharacteristicEditDialog = (props: CharacteristicEditDialogProps) =
   return (
     <FormProvider {...methods}>
       <LangContext lang={`${langBase}.dialog`}>
-        <DialogEdit
+        <UpsertDialog
+          store={store}
+          isLoading={false}
+          handleSubmit={console.log}
           height="auto"
           size="auto"
-          showActions
-          onSave={characteristics.create}
-          onEdit={characteristics.edit}
           container={<CreateEditForm />}
           PaperProps={{
             sx: {

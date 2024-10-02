@@ -4,7 +4,7 @@ info:
   description: Category Api
   version: 1.0.0
 servers:
-  - url: 'http://localhost:3333/api'
+  - url: "http://localhost:3333/api"
 
 paths:
   /characteristics:
@@ -15,7 +15,7 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/Characteristics"
-          
+
   /units:
     get:
       operationId: getUnits
@@ -24,7 +24,6 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/Units"
-
 
 components:
   responses:
@@ -36,7 +35,7 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/Characteristic"
-              
+
     Units:
       description: Получение всех единиц измерения
       content:
@@ -49,22 +48,20 @@ components:
   schemas:
     Unit:
       type: object
-      properties: 
+      properties:
         id:
           type: string
         caption:
           oneOf:
             - type: string
             - nullable: true
-      required: 
+      required:
         - id
         - caption
 
-    Characteristic:
+    CharacteristicBase:
       type: object
       properties:
-        id:
-          type: number
         characteristic:
           type: string
         unit:
@@ -81,3 +78,29 @@ components:
         - value
         - hideClient
         - unit
+
+    CharacteristicCreate:
+      allOf:
+        - $ref: "#/components/schemas/CharacteristicBase"
+        - type: object
+          properties:
+            action:
+              type: string
+              enum:
+                - create
+                - update
+                - remove
+            id:
+              type: number
+          required:
+            - action
+
+    Characteristic:
+      allOf:
+        - $ref: "#/components/schemas/CharacteristicBase"
+        - type: object
+          properties:
+            id:
+              type: number
+          required:
+            - id

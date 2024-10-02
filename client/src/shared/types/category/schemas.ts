@@ -65,13 +65,11 @@ export const createCategoriesBody = zod.object({
     )
   ),
   characteristics: zod.array(
-    zod.object({
-      id: zod.number(),
-      characteristic: zod.string(),
-      unit: zod.string().or(zod.any().nullable()),
-      value: zod.string(),
-      hideClient: zod.boolean(),
-    })
+    zod.any().and(
+      zod.object({
+        id: zod.number(),
+      })
+    )
   ),
   media: zod.array(
     zod.object({
@@ -151,13 +149,11 @@ export const getCategoryResponse = zod.object({
     )
   ),
   characteristics: zod.array(
-    zod.object({
-      id: zod.number(),
-      characteristic: zod.string(),
-      unit: zod.string().or(zod.any().nullable()),
-      value: zod.string(),
-      hideClient: zod.boolean(),
-    })
+    zod.any().and(
+      zod.object({
+        id: zod.number(),
+      })
+    )
   ),
   media: zod.array(
     zod.object({

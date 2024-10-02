@@ -17,7 +17,7 @@ export const CreateEditForm = () => {
   return (
     <Box flex gap sx={{ pt: 1 }}>
       <Controller
-        name="caption"
+        name="characteristic"
         rules={{
           required: "required",
           minLength: { value: 3, message: "minLength" },
@@ -91,26 +91,3 @@ export const CreateEditForm = () => {
     </Box>
   )
 }
-
-const a = [
-  {
-    value: "1",
-    ideClient: true,
-    caption: "Объем",
-    unit: "Литров",
-    id: 34,
-  }, {
-    value: "да",
-    hideClient: true,
-    caption: "Количество",
-    unit: null,
-    id: 33,
-  }, {
-    caption: "new",
-    unit: "new",
-    value: "new",
-    hideClient: true,
-    local: true,
-    action: "create",
-  },
-]

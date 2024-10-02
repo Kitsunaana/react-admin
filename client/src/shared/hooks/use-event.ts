@@ -1,15 +1,25 @@
 import { useEffect } from "react"
 
-export const useEvent = (name: string, handler: any, shouldHandle: any = true, target = document) => {
+export const useEvent = <Key extends keyof HTMLElementEventMap>(
+  name: Key,
+  handler: (event: HTMLElementEventMap[Key]) => void,
+  shouldHandle: (() => boolean) | boolean = true,
+  target: (() => EventTarget) | EventTarget = document,
+) => {
   useEffect(() => {
     const handle = shouldHandle instanceof Function ? shouldHandle() : shouldHandle
-
-    if (!handle) return
+    if (!handle) return () => { }
 
     const node = target instanceof Function ? target() : target
 
-    node.addEventListener(name, handler)
+    const eventListener: EventListener = (event: Event) => {
+      handler(event as HTMLElementEventMap[Key])
+    }
 
-    return () => node.removeEventListener(name, handler)
-  })
+    if ("addEventListener" in node) {
+      node.addEventListener(name, eventListener)
+    }
+
+    return () => ("removeEventListener" in node ? node.removeEventListener(name, eventListener) : {})
+  }, [name, handler, shouldHandle, target])
 }

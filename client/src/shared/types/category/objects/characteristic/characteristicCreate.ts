@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { CharacteristicBase } from "./characteristicBase";
-import type { CharacteristicAllOf } from "./characteristicAllOf";
+import type { CharacteristicCreateAllOf } from "./characteristicCreateAllOf";
 
-export type Characteristic = CharacteristicBase & CharacteristicAllOf;
+export type CharacteristicCreate = CharacteristicBase &
+  CharacteristicCreateAllOf;

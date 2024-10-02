@@ -1,7 +1,7 @@
 export interface ICharacteristic {
   id: number | string
   unit: string | null
-  caption: string
+  characteristic: string
   value: string
   hideClient: boolean
 

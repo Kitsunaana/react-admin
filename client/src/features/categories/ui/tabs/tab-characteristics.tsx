@@ -9,6 +9,8 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import { CharacteristicDeleteDialog, CharacteristicEditDialog } from "features/characteristics"
 import { Text } from "shared/ui/text"
 import { Characteristic } from "entities/characteristic"
+import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
+import { CharacteristicCreateDialog } from "features/characteristics/edit/ui/characteristic-create-dialog"
 import { useStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
@@ -24,10 +26,12 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
 `
 
 export const TabCharacteristics = observer(() => {
-  const editStore = useEditDialogStore()
+  const createStore = useCreateDialogStore()
 
   const { characteristics } = useStores()
   const { fullScreen } = useEditDialogStore()
+
+  console.log(JSON.parse(JSON.stringify(characteristics.filteredItems)))
 
   return (
     <>
@@ -46,9 +50,8 @@ export const TabCharacteristics = observer(() => {
         <Box sx={{ pt: 1 }}>
           <IconButton
             name="add"
-            onClick={() => editStore.openDialog(null)}
+            onClick={() => createStore.openDialog(null)}
             help={{
-              arrow: true,
               title: <Text onlyText name="actions.add" />,
             }}
           />
@@ -56,7 +59,7 @@ export const TabCharacteristics = observer(() => {
       </Box>
 
       <CharacteristicEditDialog characteristics={characteristics} />
-      <CharacteristicDeleteDialog characteristics={characteristics} />
+      <CharacteristicCreateDialog characteristics={characteristics} />
     </>
   )
 })

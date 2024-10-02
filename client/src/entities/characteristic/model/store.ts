@@ -11,8 +11,6 @@ export type Characteristic = Omit<Common.Characteristic, "id"> & {
   action?: Action
 }
 
-export type CharacteristicCreate = Omit<Common.Characteristic, "id">
-
 export class CharacteristicsStore {
   items: Array<Characteristic> = []
 
@@ -20,7 +18,7 @@ export class CharacteristicsStore {
     makeAutoObservable(this, { applyActions: false }, { autoBind: true })
   }
 
-  create(data: CharacteristicCreate) {
+  create(data: Common.CharacteristicCreate) {
     this.items.push({
       ...data,
       action: "create",

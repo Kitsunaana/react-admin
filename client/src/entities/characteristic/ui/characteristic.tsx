@@ -20,7 +20,7 @@ export interface CharacteristicItemProps extends ICharacteristic {
 
 export const Characteristic = observer((props: CharacteristicItemProps) => {
   const {
-    unit, hideClient, value, caption, id, local,
+    unit, hideClient, value, characteristic, id, local,
   } = props
 
   const { characteristics } = useStores()
@@ -29,12 +29,12 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   const langBase = useLang()
 
   const onOpenEditDialog = () => openDialog(id, {
-    unit, hideClient, value, caption, id,
+    unit, hideClient, value, characteristic, id,
   })
 
-  const onOpenDeleteDialog = () => openDeleteDialog(id, { caption })
+  const onOpenDeleteDialog = () => openDeleteDialog(id, { characteristic })
 
-  const hasConflict = characteristics.getConflict({ id, caption })
+  const hasConflict = characteristics.getConflict({ id, characteristic })
 
   return (
     <LangContext lang={`${langBase}.rows`}>
@@ -45,7 +45,7 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
       >
         <Box flex row ai>
           <HiddenIndicator hidden={hideClient} />
-          <Caption caption={caption} unit={unit} value={value} />
+          <Caption caption={characteristic} unit={unit} value={value} />
         </Box>
         <Box flex ai row>
           <Icon

@@ -56,9 +56,9 @@ export interface DialogHeaderProps {
 
   settings?: ReactNode
 
-  onCopyClick: () => Promise<void>
-  onPasteClick: () => Promise<void>
-  onClearClick: () => void
+  onCopyClick?: () => Promise<void>
+  onPasteClick?: () => Promise<void>
+  onClearClick?: () => void
   store: DialogStore
 
 }
@@ -79,6 +79,8 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
     : "fullscreenOpen"
 
   const handleCopy = async () => {
+    if (!onCopyClick) return
+
     await toast.promise(onCopyClick(), {
       success: "Данные для перноса скопированы",
       error: "При копировании данных произошла ошибка",
@@ -86,6 +88,8 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
   }
 
   const handlePaste = async () => {
+    if (!onPasteClick) return
+
     await toast.promise(onPasteClick(), {
       success: "Данные успешно вставлены",
       error: "Не валидные данные для вставки",
@@ -94,20 +98,22 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
 
   return (
     <HeaderContainer>
-      <IconButton
-        onClick={onClearClick}
-        name="delete"
-        color="error"
-        help={{
-          title: (
-            <Text
-              onlyText
-              langBase="global.dialog"
-              name="clear"
-            />
-          ),
-        }}
-      />
+      {onClearClick && (
+        <IconButton
+          onClick={onClearClick}
+          name="delete"
+          color="error"
+          help={{
+            title: (
+              <Text
+                onlyText
+                langBase="global.dialog"
+                name="clear"
+              />
+            ),
+          }}
+        />
+      )}
       {title}
       <Box flex row ai sx={{ mr: 0 }}>
         {showActions && (

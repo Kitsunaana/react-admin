@@ -9,7 +9,7 @@ export const characteristicsApi = {
     const { data } = await $axios.get(URL)
 
     return (
-      validation(Schemas.getCharacteristicsResponse, data) as Common.CharacteristicsResponse
+      data
     )
   },
 
@@ -17,7 +17,7 @@ export const characteristicsApi = {
     const { data } = await $axios.get(`${URL}/units`)
 
     return (
-      validation(Schemas.getUnitsResponse, data) as Common.UnitsResponse
+      data
     )
   },
 }
