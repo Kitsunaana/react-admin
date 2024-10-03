@@ -1,2 +1,3 @@
-export { TagDeleteDialog } from "./delete/ui/tag-delete-dialog"
-export { TagEditDialog } from "./edit/ui/tag-edit-dialog"
+export { TagCreateDialog } from "./ui/tag-create-dialog"
+export { TagEditDialog } from "./ui/tag-edit-dialog"
+export { useRemoveTag } from "./model/use-remove-tag"

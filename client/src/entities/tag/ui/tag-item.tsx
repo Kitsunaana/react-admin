@@ -3,44 +3,45 @@ import { Vertical } from "shared/ui/divider"
 import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { RowItem } from "shared/ui/row-item"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { LangContext, useLang } from "shared/context/lang"
-import { ITag } from "../model/types"
+import { CategoryDto } from "shared/types/category"
 import { Tag } from "./tag"
 
-interface TagItemProps extends ITag {}
+interface TagItemProps extends CategoryDto.TagCreate {
+  onRemove: (id: number | string, caption: string) => Promise<void>
+  onEdit: (id: number | string, data: CategoryDto.TagCreate) => void
+  isRecordCreatedOrUpdated: (id: number | string) => boolean
+}
 
 export const TagItem = (props: TagItemProps) => {
   const {
-    tagColor, tag, edited, local, id, icon,
+    id,
+    icon,
+    color,
+    caption,
+    onRemove,
+    onEdit,
+    isRecordCreatedOrUpdated,
   } = props
 
-  const editStore = useEditDialogStore()
-  const deleteStore = useDeleteDialogStore()
   const langBase = useLang()
-
-  const onOpenEditDialog = () => {
-    editStore.openDialog(id, {
-      tag, id, icon, tagColor,
-    })
-  }
-
-  const onOpenDeleteDialog = () => {
-    deleteStore.openDialog(id, {
-      caption: tag.caption,
-    })
-  }
 
   return (
     <LangContext lang={`${langBase}.rows`}>
-      <RowItem color={(edited || local) ? "success" : undefined}>
-        <Tag caption={tag.caption} icon={icon} color={tagColor} />
-
+      <RowItem color={isRecordCreatedOrUpdated(id) && "success"}>
+        <Tag
+          caption={caption}
+          color={color}
+          icon={icon}
+        />
         <Box flex row ai>
           <Vertical />
-          <IconButtonEdit onClick={onOpenEditDialog} />
-          <IconButtonDelete onClick={onOpenDeleteDialog} />
+          <IconButtonEdit
+            onClick={() => onEdit(id, {
+              icon, color, caption, id,
+            })}
+          />
+          <IconButtonDelete onClick={() => onRemove(id, caption)} />
         </Box>
       </RowItem>
     </LangContext>

@@ -3,12 +3,12 @@ import { Box, BoxProps } from "shared/ui/box"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { EmptyList } from "shared/ui/empty-list"
 import { Vertical } from "shared/ui/divider"
-import React from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { TagItem } from "entities/tag"
-import { TagEditDialog, TagDeleteDialog } from "features/tag"
+import { TagEditDialog, TagCreateDialog, useRemoveTag } from "features/tag"
 import { Text } from "shared/ui/text"
+import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
 import { useStores } from "../../model/context"
 
 const TagsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
@@ -26,28 +26,48 @@ const TagsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
 export const TabTags = observer(() => {
   const { tags } = useStores()
 
-  const { fullScreen, openDialog } = useEditDialogStore()
+  const handleRemoveTag = useRemoveTag(tags.remove)
+  const createDialog = useCreateDialogStore()
+  const editDialog = useEditDialogStore()
 
   return (
     <>
       <Box flex row grow sx={{ height: 1 }}>
         {tags.filteredTags.length > 0 ? (
-          <TagsContainer fullScreen={fullScreen}>
-            {tags.filteredTags.map((tag) => (<TagItem key={tag.id} {...tag} />))}
+          <TagsContainer fullScreen={createDialog.fullScreen || editDialog.fullScreen}>
+            {tags.filteredTags.map((tag) => (
+              <TagItem
+                key={tag.id}
+                id={tag.id}
+                icon={tag.icon}
+                color={tag.color}
+                caption={tag.caption}
+                onRemove={handleRemoveTag}
+                onEdit={editDialog.openDialog}
+                isRecordCreatedOrUpdated={tags.isRecordCreatedOrUpdated}
+              />
+            ))}
           </TagsContainer>
         ) : <EmptyList />}
         <Vertical />
         <Box sx={{ pt: 1 }}>
           <IconButton
             name="add"
-            help={{ title: <Text onlyText name="actions.add" />, arrow: true }}
-            onClick={() => openDialog(null)}
+            onClick={() => createDialog.openDialog(null)}
+            help={{
+              title: (
+                <Text
+                  onlyText
+                  name="actions.add"
+                />
+              ),
+            }}
           />
         </Box>
       </Box>
 
-      <TagEditDialog tags={tags} />
-      <TagDeleteDialog tags={tags} />
+      <TagEditDialog onEdit={tags.edit} />
+      <TagCreateDialog onCreate={tags.create} />
     </>
   )
 })
