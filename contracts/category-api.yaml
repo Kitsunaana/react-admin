@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: Category Api
   description: Category Api
@@ -58,25 +58,12 @@ components:
               - $ref: "#/components/schemas/CategoryDto"
               - type: object
                 properties:
-                  imagesIds:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        caption:
-                          type: string
-                      required:
-                        - id
-                        - caption
                   images:
                     type: array
                     items:
                       type: string
                       format: binary
                 required:
-                  - imagesIds
                   - images
 
     PostCategory:
@@ -146,7 +133,9 @@ components:
         caption:
           type: string
         order:
-          type: number
+          oneOf:
+            - type: number
+            - type: "null"
         altNames:
           type: array
           items:
@@ -162,6 +151,69 @@ components:
         - order
         - altNames
         - media
+
+    CategoryFields:
+      type: object
+      properties:
+        caption:
+          type: string
+        description:
+          oneOf:
+            - type: string
+            - type: "null"
+        isShowPhotoWithGoods:
+          type: boolean
+        bgColor:
+          type: string
+        color:
+          type: string
+        blur:
+          type: number
+      required:
+        - caption
+        - description
+        - isShowPhotoWithGoods
+        - bgColor
+        - color
+        - blur
+
+    CategoryRows:
+      type: object
+      properties:
+        activeImageId:
+          oneOf:
+            - type: string
+            - type: "null"
+        captionPosition:
+          $ref: "#/components/schemas/CaptionPosition"
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Media"
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
+        characteristics:
+          type: array
+          items:
+            $ref: "./characteristic.yaml#/components/schemas/CharacteristicCreate"
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagCreate"
+        images:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Image"
+      required:
+        - activeImageId
+        - captionPosition
+        - media
+        - altNames
+        - characteristics
+        - tags
+        - images
 
     CategoryBase:
       type: object
@@ -181,20 +233,9 @@ components:
         activeImageId:
           oneOf:
             - type: string
-            - nullable: true
+            - type: "null"
         captionPosition:
           $ref: "#/components/schemas/CaptionPosition"
-
-        altNames:
-          type: array
-          items:
-            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
-
-        characteristics:
-          type: array
-          items:
-            $ref: "./characteristic.yaml#/components/schemas/Characteristic"
-
         media:
           type: array
           items:
@@ -208,8 +249,6 @@ components:
         - blur
         - activeImageId
         - captionPosition
-        - altNames
-        - characteristics
         - media
 
     CategoryDto:
@@ -217,6 +256,10 @@ components:
       properties:
         id:
           type: number
+        order:
+          oneOf:
+            - type: number
+            - type: "null"
         caption:
           type: string
         description:
@@ -229,14 +272,16 @@ components:
           type: string
         blur:
           type: number
-        order:
-          type: number
         activeImageId:
           oneOf:
             - type: string
-            - nullable: true
+            - type: "null"
         captionPosition:
           $ref: "#/components/schemas/CaptionPosition"
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Media"
         altNames:
           type: array
           items:
@@ -245,12 +290,11 @@ components:
           type: array
           items:
             $ref: "./characteristic.yaml#/components/schemas/Characteristic"
-        media:
+        tags:
           type: array
           items:
-            $ref: "./media.yaml#/components/schemas/Media"
+            $ref: "#/components/schemas/Tag"
       required:
-        - id
         - caption
         - description
         - isShowPhotoWithGoods
@@ -259,9 +303,12 @@ components:
         - blur
         - activeImageId
         - captionPosition
+        - media
+        - id
+        - order
         - altNames
         - characteristics
-        - media
+        - tags
 
     CategoryCreate:
       type: object
@@ -269,7 +316,9 @@ components:
         caption:
           type: string
         description:
-          type: string
+          oneOf:
+            - type: string
+            - type: "null"
         isShowPhotoWithGoods:
           type: boolean
         bgColor:
@@ -281,24 +330,30 @@ components:
         activeImageId:
           oneOf:
             - type: string
-            - nullable: true
+            - type: "null"
         captionPosition:
           $ref: "#/components/schemas/CaptionPosition"
-        altNames:
-          type: array
-          items:
-            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
-
-        characteristics:
-          type: array
-          items:
-            $ref: "./characteristic.yaml#/components/schemas/Characteristic"
         media:
           type: array
           items:
             $ref: "./media.yaml#/components/schemas/Media"
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
+        characteristics:
+          type: array
+          items:
+            $ref: "./characteristic.yaml#/components/schemas/CharacteristicCreate"
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagCreate"
+        images:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Image"
       required:
-        - id
         - caption
         - description
         - isShowPhotoWithGoods
@@ -307,9 +362,64 @@ components:
         - blur
         - activeImageId
         - captionPosition
+        - media
         - altNames
         - characteristics
+        - tags
+        - images
+
+    CategoryCreateWithMedia:
+      type: object
+      properties:
+        caption:
+          type: string
+        description:
+          oneOf:
+            - type: string
+            - type: "null"
+        isShowPhotoWithGoods:
+          type: boolean
+        bgColor:
+          type: string
+        color:
+          type: string
+        blur:
+          type: number
+        activeImageId:
+          oneOf:
+            - type: string
+            - type: "null"
+        captionPosition:
+          $ref: "#/components/schemas/CaptionPosition"
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Media"
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
+        characteristics:
+          type: array
+          items:
+            $ref: "./characteristic.yaml#/components/schemas/CharacteristicCreate"
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagCreate"
+      required:
+        - caption
+        - description
+        - isShowPhotoWithGoods
+        - bgColor
+        - color
+        - blur
+        - activeImageId
+        - captionPosition
         - media
+        - altNames
+        - characteristics
+        - tags
 
     CaptionPosition:
       type: string
@@ -326,26 +436,71 @@ components:
 
     CategoryUpdateDto:
       allOf:
-        - $ref: "#/components/schemas/CategoryDto"
+        - $ref: "#/components/schemas/CategoryBase"
         - type: object
           properties:
-            imagesIds:
+            altNames:
               type: array
               items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  caption:
-                    type: string
-                required:
-                  - id
-                  - caption
+                $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
+            characteristics:
+              type: array
+              items:
+                $ref: "./characteristic.yaml#/components/schemas/CharacteristicCreate"
+            tags:
+              type: array
+              items:
+                $ref: "#/components/schemas/TagCreate"
             images:
               type: array
               items:
                 $ref: "./media.yaml#/components/schemas/Image"
-
           required:
-            - imagesIds
             - images
+            - altNames
+            - characteristics
+            - tags
+
+    TagBase:
+      type: object
+      properties:
+        icon:
+          oneOf:
+            - type: string
+            - type: "null"
+        caption:
+          type: string
+        color:
+          type: string
+      required:
+        - icon
+        - caption
+        - color
+
+    Tag:
+      allOf:
+        - $ref: "#/components/schemas/TagBase"
+        - type: object
+          properties:
+            id:
+              type: number
+          required:
+            - id
+
+    TagCreate:
+      allOf:
+        - $ref: "#/components/schemas/TagBase"
+        - type: object
+          properties:
+            action:
+              type: string
+              enum:
+                - create
+                - update
+                - remove
+            id:
+              oneOf:
+                - type: number
+                - type: string
+          required:
+            - id

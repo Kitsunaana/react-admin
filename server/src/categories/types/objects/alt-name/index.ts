@@ -14,6 +14,7 @@ export * from './altNameBaseDescriptionOneOf';
 export * from './altNameCreate';
 export * from './altNameCreateAllOf';
 export * from './altNameCreateAllOfAction';
+export * from './altNameCreateAllOfId';
 export * from './altNameDescription';
 export * from './altNameDescriptionOneOf';
 export * from './locale';

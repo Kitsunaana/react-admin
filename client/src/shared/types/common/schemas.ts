@@ -9,8 +9,8 @@ import { z as zod } from "zod";
 
 export const getCharacteristicsResponseItem = zod
   .object({
-    characteristic: zod.string(),
-    unit: zod.string().or(zod.any().nullable()),
+    caption: zod.string().optional(),
+    unit: zod.string().or(zod.null()),
     value: zod.string(),
     hideClient: zod.boolean(),
   })
@@ -24,7 +24,7 @@ export const getCharacteristicsResponse = zod.array(
 );
 
 export const getUnitsResponseItem = zod.object({
-  id: zod.string(),
-  caption: zod.string().or(zod.any().nullable()),
+  id: zod.number(),
+  caption: zod.string().or(zod.null()),
 });
 export const getUnitsResponse = zod.array(getUnitsResponseItem);

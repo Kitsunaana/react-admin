@@ -6,8 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { AltNameCreateAllOfAction } from './altNameCreateAllOfAction';
+import type { AltNameCreateAllOfId } from './altNameCreateAllOfId';
 
 export type AltNameCreateAllOf = {
-  action: AltNameCreateAllOfAction;
-  id?: number;
+  action?: AltNameCreateAllOfAction;
+  id: AltNameCreateAllOfId;
 };

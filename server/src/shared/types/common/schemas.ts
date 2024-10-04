@@ -7,17 +7,22 @@
  */
 import { z as zod } from 'zod';
 
-export const getCharacteristicsResponseItem = zod.object({
-  id: zod.number(),
-  characteristic: zod.string(),
-  unit: zod.string().or(zod.any().nullable()),
-  value: zod.string(),
-  hideClient: zod.boolean(),
-});
+export const getCharacteristicsResponseItem = zod
+  .object({
+    caption: zod.string().optional(),
+    unit: zod.string().or(zod.null()),
+    value: zod.string(),
+    hideClient: zod.boolean(),
+  })
+  .and(
+    zod.object({
+      id: zod.number(),
+    }),
+  );
 export const getCharacteristicsResponse = zod.array(getCharacteristicsResponseItem);
 
 export const getUnitsResponseItem = zod.object({
-  id: zod.string(),
-  caption: zod.string().or(zod.any().nullable()),
+  id: zod.number(),
+  caption: zod.string().or(zod.null()),
 });
 export const getUnitsResponse = zod.array(getUnitsResponseItem);

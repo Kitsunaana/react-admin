@@ -5,6 +5,5 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CharacteristicBaseUnitOneOf } from "./characteristicBaseUnitOneOf";
 
-export type CharacteristicBaseUnit = string | CharacteristicBaseUnitOneOf;
+export type CharacteristicBaseUnit = string | null;

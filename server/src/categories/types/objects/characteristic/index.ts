@@ -7,6 +7,13 @@
  */
 
 export * from './characteristic';
+export * from './characteristicAllOf';
+export * from './characteristicBase';
+export * from './characteristicBaseUnit';
+export * from './characteristicCreate';
+export * from './characteristicCreateAllOf';
+export * from './characteristicCreateAllOfAction';
+export * from './characteristicCreateAllOfId';
 export * from './characteristicUnit';
 export * from './characteristicUnitOneOf';
 export * from './characteristicsResponse';

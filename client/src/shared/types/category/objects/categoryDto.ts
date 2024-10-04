@@ -10,6 +10,8 @@ import type { AltName } from "./alt-name/altName";
 import type { CaptionPosition } from "./captionPosition";
 import type { Characteristic } from "./characteristic/characteristic";
 import type { Media } from "./media/media";
+import type { CategoryDtoOrder } from "./categoryDtoOrder";
+import type { Tag } from "./tag";
 
 export interface CategoryDto {
   activeImageId: CategoryDtoActiveImageId;
@@ -24,5 +26,6 @@ export interface CategoryDto {
   id: number;
   isShowPhotoWithGoods: boolean;
   media: Media[];
-  order?: number;
+  order: CategoryDtoOrder;
+  tags: Tag[];
 }

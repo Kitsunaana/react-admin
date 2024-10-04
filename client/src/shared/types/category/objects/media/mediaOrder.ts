@@ -5,6 +5,5 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { MediaOrderOneOf } from "./mediaOrderOneOf";
 
-export type MediaOrder = number | MediaOrderOneOf;
+export type MediaOrder = number | null;

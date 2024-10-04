@@ -5,6 +5,5 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { UnitCaptionOneOf } from './unitCaptionOneOf';
 
-export type UnitCaption = string | UnitCaptionOneOf;
+export type UnitCaption = string | null;

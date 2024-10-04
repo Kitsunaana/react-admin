@@ -8,7 +8,7 @@
 import type { CharacteristicBaseUnit } from "./characteristicBaseUnit";
 
 export interface CharacteristicBase {
-  characteristic: string;
+  caption?: string;
   hideClient: boolean;
   unit: CharacteristicBaseUnit;
   value: string;

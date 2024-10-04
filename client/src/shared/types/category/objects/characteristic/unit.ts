@@ -9,5 +9,5 @@ import type { UnitCaption } from "./unitCaption";
 
 export interface Unit {
   caption: UnitCaption;
-  id: string;
+  id: number;
 }

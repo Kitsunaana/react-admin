@@ -13,7 +13,7 @@ export const getCategoriesResponse = zod.object({
       id: zod.number(),
       description: zod.string(),
       caption: zod.string(),
-      order: zod.number(),
+      order: zod.number().or(zod.null()),
       altNames: zod.array(
         zod.any().and(
           zod.object({
@@ -28,7 +28,7 @@ export const getCategoriesResponse = zod.object({
           originalName: zod.string(),
           path: zod.string(),
           mimetype: zod.string(),
-          order: zod.number().or(zod.any().nullable()),
+          order: zod.number().or(zod.null()),
           size: zod.number(),
         }),
       ),
@@ -39,12 +39,12 @@ export const getCategoriesResponse = zod.object({
 
 export const createCategoriesBody = zod.object({
   caption: zod.string(),
-  description: zod.string(),
+  description: zod.string().or(zod.null()),
   isShowPhotoWithGoods: zod.boolean(),
   bgColor: zod.string(),
   color: zod.string(),
   blur: zod.number(),
-  activeImageId: zod.string().or(zod.any().nullable()),
+  activeImageId: zod.string().or(zod.null()),
   captionPosition: zod.enum([
     'top-left',
     'top-center',
@@ -56,23 +56,6 @@ export const createCategoriesBody = zod.object({
     'bottom-center',
     'bottom-right',
   ]),
-  altNames: zod.array(
-    zod.any().and(
-      zod.object({
-        id: zod.number().optional(),
-        action: zod.enum(['update', 'create', 'remove']),
-      }),
-    ),
-  ),
-  characteristics: zod.array(
-    zod.object({
-      id: zod.number(),
-      characteristic: zod.string(),
-      unit: zod.string().or(zod.any().nullable()),
-      value: zod.string(),
-      hideClient: zod.boolean(),
-    }),
-  ),
   media: zod.array(
     zod.object({
       id: zod.string(),
@@ -80,8 +63,46 @@ export const createCategoriesBody = zod.object({
       originalName: zod.string(),
       path: zod.string(),
       mimetype: zod.string(),
-      order: zod.number().or(zod.any().nullable()),
+      order: zod.number().or(zod.null()),
       size: zod.number(),
+    }),
+  ),
+  altNames: zod.array(
+    zod.any().and(
+      zod.object({
+        id: zod.number().or(zod.string()),
+        action: zod.enum(['update', 'create', 'remove']).optional(),
+      }),
+    ),
+  ),
+  characteristics: zod.array(
+    zod.any().and(
+      zod.object({
+        action: zod.enum(['create', 'update', 'remove']).optional(),
+        id: zod.number().or(zod.string()),
+      }),
+    ),
+  ),
+  tags: zod.array(
+    zod
+      .object({
+        icon: zod.string().or(zod.null()),
+        caption: zod.string(),
+        color: zod.string(),
+      })
+      .and(
+        zod.object({
+          action: zod.enum(['create', 'update', 'remove']).optional(),
+          id: zod.number().or(zod.string()),
+        }),
+      ),
+  ),
+  images: zod.array(
+    zod.object({
+      id: zod.string(),
+      caption: zod.string(),
+      type: zod.string(),
+      data: zod.string(),
     }),
   ),
 });
@@ -90,7 +111,7 @@ export const createCategoriesResponse = zod.object({
   id: zod.number(),
   description: zod.string(),
   caption: zod.string(),
-  order: zod.number(),
+  order: zod.number().or(zod.null()),
   altNames: zod.array(
     zod.any().and(
       zod.object({
@@ -105,7 +126,7 @@ export const createCategoriesResponse = zod.object({
       originalName: zod.string(),
       path: zod.string(),
       mimetype: zod.string(),
-      order: zod.number().or(zod.any().nullable()),
+      order: zod.number().or(zod.null()),
       size: zod.number(),
     }),
   ),
@@ -124,14 +145,14 @@ export const getCategoryParams = zod.object({
 
 export const getCategoryResponse = zod.object({
   id: zod.number(),
+  order: zod.number().or(zod.null()),
   caption: zod.string(),
   description: zod.string(),
   isShowPhotoWithGoods: zod.boolean(),
   bgColor: zod.string(),
   color: zod.string(),
   blur: zod.number(),
-  order: zod.number().optional(),
-  activeImageId: zod.string().or(zod.any().nullable()),
+  activeImageId: zod.string().or(zod.null()),
   captionPosition: zod.enum([
     'top-left',
     'top-center',
@@ -143,6 +164,17 @@ export const getCategoryResponse = zod.object({
     'bottom-center',
     'bottom-right',
   ]),
+  media: zod.array(
+    zod.object({
+      id: zod.string(),
+      filename: zod.string(),
+      originalName: zod.string(),
+      path: zod.string(),
+      mimetype: zod.string(),
+      order: zod.number().or(zod.null()),
+      size: zod.number(),
+    }),
+  ),
   altNames: zod.array(
     zod.any().and(
       zod.object({
@@ -151,23 +183,23 @@ export const getCategoryResponse = zod.object({
     ),
   ),
   characteristics: zod.array(
-    zod.object({
-      id: zod.number(),
-      characteristic: zod.string(),
-      unit: zod.string().or(zod.any().nullable()),
-      value: zod.string(),
-      hideClient: zod.boolean(),
-    }),
+    zod.any().and(
+      zod.object({
+        id: zod.number(),
+      }),
+    ),
   ),
-  media: zod.array(
-    zod.object({
-      id: zod.string(),
-      filename: zod.string(),
-      originalName: zod.string(),
-      path: zod.string(),
-      mimetype: zod.string(),
-      order: zod.number().or(zod.any().nullable()),
-      size: zod.number(),
-    }),
+  tags: zod.array(
+    zod
+      .object({
+        icon: zod.string().or(zod.null()),
+        caption: zod.string(),
+        color: zod.string(),
+      })
+      .and(
+        zod.object({
+          id: zod.number(),
+        }),
+      ),
   ),
 });

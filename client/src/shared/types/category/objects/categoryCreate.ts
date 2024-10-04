@@ -8,8 +8,11 @@
 import type { CategoryCreateActiveImageId } from "./categoryCreateActiveImageId";
 import type { AltNameCreate } from "./alt-name/altNameCreate";
 import type { CaptionPosition } from "./captionPosition";
-import type { Characteristic } from "./characteristic/characteristic";
+import type { CharacteristicCreate } from "./characteristic/characteristicCreate";
+import type { CategoryCreateDescription } from "./categoryCreateDescription";
+import type { Image } from "./media/image";
 import type { Media } from "./media/media";
+import type { TagCreate } from "./tagCreate";
 
 export interface CategoryCreate {
   activeImageId: CategoryCreateActiveImageId;
@@ -18,9 +21,11 @@ export interface CategoryCreate {
   blur: number;
   caption: string;
   captionPosition: CaptionPosition;
-  characteristics: Characteristic[];
+  characteristics: CharacteristicCreate[];
   color: string;
-  description: string;
+  description: CategoryCreateDescription;
+  images: Image[];
   isShowPhotoWithGoods: boolean;
   media: Media[];
+  tags: TagCreate[];
 }

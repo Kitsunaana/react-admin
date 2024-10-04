@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: API Admin
   description: Category Api
@@ -50,11 +50,11 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: number
         caption:
           oneOf:
             - type: string
-            - nullable: true
+            - type: "null"
       required:
         - id
         - caption
@@ -62,18 +62,17 @@ components:
     CharacteristicBase:
       type: object
       properties:
-        characteristic:
+        caption:
           type: string
         unit:
           oneOf:
             - type: string
-            - nullable: true
+            - type: "null"
         value:
           type: string
         hideClient:
           type: boolean
       required:
-        - id
         - characteristic
         - value
         - hideClient
@@ -91,9 +90,11 @@ components:
                 - update
                 - remove
             id:
-              type: number
+              oneOf:
+                - type: number
+                - type: string
           required:
-            - action
+            - id
 
     Characteristic:
       allOf:

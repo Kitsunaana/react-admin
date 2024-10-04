@@ -7,6 +7,7 @@
  */
 import type { AltName } from './alt-name/altName';
 import type { Media } from './media/media';
+import type { CategoryPreviewOrder } from './categoryPreviewOrder';
 
 export interface CategoryPreview {
   altNames: AltName[];
@@ -14,5 +15,5 @@ export interface CategoryPreview {
   description: string;
   id: number;
   media: Media[];
-  order: number;
+  order: CategoryPreviewOrder;
 }

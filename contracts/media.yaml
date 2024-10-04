@@ -19,12 +19,12 @@ components:
         order:
           oneOf:
             - type: number
-            - nullable: true
+            - type: "null"
         size:
           type: number
       required:
         - id
-        - filename 
+        - filename
         - originalName
         - path
         - mimetype

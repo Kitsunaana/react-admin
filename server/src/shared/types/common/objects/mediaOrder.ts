@@ -3,6 +3,5 @@
  * Do not edit manually.
  * Common
  */
-import type { MediaOrderOneOf } from './mediaOrderOneOf';
 
-export type MediaOrder = number | MediaOrderOneOf;
+export type MediaOrder = number | null;

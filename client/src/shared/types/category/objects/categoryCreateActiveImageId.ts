@@ -5,8 +5,5 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryCreateActiveImageIdOneOf } from "./categoryCreateActiveImageIdOneOf";
 
-export type CategoryCreateActiveImageId =
-  | string
-  | CategoryCreateActiveImageIdOneOf;
+export type CategoryCreateActiveImageId = string | null;

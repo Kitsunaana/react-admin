@@ -5,9 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { PatchCategoryBodyAllOfImagesIdsItem } from './patchCategoryBodyAllOfImagesIdsItem';
 
 export type PatchCategoryBodyAllOf = {
   images: Blob[];
-  imagesIds: PatchCategoryBodyAllOfImagesIdsItem[];
 };
