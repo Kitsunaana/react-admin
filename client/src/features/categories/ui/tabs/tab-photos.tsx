@@ -1,4 +1,3 @@
-import * as React from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { observer } from "mobx-react-lite"
 import { InputFile } from "shared/ui/form/input-file"

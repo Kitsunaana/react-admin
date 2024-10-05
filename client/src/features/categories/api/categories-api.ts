@@ -1,23 +1,10 @@
 import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
 import { createMultipart } from "shared/lib/multipart"
-import { z } from "zod"
 import { CategoryDto, CategorySchemas } from "shared/types/category"
-import { v2 as cloudinary } from "cloudinary"
-import { fileToBase64 } from "shared/lib/utils"
 import { Common } from "shared/types/common"
-import { createCategorySchema } from "../model/schemas"
 
 const URL = "/categories"
-// const CLOUDINARY_URL = "cloudinary://499235942529377:XhqvuU3BUTGqqjRg6bXyLjI9FZY@diyo8nacu"
-const url = "https://api.cloudinary.com/v1_1/diyo8nacu/upload"
-
-/* cloudinary.config({
-  secure: true,
-  cloud_name: "diyo8nacu",
-  api_key: "499235942529377",
-  api_secret: "XhqvuU3BUTGqqjRg6bXyLjI9FZY",
-}) */
 
 interface ImageUploadResponse {
   asset_folder: string,
@@ -43,11 +30,13 @@ interface ImageUploadResponse {
   width: number
 }
 
+export const modifiedCategorySchemas = CategorySchemas.createCategoriesBody.omit({ images: true })
+
 export const categoriesApi = {
   filesUpload: async (images: Common.Image[]): Promise<Common.Media[]> => {
     const url = "https://api.cloudinary.com/v1_1/diyo8nacu/upload"
 
-    return await Promise.all<Common.Media>(
+    return Promise.all<Common.Media>(
       images.map(async (image) => {
         const fd = new FormData()
 
@@ -60,10 +49,8 @@ export const categoriesApi = {
           },
         })
 
-        console.log(data)
-
         return {
-          id: data.asset_id,
+          id: image.id,
           originalName: data.original_filename,
           filename: data.display_name,
           path: data.url,
@@ -75,12 +62,9 @@ export const categoriesApi = {
     )
   },
 
-  post: async (payload: CategoryDto.CategoryCreate): Promise<CategoryDto.PostCategoryResponse> => {
+  post: async (payload: CategoryDto.CategoryCreateWithMedia): Promise<CategoryDto.PostCategoryResponse> => {
     try {
-      console.log(payload)
-
-      validation(CategorySchemas.createCategoriesBody, payload)
-
+      validation(modifiedCategorySchemas, payload)
       const { data } = await $axios.post(URL, payload)
 
       return validation(

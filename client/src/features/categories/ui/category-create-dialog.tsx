@@ -1,7 +1,4 @@
-import {
-  DeepPartial,
-  FormProvider, useForm,
-} from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { TabsContainer } from "shared/ui/tabs/tabs-container"
 import { observer } from "mobx-react-lite"
 import { useStores } from "features/categories/model/context"
@@ -15,11 +12,13 @@ import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-heade
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { CategoryDto, CategorySchemas } from "shared/types/category"
 import {
-  copyToClipboardV2, fileToBase64, readOfClipboardV2,
+  base64ToFile,
+  copyToClipboardV2, fileToBase64, include, readOfClipboardV2,
 } from "shared/lib/utils"
 import { validation } from "shared/lib/validation"
 import { useCreateCategory } from "features/categories/queries/use-create-category"
 import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
+import { Common } from "shared/types/common"
 
 const defaultValues: UseCategoryFormProps = {
   caption: "",
@@ -30,16 +29,12 @@ const defaultValues: UseCategoryFormProps = {
   blur: 8,
 }
 
-const copiedCategorySchema = CategorySchemas.getCategoryResponse.omit({
-  id: true,
-})
-
 export const CategoryCreateDialog = observer(() => {
-  const methods = useForm<UseCategoryFormProps>({ defaultValues })
+  const methods = useForm<CategoryDto.CategoryCreate>({ defaultValues })
   const dialogStore = useCreateDialogStore()
   const categoryStore = useStores()
 
-  const { onCreate, isLoadingCreate } = useCreateCategory()
+  const { onCreate, isLoadingCreate, isSuccessCreate } = useCreateCategory()
 
   const { apply, clear } = useSetDialogValues({
     data: defaultValues,
@@ -52,15 +47,11 @@ export const CategoryCreateDialog = observer(() => {
     const fields = methods.getValues()
     const rows = categoryStore.getData()
 
-    const stringifyImages = async (images: [{ data: File }]) => await Promise.all(
-      images.map(async (image: { data: File }) => {
-        const base64string = await fileToBase64(image.data)
-
-        return {
-          ...image,
-          data: base64string,
-        }
-      }),
+    const stringifyImages = async (images: Common.Image[]) => Promise.all(
+      images.map(async (image) => ({
+        ...image,
+        data: await fileToBase64(image.data as File),
+      })),
     )
 
     const mergedData = {
@@ -74,14 +65,23 @@ export const CategoryCreateDialog = observer(() => {
 
   const handlePaste = async () => {
     const readDataOfClipboard = await readOfClipboardV2()
+    const fields = ["bgColor", "color", "blur", "caption", "description", "isShowPhotoWithGoods"] as const
 
-    validation(copiedCategorySchema, readDataOfClipboard)
+    const validatedData = validation(CategorySchemas.createCategoriesBody, readDataOfClipboard)
 
-    apply<CategoryDto.CategoryDto>({
-      data: validation(copiedCategorySchema, readDataOfClipboard) as CategoryDto.CategoryDto,
+    const category = {
+      ...validatedData,
+      images: validatedData.images.map((image) => ({
+        ...image,
+        data: base64ToFile(image.data, image.caption),
+      })),
+    }
+
+    apply<CategoryDto.CategoryCreate>({
+      data: category,
       setData: [
-        methods.reset,
-        (data) => categoryStore.setCopiedData(data),
+        (data) => methods.reset(include(data, fields)),
+        categoryStore.setCopiedData,
       ],
     })
   }
@@ -89,11 +89,14 @@ export const CategoryCreateDialog = observer(() => {
   return (
     <FormProvider {...methods}>
       <UpsertDialog
+        close={isSuccessCreate}
         store={dialogStore}
-        handleSubmit={(data: CategoryDto.CategoryDto) => onCreate({
-          ...data,
-          ...categoryStore.getData(),
-        })}
+        handleSubmit={(data: CategoryDto.CategoryFields) => {
+          onCreate({
+            ...data,
+            ...categoryStore.getData(),
+          })
+        }}
         isLoading={isLoadingCreate}
         container={<ContentContainer />}
         header={(

@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx"
-import { CharacteristicsStore } from "entities/characteristic/model/store"
+import { CharacteristicsStore } from "entities/characteristic/model/characteristics-store"
 import { TagsStore } from "entities/tag"
 import { AltNamesStore } from "entities/alt-name"
 import { PhotosStore } from "features/categories/model/stores/photos-store"
 import { z, ZodSchema } from "zod"
 import { CategorySchemas, CategoryDto } from "shared/types/category"
 import { validation } from "shared/lib/validation"
+import { CategoryCreate } from "shared/types/category/objects"
 import { PhotoPositionStore } from "./photo-position-store"
 
 type Actions = "add" | "replace" | "none"
@@ -53,16 +54,8 @@ const categoryStoreSchema = CategorySchemas.getCategoryResponse.pick({
   captionPosition: true,
   media: true,
   characteristics: true,
+  tags: true,
 })
-
-type SetCategoryStore = Pick<
-  CategoryDto.CategoryDto,
-  "activeImageId" |
-  "altNames" |
-  "captionPosition" |
-  "media" |
-  "characteristics"
->
 
 export class RootStore {
   tags!: TagsStore
@@ -94,28 +87,27 @@ export class RootStore {
     getLocalStorageData("settingInputs", settingInputsSchema)
   }
 
-  private stores = ["photoPosition", "photos", "characteristics", "altNames", "tags"]
-
   destroy() { this.createStores() }
 
-  setCopiedData(data: SetCategoryStore | undefined) {
+  setCopiedData(data: undefined) {
     if (data === undefined) return
 
     console.log(data)
-    const validatedData = validation(categoryStoreSchema, data) as SetCategoryStore
+    const validatedData = validation(categoryStoreSchema, data)
 
     // this.photos.setCopiedData({
     // })
   }
 
-  setData(data: SetCategoryStore | undefined) {
+  setData(data: CategoryDto.CategoryRows | undefined) {
     if (data === undefined) return
 
-    const validatedData = validation(categoryStoreSchema, data) as SetCategoryStore
+    const validatedData = validation(categoryStoreSchema, data)
 
     this.photos.setMedia(validatedData.media)
     this.characteristics.setCharacteristics(validatedData.characteristics)
     this.altNames.setAltNames(validatedData.altNames)
+    this.tags.setTags(validatedData.tags)
 
     this.photoPosition.setPhotoPosition({
       activeImageId: validatedData.activeImageId,
@@ -123,16 +115,14 @@ export class RootStore {
     })
   }
 
-  getData(all: boolean = false) {
-    return this.stores.reduce((parentPrev, parentCurrent) => {
-      const result = Object.keys(this[parentCurrent]).reduce(() => {
-        if (typeof this[parentCurrent]?.getData !== "function") return
-
-        return this[parentCurrent].getData(all)
-      }, {})
-
-      return { ...parentPrev, ...result }
-    }, {})
+  getData(): CategoryDto.CategoryRows {
+    return {
+      ...this.photoPosition.getData(),
+      ...this.photos.getData(),
+      ...this.characteristics.getData(),
+      ...this.altNames.getData(),
+      ...this.tags.getData(),
+    }
   }
 
   settingsFields = initialSettingInputs

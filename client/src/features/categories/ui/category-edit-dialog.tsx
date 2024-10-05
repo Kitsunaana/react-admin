@@ -95,9 +95,19 @@ export const CategoryEditDialog = observer(() => {
     <FormProvider {...methods}>
       <UpsertDialog
         store={dialogStore}
-        handleSubmit={(data: CategoryDto.CategoryDto) => (
-          onEdit({ ...data, ...categoryStore.getData() } as CategoryDto.CategoryUpdateDto)
-        )}
+        handleSubmit={(data: CategoryDto.CategoryDto) => {
+          const payload = categoryStore.getData()
+
+          onEdit({
+            activeImageId: payload.activeImageId,
+            description: data.description,
+            color: data.color,
+            characteristics: payload.characteristics,
+          })
+          // return (
+          //   onEdit({ ...data, ...categoryStore.getData() })
+          // )
+        }}
         isLoading={(isLoadingGet || isLoadingEdit) && dialogStore.id !== null}
         container={<ContentContainer />}
         header={(

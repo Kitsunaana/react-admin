@@ -1,10 +1,10 @@
 import { forwardRef } from "react"
 import { ContextMenu } from "shared/ui/menu/context-menu"
-import { Box } from "shared/ui/box"
+import { Box, BoxProps } from "shared/ui/box"
 import { ContextMenuItem } from "shared/ui/menu/context-menu-item"
 import { Divider } from "shared/ui/divider"
 
-interface CategoryContextMenuProps {
+interface CategoryContextMenuProps extends Omit<BoxProps, "id"> {
   id: number
   onEdit: () => void
   onDelete: () => void
@@ -13,11 +13,12 @@ interface CategoryContextMenuProps {
 
 export const CategoryContextMenu = forwardRef<HTMLDivElement, CategoryContextMenuProps>((props, ref) => {
   const {
-    id, onEdit, onDelete, onGoodsCategory,
+    id, onEdit, onDelete, onGoodsCategory, ...other
   } = props
 
   return (
     <ContextMenu
+      {...other}
       ref={ref}
       id={id}
       actionsList={(

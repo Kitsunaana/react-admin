@@ -1,2 +1,3 @@
-export { CharacteristicEditDialog } from "./edit/ui/characteristic-edit-dialog"
-export { CharacteristicDeleteDialog } from "./delete/ui/characteristic-delete-dialog"
+export { CharacteristicEditDialog } from "./ui/characteristic-edit-dialog"
+export { CharacteristicCreateDialog } from "./ui/characteristic-create-dialog"
+export { useRemoveCharacteristic } from "./model/use-remove-characteristic"

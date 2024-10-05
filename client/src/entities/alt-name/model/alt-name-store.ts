@@ -4,26 +4,21 @@ import { Common } from "shared/types/common"
 import { toast } from "react-toastify"
 import { isEqual, isNumber, isString } from "shared/lib/utils"
 import { altNameApi } from "../api/alt-name-api"
-import {
-  AltName,
-  AltNameCreate,
-  DataTranslation,
-  FetchTranslateData,
-} from "../model/types"
+import { DataTranslation, FetchTranslateData } from "../model/types"
 
 export class AltNamesStore {
   isLoading = false
-  altNames: AltName[] = []
+  altNames: Common.AltNameCreate[] = []
 
   constructor() {
     makeAutoObservable(this, { selectedLocale: false }, { autoBind: true })
   }
 
-  create(data: AltNameCreate) {
+  create(data: Common.AltNameBase) {
     this.altNames.push({ ...data, action: "create", id: nanoid() })
   }
 
-  edit(data: AltName) {
+  edit(data: Common.AltNameCreate) {
     this.altNames = this.altNames.map((item) => (
       item.id !== data.id
         ? item
@@ -37,13 +32,13 @@ export class AltNamesStore {
 
   remove(id: number | string) {
     this.altNames = this.altNames
-      .map((altName): AltName | null => {
+      .map((altName): Common.AltNameCreate | null => {
         if (isNumber(id) && isEqual(altName.id, id)) return { ...altName, action: "remove" }
         if (isString(id) && isEqual(altName.id, id)) return null
 
         return altName
       })
-      .filter((altName): altName is AltName => altName !== null)
+      .filter((altName): altName is Common.AltNameCreate => altName !== null)
   }
 
   get filteredItems() {
@@ -82,27 +77,26 @@ export class AltNamesStore {
   }
 
   selectedLocale: Common.Locale | null = null
-  exclude(altNames: Common.Locale[], nonExclude: Common.Locale | null) {
+
+  exclude(locales: Common.Locale[], nonExclude: Common.Locale | null) {
     const localeCodes = this.filteredItems.map((item) => item.locale.code)
 
     if (nonExclude !== null) this.selectedLocale = nonExclude
 
-    return altNames.map((item) => {
-      const isCodesNotEqual = this.selectedLocale?.code !== item.code
-      const isCodeNotAvailable = localeCodes.includes(item.code)
+    return locales.map((locale) => {
+      const isCodesNotEqual = this.selectedLocale?.code !== locale.code
+      const isCodeNotAvailable = localeCodes.includes(locale.code)
 
-      if (isCodeNotAvailable && isCodesNotEqual) return { ...item, disabled: true }
+      if (isCodesNotEqual && isCodeNotAvailable) return { ...locale, disabled: true }
+      if (isCodeNotAvailable && nonExclude === null) return { ...locale, disabled: true }
 
-      return item
+      return locale
     })
   }
 
   getData() {
     return {
-      altNames: this.altNames.map(({ id, ...other }) => ({
-        ...other,
-        ...(other.action === "create" ? { } : { id }),
-      })),
+      altNames: this.altNames,
     }
   }
 

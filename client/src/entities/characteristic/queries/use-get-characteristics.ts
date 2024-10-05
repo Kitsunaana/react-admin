@@ -9,6 +9,6 @@ export const useGetCharacteristics = () => {
 
   return {
     characteristics: data,
-    characteristicsIsLoading: isLoading,
+    isLoadingGet: isLoading,
   }
 }

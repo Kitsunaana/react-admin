@@ -7,7 +7,7 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import { observer } from "mobx-react-lite"
 import { useFormContext } from "react-hook-form"
 import { AltNameItem, useLocales } from "entities/alt-name"
-import { AltNameEditDialog, AltNameDeleteDialog } from "features/alt-names"
+import { AltNameCreateDialog } from "features/alt-names"
 import { Text } from "shared/ui/text"
 import { Skeleton } from "@mui/material"
 import { useStores } from "../../model/context"
@@ -80,8 +80,7 @@ export const TabAltNames = observer(() => {
         </Box>
       </Box>
 
-      <AltNameDeleteDialog altNames={altNames} />
-      <AltNameEditDialog altNames={altNames} />
+      <AltNameCreateDialog />
     </>
   )
 })

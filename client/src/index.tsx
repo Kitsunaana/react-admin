@@ -9,6 +9,7 @@ import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "app/providers/query-client"
 import { BrowserRouter } from "react-router-dom"
 import "react-toastify/dist/ReactToastify.css"
+import { Confirmations } from "widgets/confirmations"
 
 const container = document.getElementById("root")
 const root = createRoot(container as HTMLElement)
@@ -18,7 +19,9 @@ root.render(
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider>
-            <App />
+            <Confirmations>
+              <App />
+            </Confirmations>
           </ThemeProvider>
         </QueryClientProvider>
       </Provider>

@@ -1,12 +1,15 @@
-import { DialogDelete as DialogDeleteBase } from "shared/ui/dialog/dialog-delete"
-import { AltNamesStore } from "entities/alt-name"
+import { useGetConfirmation } from "shared/lib/confirmation"
+import { useStores } from "features/categories/model/context"
 
-interface AltNameDeleteDialogProps {
-  altNames: AltNamesStore
-}
+export const useRemoveAltName = () => {
+  const getConfirmation = useGetConfirmation()
+  const { altNames } = useStores()
 
-export const AltNameDeleteDialog = (props: AltNameDeleteDialogProps) => {
-  const { altNames } = props
+  return async (id: string | number, caption: string) => {
+    const confirmation = await getConfirmation({
+      description: caption,
+    })
 
-  return <DialogDeleteBase onDeleteLocal={altNames.remove} />
+    if (confirmation) altNames.remove(id)
+  }
 }

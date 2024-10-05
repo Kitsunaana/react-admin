@@ -1,10 +1,2 @@
-export interface ICharacteristic {
-  id: number | string
-  unit: string | null
-  characteristic: string
-  value: string
-  hideClient: boolean
-
-  local?: boolean
-  action?: "update" | "create" | "remove"
-}
+export type CharacteristicsResponse = Array<{ id: number, caption: string }>
+export type UnitsResponse = Array<{ id: number, caption: string | null }>

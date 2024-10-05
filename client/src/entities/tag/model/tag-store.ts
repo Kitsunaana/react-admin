@@ -52,10 +52,7 @@ export class TagsStore {
 
   getData() {
     return {
-      tags: this.tags.map(({ id, ...other }) => ({
-        ...other,
-        ...(isNumber(id) ? { id } : {}),
-      })),
+      tags: this.tags
     }
   }
 

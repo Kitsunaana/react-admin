@@ -51,7 +51,7 @@ export class PhotosStore {
 
         return null
       })
-      .filter((image): image is string => image !== null)
+      .filter((caption): caption is string => caption !== null)
 
     return data.filter((image) => {
       if ("caption" in image) return !captionImages.includes(image.caption)
@@ -78,7 +78,7 @@ export class PhotosStore {
     const actions = {
       add: (name: "images" | "media") => this[name] = [...this[name], ...filteredData] as any,
       replace: (name: "images" | "media") => this[name] = data as any,
-      none: () => {},
+      none: () => { },
     }
 
     return actions[action]

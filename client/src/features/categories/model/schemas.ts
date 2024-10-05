@@ -1,5 +1,4 @@
 import { z } from "zod"
-import { tagsSchema } from "entities/tag"
 
 export const customCategorySchema = z.object({
   isShowPhotoWithGoods: z.boolean(),
@@ -53,7 +52,7 @@ export const categorySchema = z.object({
   custom: customCategorySchema.optional().nullable(),
   characteristics: z.any(),
   altNames: z.any(),
-  tags: tagsSchema.optional(),
+  tags: z.any(),
 })
 
 export type TCategory = z.infer<typeof categorySchema>

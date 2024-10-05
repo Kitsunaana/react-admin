@@ -4,7 +4,6 @@ import { Position } from "shared/ui/position-counter"
 import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 import { UseMutationOptions } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
-import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { Box } from "shared/ui/box"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { IconButton } from "shared/ui/buttons/icon-button"
@@ -21,6 +20,7 @@ interface CategoryRowProps {
   caption: string
   images?: Common.Media[]
   order: number | null
+  onRemoveCategory: (categoryId: (number | null)) => Promise<void>
 }
 
 export const updatePositionOptions = (id: number): UseMutationOptions<any, any, number> => ({
@@ -47,23 +47,22 @@ const CustomRowItem = styled(RowItem)`
 
 export const CategoryRow = (props: CategoryRowProps) => {
   const {
-    caption, id, images, order,
+    caption, id, images, order, onRemoveCategory,
   } = props
 
-  const deleteStore = useDeleteDialogStore()
   const editStore = useEditDialogStore()
   const langBase = useLang()
   const navigate = useNavigateGoods(caption)
   const menu = useContextMenu()
 
   const handleOnEdit = () => {
-    editStore.openDialog(id)
     menu.close()
+    editStore.openDialog(id)
   }
 
-  const handleOnDelete = () => {
-    deleteStore.openDialog(id, { caption })
+  const handleOnDelete = async () => {
     menu.close()
+    await onRemoveCategory(id)
   }
 
   return (
@@ -75,6 +74,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
       {menu.isOpen && (
         <LangContext lang={`${langBase}.menuActions`}>
           <CategoryContextMenu
+            onClick={() => menu.close()}
             id={id}
             ref={menu.ref}
             onGoodsCategory={navigate}

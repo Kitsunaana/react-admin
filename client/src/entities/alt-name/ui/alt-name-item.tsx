@@ -7,7 +7,6 @@ import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 import { RowItem, RowItemProps } from "shared/ui/row-item"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { AltName } from "../model/types"
 
@@ -34,6 +33,7 @@ const StyledAltNameItem = styled((props: RowItemProps & { disabled: boolean }) =
 
 interface AltNameItemProps extends AltName {
   disabled?: boolean
+  onRemove: (id: (string | number), caption: string) => Promise<void>
 }
 
 export const AltNameItem = (props: AltNameItemProps) => {
@@ -44,10 +44,10 @@ export const AltNameItem = (props: AltNameItemProps) => {
     locale,
     action,
     disabled,
+    onRemove,
   } = props
 
   const editStore = useEditDialogStore()
-  const deleteStore = useDeleteDialogStore()
   const langBase = useLang()
 
   const onOpenEditDialog = () => {
@@ -56,10 +56,8 @@ export const AltNameItem = (props: AltNameItemProps) => {
     })
   }
 
-  const onOpenDeleteDialog = () => {
-    deleteStore.openDialog(id, {
-      caption,
-    })
+  const onOpenDeleteDialog = async () => {
+    await onRemove(id, caption)
   }
 
   return (

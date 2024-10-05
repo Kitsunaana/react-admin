@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx"
 import { PhotosStore } from "features/goods/dialog/model/stores/photos-store"
-import { CharacteristicsStore } from "entities/characteristic/model/store"
+import { CharacteristicsStore } from "entities/characteristic/model/characteristics-store"
 import { AltNamesStore } from "entities/alt-name"
 
 export class RootStore {

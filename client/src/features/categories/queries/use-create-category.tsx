@@ -4,40 +4,42 @@ import { categoriesApi as categoriesApiV2 } from "features/categories/api/catego
 import { Text } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
 import { CategoryDto } from "shared/types/category"
-import { AxiosError } from "axios"
-import { Common } from "shared/types/common"
-
-interface CategoryCreatePayload extends CategoryDto.CategoryCreate {
-  images: Common.Image[]
-}
+import { queryClient } from "app/providers/query-client"
+import { categoriesUrlStore } from "entities/category"
 
 export const useCreateCategory = () => {
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, isSuccess } = useMutation({
     mutationKey: ["categories"],
-    mutationFn: (payload: CategoryCreatePayload) => (
-      toast.promise(new Promise<CategoryDto.CategoryPreview>((resolve) => {
+    mutationFn: ({ images, ...otherPayload }: CategoryDto.CategoryCreate) => (
+      toast.promise(new Promise<CategoryDto.CategoryPreview>((resolve, reject) => {
         setTimeout(() => {
-          toast.promise(categoriesApiV2.filesUpload(payload.images ?? []), {
+          toast.promise(categoriesApiV2.filesUpload(images), {
             pending: "Идет загрузка изображений",
             error: {
-              render({ data }) {
-                console.log((data as AxiosError)?.response?.data)
+              render() {
                 return "При загрузке изображений произошла ошибка"
               },
             },
           })
             .then((images) => {
-              categoriesApiV2.post({ ...payload, media: images ?? [] })
-                .then((data) => data && resolve(data))
+              categoriesApiV2.post({ ...otherPayload, media: images ?? [] })
+                .then(resolve)
+                .catch(reject)
             })
             .catch(() => {
-              categoriesApiV2.post({ ...payload, media: [] })
-                .then((data) => data && resolve(data))
+              categoriesApiV2.post({ ...otherPayload, media: [] })
+                .then(resolve)
+                .catch(reject)
             })
         }, 1000)
       }), {
         pending: "Категория создается",
-        error: "Ой, произошла какая-то ошибка",
+        error: {
+          render({ data }) {
+            if (data instanceof Error) return data.message
+            return "Ой, произошла какая-то ошибка"
+          },
+        },
         success: {
           render({ data }) {
             return (
@@ -46,6 +48,7 @@ export const useCreateCategory = () => {
                 langBase="catalog.notify.create"
                 name="success"
                 value={data.caption}
+                caption={data.caption}
                 translateOptions={{
                   components: {
                     strong: <Mark style={{ margin: "0px 3px" }} />,
@@ -57,10 +60,20 @@ export const useCreateCategory = () => {
         },
       }, { autoClose: 1500 })
     ),
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ["categories", categoriesUrlStore.searchParams],
+        (oldData: CategoryDto.GetAllCategoriesResponse) => ({
+          ...oldData,
+          rows: oldData.rows.concat([data]),
+        } as CategoryDto.GetAllCategoriesResponse),
+      )
+    },
   })
 
   return {
     onCreate: mutate,
     isLoadingCreate: isPending,
+    isSuccessCreate: isSuccess,
   }
 }

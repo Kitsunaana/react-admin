@@ -1,10 +1,13 @@
 import { Box, BoxProps } from "shared/ui/box"
 import { AlertColor, alpha } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import { isString } from "shared/lib/utils"
 
-export interface RowItemProps extends BoxProps {
-  color?: AlertColor | "primary" | "secondary"
-  bgColor?: AlertColor | "primary" | "secondary"
+type Colors = AlertColor | "primary" | "secondary"
+
+export interface RowItemProps extends Omit<BoxProps, "color"> {
+  color?: Colors | boolean
+  bgColor?: Colors | boolean
   disableMargin?: boolean
   eachRadius?: boolean
   height?: number
@@ -21,6 +24,7 @@ export const RowItem = styled((props: RowItemProps) => {
   } = props
 
   return <Box {...other} />
+// @ts-ignore
 })((props) => {
   const {
     color,
@@ -33,6 +37,8 @@ export const RowItem = styled((props: RowItemProps) => {
       background,
     },
   } = props
+
+  const omitColor = (color: unknown): color is Colors => isString(color)
 
   return {
     border: `1px solid ${palette.mode === "dark"
@@ -60,8 +66,8 @@ export const RowItem = styled((props: RowItemProps) => {
       borderTopRightRadius: 8,
     },
 
-    borderLeft: color && `5px solid ${palette[color].main}`,
-    backgroundImage: bgColor && (background.hatch as any)[bgColor],
+    borderLeft: omitColor(color) && `5px solid ${palette[color].main}`,
+    backgroundImage: omitColor(bgColor) && (background.hatch as any)[bgColor],
 
     "&:hover": {
       backgroundColor: palette.grey[palette.mode === "dark" ? 800 : 100],

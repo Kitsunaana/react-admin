@@ -1,46 +1,63 @@
-import { DialogEdit } from "shared/ui/dialog/dialog-edit"
+import { observer } from "mobx-react-lite"
 import { FormProvider, useForm } from "react-hook-form"
-import * as React from "react"
+import { LangContext, useLang } from "shared/context/lang"
+import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
+import { UpsertDialog } from "shared/ui/dialog/dialog-edit-v3"
+import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { CreateEditForm } from "features/alt-names/edit/ui/alt-name-edit-form"
+import { useStores } from "features/categories/model/context"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { LangContext, useLang } from "shared/context/Lang"
-import { AltNamesStore } from "entities/alt-name"
-import { CreateEditForm } from "./alt-name-edit-form"
+import { Common } from "shared/types/common"
 
-interface AltNameEditDialogProps {
-  altNames: AltNamesStore
-}
-
-export const AltNameEditDialog = (props: AltNameEditDialogProps) => {
-  const { altNames } = props
-
-  const store = useEditDialogStore()
+export const AltNameEditDialog = observer(() => {
+  const { altNames } = useStores()
+  const editStore = useEditDialogStore()
+  const methods = useForm()
   const langBase = useLang()
 
-  const methods = useForm({
-    defaultValues: {
-      caption: "",
-      description: "",
-    },
+  const findAltName = altNames.filteredItems
+    .find((item) => item.id === editStore.id) as Common.AltNameCreate
+
+  useSetDialogValues({
+    data: findAltName,
+    shouldHandle: [editStore.open],
+    setData: [methods.reset],
+    clearData: [methods.reset],
   })
 
   return (
-    <LangContext lang={`${langBase}.dialog`}>
-      <FormProvider {...methods}>
-        <DialogEdit
-          showActions
-          size="auto"
+    <FormProvider {...methods}>
+      <LangContext lang={`${langBase}.dialog`}>
+        <UpsertDialog
+          header={(
+            <DialogHeader
+              store={editStore}
+              title={(
+                <DialogHeaderCaption
+                  name="create"
+                />
+              )}
+            />
+          )}
           height="auto"
-          onSave={altNames.create}
-          onEdit={altNames.edit}
+          size="auto"
+          store={editStore}
+          handleSubmit={(data) => {
+            altNames.edit(data)
+            editStore.closeDialog()
+          }}
+          isLoading={false}
           container={<CreateEditForm />}
           PaperProps={{
             sx: {
-              maxWidth: store.fullScreen ? "95%" : 840,
+              maxWidth: editStore.fullScreen
+                ? "95% !important"
+                : "840px !important",
               maxHeight: "95%",
             },
           }}
         />
-      </FormProvider>
-    </LangContext>
+      </LangContext>
+    </FormProvider>
   )
-}
+})

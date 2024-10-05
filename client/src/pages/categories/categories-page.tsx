@@ -18,9 +18,11 @@ import { LangContext, useLang } from "shared/context/lang"
 import { useCategories } from "entities/category/queries/use-categories"
 import { CategoryDto } from "shared/types/category"
 import { Common } from "shared/types/common"
+import { useRemoveCategory } from "features/categories/ui/category-delete-dialog"
 
 const CategoriesPage = observer(() => {
   const { categories, refetchCategories, isLoadingCategories } = useCategories()
+  const onRemoveCategory = useRemoveCategory()
 
   const { palette } = useTheme()
   const langBase = useLang()
@@ -56,6 +58,7 @@ const CategoriesPage = observer(() => {
 
     return categories.rows.map((category) => (
       <CategoryRow
+        onRemoveCategory={onRemoveCategory}
         key={category.id}
         images={category?.media}
         {...category}

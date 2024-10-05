@@ -15,6 +15,7 @@ export const CreateEditForm = observer(() => {
   const excludedLocales = altNames
     .exclude(locales || [], methods.getValues("locale"))
 
+
   return (
     <Box flex gap sx={{ height: 1, pt: 1 }}>
       <AltNameInputLocale options={excludedLocales} />

@@ -27,12 +27,14 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["./src/*"]
-    },
-      "lib": [
-          "es2021.full",
-          "dom"
+      "*": [
+        "./src/*"
       ]
+    },
+    "lib": [
+      "es2021.full",
+      "dom"
+    ]
   },
   "ts-node": {
     "compilerOptions": {

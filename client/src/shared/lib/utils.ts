@@ -27,13 +27,6 @@ export const stringifiedParams = <TParams extends object>(data: TParams) => {
   return searchParams && `?${searchParams}`
 }
 
-/* export const fileToBase64 = (file: File) => new Promise<string | ArrayBuffer>((resolve, reject) => {
-  const reader = new FileReader()
-  reader.onloadend = () => reader.result !== null && resolve(reader.result)
-  reader.onerror = reject
-  reader.readAsDataURL(file)
-}) */
-
 export const fileToBase64 = async (file: File): Promise<string | ArrayBuffer> => {
   const reader = new FileReader()
 
@@ -49,18 +42,6 @@ export const fileToBase64 = async (file: File): Promise<string | ArrayBuffer> =>
 
 export const copyToClipboardV2 = async (data: object) => {
   await navigator.clipboard.writeText(JSON.stringify(data))
-}
-
-export const copyToClipboard = async (data: Record<string, any>) => {
-  const { images, ...other } = data
-
-  const result = await Promise.all((images ?? [])
-    .map(async (image) => fileToBase64(image?.data)))
-
-  await navigator.clipboard.writeText(JSON.stringify({
-    data: { ...other, images },
-    images: result,
-  }))
 }
 
 export const base64ToFile = (base64String: string, filename: string) => {
@@ -82,26 +63,8 @@ export const readOfClipboardV2 = async () => {
     const readText = await navigator.clipboard.readText()
     return JSON.parse(readText)
   } catch (error) {
-    console.log(error)
-  }
-}
-
-export const readOfClipboard = async () => {
-  try {
-    const readText = await navigator.clipboard.readText()
-    const parsedData = JSON.parse(readText)
-
-    const { images, ...other } = parsedData
-    const { images: sourceImages, ...otherProperties } = other.data
-    const imagesFilesOfBase64String = images
-      ?.map((base64string: string, index: number) => ({
-        ...sourceImages[index],
-        data: base64ToFile(base64string, sourceImages[index].caption),
-      }))
-
-    return { ...otherProperties, images: imagesFilesOfBase64String }
-  } catch (error) {
-    console.log(error)
+    console.error(error)
+    if (error instanceof Error) throw new Error(error.message)
   }
 }
 
@@ -111,6 +74,7 @@ export const getImageUrl = (name: string) => `http://localhost:3333/uploads/${na
 
 export const isString = (value: unknown) => typeof value === "string"
 export const isNumber = (value: unknown) => typeof value === "number"
+export const isBoolean = (value: unknown) => typeof value === "boolean"
 export const isEqual = (right: unknown, left: unknown) => right === left
 
 export const exclude = <T extends object, K extends keyof T>(data: T, keys: K[]) => {
@@ -124,7 +88,7 @@ export const exclude = <T extends object, K extends keyof T>(data: T, keys: K[])
   return Object.fromEntries(entries)
 }
 
-export const include = <T extends object, K extends keyof T>(data: T, keys: K[]) => {
+export const include = <T extends object, K extends keyof T>(data: T, keys: readonly K[]) => {
   const entries = Object
     .entries(data)
     .filter(([key, value]) => {

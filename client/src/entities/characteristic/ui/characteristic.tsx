@@ -3,60 +3,77 @@ import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Vertical } from "shared/ui/divider"
 import { RowItem } from "shared/ui/row-item"
-import { ICharacteristic } from "entities/characteristic/model/types"
-import { Caption } from "entities/characteristic/ui/caption"
-import { HiddenIndicator } from "entities/characteristic/ui/hidden-indicator"
 import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
 import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { useDeleteDialogStore } from "shared/ui/dialog/context/dialog-delete-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { Text } from "shared/ui/text"
-import { useStores } from "features/categories/model/context"
+import { Common } from "shared/types/common"
+import { Caption } from "./caption"
+import { HiddenIndicator } from "./hidden-indicator"
 
-export interface CharacteristicItemProps extends ICharacteristic {
-  local?: boolean
+export interface CharacteristicItemProps extends Common.CharacteristicCreate {
+  onRemove: (id: number | string, caption: string) => void
+  onEdit: (id: string | number, data: Common.CharacteristicCreate) => void
+  getConflict: (data: Pick<Common.CharacteristicCreate, "id" | "caption">) => boolean
+  isRecordCreatedOrUpdated: (id: number | string) => boolean
 }
 
 export const Characteristic = observer((props: CharacteristicItemProps) => {
   const {
-    unit, hideClient, value, characteristic, id, local,
+    id,
+    caption,
+    unit,
+    value,
+    hideClient,
+    onRemove,
+    onEdit,
+    getConflict,
+    isRecordCreatedOrUpdated,
   } = props
 
-  const { characteristics } = useStores()
-  const { openDialog } = useEditDialogStore()
-  const { openDialog: openDeleteDialog } = useDeleteDialogStore()
   const langBase = useLang()
+  const hasConflict = getConflict({ id, caption })
 
-  const onOpenEditDialog = () => openDialog(id, {
-    unit, hideClient, value, characteristic, id,
-  })
-
-  const onOpenDeleteDialog = () => openDeleteDialog(id, { characteristic })
-
-  const hasConflict = characteristics.getConflict({ id, characteristic })
+  const handleEdit = () => {
+    onEdit(id, {
+      caption, value, unit, hideClient, id,
+    })
+  }
 
   return (
     <LangContext lang={`${langBase}.rows`}>
       <RowItem
-        onDoubleClick={onOpenEditDialog}
-        bgColor={hasConflict ? "error" : undefined}
-        color={hasConflict ? "error" : local ? "warning" : undefined}
+        color={hasConflict ? "error" : (isRecordCreatedOrUpdated(id) && "warning")}
+        bgColor={hasConflict && "error"}
+        onDoubleClick={handleEdit}
       >
         <Box flex row ai>
           <HiddenIndicator hidden={hideClient} />
-          <Caption caption={characteristic} unit={unit} value={value} />
+          <Caption
+            caption={caption}
+            unit={unit}
+            value={value}
+          />
         </Box>
         <Box flex ai row>
           <Icon
             name="allowCategory"
             fontSize="small"
             color="success"
-            help={{ title: <Text onlyText name="forCategory" />, arrow: true }}
+            help={{
+              title: (
+                <Text
+                  onlyText
+                  name="forCategory"
+                />
+              ),
+            }}
           />
           <Vertical />
-          <IconButtonEdit onClick={onOpenEditDialog} />
-          <IconButtonDelete onClick={onOpenDeleteDialog} />
+          <IconButtonEdit onClick={handleEdit} />
+          <IconButtonDelete
+            onClick={() => onRemove(id, caption)}
+          />
         </Box>
       </RowItem>
     </LangContext>

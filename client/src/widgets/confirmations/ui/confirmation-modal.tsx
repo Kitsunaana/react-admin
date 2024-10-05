@@ -1,7 +1,6 @@
 import { useEvent } from "shared/hooks/use-event"
 import { Modal } from "shared/ui/modal"
 import Button from "@mui/material/Button"
-import { Text } from "shared/ui/text"
 import { ConfirmationModalParams } from "../model/types"
 
 interface ConfirmationModalProps {
@@ -17,11 +16,27 @@ export const ConfirmationModal = (props: ConfirmationModalProps) => {
 
   return (
     <Modal isOpen onClose={params.onClose}>
-      <Modal.Header><Text caption={params.title} /></Modal.Header>
-      <Modal.Body><Text caption={params.description} /></Modal.Body>
+      <Modal.Header>{params.title}</Modal.Header>
+      <Modal.Body>{params.description}</Modal.Body>
       <Modal.Footer>
-        <Button onClick={params.onClose}>{params.closeText}</Button>
-        <Button onClick={params.onConfirm}>{params.confirmText}</Button>
+        <Button
+          sx={{ borderRadius: 2 }}
+          onClick={params.onClose}
+          color="primary"
+          variant="contained"
+          size="small"
+        >
+          {params.closeText}
+        </Button>
+        <Button
+          sx={{ borderRadius: 2 }}
+          onClick={params.onConfirm}
+          color="warning"
+          variant="contained"
+          size="small"
+        >
+          {params.confirmText}
+        </Button>
       </Modal.Footer>
     </Modal>
   )

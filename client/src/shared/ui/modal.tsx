@@ -7,8 +7,9 @@ import { CrossLightIcon } from "./close-icon"
 const ModalWrapper = styled.div`
   position: fixed;
   inset: 0px;
-  background-color: rgb(15 23 42 / 0.6);
-  backdrop-filter: blur(8px);
+  z-index: 3400;
+  background-color: rgb(0 0 0 / 0.6);
+  backdrop-filter: blur(3px);
   padding: 64px 24px;
   overflow-y: auto;
 `
@@ -16,7 +17,7 @@ const ModalWrapper = styled.div`
 const ModalInner = styled.div`
   background-color: #fff;
   min-height: 240px;
-  border-radius: 8px;
+  border-radius: 16px;
   position: relative;
   margin: 0px auto;
   display: flex;
@@ -51,7 +52,7 @@ const ModalHeader = styled("div")`
   align-items: center;
   background-image: linear-gradient(315deg, #0000 48%, rgba(237, 108, 2, 0.35) 50%, #0000 52%);
   background-size: 7px 7px;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 8px;
   height: 38px;
   border: 1px solid rgba(158, 158, 158, 0.25);

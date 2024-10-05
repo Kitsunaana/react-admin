@@ -1,5 +1,5 @@
 import { DialogProps as MUIDialogProps } from "@mui/material/Dialog/Dialog"
-import { FC, ReactNode } from "react"
+import { FC, ReactNode, useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { observer } from "mobx-react-lite"
 import { Dialog as MUIDialog } from "@mui/material"
@@ -21,6 +21,7 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   isLoading: boolean
   handleSubmit: (data: any) => void
   store: DialogStore
+  close?: boolean
 }
 
 const ButtonContainer = styled.div`
@@ -63,10 +64,13 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
     isLoading,
     handleSubmit,
     store,
+    close,
     ...other
   } = props
 
   const methods = useFormContext()
+
+  useEffect(() => { if (close) store.closeDialog() }, [close])
 
   const onClose = () => store.closeDialog()
   const onSubmit = () => methods.handleSubmit(handleSubmit)()

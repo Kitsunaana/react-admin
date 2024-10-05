@@ -1,23 +1,21 @@
 import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
-import { Common, Schemas } from "shared/types/common"
+import { getCharacteristicsResponse } from "entities/characteristic/model/schemas"
+import { CharacteristicsResponse, UnitsResponse } from "entities/characteristic/model/types"
+import { Schemas } from "shared/types/common"
 
-const URL = "/characteristics"
+const URL = "characteristics"
 
 export const characteristicsApi = {
-  getAll: async (): Promise<Common.CharacteristicsResponse> => {
+  getAll: async (): Promise<CharacteristicsResponse> => {
     const { data } = await $axios.get(URL)
 
-    return (
-      data
-    )
+    return validation(getCharacteristicsResponse, data)
   },
 
-  getAllUnits: async (): Promise<Common.UnitsResponse> => {
+  getAllUnits: async (): Promise<UnitsResponse> => {
     const { data } = await $axios.get(`${URL}/units`)
 
-    return (
-      data
-    )
+    return validation(Schemas.getUnitsResponse, data)
   },
 }

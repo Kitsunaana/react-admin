@@ -1,8 +1,9 @@
+import { ReactNode } from "react"
 import { createStrictContext, useStrictContext } from "./react"
 
 export type ConfirmationParams = {
   title?: string
-  description?: string
+  description?: string | ReactNode
   closeText?: string
   confirmText?: string
 }

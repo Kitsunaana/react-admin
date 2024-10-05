@@ -1,5 +1,5 @@
 import { $axios } from "shared/config/axios"
-import { Common, Schemas } from "shared/types/common"
+import { Common } from "shared/types/common"
 import { DataTranslation, FetchTranslateResponse } from "entities/alt-name/model/types"
 import { validation } from "shared/lib/validation"
 import { translateSchema } from "entities/alt-name/model/schemas"
@@ -29,7 +29,7 @@ const getConfig = (host: string, key: string) => ({
 
 export const altNameApi = {
   getAll: async (): Promise<Common.Locale[]> => (
-    $axios.get(URL).then(({ data }) => validation(Schemas.getLocalesResponse, data))
+    $axios.get(URL).then(({ data }) => data)
   ),
 
   translate: async (
