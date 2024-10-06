@@ -31,6 +31,36 @@ components:
         - order
         - size
 
+    MediaUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        originalName:
+          type: string
+        path:
+          type: string
+        mimetype:
+          type: string
+        order:
+          oneOf:
+            - type: number
+            - type: "null"
+        size:
+          type: number
+        deleted:
+          type: boolean
+      required:
+        - id
+        - filename
+        - originalName
+        - path
+        - mimetype
+        - order
+        - size
+
     Image:
       type: object
       properties:

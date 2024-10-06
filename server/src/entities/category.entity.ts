@@ -15,7 +15,7 @@ interface CategoryCreationAttrs {
 
 @Table({ timestamps: true })
 export class Category extends Model<Category, CategoryCreationAttrs> {
-  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER, unique: true })
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
   id: number;
 
   @Column({ allowNull: true, type: DataTypes.TEXT })
@@ -33,8 +33,11 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
   @HasOne(() => CustomCategory)
   custom: CustomCategory;
 
-  @HasMany(() => CategoryCharacteristic)
-  characteristics: CategoryCharacteristic[];
+  /*@HasMany(() => CategoryCharacteristic, { foreignKeyConstraint: false, constraints: false })
+  characteristics: CategoryCharacteristic[];*/
+
+  @HasMany(() => CategoryCharacteristic, { foreignKeyConstraint: false, constraints: false })
+  categoryCharacteristics: CategoryCharacteristic[];
 
   @HasMany(() => AltNameCategory)
   altNames: Locale;

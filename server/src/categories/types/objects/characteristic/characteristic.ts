@@ -5,12 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CharacteristicUnit } from './characteristicUnit';
+import type { CharacteristicBase } from './characteristicBase';
+import type { CharacteristicAllOf } from './characteristicAllOf';
 
-export interface Characteristic {
-  characteristic: string;
-  hideClient: boolean;
-  id: number;
-  unit: CharacteristicUnit;
-  value: string;
-}
+export type Characteristic = CharacteristicBase & CharacteristicAllOf;

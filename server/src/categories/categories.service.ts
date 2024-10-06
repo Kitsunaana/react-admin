@@ -34,7 +34,7 @@ export class CategoriesService {
   ) {}
 
   async create(dto: CategoryDto.PostCategoryBody) {
-    const category = await this.categoryRepository.create(dto);
+    const category = await this.categoryRepository.create({ ...dto, order: null } as Category);
 
     await this.customCategoryRepository.create({
       isShowPhotoWithGoods: dto.isShowPhotoWithGoods,
@@ -49,7 +49,7 @@ export class CategoriesService {
     return category;
   }
 
-  async update(id: number, dto: UpdateCategoryDto) {
+  async update(id: number, dto: CategoryDto.PatchCategoryBody) {
     const category = await this.categoryRepository.update(
       {
         order: dto.order,
@@ -134,7 +134,7 @@ export class CategoriesService {
     const category = await this.categoryRepository.findOne({
       where: { id },
       attributes: {
-        exclude: ['createdAt', 'updatedAt', 'order'],
+        exclude: ['createdAt', 'updatedAt'],
       },
       rejectOnEmpty: false,
       include: [
@@ -170,19 +170,23 @@ export class CategoriesService {
     });
 
     if (category) {
-      const { custom, characteristics, tags, ...other } = category.toJSON();
+      const { custom, categoryCharacteristics, tags, ...other } = category.toJSON();
 
       return {
         ...other,
         ...custom,
-        characteristics: characteristics.map(({ characteristic, unit, ...other }) => ({
-          ...other,
-          characteristic: characteristic.caption,
+        characteristics: categoryCharacteristics.map(({ characteristic, unit, ...other }) => ({
+          id: other.id,
+          caption: characteristic.caption,
           unit: unit.caption,
+          value: other.value,
+          hideClient: other.hideClient,
         })),
         tags: tags.map(({ tag, ...other }) => ({
-          ...other,
-          tag: tag.caption,
+          caption: tag.caption,
+          color: other.tagColor,
+          icon: other.icon,
+          id: other.id,
         })),
       };
     }

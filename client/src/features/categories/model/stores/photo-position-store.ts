@@ -91,10 +91,9 @@ export class PhotoPositionStore {
   }
 
   getData() {
-    const { rootStore, _indexActiveImage, ...otherProperties } = this
-
     return {
-      ...otherProperties,
+      captionPosition: this.captionPosition,
+      activeImageId: this.activeImageId,
     }
   }
 }

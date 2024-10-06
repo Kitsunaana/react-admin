@@ -11,6 +11,7 @@ import { Category } from '../entities/category.entity';
 import { CreateCharacteristicsDto } from './dto/create-characteristics-dto';
 import { UpdatedCharacteristicsDto } from './dto/update-characteristics-dto';
 import { Op } from 'sequelize';
+import { Common } from '../shared/types/common';
 
 @Injectable()
 export class CharacteristicsService {
@@ -48,48 +49,28 @@ export class CharacteristicsService {
   async updateCategoryCharacteristic(data: CategoryCharacteristicUpdate) {
     return await this.categoryCharacteristicsRepository.update(data, {
       where: { id: data.id },
+      returning: false,
     });
   }
 
-  async createCharacteristic(data: CreateCharacteristicsDto, categoryId: number) {
-    const [unit] = await this.findOrCreateUnit(data.unit);
-    const [characteristic] = await this.findOrCreateCharacteristic(data.caption);
+  async createCharacteristic(payload: Common.CharacteristicCreate, categoryId: number) {
+    const [unit] = await this.findOrCreateUnit(payload.unit);
+    const [characteristic] = await this.findOrCreateCharacteristic(payload.caption);
 
-    console.log(
-      JSON.parse(
-        JSON.stringify({
-          unit,
-          characteristic,
-        }),
-      ),
-    );
-
-    console.log({
+    const categoryCharacteristic = await this.findOrCreateCategoryCharacteristic({
       characteristicId: characteristic.id,
       categoryId: categoryId,
       unitId: unit.id,
-      value: data.value,
-      hideClient: data.hideClient,
+      value: payload.value,
+      hideClient: payload.hideClient,
     });
 
-    // return await this.categoryCharacteristicsRepository.create({
-    //   characteristicId: characteristic.id,
-    //   categoryId: categoryId,
-    //   unitId: unit.id,
-    //   value: data.value,
-    //   hideClient: data.hideClient,
-    // });
-
-    return await this.findOrCreateCategoryCharacteristic({
-      characteristicId: characteristic.id,
-      categoryId: categoryId,
-      unitId: unit.id,
-      value: data.value,
-      hideClient: data.hideClient,
-    });
+    return categoryCharacteristic;
   }
 
-  async updateCharacteristic(data: UpdatedCharacteristicsDto, categoryId: number) {
+  async updateCharacteristic(payload: Common.CharacteristicCreate, categoryId: number) {
+    // const { unit } = payload
+
     const [unit] = await this.findOrCreateUnit(data.unit);
     const [characteristic] = await this.findOrCreateCharacteristic(data.caption);
 
@@ -157,11 +138,11 @@ export class CharacteristicsService {
     await this.destroyCharacteristic(data.caption);
   }
 
-  async create(items: CreateCharacteristicsDto[], category: Category) {
+  async create(items: Common.CharacteristicCreate[], category: Category) {
     await Promise.all(items.map(async (item) => this.createCharacteristic(item, category.id)));
   }
 
-  async update(items: UpdatedCharacteristicsDto[], categoryId: number) {
+  async update(items: Common.CharacteristicCreate[], categoryId: number) {
     await Promise.all(
       items.map(async (item) => {
         if (item.action === 'update') return await this.updateCharacteristic(item, categoryId);

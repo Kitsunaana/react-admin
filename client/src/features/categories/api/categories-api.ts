@@ -1,6 +1,5 @@
 import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
-import { createMultipart } from "shared/lib/multipart"
 import { CategoryDto, CategorySchemas } from "shared/types/category"
 import { Common } from "shared/types/common"
 
@@ -80,27 +79,25 @@ export const categoriesApi = {
 
   patch: async (
     id: number | null,
-    data: CategoryDto.CategoryUpdateDto,
+    payload: CategoryDto.CategoryCreateWithMedia,
   ): Promise<CategoryDto.PatchCategoryResponse> => {
-    try {
-      const imagesIds = data.images?.map(({ id, caption }) => ({ id, caption }))
+    validation(modifiedCategorySchemas, payload)
+    const { data } = await $axios.patch(`${URL}/${id}`, payload)
 
-      const formData = createMultipart({ ...data, imagesIds }, ["images"])
-      const response = await $axios.patch<CategoryDto.PatchCategoryResponse>(
-        `${URL}/${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      )
-
-      return validation(CategorySchemas.updateCategoryResponse, response.data)
-    } catch (error) {
-      if (error instanceof Error) throw new Error(error.message)
-
-      throw new Error("Error")
-    }
+    return validation(CategorySchemas.updateCategoryResponse, data)
   },
+
+  fakeFilesUpload: async (): Promise<Common.Media[]> => new Promise((resolve) => {
+    resolve([
+      {
+        id: "5Cf5gY5pveqPMMm6D6GDI",
+        originalName: "Screenshot_4",
+        filename: "Screenshot_4_vlacvd",
+        path: "http://res.cloudinary.com/diyo8nacu/image/upload/v1728207197/Screenshot_4_vlacvd.png",
+        mimetype: "upload",
+        size: 1664381,
+        order: null,
+      },
+    ])
+  }),
 }

@@ -51,7 +51,7 @@ export class FilesService {
     );
   }
 
-  async deleteMedia(media?: Media[]): Promise<void[]> {
+  async deleteMedia(media: Common.Media[]): Promise<void[]> {
     return await Promise.all(
       media?.map(async ({ path, id }) => {
         await this.mediaRepository.destroy({ where: { id } });
@@ -67,7 +67,7 @@ export class FilesService {
     );
   }
 
-  async updateOrder(media: Media[]) {
+  async updateOrder(media: Common.Media[]) {
     return await Promise.all(
       media.map(async (file) => {
         return await this.mediaRepository.update(file, {
@@ -81,16 +81,38 @@ export class FilesService {
   async create(media: Common.Media[], categoryId: number) {
     return await Promise.all(
       media.map(async (item) => {
-        return await this.mediaRepository.create({
-          id: item.id,
-          filename: item.filename,
-          originalName: item.originalName,
-          size: item.size,
-          mimetype: item.mimetype,
-          path: item.path,
-          order: item.order as number | null,
-          categoryId,
+        return await this.mediaRepository.findOrCreate({
+          where: { id: item.id },
+          defaults: {
+            id: item.id,
+            filename: item.filename,
+            originalName: item.originalName,
+            size: item.size,
+            mimetype: item.mimetype,
+            path: item.path,
+            order: item.order,
+            categoryId,
+          },
         });
+      }),
+    );
+  }
+
+  async update(media: Common.Media[]) {
+    return await Promise.all(
+      media.map(async (item) => {
+        return await this.mediaRepository.update(
+          {
+            id: item.id,
+            filename: item.filename,
+            originalName: item.originalName,
+            size: item.size,
+            mimetype: item.mimetype,
+            path: item.path,
+            order: item.order,
+          },
+          { where: { id: item.id }, returning: false },
+        );
       }),
     );
   }

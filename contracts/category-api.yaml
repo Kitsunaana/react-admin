@@ -52,19 +52,9 @@ components:
     PatchCategory:
       description: Редактирование категории
       content:
-        multipart/form-data:
+        application/json:
           schema:
-            allOf:
-              - $ref: "#/components/schemas/CategoryDto"
-              - type: object
-                properties:
-                  images:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-                required:
-                  - images
+            $ref: "#/components/schemas/CategoryUpdate"
 
     PostCategory:
       description: Создание категории
@@ -110,9 +100,7 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              type: number
+            $ref: "#/components/schemas/CategoryPreview"
 
   parameters:
     CategoryId:
@@ -310,6 +298,69 @@ components:
         - characteristics
         - tags
 
+    CategoryUpdate:
+      type: object
+      properties:
+        caption:
+          type: string
+        description:
+          oneOf:
+            - type: string
+            - type: "null"
+        isShowPhotoWithGoods:
+          type: boolean
+        bgColor:
+          type: string
+        color:
+          type: string
+        blur:
+          type: number
+        activeImageId:
+          oneOf:
+            - type: string
+            - type: "null"
+        captionPosition:
+          $ref: "#/components/schemas/CaptionPosition"
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/MediaUpdate"
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
+        characteristics:
+          type: array
+          items:
+            $ref: "./characteristic.yaml#/components/schemas/CharacteristicCreate"
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagCreate"
+        images:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Image"
+        order:
+          oneOf:
+            - type: number
+            - type: "null"
+      required:
+        - caption
+        - description
+        - isShowPhotoWithGoods
+        - bgColor
+        - color
+        - blur
+        - activeImageId
+        - captionPosition
+        - media
+        - altNames
+        - characteristics
+        - tags
+        - images
+        - order
+
     CategoryCreate:
       type: object
       properties:
@@ -369,6 +420,59 @@ components:
         - images
 
     CategoryCreateWithMedia:
+      type: object
+      properties:
+        caption:
+          type: string
+        description:
+          oneOf:
+            - type: string
+            - type: "null"
+        isShowPhotoWithGoods:
+          type: boolean
+        bgColor:
+          type: string
+        color:
+          type: string
+        blur:
+          type: number
+        activeImageId:
+          oneOf:
+            - type: string
+            - type: "null"
+        captionPosition:
+          $ref: "#/components/schemas/CaptionPosition"
+        media:
+          type: array
+          items:
+            $ref: "./media.yaml#/components/schemas/Media"
+        altNames:
+          type: array
+          items:
+            $ref: "./alt-name.yaml#/components/schemas/AltNameCreate"
+        characteristics:
+          type: array
+          items:
+            $ref: "./characteristic.yaml#/components/schemas/CharacteristicCreate"
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagCreate"
+      required:
+        - caption
+        - description
+        - isShowPhotoWithGoods
+        - bgColor
+        - color
+        - blur
+        - activeImageId
+        - captionPosition
+        - media
+        - altNames
+        - characteristics
+        - tags
+
+    CategoryUpdateWithMedia:
       type: object
       properties:
         caption:

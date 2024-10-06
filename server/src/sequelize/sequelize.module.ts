@@ -5,6 +5,7 @@ import { Models } from '../entities';
 @Module({
   imports: [
     SequelizeModulePackage.forRootAsync({
+      imports: undefined,
       useFactory: () => ({
         username: 'postgres',
         password: 'postgres',
@@ -24,4 +25,4 @@ import { Models } from '../entities';
     }),
   ],
 })
-export class SequelizeModule { }
+export class SequelizeModule {}

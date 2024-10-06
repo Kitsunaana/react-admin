@@ -10,8 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { GoodsService } from './goods.service';
-import { CustomFilesInterceptor } from '../categories/categories.controller';
-import { IsBoolean, IsBooleanString, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { FilesService } from '../files/files.service';
 
@@ -72,11 +71,9 @@ export class GoodsController {
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
-  @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
-  async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: CreateGoodDto) {
-    const good = await this.goodsService.create(dto);
-
-    await this.filesService.saveMedia(files, [], { goodId: good.id });
+  async create(@Body() dto: CreateGoodDto) {
+    // const good = await this.goodsService.create(dto);
+    // await this.filesService.saveMedia(files, [], { goodId: good.id });
   }
 
   @Get('/:id')

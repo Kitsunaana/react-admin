@@ -136,8 +136,102 @@ export const updateCategoryParams = zod.object({
   categoryId: zod.number(),
 });
 
-export const updateCategoryResponseItem = zod.number();
-export const updateCategoryResponse = zod.array(updateCategoryResponseItem);
+export const updateCategoryBody = zod.object({
+  caption: zod.string(),
+  description: zod.string().or(zod.null()),
+  isShowPhotoWithGoods: zod.boolean(),
+  bgColor: zod.string(),
+  color: zod.string(),
+  blur: zod.number(),
+  activeImageId: zod.string().or(zod.null()),
+  captionPosition: zod.enum([
+    'top-left',
+    'top-center',
+    'top-right',
+    'center-left',
+    'center-center',
+    'center-right',
+    'bottom-left',
+    'bottom-center',
+    'bottom-right',
+  ]),
+  media: zod.array(
+    zod.object({
+      id: zod.string(),
+      filename: zod.string(),
+      originalName: zod.string(),
+      path: zod.string(),
+      mimetype: zod.string(),
+      order: zod.number().or(zod.null()),
+      size: zod.number(),
+      deleted: zod.boolean().optional(),
+    }),
+  ),
+  altNames: zod.array(
+    zod.any().and(
+      zod.object({
+        id: zod.number().or(zod.string()),
+        action: zod.enum(['update', 'create', 'remove']).optional(),
+      }),
+    ),
+  ),
+  characteristics: zod.array(
+    zod.any().and(
+      zod.object({
+        action: zod.enum(['create', 'update', 'remove']).optional(),
+        id: zod.number().or(zod.string()),
+      }),
+    ),
+  ),
+  tags: zod.array(
+    zod
+      .object({
+        icon: zod.string().or(zod.null()),
+        caption: zod.string(),
+        color: zod.string(),
+      })
+      .and(
+        zod.object({
+          action: zod.enum(['create', 'update', 'remove']).optional(),
+          id: zod.number().or(zod.string()),
+        }),
+      ),
+  ),
+  images: zod.array(
+    zod.object({
+      id: zod.string(),
+      caption: zod.string(),
+      type: zod.string(),
+      data: zod.string(),
+    }),
+  ),
+  order: zod.number().or(zod.null()),
+});
+
+export const updateCategoryResponse = zod.object({
+  id: zod.number(),
+  description: zod.string(),
+  caption: zod.string(),
+  order: zod.number().or(zod.null()),
+  altNames: zod.array(
+    zod.any().and(
+      zod.object({
+        id: zod.number(),
+      }),
+    ),
+  ),
+  media: zod.array(
+    zod.object({
+      id: zod.string(),
+      filename: zod.string(),
+      originalName: zod.string(),
+      path: zod.string(),
+      mimetype: zod.string(),
+      order: zod.number().or(zod.null()),
+      size: zod.number(),
+    }),
+  ),
+});
 
 export const getCategoryParams = zod.object({
   categoryId: zod.number(),

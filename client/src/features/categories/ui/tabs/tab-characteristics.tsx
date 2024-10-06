@@ -5,7 +5,11 @@ import styled from "styled-components"
 import { EmptyList } from "shared/ui/empty-list"
 import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { CharacteristicEditDialog, CharacteristicCreateDialog, useRemoveCharacteristic } from "features/characteristics"
+import { 
+  CharacteristicEditDialog,
+  CharacteristicCreateDialog,
+  useRemoveCharacteristic
+} from "features/characteristics"
 import { Text } from "shared/ui/text"
 import { Characteristic } from "entities/characteristic"
 import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"

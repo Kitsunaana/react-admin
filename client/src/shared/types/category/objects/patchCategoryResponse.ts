@@ -5,8 +5,9 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
+import type { CategoryPreview } from "./categoryPreview";
 
 /**
  * Изменение категории
  */
-export type PatchCategoryResponse = number[];
+export type PatchCategoryResponse = CategoryPreview;

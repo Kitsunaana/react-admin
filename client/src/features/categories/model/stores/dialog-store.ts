@@ -6,7 +6,6 @@ import { PhotosStore } from "features/categories/model/stores/photos-store"
 import { z, ZodSchema } from "zod"
 import { CategorySchemas, CategoryDto } from "shared/types/category"
 import { validation } from "shared/lib/validation"
-import { CategoryCreate } from "shared/types/category/objects"
 import { PhotoPositionStore } from "./photo-position-store"
 
 type Actions = "add" | "replace" | "none"
@@ -89,14 +88,10 @@ export class RootStore {
 
   destroy() { this.createStores() }
 
-  setCopiedData(data: undefined) {
+  setCopiedData(data: CategoryDto.CategoryRows | undefined) {
     if (data === undefined) return
 
     console.log(data)
-    const validatedData = validation(categoryStoreSchema, data)
-
-    // this.photos.setCopiedData({
-    // })
   }
 
   setData(data: CategoryDto.CategoryRows | undefined) {

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, toJS } from "mobx"
 import { nanoid } from "nanoid"
 import { CategoryDto } from "shared/types/category"
 import { isNumber, isString } from "shared/lib/utils"
@@ -52,7 +52,7 @@ export class TagsStore {
 
   getData() {
     return {
-      tags: this.tags
+      tags: toJS(this.tags),
     }
   }
 

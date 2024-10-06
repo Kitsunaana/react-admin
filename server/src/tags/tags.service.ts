@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Tag, TagCreate } from '../entities/tag.entity';
 import { CategoryTag } from '../entities/category-tag.entity';
+import { CategoryDto } from '../categories/types';
 
 export class TagCreateDto extends TagCreate {
   id: number;
@@ -15,51 +16,67 @@ export class TagsService {
     @InjectModel(CategoryTag) private categoryTagRepository: typeof CategoryTag,
   ) {}
 
-  async findOrCreateTag({ caption }: TagCreate['tag']) {
+  async findOrCreateTag({ caption }: CategoryDto.TagCreate) {
     return await this.tagRepository.findOrCreate({
       where: { caption },
       defaults: { caption },
     });
   }
 
-  async createCategoryTag(data: TagCreate, categoryId: number) {
-    const [tag] = await this.findOrCreateTag(data.tag);
+  async createCategoryTag(payload: CategoryDto.TagCreate, categoryId: number) {
+    const [tag] = await this.findOrCreateTag(payload);
 
     return await this.categoryTagRepository.create({
       tagId: tag.id,
-      icon: data.icon,
-      tagColor: data.tagColor,
+      icon: payload.icon,
+      tagColor: payload.color,
       categoryId,
     });
   }
 
-  async create(tags: TagCreate[], categoryId: number) {
+  async create(tags: CategoryDto.TagCreate[], categoryId: number) {
     await Promise.all(tags.map(async (item) => await this.createCategoryTag(item, categoryId)));
   }
 
-  async updateCategoryTag({ tag, icon, tagColor, id }: TagCreateDto) {
+  async updateCategoryTag(payload: CategoryDto.TagCreate) {
+    const { caption, icon, color, id } = payload;
+
     const tags = await this.categoryTagRepository.findAll({
-      include: [{ model: Tag, where: { caption: tag.caption } }],
+      include: [{ model: Tag, where: { caption } }],
     });
 
     let tagId = null;
     if (tags.length === 1) {
       await this.tagRepository.update(
-        { caption: tag.caption },
-        { where: { caption: tag.caption } },
+        { caption: caption },
+        { where: { caption }, returning: false },
       );
 
-      const findTag = await this.tagRepository.findOne({ where: { caption: tag.caption } });
+      const findTag = await this.tagRepository.findOne({
+        where: { caption },
+        rejectOnEmpty: false,
+      });
+
       tagId = findTag.id;
     } else {
-      const newTag = await this.tagRepository.create({ caption: tag.caption });
+      const newTag = await this.tagRepository.create({ caption });
       tagId = newTag.id;
     }
 
-    return await this.categoryTagRepository.update({ tagId, icon, tagColor }, { where: { id } });
+    return await this.categoryTagRepository.update(
+      { tagId, icon, tagColor: color },
+      { where: { id }, returning: false },
+    );
   }
 
-  async destroyCategoryTag({ id, tag }: TagCreateDto) {
+  async destroyCategoryTag(payload: CategoryDto.TagCreate) {
+    const { id, caption } = payload;
+
+    const findTag = await this.tagRepository.findOne({
+      where: { caption },
+      rejectOnEmpty: true,
+    });
+
     await this.categoryTagRepository.destroy({
       where: { id },
     });
@@ -68,15 +85,15 @@ export class TagsService {
       include: [
         {
           model: CategoryTag,
-          where: { tagId: tag?.id },
+          where: { tagId: findTag.id },
         },
       ],
     });
 
-    if (tags.length === 0) await this.tagRepository.destroy({ where: { id: tag.id } });
+    if (tags.length === 0) await this.tagRepository.destroy({ where: { id: findTag.id } });
   }
 
-  async update(tags: TagCreateDto[], categoryId: number) {
+  async update(tags: CategoryDto.TagCreate[], categoryId: number) {
     await Promise.all(
       tags.map(async (item) => {
         if (item.action === 'create') return this.createCategoryTag(item, categoryId);

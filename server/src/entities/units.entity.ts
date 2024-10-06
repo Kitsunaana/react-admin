@@ -10,6 +10,9 @@ export class Unit extends Model<Unit> {
   @Column({ type: DataType.STRING, unique: true })
   caption: string;
 
-  @BelongsToMany(() => Characteristic, () => CategoryCharacteristic)
-  characteristics: Characteristic[];
+  /*@BelongsToMany(() => Characteristic, () => CategoryCharacteristic)
+  characteristics: Characteristic[];*/
+
+  @HasMany(() => CategoryCharacteristic)
+  categoryCharacteristics: CategoryCharacteristic[];
 }

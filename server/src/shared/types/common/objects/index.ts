@@ -34,6 +34,8 @@ export * from './localesResponse';
 export * from './media';
 export * from './mediaOrder';
 export * from './mediaOrderOneOf';
+export * from './mediaUpdate';
+export * from './mediaUpdateOrder';
 export * from './unit';
 export * from './unitCaption';
 export * from './unitCaptionOneOf';

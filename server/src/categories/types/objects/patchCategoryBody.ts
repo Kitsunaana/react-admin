@@ -5,7 +5,9 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryDto } from './categoryDto';
-import type { PatchCategoryBodyAllOf } from './patchCategoryBodyAllOf';
+import type { CategoryUpdate } from './categoryUpdate';
 
-export type PatchCategoryBody = CategoryDto & PatchCategoryBodyAllOf;
+/**
+ * Редактирование категории
+ */
+export type PatchCategoryBody = CategoryUpdate;

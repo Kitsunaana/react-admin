@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Injectable,
-  NestInterceptor,
   Param,
   Patch,
   Post,
@@ -15,9 +13,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { GetCategoryDto } from './dto/get-category-dto';
 import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
@@ -27,24 +22,6 @@ import { LocalesService } from '../locales/locales.service';
 import { TagsService } from '../tags/tags.service';
 import { CategoryDto } from './types';
 
-@Injectable()
-export class CustomFilesInterceptor {
-  static imagesInterceptor(): NestInterceptor {
-    return FilesInterceptor('images', 100, {
-      storage: diskStorage({
-        destination: './uploads',
-        filename(
-          req: any,
-          file: Express.Multer.File,
-          callback: (error: Error | null, filename: string) => void,
-        ) {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          callback(null, uniqueSuffix + file.originalname);
-        },
-      }),
-    }) as NestInterceptor;
-  }
-}
 @Controller('categories')
 export class CategoriesController {
   constructor(
@@ -56,26 +33,15 @@ export class CategoriesController {
   ) {}
 
   @Post('')
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
-  async create(@Body() dto: CategoryDto.PostCategoryBody) {
+  async create(@Body() dto: CategoryDto.CategoryCreate) {
     const category = await this.categoryService.create(dto);
 
     await this.localesService.create(dto.altNames, category.id);
     await this.filesService.create(dto.media, category.id);
-    // await this.characteristicsService.create(dto.characteristics, category);
-    // if (dto?.media)
-    //   await this.filesService.saveUploadedMedia(
-    //     dto.media.filter((media) => !media.deleted),
-    //     category.id,
-    //   );
-    // await this.filesService.saveMedia(files, dto.imagesIds, { categoryId: category.id });
-    // await this.tagsService.create(dto.tags, category.id);
-    //
-    // return category;
+    await this.characteristicsService.create(dto.characteristics, category);
+    await this.tagsService.create(dto.tags, category.id);
 
-    return category;
-    console.log(dto);
+    return this.categoryService.getById(category.id);
   }
 
   @Get()
@@ -99,26 +65,21 @@ export class CategoriesController {
   }
 
   @Patch('/:id')
-  @UsePipes(new ValidationPipe({ transform: true }))
-  @UseInterceptors(CustomFilesInterceptor.imagesInterceptor())
-  async update(
-    @Param('id') id: number,
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @Body() dto: UpdateCategoryDto,
-  ) {
-    const categoryId = (<any>dto).id;
+  async update(@Param('id') id: number, @Body() dto: CategoryDto.PatchCategoryBody) {
+    await this.filesService.update(dto.media);
+    await this.filesService.create(dto.media, id);
+    await this.filesService.deleteMedia(dto.media.filter((media) => media?.deleted));
 
-    await this.filesService.updateOrder(dto.media);
-    await this.filesService.saveMedia(files, dto.imagesIds, { categoryId });
-    if (dto?.media) await this.filesService.saveUploadedMedia(dto.media, id);
-    await this.filesService.deleteMedia(dto.media.filter((media) => media.deleted));
-    await this.characteristicsService.update(dto.characteristics, id);
-    await this.localesService.updateAltNamesCategory(dto.altNames, id);
-    await this.tagsService.update(dto.tags, id);
+    // await this.filesService.saveMedia(files, dto.imagesIds, { categoryId });
+    // if (dto?.media) await this.filesService.saveUploadedMedia(dto.media, id);
 
-    const category = await this.categoryService.update(id, dto);
+    // await this.characteristicsService.update(dto.characteristics, id);
+    // await this.localesService.updateAltNamesCategory(dto.altNames, id);
+    // await this.tagsService.update(dto.tags, id);
 
-    return category;
+    await this.categoryService.update(id, dto);
+
+    return await this.categoryService.getById(id);
   }
 
   @Delete('/:id')

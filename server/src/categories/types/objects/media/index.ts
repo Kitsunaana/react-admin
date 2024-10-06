@@ -10,3 +10,5 @@ export * from './image';
 export * from './media';
 export * from './mediaOrder';
 export * from './mediaOrderOneOf';
+export * from './mediaUpdate';
+export * from './mediaUpdateOrder';

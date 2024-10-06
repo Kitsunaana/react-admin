@@ -53,7 +53,7 @@ export class LocalesService {
       altNames.map(async (altName) => {
         if (altName.action === 'update') return this.updateAltName(altName, categoryId);
         if (altName.action === 'create') return this.createAltName(altName, categoryId);
-        if (altName.action === 'remove') return this.destroyAltName(altName.id);
+        if (altName.action === 'remove') return this.destroyAltName(altName.id as number);
       }),
     );
   }

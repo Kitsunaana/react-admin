@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, toJS } from "mobx"
 import { nanoid } from "nanoid"
 import { Common } from "shared/types/common"
 import { toast } from "react-toastify"
@@ -87,8 +87,10 @@ export class AltNamesStore {
       const isCodesNotEqual = this.selectedLocale?.code !== locale.code
       const isCodeNotAvailable = localeCodes.includes(locale.code)
 
-      if (isCodesNotEqual && isCodeNotAvailable) return { ...locale, disabled: true }
-      if (isCodeNotAvailable && nonExclude === null) return { ...locale, disabled: true }
+      if (
+        (isCodesNotEqual && isCodeNotAvailable)
+        || (isCodeNotAvailable && nonExclude === null)
+      ) return { ...locale, disabled: true }
 
       return locale
     })
@@ -96,7 +98,7 @@ export class AltNamesStore {
 
   getData() {
     return {
-      altNames: this.altNames,
+      altNames: toJS(this.altNames),
     }
   }
 

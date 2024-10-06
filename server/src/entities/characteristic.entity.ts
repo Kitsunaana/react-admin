@@ -5,7 +5,6 @@ import {
   DataType,
   ForeignKey,
   HasMany,
-  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -14,15 +13,20 @@ import { Unit } from './units.entity';
 
 @Table({ timestamps: false })
 export class Characteristic extends Model<Characteristic> {
-  // @Column({ unique: true, type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   id: number;
 
   @Column({ type: DataType.STRING, unique: true })
   caption: string;
 
-  @BelongsToMany(() => Category, () => CategoryCharacteristic)
-  categories: Array<Category & { CategoryCharacteristic: CategoryCharacteristic }>;
+  // @BelongsToMany(() => Category, () => CategoryCharacteristic)
+  // categories: Array<Category & { CategoryCharacteristic: CategoryCharacteristic }>;
+
+  // @HasMany(() => Category, { foreignKeyConstraint: false, constraints: false })
+  // categories: Category[];
+
+  @HasMany(() => CategoryCharacteristic, { foreignKeyConstraint: false, constraints: false })
+  categoryCharacteristics: CategoryCharacteristic[];
 }
 
 export class CategoryCharacteristicCreate {
@@ -47,7 +51,7 @@ export class CategoryCharacteristic extends Model<
   CategoryCharacteristic,
   CategoryCharacteristicCreate
 > {
-  @Column({ unique: true, type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
+  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   id: number;
 
   @ForeignKey(() => Characteristic)

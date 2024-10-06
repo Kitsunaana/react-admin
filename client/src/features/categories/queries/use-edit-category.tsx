@@ -8,12 +8,20 @@ import { CategoryDto } from "shared/types/category"
 export const useEditCategory = (id: number | null) => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["category", id],
-    mutationFn: (data: CategoryDto.CategoryUpdateDto) => (
-      toast.promise(new Promise<CategoryDto.CategoryUpdateDto>((resolve) => {
+    mutationFn: ({ images, ...other }: CategoryDto.PatchCategoryBody) => (
+      toast.promise(new Promise<CategoryDto.PatchCategoryResponse>(async (resolve, reject) => {
         if (id === null) return
 
+        const media = await categoriesApiV2.filesUpload(images)
+        // const media = await categoriesApiV2.fakeFilesUpload()
+
+        console.log({ ...other, media: [...other.media, ...media] })
+
         setTimeout(() => {
-          categoriesApiV2.patch(id, data).then(() => resolve(data))
+          categoriesApiV2
+            .patch(id, { ...other, media: [...other.media, ...media] })
+            .then(resolve)
+            .catch(reject)
         }, 1000)
       }), {
         pending: "Категория обновляется",

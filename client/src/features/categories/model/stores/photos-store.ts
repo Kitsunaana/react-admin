@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, toJS } from "mobx"
 import { dispatch } from "shared/lib/event"
 import { RootStore } from "features/categories/model/stores/dialog-store"
 import { Common } from "shared/types/common"
@@ -86,8 +86,8 @@ export class PhotosStore {
 
   getData() {
     return {
-      media: this.media,
-      images: this.images,
+      media: toJS(this.media),
+      images: toJS(this.images),
     }
   }
 }

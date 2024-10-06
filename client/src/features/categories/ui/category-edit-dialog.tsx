@@ -1,5 +1,4 @@
 import {
-  DeepPartial,
   FormProvider, useForm,
 } from "react-hook-form"
 import { TabsContainer } from "shared/ui/tabs/tabs-container"
@@ -18,11 +17,14 @@ import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { CategoryDto, CategorySchemas } from "shared/types/category"
 import { useEditCategory } from "features/categories/queries/use-edit-category"
 import {
+  base64ToFile,
   copyToClipboardV2, exclude, fileToBase64, getNumberOrNull, readOfClipboardV2,
 } from "shared/lib/utils"
 import { validation } from "shared/lib/validation"
+import { useGetConfirmation } from "shared/lib/confirmation"
+import { Common } from "shared/types/common"
 
-const defaultValues: DeepPartial<UseCategoryFormProps> = {
+const defaultValues: UseCategoryFormProps = {
   caption: "",
   description: "",
   bgColor: "",
@@ -31,26 +33,33 @@ const defaultValues: DeepPartial<UseCategoryFormProps> = {
   blur: 8,
 }
 
-const copiedCategorySchema = CategorySchemas.getCategoryResponse.omit({
-  id: true,
-})
+export const useClearDialog = () => {
+  const getConfirmation = useGetConfirmation()
+
+  return async (clear: () => void) => {
+    const confirmation = await getConfirmation({})
+
+    if (confirmation) clear()
+  }
+}
 
 export const CategoryEditDialog = observer(() => {
-  const methods = useForm<UseCategoryFormProps>({ defaultValues })
+  const methods = useForm<CategoryDto.CategoryCreate>({ defaultValues })
   const dialogStore = useEditDialogStore()
   const categoryStore = useStores()
+  const onClear = useClearDialog()
 
   const { category, isLoadingGet } = useGetCategory(getNumberOrNull(dialogStore.id))
   const { onEdit, isLoadingEdit } = useEditCategory(getNumberOrNull(dialogStore.id))
 
-  const { apply, clear } = useSetDialogValues<CategoryDto.CategoryDto | undefined>({
+  const { apply, clear } = useSetDialogValues({
     data: category,
     defaults: defaultValues,
     setData: [
-      categoryStore.setData,
+      (data) => data && categoryStore.setData({ ...data, images: [] }),
       (data) => data && methods.reset(exclude(
         data,
-        ["characteristics", "altNames", "media", "id", "activeImageId"],
+        ["characteristics", "altNames", "tags", "media", "activeImageId", "id"],
       ))],
     clearData: [categoryStore.destroy, methods.reset],
     shouldHandle: [dialogStore.open],
@@ -60,15 +69,11 @@ export const CategoryEditDialog = observer(() => {
     const fields = methods.getValues()
     const rows = categoryStore.getData()
 
-    const stringifyImages = async (images: [{ data: File }]) => await Promise.all(
-      images.map(async (image: { data: File }) => {
-        const base64string = await fileToBase64(image.data)
-
-        return {
-          ...image,
-          data: base64string,
-        }
-      }),
+    const stringifyImages = async (images: Common.Image[]) => await Promise.all(
+      images.map(async (image) => ({
+        ...image,
+        data: await fileToBase64(image.data as File),
+      })),
     )
 
     const mergedData = {
@@ -83,10 +88,18 @@ export const CategoryEditDialog = observer(() => {
   const handlePaste = async () => {
     const readDataOfClipboard = await readOfClipboardV2()
 
-    validation(copiedCategorySchema, readDataOfClipboard)
+    const validatedData = validation(CategorySchemas.createCategoriesBody, readDataOfClipboard)
 
-    apply({
-      data: readDataOfClipboard,
+    const category = {
+      ...validatedData,
+      images: validatedData.images.map((image) => ({
+        ...image,
+        data: base64ToFile(image.data, image.caption),
+      })),
+    }
+
+    apply<CategoryDto.CategoryCreate>({
+      data: category,
       setData: [methods.reset, categoryStore.setCopiedData],
     })
   }
@@ -95,18 +108,10 @@ export const CategoryEditDialog = observer(() => {
     <FormProvider {...methods}>
       <UpsertDialog
         store={dialogStore}
-        handleSubmit={(data: CategoryDto.CategoryDto) => {
+        handleSubmit={(data: CategoryDto.CategoryFields) => {
           const payload = categoryStore.getData()
 
-          onEdit({
-            activeImageId: payload.activeImageId,
-            description: data.description,
-            color: data.color,
-            characteristics: payload.characteristics,
-          })
-          // return (
-          //   onEdit({ ...data, ...categoryStore.getData() })
-          // )
+          onEdit({ ...data, ...payload })
         }}
         isLoading={(isLoadingGet || isLoadingEdit) && dialogStore.id !== null}
         container={<ContentContainer />}
@@ -115,7 +120,7 @@ export const CategoryEditDialog = observer(() => {
             store={dialogStore}
             onCopyClick={handleCopyToClipboard}
             onPasteClick={handlePaste}
-            onClearClick={clear}
+            onClearClick={() => onClear(clear)}
             showActions
             settings={(
               <CopySettingsPopup>
