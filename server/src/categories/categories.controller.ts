@@ -38,7 +38,7 @@ export class CategoriesController {
 
     await this.localesService.create(dto.altNames, category.id);
     await this.filesService.create(dto.media, category.id);
-    await this.characteristicsService.create(dto.characteristics, category);
+    await this.characteristicsService.create(dto.characteristics, category.id);
     await this.tagsService.create(dto.tags, category.id);
 
     return this.categoryService.getById(category.id);
@@ -70,10 +70,7 @@ export class CategoriesController {
     await this.filesService.create(dto.media, id);
     await this.filesService.deleteMedia(dto.media.filter((media) => media?.deleted));
 
-    // await this.filesService.saveMedia(files, dto.imagesIds, { categoryId });
-    // if (dto?.media) await this.filesService.saveUploadedMedia(dto.media, id);
-
-    // await this.characteristicsService.update(dto.characteristics, id);
+    await this.characteristicsService.update(dto.characteristics, id);
     // await this.localesService.updateAltNamesCategory(dto.altNames, id);
     // await this.tagsService.update(dto.tags, id);
 
@@ -86,7 +83,7 @@ export class CategoriesController {
   async delete(@Param('id') id: string) {
     await this.tagsService.delete(parseInt(id));
     await this.localesService.delete(parseInt(id));
-    await this.characteristicsService.delete(parseInt(id));
+    await this.characteristicsService.remove(parseInt(id));
 
     return await this.categoryService.delete(parseInt(id));
   }

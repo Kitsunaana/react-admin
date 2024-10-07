@@ -82,7 +82,7 @@ export class FilesService {
     return await Promise.all(
       media.map(async (item) => {
         return await this.mediaRepository.findOrCreate({
-          where: { id: item.id },
+          where: { id: item.id, categoryId },
           defaults: {
             id: item.id,
             filename: item.filename,
