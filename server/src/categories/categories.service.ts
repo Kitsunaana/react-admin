@@ -178,7 +178,7 @@ export class CategoriesService {
         characteristics: categoryCharacteristics.map(({ characteristic, unit, ...other }) => ({
           id: other.id,
           caption: characteristic.caption,
-          unit: unit.caption,
+          unit: unit ? unit.caption : null,
           value: other.value,
           hideClient: other.hideClient,
         })),
