@@ -12,13 +12,13 @@ export class CharacteristicsService {
     private categoryCharacteristicsRepository: typeof CategoryCharacteristic,
     private unitRepository: UnitRepository,
     private characteristicRepository: CharacteristicRepository,
-  ) {}
+  ) { }
 
   async createCharacteristic(payload: Common.CharacteristicCreate, categoryId: number) {
     const [unit] = await this.unitRepository.findOrCreate(payload.unit);
     const [characteristic] = await this.characteristicRepository.findOrCreate(payload.caption);
 
-    return await this.categoryCharacteristicsRepository.create({
+    await this.categoryCharacteristicsRepository.create({
       characteristicId: characteristic.id,
       categoryId: categoryId,
       unitId: unit.id,
@@ -28,13 +28,11 @@ export class CharacteristicsService {
   }
 
   async updateCharacteristic(payload: Common.CharacteristicCreate, categoryId: number) {
-    console.log(payload);
     const [unit] = await this.unitRepository.findOrCreate(payload.unit);
     const [characteristic] = await this.characteristicRepository.findOrCreate(payload.caption);
 
-    return await this.categoryCharacteristicsRepository.update(
+    await this.categoryCharacteristicsRepository.update(
       {
-        id: payload.id as number,
         value: payload.value,
         hideClient: payload.hideClient,
         characteristicId: characteristic.id,
@@ -46,9 +44,6 @@ export class CharacteristicsService {
         returning: false,
       },
     );
-
-    await this.characteristicRepository.removeUnused();
-    await this.unitRepository.removeUnused();
   }
 
   async removeCharacteristic(data: Common.CharacteristicCreate) {
@@ -71,19 +66,15 @@ export class CharacteristicsService {
 
     await Promise.all(
       items.map(async (item) => {
-        // if (item.action === 'create') return await this.createCharacteristic(item, categoryId);
-        // if (item.action === 'update') return await this.updateCharacteristic(item, categoryId);
-        // if (item.action === 'remove') return await this.removeCharacteristic(item);
-
-        return await actions[item.action]?.bind(this)(item, categoryId);
+        await actions[item.action]?.bind(this)(item, categoryId);
       }),
     );
+
+    await this.characteristicRepository.removeUnused();
+    await this.unitRepository.removeUnused();
   }
 
   async remove(categoryId: number) {
     await this.categoryCharacteristicsRepository.destroy({ where: { categoryId } });
-
-    await this.characteristicRepository.removeUnused();
-    await this.unitRepository.removeUnused();
   }
 }
