@@ -1,3 +1,6 @@
+import { ZodSchema } from "zod"
+import { validation, ValidationError } from "./validation"
+
 export const shallowEqual = (prev, next) => {
   const keys = Object.keys(prev)
 
@@ -17,16 +20,6 @@ export const shallowEqual = (prev, next) => {
   return isEqual
 }
 
-export const stringifiedParams = <TParams extends object>(data: TParams) => {
-  const newData = Object.entries(data).reduce((prev, [key, value]) => {
-    if (value) prev[key] = value
-    return prev
-  }, {})
-
-  const searchParams = (new URLSearchParams(newData)).toString()
-  return searchParams && `?${searchParams}`
-}
-
 export const fileToBase64 = async (file: File): Promise<string | ArrayBuffer> => {
   const reader = new FileReader()
 
@@ -40,7 +33,7 @@ export const fileToBase64 = async (file: File): Promise<string | ArrayBuffer> =>
   })
 }
 
-export const copyToClipboardV2 = async (data: object) => {
+export const copyToClipboard = async (data: object) => {
   await navigator.clipboard.writeText(JSON.stringify(data))
 }
 
@@ -58,7 +51,7 @@ export const base64ToFile = (base64String: string, filename: string) => {
   return new File([u8arr], filename, { type: mime })
 }
 
-export const readOfClipboardV2 = async () => {
+export const readOfClipboard = async () => {
   try {
     const readText = await navigator.clipboard.readText()
     return JSON.parse(readText)
@@ -69,8 +62,6 @@ export const readOfClipboardV2 = async () => {
 }
 
 export const getNumberOrNull = (value: unknown) => (typeof value === "number" ? value : null)
-
-export const getImageUrl = (name: string) => `http://localhost:3333/uploads/${name}`
 
 export const isString = (value: unknown) => typeof value === "string"
 export const isNumber = (value: unknown) => typeof value === "number"
@@ -97,4 +88,14 @@ export const include = <T extends object, K extends keyof T>(data: T, keys: read
     })
 
   return Object.fromEntries(entries)
+}
+
+export const getLocalStorageData = (name: "settingsRows" | "settingsFields", schema: ZodSchema) => {
+  const data = localStorage.getItem(name)
+  try {
+    const parsedData = validation(schema, JSON.parse(data ?? "{}"))
+    return parsedData
+  } catch (error) {
+    if (error instanceof ValidationError) console.error(error.message)
+  }
 }

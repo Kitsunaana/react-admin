@@ -1,7 +1,6 @@
 import { $axios } from "shared/config/axios"
-import { stringifiedParams } from "shared/lib/utils"
-import { CategoryDto, CategorySchemas } from "shared/types/category"
 import { validation } from "shared/lib/validation"
+import { CategoryDto, CategorySchemas } from "shared/types/category"
 import { z } from "zod"
 import { IParams } from "../model/types"
 
@@ -9,7 +8,9 @@ const URL = "/categories"
 
 export const categoriesApi = {
   getAll: async (params: IParams): Promise<CategoryDto.GetAllCategoriesResponse> => {
-    const { data } = await $axios.get(`${URL}${stringifiedParams(params)}`)
+    const { data } = await $axios.get(`${URL}`, {
+      params,
+    })
 
     return (
       validation(

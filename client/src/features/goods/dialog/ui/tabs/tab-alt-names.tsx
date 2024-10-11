@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { Box, BoxProps } from "shared/ui/box"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { EmptyList } from "shared/ui/empty-list"
 import { Vertical } from "shared/ui/divider"
 import { IconButton } from "shared/ui/buttons/icon-button"
@@ -10,7 +10,7 @@ import { AltNameItem, useLocales } from "entities/alt-name"
 import { AltNameCreateDialog } from "features/alt-names"
 import { Text } from "shared/ui/text"
 import { Skeleton } from "@mui/material"
-import { useStores } from "../../model/context"
+import { useCategoryStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -25,7 +25,7 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
 `
 
 export const TabAltNames = observer(() => {
-  const { altNames } = useStores()
+  const { altNames } = useCategoryStores()
   const { fullScreen, openDialog: openEditDialog } = useEditDialogStore()
   const { locales } = useLocales()
 

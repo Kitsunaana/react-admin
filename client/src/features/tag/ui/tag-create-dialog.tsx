@@ -1,11 +1,14 @@
+import { openCreateTagDialog } from "entities/tag"
 import { observer } from "mobx-react-lite"
-import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { useCreateDialogStore } from "shared/context/dialog-create-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { UpsertDialog } from "shared/ui/dialog/dialog-edit-v3"
-import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { eventBus } from "shared/lib/event-bus"
 import { CategoryDto } from "shared/types/category"
+import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
 import { defaultValues } from "../model/const"
 import { TagForm } from "./tag-form"
 
@@ -30,6 +33,13 @@ export const TagCreateDialog = observer(({ onCreate }: TagCreateDialogProps) => 
     onCreate(data)
     createStore.closeDialog()
   }
+
+  useEffect(() => {
+    const event = () => createStore.openDialogV2()
+
+    eventBus.on(openCreateTagDialog, event)
+    return () => eventBus.off(openCreateTagDialog, event)
+  }, [])
 
   return (
     <FormProvider {...methods}>

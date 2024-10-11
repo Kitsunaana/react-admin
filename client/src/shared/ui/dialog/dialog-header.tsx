@@ -8,7 +8,7 @@ import { styled } from "@mui/material/styles"
 import { Mark } from "shared/ui/mark"
 import { Box } from "shared/ui/box"
 import { toast } from "react-toastify"
-import { DialogStore } from "shared/ui/dialog/model/dialog-store"
+import { DialogStore } from "shared/stores/dialog-store"
 
 const HeaderContainer = styled("div")(({ theme }) => ({
   display: "flex",

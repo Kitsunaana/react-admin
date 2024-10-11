@@ -3,7 +3,7 @@ import { Tabs } from "shared/ui/tabs/tabs"
 import { useFormContext, useFormState } from "react-hook-form"
 import { Tab } from "shared/ui/tabs/tab"
 import { observer } from "mobx-react-lite"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { useLang } from "shared/context/lang"
 
 export interface ITab {

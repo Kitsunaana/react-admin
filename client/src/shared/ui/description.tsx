@@ -26,6 +26,7 @@ export const DescriptionInput = () => (
       <Input
         {...field}
         fullWidth
+        value={field.value ?? ""}
         label={<Text name="description" />}
         multiline
         rows="10"

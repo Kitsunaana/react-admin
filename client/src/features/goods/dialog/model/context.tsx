@@ -5,7 +5,7 @@ import * as React from "react"
 import { createRootStore } from "features/goods/dialog/model/stores/dialog-store"
 
 const RootStoreContext = createContext(createRootStore())
-export const useStores = () => useContext(RootStoreContext)
+export const useCategoryStores = () => useContext(RootStoreContext)
 
 export const StoreProvider: FC<PropsWithChildren> = (props) => {
   const { children } = props

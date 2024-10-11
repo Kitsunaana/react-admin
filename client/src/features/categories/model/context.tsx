@@ -1,15 +1,16 @@
 import {
-  createContext, FC, PropsWithChildren, useContext, useState,
+  createContext,
+  FC,
+  PropsWithChildren,
+  useContext,
+  useState,
 } from "react"
-import * as React from "react"
 import { createRootStore } from "./stores/dialog-store"
 
 const RootStoreContext = createContext(createRootStore())
-export const useStores = () => useContext(RootStoreContext)
+export const useCategoryStores = () => useContext(RootStoreContext)
 
-export const StoreProvider: FC<PropsWithChildren> = (props) => {
-  const { children } = props
-
+export const StoreProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state] = useState(createRootStore)
 
   return (

@@ -1,12 +1,14 @@
+import { openCreateAltNameDialog } from "entities/alt-name"
+import { CreateEditForm } from "features/alt-names/ui/alt-name-edit-form"
 import { observer } from "mobx-react-lite"
-import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
 import { FormProvider, useForm } from "react-hook-form"
+import { useCreateDialogStore } from "shared/context/dialog-create-context"
 import { LangContext, useLang } from "shared/context/lang"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { UpsertDialog } from "shared/ui/dialog/dialog-edit-v3"
+import { Common } from "shared/types/common"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
-import { CreateEditForm } from "features/alt-names/edit/ui/alt-name-edit-form"
-import { useStores } from "features/categories/model/context"
+import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
 
 const defaultValues = {
   locale: null,
@@ -14,8 +16,11 @@ const defaultValues = {
   description: "",
 }
 
-export const AltNameCreateDialog = observer(() => {
-  const { altNames } = useStores()
+interface AltNameCreateDialogProps {
+  onCreate: (payload: Common.AltNameBase) => void
+}
+
+export const AltNameCreateDialog = observer(({ onCreate }: AltNameCreateDialogProps) => {
   const createStore = useCreateDialogStore()
   const methods = useForm({ defaultValues })
   const langBase = useLang()
@@ -27,6 +32,13 @@ export const AltNameCreateDialog = observer(() => {
     setData: [methods.reset],
     clearData: [methods.reset],
   })
+
+  useEventBusListen(openCreateAltNameDialog, () => createStore.openDialogV2({}))
+
+  const handleSubmit = (data: Common.AltNameBase) => {
+    onCreate(data)
+    createStore.closeDialog()
+  }
 
   return (
     <FormProvider {...methods}>
@@ -45,10 +57,7 @@ export const AltNameCreateDialog = observer(() => {
           height="auto"
           size="auto"
           store={createStore}
-          handleSubmit={(data) => {
-            altNames.create(data)
-            createStore.closeDialog()
-          }}
+          handleSubmit={handleSubmit}
           isLoading={false}
           container={<CreateEditForm />}
           PaperProps={{

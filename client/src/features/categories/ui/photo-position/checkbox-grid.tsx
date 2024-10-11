@@ -1,12 +1,12 @@
+import { Checkbox } from "@mui/material"
 import { observer } from "mobx-react-lite"
 import { Box } from "shared/ui/box"
-import { Checkbox } from "@mui/material"
 import { GRID_CHECKBOX } from "../../model/constants"
+import { useCategoryStores } from "../../model/context"
 import { CustomizeCaption } from "./customize-caption"
-import { useStores } from "../../model/context"
 
 export const CheckBoxGrid = observer(() => {
-  const { photoPosition } = useStores()
+  const { photoPosition } = useCategoryStores()
   const { captionPosition, changeCaptionPosition } = photoPosition
 
   return (

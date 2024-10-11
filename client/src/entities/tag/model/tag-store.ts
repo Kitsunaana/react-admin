@@ -1,34 +1,33 @@
 import { makeAutoObservable, toJS } from "mobx"
 import { nanoid } from "nanoid"
-import { CategoryDto } from "shared/types/category"
 import { isNumber, isString } from "shared/lib/utils"
+import { CategoryDto } from "shared/types/category"
 
 export class TagsStore {
   tags: CategoryDto.TagCreate[] = []
 
-  constructor() {
+  constructor(private getCopyAction: () => "add" | "replace" | "none") {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  create(data: CategoryDto.TagBase) {
+  create = (payload: CategoryDto.TagBase) => {
     this.tags.push({
-      ...data, action: "create", id: nanoid(),
+      ...payload, action: "create", id: nanoid(),
     })
   }
 
-  edit(data: CategoryDto.TagCreate) {
-    console.log(data)
+  edit = (payload: CategoryDto.TagCreate) => {
     this.tags = this.tags
-      .map((item) => (item.id !== data.id
+      .map((item) => (item.id !== payload.id
         ? item
         : {
           ...item,
-          ...data,
+          ...payload,
           action: isNumber(item.id) ? "update" : "create",
         }))
   }
 
-  remove(id: number | string) {
+  remove = (id: number | string) => {
     this.tags = this.tags
       .map((tag): CategoryDto.TagCreate | null => {
         if (isNumber(tag.id) && tag.id === id) return { ...tag, action: "remove" }
@@ -39,7 +38,31 @@ export class TagsStore {
       .filter((tag): tag is CategoryDto.TagCreate => tag !== null)
   }
 
-  isRecordCreatedOrUpdated(id: number | string) {
+  getData = () => ({ tags: toJS(this.tags) })
+
+  setTags = (tags: (CategoryDto.Tag | CategoryDto.TagCreate)[]) => { this.tags = tags }
+
+  setCopiedTags(tags: CategoryDto.TagBase[]) {
+    const action = this.getCopyAction()
+
+    const actions = {
+      none: () => { },
+      add: () => {
+        const tagCaptions = this.filteredTags.map((tag) => tag.caption)
+        const filteredTags = tags.filter((tag) => !tagCaptions.includes(tag.caption))
+
+        filteredTags.map(this.create)
+      },
+      replace: () => {
+        this.tags.forEach(({ id }) => this.remove(id))
+        tags.forEach(this.create)
+      },
+    }
+
+    actions[action]()
+  }
+
+  isCreatedOrUpdated = (id: number | string) => {
     const findTag = this.tags.find((tag) => tag.id === id)
     if (findTag === undefined) return false
 
@@ -48,37 +71,5 @@ export class TagsStore {
 
   get filteredTags() {
     return this.tags.filter((tag) => tag.action !== "remove")
-  }
-
-  getData() {
-    return {
-      tags: toJS(this.tags),
-    }
-  }
-
-  setTags(tags: CategoryDto.Tag[]) {
-    this.tags = tags ?? []
-  }
-
-  setCopiedTags(tags: unknown) {
-    console.log(tags)
-    /* const validatedTags = validation(tagsSchema, tags)
-    const action = this.rootStore.settings.tags
-
-    const actions = {
-      add: () => {
-        const tagCaptions = this.filteredTags.map((value) => value.tag.caption)
-        const filteredTags = validatedTags.filter((value) => !tagCaptions.includes(value.tag.caption))
-
-        filteredTags.map(this.create)
-      },
-      replace: () => {
-        this.tags.forEach(({ id }) => this.remove(id))
-        validatedTags.map(this.create)
-      },
-      none: () => { },
-    }
-
-    actions[action]() */
   }
 }

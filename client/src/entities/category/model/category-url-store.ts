@@ -1,3 +1,3 @@
 import { createUrlStore } from "shared/stores/url-store"
 
-export const categoriesUrlStore = createUrlStore()
+export const categoryUrlStore = createUrlStore()

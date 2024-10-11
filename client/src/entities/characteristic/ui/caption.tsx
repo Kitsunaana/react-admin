@@ -1,6 +1,6 @@
-import { Text } from "shared/ui/text"
-import { Mark } from "shared/ui/mark"
 import { Common } from "shared/types/common"
+import { Mark } from "shared/ui/mark"
+import { Text } from "shared/ui/text"
 
 interface CaptionProps extends Partial<Common.CharacteristicBase> {}
 

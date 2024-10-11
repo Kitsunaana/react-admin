@@ -1,14 +1,14 @@
 import { $axios } from "shared/config/axios"
-import { Common } from "shared/types/common"
-import { DataTranslation, FetchTranslateResponse } from "entities/alt-name/model/types"
 import { validation } from "shared/lib/validation"
-import { translateSchema } from "entities/alt-name/model/schemas"
+import { Common } from "shared/types/common"
 import {
-  KEY,
   HOST,
-  URL_TRANSLATE,
+  KEY,
   URL,
+  URL_TRANSLATE,
 } from "../model/config"
+import { translateSchema } from "../model/schemas"
+import { DataTranslation, FetchTranslateResponse } from "../model/types"
 
 const getData = (locale: Common.Locale, category: DataTranslation) => ({
   from: "auto",
@@ -37,14 +37,15 @@ export const altNameApi = {
     category: DataTranslation,
   ): Promise<FetchTranslateResponse> => {
     try {
-      const data = getData(locale, category)
+      const payload = getData(locale, category)
       const config = getConfig(HOST, KEY)
 
-      return $axios.post(URL_TRANSLATE, data, config)
-        .then(({ data }) => ({
-          data: validation(translateSchema, data),
-          locale,
-        }))
+      const { data } = await $axios.post(URL_TRANSLATE, payload, config)
+
+      return {
+        data: validation(translateSchema, data),
+        locale,
+      }
     } catch (error) {
       throw new Error((error as Error).message)
     }

@@ -1,10 +1,10 @@
-import { Controller } from "react-hook-form"
-import { Box } from "shared/ui/box"
-import { Select } from "shared/ui/form/select"
-import { Input } from "shared/ui/form/input"
 import { Checkbox, FormControlLabel } from "@mui/material"
 import { useGetCharacteristics, useGetUnits } from "entities/characteristic"
+import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { Box } from "shared/ui/box"
+import { Input } from "shared/ui/form/input"
+import { Select } from "shared/ui/form/select"
 import { Text } from "shared/ui/text"
 
 export const CharacteristicForm = () => {

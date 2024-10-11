@@ -1,8 +1,8 @@
 import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
-import { getCharacteristicsResponse } from "entities/characteristic/model/schemas"
-import { CharacteristicsResponse, UnitsResponse } from "entities/characteristic/model/types"
 import { Schemas } from "shared/types/common"
+import { getCharacteristicsResponse } from "../model/schemas"
+import { CharacteristicsResponse, UnitsResponse } from "../model/types"
 
 const URL = "characteristics"
 

@@ -1,15 +1,16 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material"
 import { observer } from "mobx-react-lite"
 import { forwardRef, useMemo } from "react"
-import { Text } from "shared/ui/text"
 import { useLang } from "shared/context/lang"
+import { Text } from "shared/ui/text"
+import { KeysSettingsFields } from "../../model/types"
 
 interface InputSettingsProps {
-  onChangeSettingsFields: (name: string, value: boolean) => void
+  onChangeSettingsFields: (name: KeysSettingsFields, value: boolean) => void
   settings: Record<string, boolean>
 }
 
-export const InputSettings = observer(forwardRef<HTMLDivElement, InputSettingsProps>((props, ref) => {
+export const SettingsFields = observer(forwardRef<HTMLDivElement, InputSettingsProps>((props, ref) => {
   const { settings, onChangeSettingsFields } = props
   const langBase = useLang()
 
@@ -25,7 +26,7 @@ export const InputSettings = observer(forwardRef<HTMLDivElement, InputSettingsPr
               <Checkbox
                 size="small"
                 checked={value}
-                onChange={(_, checked) => onChangeSettingsFields(key, checked)}
+                onChange={(_, checked) => onChangeSettingsFields(key as KeysSettingsFields, checked)}
               />
             )}
           />

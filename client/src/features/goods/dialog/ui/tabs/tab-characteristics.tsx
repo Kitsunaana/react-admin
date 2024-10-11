@@ -3,12 +3,12 @@ import { observer } from "mobx-react-lite"
 import { Vertical } from "shared/ui/divider"
 import styled from "styled-components"
 import { EmptyList } from "shared/ui/empty-list"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { CharacteristicEditDialog } from "features/characteristics"
 import { Text } from "shared/ui/text"
 import { Characteristic } from "entities/characteristic"
-import { useStores } from "../../model/context"
+import { useCategoryStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -25,7 +25,7 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
 export const TabCharacteristics = observer(() => {
   const editStore = useEditDialogStore()
 
-  const { characteristics } = useStores()
+  const { characteristics } = useCategoryStores()
   const { fullScreen } = useEditDialogStore()
 
   return (

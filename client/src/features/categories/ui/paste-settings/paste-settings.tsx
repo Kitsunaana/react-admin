@@ -1,22 +1,21 @@
-import { useEffect, useRef, useState } from "react"
-import { Tabs } from "shared/ui/tabs/tabs"
-import { Tab } from "shared/ui/tabs/tab"
-import { RowSettings } from "features/categories/ui/copy-settings/row-settings"
-import { InputSettings } from "features/categories/ui/copy-settings/input-settings"
 import { observer } from "mobx-react-lite"
-import { useStores } from "features/categories/model/context"
+import { useEffect, useRef, useState } from "react"
+import { Tab } from "shared/ui/tabs/tab"
 import { TabPanel } from "shared/ui/tabs/tab-panel"
+import { Tabs } from "shared/ui/tabs/tabs"
+import { useCategoryStores } from "../../model/context"
+import { SettingsFields } from "./settings-fields"
+import { SettingsRows } from "./settings-rows"
 
 const tabs = [{ id: 0, caption: "rows" }, { id: 1, caption: "inputs" }]
-const buttonGroups = ["images", "characteristics", "tags"]
 
-export const CopySettings = observer(() => {
+export const PasteSettings = observer(() => {
   const {
     settingsRows,
     settingsFields,
     handleChangeSettingsFields,
     handleChangeSettingsRows,
-  } = useStores()
+  } = useCategoryStores()
 
   const [selectedTab, setSelectedTab] = useState(0)
   const [height, setHeight] = useState(0)
@@ -47,15 +46,14 @@ export const CopySettings = observer(() => {
 
       <div style={{ position: "relative", height }}>
         <TabPanel value={selectedTab} index={0}>
-          <RowSettings
+          <SettingsRows
             ref={tabPanelRowsRef}
             settings={settingsRows}
-            buttonGroups={buttonGroups}
             onChangeSettingsRows={handleChangeSettingsRows}
           />
         </TabPanel>
         <TabPanel value={selectedTab} index={1}>
-          <InputSettings
+          <SettingsFields
             ref={tabPanelInputsRef}
             settings={settingsFields}
             onChangeSettingsFields={handleChangeSettingsFields}

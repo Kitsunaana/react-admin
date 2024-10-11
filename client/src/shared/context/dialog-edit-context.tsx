@@ -1,4 +1,4 @@
-import { createDialogStore } from "shared/ui/dialog/model/dialog-store"
+import { createDialogStore } from "shared/stores/dialog-store"
 import {
   FC,
   createContext,

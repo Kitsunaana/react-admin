@@ -1,4 +1,3 @@
-import { DialogEditV2 } from "shared/ui/dialog/dialog-edit"
 import { queryOptions, UseMutationOptions } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
 import { FormProvider, useForm } from "react-hook-form"
@@ -6,9 +5,8 @@ import { TabsContainer } from "shared/ui/tabs/tabs-container"
 import { TABS } from "features/goods/dialog/model/tabs"
 import { ContentContainer } from "features/goods/dialog/ui/content-container"
 import { LangContext } from "shared/context/lang"
-import { useStores } from "features/goods/dialog/model/context"
+import { useCategoryStores } from "features/goods/dialog/model/context"
 import { z } from "zod"
-import { mediaSchema } from "features/categories/model/schemas"
 import { goodsApi } from "shared/api/goods-api"
 
 export const createGoodSchema = z.object({
@@ -33,7 +31,6 @@ export const createGoodSchema = z.object({
   isNew: z.boolean(),
   label: z.string(),
   notCalculation: z.boolean(),
-  media: z.array(mediaSchema),
 })
 
 export type CreateGood = z.infer<typeof createGoodSchema>
@@ -55,32 +52,14 @@ const onUpdateOptions = (): UseMutationOptions => ({
 })
 
 export const GoodEditDialog = () => {
-  const store = useStores()
+  const store = useCategoryStores()
   const methods = useForm({
     defaultValues: { caption: "" },
   })
 
   return (
     <FormProvider {...methods}>
-      <LangContext lang="global.dialog">
-        <DialogEditV2
-          onGetByIdOptions={onGetByIdOptions}
-          onCreateOptions={onCreateOptions}
-          onUpdateOptions={onUpdateOptions}
-          getData={store.getData}
-          defaultValues={{
-            category: null,
-            caption: null,
-          }}
-          tabs={(
-            <TabsContainer
-              tabs={TABS}
-              requiredFields={["category"]}
-            />
-          )}
-          container={<ContentContainer />}
-        />
-      </LangContext>
+      <LangContext lang="global.dialog" />
     </FormProvider>
   )
 }

@@ -3,7 +3,7 @@ import { Table } from "shared/ui/table"
 import { CreateButton } from "shared/ui/buttons/create-button"
 import { Text } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
-import { RootDialogProvider } from "shared/ui/dialog/context/dialog-context"
+import { RootDialogProvider } from "shared/context/dialog-context"
 import { observer } from "mobx-react-lite"
 import { CategoryHeader } from "pages/categories/ui/header"
 import { EmptyList } from "shared/ui/empty-list"
@@ -18,7 +18,24 @@ import { LangContext, useLang } from "shared/context/lang"
 import { useCategories } from "entities/category/queries/use-categories"
 import { CategoryDto } from "shared/types/category"
 import { Common } from "shared/types/common"
-import { useRemoveCategory } from "features/categories/ui/category-delete-dialog"
+import { useRemoveCategory } from "features/categories/queries/use-remove-category"
+import { TagCreateDialog, TagEditDialog } from "features/tag"
+import { StoreProvider } from "features/categories/model/context"
+import { AltNameCreateDialog } from "features/alt-names"
+import { AltNameEditDialog } from "features/alt-names/ui/alt-name-edit-dialog"
+import { CharacteristicCreateDialog, CharacteristicEditDialog } from "features/characteristics"
+
+export const findCaption = (altNames: Common.AltName[], defaultValue: string = ""): string => {
+  const readLocale = localStorage.getItem("lngAdmin")
+
+  if (altNames.length > 0) {
+    altNames?.find((altName) => (
+      altName.locale.code === readLocale ? altName.caption : defaultValue
+    ))
+  }
+
+  return defaultValue
+}
 
 const CategoriesPage = observer(() => {
   const { categories, refetchCategories, isLoadingCategories } = useCategories()
@@ -46,23 +63,14 @@ const CategoriesPage = observer(() => {
     if (isShowEmptyList) return <EmptyList />
     if (!categories) return null
 
-    const readLocale = localStorage.getItem("lngAdmin")
-
-    const findCaption = (category: CategoryDto.CategoryPreview): Common.AltName | undefined => (
-      category.altNames?.find((altName) => {
-        if (altName.locale.code === readLocale) return altName
-
-        return null
-      })
-    )
-
     return categories.rows.map((category) => (
       <CategoryRow
-        onRemoveCategory={onRemoveCategory}
         key={category.id}
+        id={category.id}
+        caption={findCaption(category.altNames, category.caption)}
         images={category?.media}
-        {...category}
-        caption={findCaption(category)?.caption ?? category.caption}
+        order={category.order}
+        onRemoveCategory={onRemoveCategory}
       />
     ))
   }
@@ -105,7 +113,30 @@ const CategoriesPage = observer(() => {
           </LangContext>
         )}
       />
-      <CategoryDialog />
+
+      <StoreProvider>
+        <CategoryDialog
+          renderTagCreateDialog={(handleCreate) => (
+            <TagCreateDialog onCreate={handleCreate} />
+          )}
+          renderTagEditDialog={(handleEdit) => (
+            <TagEditDialog onEdit={handleEdit} />
+          )}
+          renderAltNameCreateDialog={(handleCreate) => (
+            <AltNameCreateDialog onCreate={handleCreate} />
+          )}
+          renderAltNameEditDialog={(handleEdit) => (
+            <AltNameEditDialog onEdit={handleEdit} />
+          )}
+          renderCharacteristicCreateDialog={(handleCreate) => (
+            <CharacteristicCreateDialog onCreate={handleCreate} />
+          )}
+          renderCharacteristicEditDialog={(handleEdit) => (
+            <CharacteristicEditDialog onEdit={handleEdit} />
+          )}
+        />
+      </StoreProvider>
+
     </RootDialogProvider>
   )
 })

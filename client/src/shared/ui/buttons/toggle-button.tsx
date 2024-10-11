@@ -1,13 +1,10 @@
-import * as React from "react"
-import { styled } from "@mui/material/styles"
-import Divider from "@mui/material/Divider"
+import { alpha } from "@mui/material"
 import Paper from "@mui/material/Paper"
 import ToggleButtonBase, { ToggleButtonProps as ToggleButtonPropsBase } from "@mui/material/ToggleButton"
-import ToggleButtonGroup, {
-  toggleButtonGroupClasses,
-} from "@mui/material/ToggleButtonGroup"
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
+import { Action, KeysSettingsRows } from "features/categories/model/stores/dialog-store"
+import * as React from "react"
 import { Icon } from "shared/ui/icon"
-import { alpha, ExtendButtonBase } from "@mui/material"
 
 interface ToggleButtonProps extends ToggleButtonPropsBase {
   help: string
@@ -16,7 +13,10 @@ interface ToggleButtonProps extends ToggleButtonPropsBase {
 
 export const ToggleButton = (props: ToggleButtonProps) => {
   const {
-    sx, help, icon, ...other
+    sx,
+    help,
+    icon,
+    ...other
   } = props
 
   return (
@@ -33,7 +33,7 @@ export const ToggleButton = (props: ToggleButtonProps) => {
       {...other}
     >
       <Icon
-        help={{ arrow: true, title: help }}
+        help={{ title: help }}
         fontSize="small"
         name={icon}
       />
@@ -42,19 +42,19 @@ export const ToggleButton = (props: ToggleButtonProps) => {
 }
 
 interface ToggleButtonGroupProps {
-  name: string
-  onChangeSettings: (name: string, value: string) => void
+  name: KeysSettingsRows
+  onChangeSetting: (name: KeysSettingsRows, value: Action) => void
   defaultValue: string
 }
 
 export function ButtonGroup(props: ToggleButtonGroupProps) {
-  const { name, onChangeSettings, defaultValue } = props
+  const { name, onChangeSetting, defaultValue } = props
 
   const [alignment, setAlignment] = React.useState(defaultValue)
 
-  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
+  const handleAlignment = (_: React.MouseEvent<HTMLElement, MouseEvent>, newAlignment: Action) => {
     if (newAlignment !== null) {
-      onChangeSettings(name, newAlignment)
+      onChangeSetting(name, newAlignment)
       setAlignment(newAlignment)
     }
   }

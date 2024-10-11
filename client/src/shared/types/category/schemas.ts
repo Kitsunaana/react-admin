@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import { z as zod } from "zod";
+import { z as zod } from "zod"
 
 export const getCategoriesResponse = zod.object({
   rows: zod.array(
@@ -18,8 +18,8 @@ export const getCategoriesResponse = zod.object({
         zod.any().and(
           zod.object({
             id: zod.number(),
-          })
-        )
+          }),
+        ),
       ),
       media: zod.array(
         zod.object({
@@ -30,12 +30,12 @@ export const getCategoriesResponse = zod.object({
           mimetype: zod.string(),
           order: zod.number().or(zod.null()),
           size: zod.number(),
-        })
+        }),
       ),
-    })
+    }),
   ),
   count: zod.number(),
-});
+})
 
 export const createCategoriesBody = zod.object({
   caption: zod.string(),
@@ -65,23 +65,23 @@ export const createCategoriesBody = zod.object({
       mimetype: zod.string(),
       order: zod.number().or(zod.null()),
       size: zod.number(),
-    })
+    }),
   ),
   altNames: zod.array(
     zod.any().and(
       zod.object({
         id: zod.number().or(zod.string()),
         action: zod.enum(["update", "create", "remove"]).optional(),
-      })
-    )
+      }),
+    ),
   ),
   characteristics: zod.array(
     zod.any().and(
       zod.object({
         action: zod.enum(["create", "update", "remove"]).optional(),
         id: zod.number().or(zod.string()),
-      })
-    )
+      }),
+    ),
   ),
   tags: zod.array(
     zod
@@ -94,8 +94,8 @@ export const createCategoriesBody = zod.object({
         zod.object({
           action: zod.enum(["create", "update", "remove"]).optional(),
           id: zod.number().or(zod.string()),
-        })
-      )
+        }),
+      ),
   ),
   images: zod.array(
     zod.object({
@@ -103,9 +103,9 @@ export const createCategoriesBody = zod.object({
       caption: zod.string(),
       type: zod.string(),
       data: zod.string(),
-    })
+    }),
   ),
-});
+})
 
 export const createCategoriesResponse = zod.object({
   id: zod.number(),
@@ -116,8 +116,8 @@ export const createCategoriesResponse = zod.object({
     zod.any().and(
       zod.object({
         id: zod.number(),
-      })
-    )
+      }),
+    ),
   ),
   media: zod.array(
     zod.object({
@@ -128,13 +128,13 @@ export const createCategoriesResponse = zod.object({
       mimetype: zod.string(),
       order: zod.number().or(zod.null()),
       size: zod.number(),
-    })
+    }),
   ),
-});
+})
 
 export const updateCategoryParams = zod.object({
   categoryId: zod.number(),
-});
+})
 
 export const updateCategoryBody = zod.object({
   caption: zod.string(),
@@ -164,23 +164,23 @@ export const updateCategoryBody = zod.object({
       mimetype: zod.string(),
       order: zod.number().or(zod.null()),
       size: zod.number(),
-    })
+    }),
   ),
   altNames: zod.array(
     zod.any().and(
       zod.object({
         id: zod.number().or(zod.string()),
         action: zod.enum(["update", "create", "remove"]).optional(),
-      })
-    )
+      }),
+    ),
   ),
   characteristics: zod.array(
     zod.any().and(
       zod.object({
         action: zod.enum(["create", "update", "remove"]).optional(),
         id: zod.number().or(zod.string()),
-      })
-    )
+      }),
+    ),
   ),
   tags: zod.array(
     zod
@@ -193,8 +193,8 @@ export const updateCategoryBody = zod.object({
         zod.object({
           action: zod.enum(["create", "update", "remove"]).optional(),
           id: zod.number().or(zod.string()),
-        })
-      )
+        }),
+      ),
   ),
   images: zod.array(
     zod.object({
@@ -202,9 +202,9 @@ export const updateCategoryBody = zod.object({
       caption: zod.string(),
       type: zod.string(),
       data: zod.string(),
-    })
+    }),
   ),
-});
+})
 
 export const updateCategoryResponse = zod.object({
   id: zod.number(),
@@ -215,8 +215,8 @@ export const updateCategoryResponse = zod.object({
     zod.any().and(
       zod.object({
         id: zod.number(),
-      })
-    )
+      }),
+    ),
   ),
   media: zod.array(
     zod.object({
@@ -227,13 +227,13 @@ export const updateCategoryResponse = zod.object({
       mimetype: zod.string(),
       order: zod.number().or(zod.null()),
       size: zod.number(),
-    })
+    }),
   ),
-});
+})
 
 export const getCategoryParams = zod.object({
   categoryId: zod.number(),
-});
+})
 
 export const getCategoryResponse = zod.object({
   id: zod.number(),
@@ -265,21 +265,21 @@ export const getCategoryResponse = zod.object({
       mimetype: zod.string(),
       order: zod.number().or(zod.null()),
       size: zod.number(),
-    })
+    }),
   ),
   altNames: zod.array(
     zod.any().and(
       zod.object({
         id: zod.number(),
-      })
-    )
+      }),
+    ),
   ),
   characteristics: zod.array(
     zod.any().and(
       zod.object({
         id: zod.number(),
-      })
-    )
+      }),
+    ),
   ),
   tags: zod.array(
     zod
@@ -291,7 +291,7 @@ export const getCategoryResponse = zod.object({
       .and(
         zod.object({
           id: zod.number(),
-        })
-      )
+        }),
+      ),
   ),
-});
+})

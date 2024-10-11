@@ -114,7 +114,7 @@ export const App = () => {
       <ToastContainer
         autoClose={3000}
         closeOnClick
-        position="top-right"
+        position="top-left"
         theme={(
           theme === "light"
             ? "light"

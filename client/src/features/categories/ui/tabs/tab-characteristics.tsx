@@ -1,20 +1,22 @@
-import { Box, BoxProps } from "shared/ui/box"
-import { observer } from "mobx-react-lite"
-import { Vertical } from "shared/ui/divider"
-import styled from "styled-components"
-import { EmptyList } from "shared/ui/empty-list"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { IconButton } from "shared/ui/buttons/icon-button"
-import { 
-  CharacteristicEditDialog,
-  CharacteristicCreateDialog,
-  useRemoveCharacteristic
+import {
+  Characteristic,
+  openCreateCharacteristicDialog,
+  openEditCharacteristicDialog,
+} from "entities/characteristic"
+import {
+  useRemoveCharacteristic,
 } from "features/characteristics"
-import { Text } from "shared/ui/text"
-import { Characteristic } from "entities/characteristic"
-import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
+import { observer } from "mobx-react-lite"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
+import { eventBus } from "shared/lib/event-bus"
 import { Common } from "shared/types/common"
-import { useStores } from "../../model/context"
+import { Box, BoxProps } from "shared/ui/box"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { Vertical } from "shared/ui/divider"
+import { EmptyList } from "shared/ui/empty-list"
+import { Text } from "shared/ui/text"
+import styled from "styled-components"
+import { useCategoryStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -29,53 +31,46 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
 `
 
 export const TabCharacteristics = observer(() => {
-  const { characteristics } = useStores()
+  const { characteristics } = useCategoryStores()
   const { fullScreen } = useEditDialogStore()
 
   const handleRemove = useRemoveCharacteristic(characteristics.remove)
-  const createStore = useCreateDialogStore()
-  const editStore = useEditDialogStore()
 
   return (
-    <>
-      <Box flex row grow sx={{ height: 1 }}>
-        {characteristics.filteredItems.length > 0 ? (
-          <CharacteristicsContainer fullScreen={fullScreen}>
-            {characteristics.filteredItems.map((item: Common.CharacteristicCreate) => (
-              <Characteristic
-                id={item.id}
-                key={item.id}
-                value={item.value}
-                unit={item.unit}
-                hideClient={item.hideClient}
-                caption={item.caption}
-                onRemove={handleRemove}
-                onEdit={editStore.openDialog}
-                getConflict={characteristics.getConflict}
-                isRecordCreatedOrUpdated={characteristics.isRecordCreatedOrUpdated}
+    <Box flex row grow sx={{ height: 1 }}>
+      {characteristics.filteredItems.length > 0 ? (
+        <CharacteristicsContainer fullScreen={fullScreen}>
+          {characteristics.filteredItems.map((item: Common.CharacteristicCreate) => (
+            <Characteristic
+              id={item.id}
+              key={item.id}
+              value={item.value}
+              unit={item.unit}
+              hideClient={item.hideClient}
+              caption={item.caption}
+              onRemove={handleRemove}
+              onEdit={(payload) => eventBus.emit(openEditCharacteristicDialog(payload))}
+              getConflict={characteristics.getConflict}
+              isCreatedOrUpdated={characteristics.isCreatedOrUpdated(item.id)}
+            />
+          ))}
+        </CharacteristicsContainer>
+      ) : <EmptyList />}
+      <Vertical />
+      <Box sx={{ pt: 1 }}>
+        <IconButton
+          name="add"
+          onClick={() => eventBus.emit(openCreateCharacteristicDialog({}))}
+          help={{
+            title: (
+              <Text
+                onlyText
+                name="actions.add"
               />
-            ))}
-          </CharacteristicsContainer>
-        ) : <EmptyList />}
-        <Vertical />
-        <Box sx={{ pt: 1 }}>
-          <IconButton
-            name="add"
-            onClick={() => createStore.openDialog(null)}
-            help={{
-              title: (
-                <Text
-                  onlyText
-                  name="actions.add"
-                />
-              ),
-            }}
-          />
-        </Box>
+            ),
+          }}
+        />
       </Box>
-
-      <CharacteristicEditDialog onEdit={characteristics.edit} />
-      <CharacteristicCreateDialog onCreate={characteristics.create} />
-    </>
+    </Box>
   )
 })

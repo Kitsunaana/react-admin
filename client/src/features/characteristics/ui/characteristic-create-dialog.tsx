@@ -1,13 +1,15 @@
-import { FormProvider, useForm } from "react-hook-form"
-import { LangContext, useLang } from "shared/context/lang"
-import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
-import { UpsertDialog } from "shared/ui/dialog/dialog-edit-v3"
-import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { openCreateCharacteristicDialog } from "entities/characteristic"
 import { observer } from "mobx-react-lite"
-import { Common } from "shared/types/common"
+import { FormProvider, useForm } from "react-hook-form"
+import { useCreateDialogStore } from "shared/context/dialog-create-context"
+import { LangContext, useLang } from "shared/context/lang"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { CharacteristicForm } from "./characteristic-form"
+import { Common } from "shared/types/common"
+import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
 import { defaultValues } from "../model/const"
+import { CharacteristicForm } from "./characteristic-form"
 
 interface CharacteristicEditDialogProps {
   onCreate: (data: Common.CharacteristicCreate) => void
@@ -25,6 +27,8 @@ export const CharacteristicCreateDialog = observer(({ onCreate }: Characteristic
     setData: [methods.reset],
     clearData: [methods.reset],
   })
+
+  useEventBusListen(openCreateCharacteristicDialog, createStore.openDialogV2)
 
   const handleSubmit = (data: Common.CharacteristicCreate) => {
     onCreate(data)

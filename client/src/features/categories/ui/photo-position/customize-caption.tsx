@@ -1,8 +1,8 @@
-import { Text } from "shared/ui/text"
-import { FieldValues, useFormContext, UseFormGetValues } from "react-hook-form"
 import { useEffect, useState } from "react"
+import { FieldValues, useFormContext, UseFormGetValues } from "react-hook-form"
 import { eventBus } from "shared/lib/event-bus"
-import { updateCaption } from "features/categories/ui/tabs/tab-common"
+import { Text } from "shared/ui/text"
+import { updateCaption } from "../tabs/tab-common"
 
 type FieldsRecord = {
   caption: string
@@ -30,17 +30,18 @@ export const CustomizeCaption = () => {
   const [caption, setCaption] = useState(() => setCaptionValues(getValues))
 
   eventBus.on(updateCaption, ({ payload }) => {
-    setCaption((prevState) => (
-      Object.entries(prevState).reduce((prev, [key, value]) => {
-        prev[key] = payload[key] ?? value
-
-        return prev
-      }, {} as typeof caption)
-    ))
+    setCaption((prevState) => ({
+      caption: payload.caption ?? prevState.caption,
+      bgColor: payload.bgColor ?? prevState.bgColor,
+      color: payload.color ?? prevState.color,
+      blur: payload.blur ?? prevState.blur,
+    }))
   })
 
   useEffect(
-    () => { setCaption(setCaptionValues(getValues)) },
+    () => {
+      setCaption(setCaptionValues(getValues))
+    },
     [getValues("caption")],
   )
 

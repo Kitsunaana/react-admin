@@ -1,22 +1,23 @@
 import { useQuery } from "@tanstack/react-query"
-import { categoriesApi } from "entities/category/api/categories-api"
 import { toast } from "react-toastify"
+import { isNumber } from "shared/lib/utils"
 import { CategoryDto } from "shared/types/category"
+import { categoriesApi } from "../api/categories-api"
 
 export const useGetCategory = (id: number | null) => {
   const { data, isPending, isFetching } = useQuery({
     enabled: id !== null,
     queryKey: ["category", id],
     queryFn: () => toast.promise(new Promise<CategoryDto.CategoryDto>((resolve) => {
-      if (typeof id !== "number") return
+      if (!isNumber(id)) return
 
       setTimeout(() => {
         categoriesApi
           .getById({ categoryId: id })
           .then(resolve)
-      }, 1000)
+      }, 200)
     }), {
-      error: "Error",
+      error: "При загрузке категории произошла ошибка",
     }),
   })
 

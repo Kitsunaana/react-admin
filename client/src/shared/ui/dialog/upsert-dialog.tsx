@@ -8,7 +8,7 @@ import { SaveButton } from "shared/ui/dialog/save-button"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import styled, { css } from "styled-components"
 import { Skeleton } from "shared/ui/skeleton"
-import { DialogStore } from "shared/ui/dialog/model/dialog-store"
+import { DialogStore } from "shared/stores/dialog-store"
 
 interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   tabs?: ReactNode
@@ -55,6 +55,7 @@ const DialogWrapper = styled(({ size, ...other }: DialogWrapperProps) => <MUIDia
 export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
   const {
     langBase: langBaseProps,
+    handleSubmit,
     title,
     height,
     size,
@@ -62,7 +63,6 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
     container,
     header,
     isLoading,
-    handleSubmit,
     store,
     close,
     ...other
@@ -106,7 +106,7 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
               borderRadius={0}
             />
           ) : (tabs)}
-          <Box sx={{ px: 1, height: 1 }}>
+          <Box sx={{ px: 1, height: 1, overflow: "hidden" }}>
             {isLoading ? (
               <Skeleton
                 height="100%"

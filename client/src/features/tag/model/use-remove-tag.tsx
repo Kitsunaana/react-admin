@@ -1,6 +1,6 @@
 import { useGetConfirmation } from "shared/lib/confirmation"
 
-export const useRemoveTag = (onRemove: (id: number | string) => void) => {
+export const useRemoveTag = (handleRemove: (id: number | string) => void) => {
   const getConfirmation = useGetConfirmation()
 
   return async (id: number | string, caption: string) => {
@@ -8,6 +8,6 @@ export const useRemoveTag = (onRemove: (id: number | string) => void) => {
       description: caption,
     })
 
-    if (confirmation) onRemove(id)
+    if (confirmation) handleRemove(id)
   }
 }

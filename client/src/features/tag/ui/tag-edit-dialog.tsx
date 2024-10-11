@@ -1,11 +1,14 @@
+import { openEditTagDialog } from "entities/tag/model/event"
 import { observer } from "mobx-react-lite"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { UpsertDialog } from "shared/ui/dialog/dialog-edit-v3"
-import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { eventBus } from "shared/lib/event-bus"
 import { CategoryDto } from "shared/types/category"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
 import { defaultValues } from "../model/const"
 import { TagForm } from "./tag-form"
 
@@ -25,6 +28,13 @@ export const TagEditDialog = observer(({ onEdit }: TagEditDialogProps) => {
     setData: [methods.reset],
     clearData: [methods.reset],
   })
+
+  useEffect(() => {
+    const event = (payload: CategoryDto.TagCreate) => editStore.openDialogV2(payload)
+
+    eventBus.on(openEditTagDialog, ({ payload }) => event(payload))
+    return () => eventBus.off(openEditTagDialog, ({ payload }) => event(payload))
+  }, [])
 
   return (
     <FormProvider {...methods}>

@@ -1,20 +1,19 @@
-import styled from "styled-components"
-import { Box, BoxProps } from "shared/ui/box"
-import { EmptyList } from "shared/ui/empty-list"
-import { Vertical } from "shared/ui/divider"
-import { useEffect, useState } from "react"
-import { IconButton } from "shared/ui/buttons/icon-button"
-import { observer } from "mobx-react-lite"
-import { useFormContext } from "react-hook-form"
-import { AltNameItem, useLocales } from "entities/alt-name"
-import { AltNameCreateDialog, useRemoveAltName } from "features/alt-names"
-import { Text } from "shared/ui/text"
 import { Skeleton } from "@mui/material"
-import { eventBus } from "shared/lib/event-bus"
+import { AltNameItem, openCreateAltNameDialog, openEditAltNameDialog, useLocales } from "entities/alt-name"
+import { useRemoveAltName } from "features/alt-names"
 import { updateCaption } from "features/categories/ui/tabs/tab-common"
-import { useCreateDialogStore } from "shared/ui/dialog/context/dialog-create-context"
-import { AltNameEditDialog } from "features/alt-names/edit/ui/alt-name-edit-dialog"
-import { useStores } from "../../model/context"
+import { observer } from "mobx-react-lite"
+import { useEffect, useState } from "react"
+import { useFormContext } from "react-hook-form"
+import { useCreateDialogStore } from "shared/context/dialog-create-context"
+import { eventBus } from "shared/lib/event-bus"
+import { Box, BoxProps } from "shared/ui/box"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { Vertical } from "shared/ui/divider"
+import { EmptyList } from "shared/ui/empty-list"
+import { Text } from "shared/ui/text"
+import styled from "styled-components"
+import { useCategoryStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -29,9 +28,9 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
 `
 
 export const TabAltNames = observer(() => {
-  const { altNames } = useStores()
+  const { altNames } = useCategoryStores()
   const { fullScreen, openDialog } = useCreateDialogStore()
-  const onRemoveAltName = useRemoveAltName()
+  const onRemoveAltName = useRemoveAltName(altNames.remove)
   const methods = useFormContext()
   const { locales } = useLocales()
 
@@ -61,49 +60,45 @@ export const TabAltNames = observer(() => {
   }
 
   return (
-    <>
-      <Box flex row grow sx={{ height: 1 }}>
-        {!isShowEmptyList ? (
-          <CharacteristicsContainer fullScreen={fullScreen}>
-            {isShowCharacteristics && altNames.filteredItems.map((altName) => (
-              <AltNameItem
-                key={altName.id}
-                onRemove={onRemoveAltName}
-                disabled={altNames.isLoading}
-                {...altName}
-              />
-            ))}
+    <Box flex row grow sx={{ height: 1 }}>
+      {!isShowEmptyList ? (
+        <CharacteristicsContainer fullScreen={fullScreen}>
+          {isShowCharacteristics && altNames.filteredItems.map((altName) => (
+            <AltNameItem
+              key={altName.id}
+              disabled={altNames.isLoading}
+              handleRemove={onRemoveAltName}
+              handleEdit={(paylod) => eventBus.emit(openEditAltNameDialog(paylod))}
+              {...altName}
+            />
+          ))}
 
-            {isShowSkeletons && freeLocales.map(({ id }) => (
-              <Skeleton
-                key={id}
-                sx={{ borderRadius: 2, mb: 0.5 }}
-                height={40}
-                variant="rectangular"
-              />
-            ))}
-          </CharacteristicsContainer>
-        ) : (<EmptyList />)}
-        <Vertical />
-        <Box sx={{ pt: 1 }} flex ai>
-          <IconButton
-            name="add"
-            isLoading={altNames.isLoading}
-            onClick={() => openDialog(null)}
-            help={{ title: <Text onlyText name="actions.add" /> }}
-          />
-          <IconButton
-            name="translate"
-            disabled={disabled}
-            isLoading={altNames.isLoading}
-            help={{ title: <Text onlyText name="actions.translate" /> }}
-            onClick={handleTranslateClick}
-          />
-        </Box>
+          {isShowSkeletons && freeLocales.map(({ id }) => (
+            <Skeleton
+              key={id}
+              sx={{ borderRadius: 2, mb: 0.5 }}
+              height={40}
+              variant="rectangular"
+            />
+          ))}
+        </CharacteristicsContainer>
+      ) : (<EmptyList />)}
+      <Vertical />
+      <Box sx={{ pt: 1 }} flex ai>
+        <IconButton
+          name="add"
+          isLoading={altNames.isLoading}
+          onClick={() => eventBus.emit(openCreateAltNameDialog({}))}
+          help={{ title: <Text onlyText name="actions.add" /> }}
+        />
+        <IconButton
+          name="translate"
+          disabled={disabled}
+          isLoading={altNames.isLoading}
+          help={{ title: <Text onlyText name="actions.translate" /> }}
+          onClick={handleTranslateClick}
+        />
       </Box>
-
-      <AltNameCreateDialog />
-      <AltNameEditDialog />
-    </>
+    </Box>
   )
 })

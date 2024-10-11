@@ -1,18 +1,18 @@
-type EventType <Type extends string = string, Value = unknown> = {
+export type EventType<Type extends string = string, Value = unknown> = {
   type: Type
   payload: Value
 }
 
-type EventCreator<Type extends string = string, Value = any> = {
+export type EventCreator<Type extends string = string, Value = any> = {
   (value: Value): EventType<Type, Value>
   type: Type,
   withParams: <Value2>() => EventCreator<Type, Value2>
   check: (eventType: EventType) => eventType is EventType<Type, Value>
 }
 
-type Listener<Type extends string = string, Value = unknown> = (arg: EventType<Type, Value>) => void
+export type Listener<Type extends string = string, Value = unknown> = (arg: EventType<Type, Value>) => void
 
-export const createRoute = <Type extends string, Value = void> (key: Type): EventCreator<Type, Value> => {
+export const createRoute = <Type extends string, Value = void>(key: Type): EventCreator<Type, Value> => {
   const creator = (value: Value) => ({
     type: key,
     payload: value,
@@ -48,6 +48,15 @@ export class EventEmitter {
     if (this.listeners.has(event.type)) {
       this.listeners.get(event.type)!
         .forEach((callback) => callback(event))
+    }
+  }
+
+  off<K extends string, V>(
+    eventCreator: EventCreator<K, V>,
+    callback: Listener<K, V>,
+  ) {
+    if (this.listeners.has(eventCreator.type)) {
+      this.listeners.get(eventCreator.type)!.delete(callback as Listener)
     }
   }
 }

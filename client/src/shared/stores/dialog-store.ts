@@ -3,16 +3,19 @@ import { makeAutoObservable } from "mobx"
 type Id = null | string | number
 
 export class DialogStore {
-  open = false
   id: Id = null
-  localData?: Record<string, any>
   tab = 0
-
+  open = false
   fullScreen = false
-  data: any = {}
+  localData?: Record<string, any>
 
   constructor() {
-    makeAutoObservable(this, { }, { autoBind: true })
+    makeAutoObservable(this, {}, { autoBind: true })
+  }
+
+  openDialogV2(payload?: Record<string, any>) {
+    this.open = true
+    this.localData = payload
   }
 
   openDialog(id: Id, localData?: Record<string, any>) {

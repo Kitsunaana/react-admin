@@ -1,16 +1,16 @@
-import { Box } from "shared/ui/box"
-import { Vertical } from "shared/ui/divider"
-import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
-import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
-import { RowItem } from "shared/ui/row-item"
 import { LangContext, useLang } from "shared/context/lang"
 import { CategoryDto } from "shared/types/category"
+import { Box } from "shared/ui/box"
+import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
+import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
+import { Vertical } from "shared/ui/divider"
+import { RowItem } from "shared/ui/row-item"
 import { Tag } from "./tag"
 
 interface TagItemProps extends CategoryDto.TagCreate {
   onRemove: (id: number | string, caption: string) => Promise<void>
-  onEdit: (id: number | string, data: CategoryDto.TagCreate) => void
-  isRecordCreatedOrUpdated: (id: number | string) => boolean
+  onEdit: (data: CategoryDto.TagCreate) => void
+  isCreatedOrUpdated: boolean
 }
 
 export const TagItem = (props: TagItemProps) => {
@@ -21,14 +21,14 @@ export const TagItem = (props: TagItemProps) => {
     caption,
     onRemove,
     onEdit,
-    isRecordCreatedOrUpdated,
+    isCreatedOrUpdated,
   } = props
 
   const langBase = useLang()
 
   return (
     <LangContext lang={`${langBase}.rows`}>
-      <RowItem color={isRecordCreatedOrUpdated(id) && "success"}>
+      <RowItem color={isCreatedOrUpdated && "success"}>
         <Tag
           caption={caption}
           color={color}
@@ -37,7 +37,7 @@ export const TagItem = (props: TagItemProps) => {
         <Box flex row ai>
           <Vertical />
           <IconButtonEdit
-            onClick={() => onEdit(id, {
+            onClick={() => onEdit({
               icon, color, caption, id,
             })}
           />

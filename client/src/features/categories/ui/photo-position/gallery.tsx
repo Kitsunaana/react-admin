@@ -4,7 +4,7 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import styled from "styled-components"
 import { Image } from "./image"
 import { CheckBoxGrid } from "./checkbox-grid"
-import { useStores } from "../../model/context"
+import { useCategoryStores } from "../../model/context"
 
 const ActiveImageContainer = styled(Box)`
   display: flex;
@@ -19,14 +19,21 @@ const ActiveImageContainer = styled(Box)`
 `
 
 export const Gallery = observer(() => {
-  const { photoPosition } = useStores()
+  const { photoPosition } = useCategoryStores()
 
   const renderImage = () => {
     const image = photoPosition.activeImage
     if (!image) return null
 
-    const props = { ...image, caption: image.originalName ?? image.caption }
-    return <Image {...props} />
+    if ("originalName" in image) {
+      return <Image caption={image.originalName} path={image.path} />
+    }
+
+    if ("caption" in image) {
+      return <Image caption={image.caption} data={image.data as File} />
+    }
+
+    return null
   }
 
   return (

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next"
 import { Box } from "shared/ui/box"
 import { Input } from "shared/ui/form/input"
 import { BackButton } from "shared/ui/back-button"
-import { categoriesUrlStore } from "entities/category"
+import { categoryUrlStore } from "entities/category"
 import queryString from "query-string"
 import { Text } from "shared/ui/text"
 
@@ -36,14 +36,14 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
     setValue(INPUTS.search, searchParams.get(INPUTS.search) ?? "")
 
     const parsedUrl = queryString.parseUrl(window.location.href)
-    categoriesUrlStore.setSearchParams(parsedUrl.query)
+    categoryUrlStore.setSearchParams(parsedUrl.query)
   }, [searchParams])
 
   useEvent("keydown", (event: KeyboardEvent) => {
     const search = getValues(INPUTS.search)
     if (!(event.code === "Enter" && search !== null && isFocused)) return
 
-    categoriesUrlStore.setSearchParams(getValues())
+    categoryUrlStore.setSearchParams(getValues())
     setSearchParams((prev) => {
       prev.set("search", search)
       return prev

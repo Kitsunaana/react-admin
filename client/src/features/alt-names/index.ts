@@ -1,2 +1,2 @@
-export { useRemoveAltName } from "./delete/ui/alt-name-delete-dialog"
-export { AltNameCreateDialog } from "./edit/ui/alt-name-create-dialog"
+export { useRemoveAltName } from "./model/use-remove-alt-name"
+export { AltNameCreateDialog } from "./ui/alt-name-create-dialog"

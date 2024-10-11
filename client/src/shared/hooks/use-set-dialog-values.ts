@@ -1,11 +1,16 @@
 import { DeepPartial } from "react-hook-form"
 import { useEffect } from "react"
 
+type NonUndefined<T> = T extends undefined ? never : T;
+
+export type SetData<T> = ((data: NonUndefined<T>) => void) | Array<(data: NonUndefined<T>) => void>
+export type ClearData<U> = ((data: DeepPartial<U>) => void) | Array<(data: DeepPartial<U>) => void>
+
 interface Options<T, U> {
   data: T
   defaults?: DeepPartial<U>
-  setData?: ((data: T) => void) | Array<(data: T) => void>
-  clearData?: ((data: DeepPartial<U>) => void) | Array<(data: DeepPartial<U>) => void>
+  setData?: SetData<T>
+  clearData?: ClearData<U>
   shouldHandle?: Array<unknown>
 }
 
@@ -17,9 +22,7 @@ const applyFn = (
   else callbacks?.(args)
 }
 
-type NonUndefined<T> = T extends undefined ? never : T;
-
-export const useSetDialogValues = <T, U extends T = T>(options: Options<T, U>) => {
+export const useSetDialogValues = <T, U = T>(options: Options<T, U>) => {
   const {
     clearData,
     setData,
@@ -31,11 +34,11 @@ export const useSetDialogValues = <T, U extends T = T>(options: Options<T, U>) =
   useEffect(() => {
     if (data) applyFn(setData, data as NonUndefined<T>)
 
-    return () => defaults && applyFn(clearData, defaults)
+    return () => defaults && applyFn(clearData, defaults as NonUndefined<U>)
   }, [options.data, ...shouldHandle])
 
   return {
-    apply: <T, U extends T = T>(options: Options<T, U>) => {
+    apply: <TR, TU>(options: Options<TR, TU>) => {
       const newSetData = options.setData === undefined
         ? setData
         : options.setData
@@ -45,3 +48,7 @@ export const useSetDialogValues = <T, U extends T = T>(options: Options<T, U>) =
     clear: () => applyFn(clearData, defaults),
   }
 }
+
+export type UseSetValuesReturn = ReturnType<typeof useSetDialogValues>
+export type UseSetValuesApply = UseSetValuesReturn["apply"]
+export type UseSetValuesClear = UseSetValuesReturn["clear"]

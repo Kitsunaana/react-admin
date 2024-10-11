@@ -1,8 +1,8 @@
-import GoodsPage from "pages/Goods/goods-page"
-import { SettingsPage } from "pages/settings"
 import { CategoriesPage } from "pages/categories"
-import { RouteProps } from "react-router-dom"
+import GoodsPage from "pages/goods/goods-page"
+import { SettingsPage } from "pages/settings"
 import { StopListPage } from "pages/stop-list"
+import { RouteProps } from "react-router-dom"
 
 export enum AppRoutes {
   CATALOG = "catalog",

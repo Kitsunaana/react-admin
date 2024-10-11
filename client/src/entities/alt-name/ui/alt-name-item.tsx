@@ -1,19 +1,19 @@
 import { alpha, styled } from "@mui/material"
-import { Text } from "shared/ui/text"
-import { Box } from "shared/ui/box"
-import { Mark } from "shared/ui/mark"
-import { Vertical } from "shared/ui/divider"
-import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
-import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
-import { RowItem, RowItemProps } from "shared/ui/row-item"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
 import { LangContext, useLang } from "shared/context/lang"
+import { Common } from "shared/types/common"
+import { Box } from "shared/ui/box"
+import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
+import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
+import { Vertical } from "shared/ui/divider"
+import { Mark } from "shared/ui/mark"
+import { RowItem, RowItemProps } from "shared/ui/row-item"
+import { Text } from "shared/ui/text"
 import { AltName } from "../model/types"
 
 const StyledAltNameItem = styled((props: RowItemProps & { disabled: boolean }) => {
   const { disabled, ...other } = props
   return <RowItem {...other} />
-})(({ theme, disabled }) => ({
+})(({ theme: { palette }, disabled }) => ({
   ...(disabled ? {
     position: "relative",
     "&::after": {
@@ -24,8 +24,8 @@ const StyledAltNameItem = styled((props: RowItemProps & { disabled: boolean }) =
       top: 0,
       left: 0,
       borderRadius: 2,
-      background: alpha(theme.palette.common[
-        theme.palette.mode === "light" ? "black" : "white"
+      background: alpha(palette.common[
+        palette.mode === "light" ? "black" : "white"
       ], 0.15),
     },
   } : {}),
@@ -33,7 +33,8 @@ const StyledAltNameItem = styled((props: RowItemProps & { disabled: boolean }) =
 
 interface AltNameItemProps extends AltName {
   disabled?: boolean
-  onRemove: (id: (string | number), caption: string) => Promise<void>
+  handleRemove: (id: (string | number), caption: string) => Promise<void>
+  handleEdit: (payload: Common.AltNameCreate) => void
 }
 
 export const AltNameItem = (props: AltNameItemProps) => {
@@ -44,27 +45,27 @@ export const AltNameItem = (props: AltNameItemProps) => {
     locale,
     action,
     disabled,
-    onRemove,
+    handleRemove,
+    handleEdit,
   } = props
 
-  const editStore = useEditDialogStore()
   const langBase = useLang()
 
   const onOpenEditDialog = () => {
-    editStore.openDialog(id, {
+    handleEdit({
       caption, locale, description, id,
     })
   }
 
   const onOpenDeleteDialog = async () => {
-    await onRemove(id, caption)
+    await handleRemove(id, caption)
   }
 
   return (
     <LangContext lang={`${langBase}.rows`}>
       <StyledAltNameItem
         disabled={Boolean(disabled)}
-        color={["update", "create"].includes(action ?? "") ? "success" : undefined}
+        color={["update", "create"].includes(action ?? "") ?? "success"}
       >
         <Text caption={caption} />
         <Box flex row ai sx={{ height: 1 }}>

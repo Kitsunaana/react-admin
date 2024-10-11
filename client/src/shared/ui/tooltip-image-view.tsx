@@ -4,7 +4,6 @@ import { memo, useState } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { dispatch } from "shared/lib/event"
 import { Common } from "shared/types/common"
-import { getImageUrl } from "shared/lib/utils"
 import { styled } from "@mui/material/styles"
 import { badgeClasses } from "@mui/material/Badge"
 
@@ -58,7 +57,7 @@ export const TooltipImageView = memo(({ images }: TooltipImageViewProps) => {
             <Image
               alt={image.originalName}
               key={image.id}
-              src={getImageUrl(image.filename)}
+              src={image.path}
               onClick={() => {
                 setOpen(false)
                 dispatch("gallery", { images, index })

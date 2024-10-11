@@ -1,7 +1,7 @@
 import { makeAutoObservable, reaction } from "mobx"
 import { TPosition } from "features/categories/model/types"
-import { RootStore } from "features/categories/model/stores/dialog-store"
-import { CustomCategory } from "features/categories/model/schemas"
+import { CategoryDto } from "shared/types/category"
+import { PhotosStore } from "./photos-store"
 
 export class PhotoPositionStore {
   captionPosition: TPosition = "center-center"
@@ -9,42 +9,52 @@ export class PhotoPositionStore {
 
   _indexActiveImage = 0
 
-  constructor(private rootStore: RootStore) {
+  photosStore: PhotosStore
+
+  constructor(photosStore: PhotosStore) {
+    this.photosStore = photosStore
+    const { mergedImages } = this.photosStore
+
     makeAutoObservable(this, {}, { autoBind: true })
 
     reaction(() => this._indexActiveImage, () => this.changeActiveImageId())
 
-    const { photos } = this.rootStore
-
     reaction(
-      () => (
-        !!photos
-        && !!photos.mergedImages
-        && !!photos.mergedImages[this._indexActiveImage]
-      ),
+      () => (!!mergedImages && !!mergedImages[this._indexActiveImage]),
       () => this.changeActiveImageId(),
     )
   }
 
-  setPhotoPosition(data?: Partial<CustomCategory>) {
-    if (!data) return
+  get activeImage() {
+    return this.photosStore.mergedImages[this.indexActiveImage]
+  }
 
-    const filteredData = Object
-      .entries(data)
-      .filter(([key, value]) => (value === undefined ? null : [key, value]))
-    const cleanedObject = Object.fromEntries(filteredData)
-    const mergedObject = { ...this, ...cleanedObject }
+  get indexActiveImage() {
+    const { mergedImages } = this.photosStore
 
-    Object.assign(this, mergedObject)
+    return mergedImages[this._indexActiveImage] ? this._indexActiveImage : 0
+  }
+
+  get isShowButton() { return this.photosStore.mergedImages.length > 1 }
+
+  setPhotoPosition = (data: Pick<CategoryDto.CategoryDto, "activeImageId" | "captionPosition">) => {
+    Object.assign(this, data)
     if (!data.activeImageId) return
 
-    this._indexActiveImage = this.rootStore.photos.mergedImages
+    this._indexActiveImage = this.photosStore.mergedImages
       .findIndex((image) => image.id === data.activeImageId)
   }
 
-  changeActiveImageId() {
-    if (!this.rootStore.photos) return
-    const { mergedImages } = this.rootStore.photos
+  setActiveImageId = (id: string | null) => {
+    if (id === null) return
+    const findIndex = this.photosStore.mergedImages
+      .findIndex((image) => image.id === id)
+
+    if (findIndex !== -1) this._indexActiveImage = findIndex
+  }
+
+  changeActiveImageId = () => {
+    const { mergedImages } = this.photosStore
 
     const findImage = mergedImages[this._indexActiveImage]
     this.activeImageId = findImage
@@ -54,18 +64,8 @@ export class PhotoPositionStore {
         : null
   }
 
-  get activeImage() {
-    return this.rootStore.photos.mergedImages[this.indexActiveImage]
-  }
-
-  get indexActiveImage() {
-    const { mergedImages } = this.rootStore.photos
-
-    return mergedImages[this._indexActiveImage] ? this._indexActiveImage : 0
-  }
-
-  setNextImage() {
-    const { mergedImages } = this.rootStore.photos
+  setNextImage = () => {
+    const { mergedImages } = this.photosStore
     const { indexActiveImage } = this
 
     this._indexActiveImage = mergedImages[indexActiveImage + 1]
@@ -73,8 +73,8 @@ export class PhotoPositionStore {
       : 0
   }
 
-  setPrevImage() {
-    const { mergedImages } = this.rootStore.photos
+  setPrevImage = () => {
+    const { mergedImages } = this.photosStore
     const { indexActiveImage } = this
 
     this._indexActiveImage = mergedImages[indexActiveImage - 1]
@@ -82,18 +82,12 @@ export class PhotoPositionStore {
       : mergedImages.length - 1
   }
 
-  changeCaptionPosition(newCaptionPosition: TPosition) {
+  changeCaptionPosition = (newCaptionPosition: TPosition) => {
     this.captionPosition = newCaptionPosition
   }
 
-  get isShowButton() {
-    return this.rootStore.photos.mergedImages.length > 1
-  }
-
-  getData() {
-    return {
-      captionPosition: this.captionPosition,
-      activeImageId: this.activeImageId,
-    }
-  }
+  getData = () => ({
+    captionPosition: this.captionPosition,
+    activeImageId: this.activeImageId,
+  })
 }

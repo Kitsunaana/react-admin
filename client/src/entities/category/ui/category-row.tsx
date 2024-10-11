@@ -1,19 +1,19 @@
-import { Vertical } from "shared/ui/divider"
-import { TooltipImageView } from "shared/ui/tooltip-image-view"
-import { Position } from "shared/ui/position-counter"
-import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 import { UseMutationOptions } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
-import { Box } from "shared/ui/box"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
-import { IconButton } from "shared/ui/buttons/icon-button"
-import { RowItem } from "shared/ui/row-item"
-import { useContextMenu } from "shared/hooks/use-context-menu"
-import { CategoryContextMenu } from "entities/category/ui/context-menu"
-import styled from "styled-components"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { LangContext, useLang } from "shared/context/lang"
-import { Text } from "shared/ui/text"
+import { useContextMenu } from "shared/hooks/use-context-menu"
+import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
 import { Common } from "shared/types/common"
+import { Box } from "shared/ui/box"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { Vertical } from "shared/ui/divider"
+import { Position } from "shared/ui/position-counter"
+import { RowItem } from "shared/ui/row-item"
+import { Text } from "shared/ui/text"
+import { TooltipImageView } from "shared/ui/tooltip-image-view"
+import styled from "styled-components"
+import { CategoryContextMenu } from "./context-menu"
 
 interface CategoryRowProps {
   id: number
@@ -47,7 +47,11 @@ const CustomRowItem = styled(RowItem)`
 
 export const CategoryRow = (props: CategoryRowProps) => {
   const {
-    caption, id, images, order, onRemoveCategory,
+    id,
+    caption,
+    images,
+    order,
+    onRemoveCategory,
   } = props
 
   const editStore = useEditDialogStore()

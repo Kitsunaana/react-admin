@@ -2,9 +2,9 @@ import { Box, BoxProps } from "shared/ui/box"
 import { observer } from "mobx-react-lite"
 import { InputFile } from "shared/ui/form/input-file"
 import styled from "styled-components"
-import { useEditDialogStore } from "shared/ui/dialog/context/dialog-edit-context"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { Image } from "../photos/image"
-import { useStores } from "../../model/context"
+import { useCategoryStores } from "../../model/context"
 
 const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
   const { fullScreen, ...other } = props
@@ -21,12 +21,12 @@ const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
 const GridImageContainer = styled(Box)`
   height: 100%;
   overflow: auto;
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 190px);
 `
 
 export const TabPhotos = observer(() => {
   const { fullScreen } = useEditDialogStore()
-  const { photos } = useStores()
+  const { photos } = useCategoryStores()
 
   return (
     <Box sx={{ mt: 1 }}>

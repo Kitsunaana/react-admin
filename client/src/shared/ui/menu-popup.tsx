@@ -1,10 +1,10 @@
-import { default as Menu, menuClasses } from "@mui/material/Menu"
-import { IconButton } from "shared/ui/buttons/icon-button"
-import { MouseEvent, ReactNode, useState } from "react"
-import { Text } from "shared/ui/text"
+import { Menu, menuClasses } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import { MouseEvent, ReactNode, useState } from "react"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { Text } from "shared/ui/text"
 
-interface CopySettingsPopupProps {
+interface MenuPopupProps {
   children: ReactNode
 }
 
@@ -41,7 +41,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
   },
 }))
 
-export const CopySettingsPopup = (props: CopySettingsPopupProps) => {
+export const MenuPopup = (props: MenuPopupProps) => {
   const { children } = props
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)

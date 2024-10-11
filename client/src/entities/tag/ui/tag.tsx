@@ -1,7 +1,7 @@
 import { Box, BoxProps } from "shared/ui/box"
-import styled from "styled-components"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
+import styled from "styled-components"
 
 interface TagProps extends BoxProps {
   color: string

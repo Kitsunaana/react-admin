@@ -50,15 +50,18 @@ const Container = styled((props: ContainerProps) => {
 `
 
 interface UpdateOrderProps {
-  order: number | null
-  sx?: SxProps<Theme>
   id: string
+  sx?: SxProps<Theme>
+  order: number | null
   onClick: (order: number, id: string) => void
 }
 
 export const UpdateOrder = memo((props: UpdateOrderProps) => {
   const {
-    order: orderProps, sx, id, onClick,
+    id,
+    sx,
+    onClick,
+    order: orderProps,
   } = props
 
   const [open, setOpen] = useState(false)
@@ -76,7 +79,6 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
   const renderIconButton = (direction: number) => (
     <IconButton
       help={{
-        arrow: true,
         title: (
           <Text
             onlyText
@@ -92,7 +94,6 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
       fontSize={20}
       onClick={() => {
         setOrder((prevState) => (prevState ?? 0) + direction)
-
         onClick((order ?? 0) + direction, id)
       }}
     />
@@ -106,7 +107,6 @@ export const UpdateOrder = memo((props: UpdateOrderProps) => {
           onClick={onToggle}
           sx={{ cursor: "pointer" }}
           help={{
-            arrow: true,
             title: (
               <Text
                 onlyText

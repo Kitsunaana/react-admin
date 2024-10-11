@@ -7,8 +7,6 @@ export type AltName = Omit<Common.AltName, "id"> & {
   action?: Action
 }
 
-export type AltNameCreate = Omit<Common.AltName, "id">
-
 export type DataTranslation = Pick<Common.AltName, "description" | "caption">
 
 interface ITranslate {
