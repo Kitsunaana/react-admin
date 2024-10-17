@@ -1,10 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit"
-import settingsSlice from "features/settings/model/settings-slice"
-import sidebarSlice from "widgets/Sidebar/model/sidebar-slice"
+import sidebarSlice from "widgets/sidebar/model/sidebar-slice"
 
 export const store = configureStore({
   reducer: {
-    settings: settingsSlice,
     sidebar: sidebarSlice,
   },
 })

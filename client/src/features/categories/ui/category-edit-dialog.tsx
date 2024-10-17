@@ -46,7 +46,11 @@ export const CategoryEditDialog = observer(() => {
 
   const handleSubmit = (fields: CategoryDto.CategoryFields) => {
     const rows = categoryStore.getData()
-    onEdit({ ...fields, ...rows })
+    onEdit({
+      ...fields,
+      ...rows,
+      order: category!.order,
+    })
   }
 
   return (

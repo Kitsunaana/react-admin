@@ -1,5 +1,6 @@
-import queryString from "query-string"
 import { makeAutoObservable } from "mobx"
+import queryString from "query-string"
+import { isString } from "shared/lib/utils"
 
 class UrlStore {
   searchParams = queryString.stringify(queryString.parseUrl(window.location.search).query)
@@ -13,8 +14,18 @@ class UrlStore {
     this.page = page
   }
 
-  setSearchParams<T extends {}>(data: T) {
-    this.searchParams = queryString.stringify(data)
+  setSearchParams(data: string | object) {
+    if (isString(data)) {
+      const parsedUrl = queryString.parseUrl(window.location.href)
+      this.searchParams = queryString.stringify(parsedUrl.query)
+    } else {
+      this.searchParams = queryString.stringify(data)
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getSearchParamsRecord() {
+    return queryString.parseUrl(window.location.search).query
   }
 }
 

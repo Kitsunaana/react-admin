@@ -9,16 +9,14 @@ import { ChangeIconSettingFill } from "features/settings/ui/change-icon-setting-
 const SettingsPage = () => (
   <Box flex gap={2} sx={{ p: 1 }}>
     <ChangeLanguage />
-
     <ChangeTheme />
 
     <Divider><Text name="iconSettings" /></Divider>
 
     <Box sx={{ px: 2.5 }}>
-      <Text name="iconThickness" />
+      <Text name="changeIconThickness" />
 
       <ChangeIconSettingWeight />
-
       <ChangeIconSettingFill />
     </Box>
   </Box>

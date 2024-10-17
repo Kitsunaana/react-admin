@@ -1,14 +1,15 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import { useMemo } from "react"
 import { alpha, PaletteMode, useMediaQuery } from "@mui/material"
-import { useAppSelector } from "shared/lib/hooks"
-import { RootState } from "app/providers/store"
 import { blue } from "@mui/material/colors"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import { useSettings } from "features/settings/model/context"
+import { observer } from "mobx-react-lite"
+import { useMemo } from "react"
 
-const Theme = (props) => {
+const Theme = observer((props) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-schemas: dark)")
 
-  const mode = useAppSelector((state: RootState) => state.settings.theme)
+  const settings = useSettings()
+  const mode = settings.theme
 
   const theme = useMemo(() => {
     const calcMode = mode === "system" ? (prefersDarkMode ? "dark" : "light") : mode
@@ -72,6 +73,6 @@ const Theme = (props) => {
   }, [prefersDarkMode, mode])
 
   return <ThemeProvider theme={theme} {...props} />
-}
+})
 
 export { Theme as ThemeProvider }

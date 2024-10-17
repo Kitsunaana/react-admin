@@ -6,7 +6,7 @@ export class ValidationError extends Error {
   }
 }
 
-export const validation = <T extends ZodType> (schema: T, data: unknown): z.infer<T> => {
+export const validation = <T extends ZodType>(schema: T, data: unknown): z.infer<T> => {
   const result = schema.safeParse(data)
   if (result.success) return result.data
 

@@ -1,15 +1,16 @@
 import { CssBaseline, useTheme } from "@mui/material"
-import { Box } from "shared/ui/box"
-import { menu, menuBottom } from "widgets/sidebar/constants"
-import { Sidebar } from "widgets/sidebar/ui/sidebar"
+import { useSettings } from "features/settings/model/context"
+import { observer } from "mobx-react-lite"
 import { Suspense, useEffect, useState } from "react"
+import { Route, Routes } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
 import { routeConfig } from "shared/config/route-config"
 import { LangContext } from "shared/context/lang"
-import { Route, Routes } from "react-router-dom"
+import { Box } from "shared/ui/box"
 import { Spinner } from "shared/ui/spinner"
 import { Gallery } from "widgets/galerry"
-import { ToastContainer } from "react-toastify"
-import { useAppSelector } from "shared/lib/hooks"
+import { menu, menuBottom } from "widgets/sidebar/constants"
+import { Sidebar } from "widgets/sidebar/ui/sidebar"
 
 export const Pages = () => {
   const { palette } = useTheme()
@@ -53,9 +54,9 @@ export const Pages = () => {
   )
 }
 
-export const App = () => {
+export const App = observer(() => {
   const [fontsLoaded, setFontsLoaded] = useState(true)
-  const theme = useAppSelector((state) => state.settings.theme)
+  const { theme } = useSettings()
 
   useEffect(() => {
     const event = () => setFontsLoaded(true)
@@ -125,4 +126,4 @@ export const App = () => {
       />
     </Box>
   )
-}
+})

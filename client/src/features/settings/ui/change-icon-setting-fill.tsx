@@ -1,17 +1,14 @@
-import { useAppDispatch, useAppSelector } from "shared/lib/hooks"
-import { RootState } from "app/providers/store"
-import { ChangeEvent } from "react"
 import { Checkbox, FormControlLabel } from "@mui/material"
+import { observer } from "mobx-react-lite"
+import { ChangeEvent } from "react"
 import { Text } from "shared/ui/text"
-import { changeIconSettings } from "features/settings/model/settings-slice"
+import { useSettings } from "../model/context"
 
-export const ChangeIconSettingFill = () => {
-  const fillIcon = useAppSelector((state: RootState) => state.settings.fillIcon)
-
-  const dispatch = useAppDispatch()
+export const ChangeIconSettingFill = observer(() => {
+  const settings = useSettings()
 
   const handleOnChangeIconFill = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeIconSettings({ fillIcon: event.target.checked ? 1 : 0 }))
+    settings.onChangeIconSettings({ fillIcon: event.target.checked ? 1 : 0 })
   }
 
   return (
@@ -19,10 +16,10 @@ export const ChangeIconSettingFill = () => {
       control={(
         <Checkbox
           onChange={handleOnChangeIconFill}
-          checked={!!fillIcon}
+          checked={!!settings.iconSettings.fillIcon}
         />
       )}
-      label={<Text name="fillIcons" onlyText />}
+      label={<Text name="changeFillIcons" onlyText />}
     />
   )
-}
+})

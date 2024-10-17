@@ -1,40 +1,36 @@
-import { Box } from "shared/ui/box"
-import { Table } from "shared/ui/table"
-import { CreateButton } from "shared/ui/buttons/create-button"
-import { Text } from "shared/ui/text"
-import { Mark } from "shared/ui/mark"
-import { RootDialogProvider } from "shared/context/dialog-context"
-import { observer } from "mobx-react-lite"
-import { CategoryHeader } from "pages/categories/ui/header"
-import { EmptyList } from "shared/ui/empty-list"
-import { CategoryRow } from "entities/category"
-import { Spinner } from "shared/ui/spinner"
-import { RefetchButton } from "shared/ui/buttons/refresh-button"
-import { Pagination } from "shared/ui/pagination"
-import { CategoryDialog } from "features/categories"
 import { useTheme } from "@mui/material"
-import { BackButton } from "shared/ui/back-button"
-import { LangContext, useLang } from "shared/context/lang"
+import { CategoryRow } from "entities/category"
 import { useCategories } from "entities/category/queries/use-categories"
-import { CategoryDto } from "shared/types/category"
-import { Common } from "shared/types/common"
-import { useRemoveCategory } from "features/categories/queries/use-remove-category"
-import { TagCreateDialog, TagEditDialog } from "features/tag"
-import { StoreProvider } from "features/categories/model/context"
 import { AltNameCreateDialog } from "features/alt-names"
 import { AltNameEditDialog } from "features/alt-names/ui/alt-name-edit-dialog"
+import { CategoryDialog } from "features/categories"
+import { StoreProvider } from "features/categories/model/context"
+import { useRemoveCategory } from "features/categories/queries/use-remove-category"
 import { CharacteristicCreateDialog, CharacteristicEditDialog } from "features/characteristics"
+import { TagCreateDialog, TagEditDialog } from "features/tag"
+import { observer } from "mobx-react-lite"
+import { CategoryHeader } from "pages/categories/ui/header"
+import { RootDialogProvider } from "shared/context/dialog-context"
+import { LangContext, useLang } from "shared/context/lang"
+import { Common } from "shared/types/common"
+import { BackButton } from "shared/ui/back-button"
+import { Box } from "shared/ui/box"
+import { CreateButton } from "shared/ui/buttons/create-button"
+import { RefetchButton } from "shared/ui/buttons/refresh-button"
+import { EmptyList } from "shared/ui/empty-list"
+import { Mark } from "shared/ui/mark"
+import { Pagination } from "shared/ui/pagination"
+import { Spinner } from "shared/ui/spinner"
+import { Table } from "shared/ui/table"
+import { Text } from "shared/ui/text"
 
 export const findCaption = (altNames: Common.AltName[], defaultValue: string = ""): string => {
   const readLocale = localStorage.getItem("lngAdmin")
 
-  if (altNames.length > 0) {
-    altNames?.find((altName) => (
-      altName.locale.code === readLocale ? altName.caption : defaultValue
-    ))
-  }
+  const altName = altNames?.find((altName) => altName.locale.code === readLocale)
+  console.log(readLocale)
 
-  return defaultValue
+  return altName?.caption ?? defaultValue
 }
 
 const CategoriesPage = observer(() => {

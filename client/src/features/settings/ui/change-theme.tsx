@@ -1,84 +1,80 @@
-import { Text } from "shared/ui/text"
-import { Box } from "shared/ui/box"
-import { alpha, ButtonBase, useTheme } from "@mui/material"
+import {
+  alpha,
+  ButtonBase,
+  ButtonBaseProps,
+  Theme,
+} from "@mui/material"
+import { styled } from "@mui/material/styles"
+import { Themes } from "features/settings/model/settings-slice"
+import { observer } from "mobx-react-lite"
 import { Icon } from "shared/ui/icon"
-import { changeTheme, Themes } from "features/settings/model/settings-slice"
-import { useAppDispatch, useAppSelector } from "shared/lib/hooks"
-import { RootState } from "app/providers/store"
+import { Text } from "shared/ui/text"
+import { useSettings } from "../model/context"
 
-const themes = [
-  {
-    value: "light",
-    icon: "light",
-    caption: "themes.light",
-  },
-  {
-    value: "system",
-    icon: "system",
-    caption: "themes.system",
-  },
-  {
-    value: "dark",
-    icon: "dark",
-    caption: "themes.dark",
-  },
-]
+const themes: Array<Themes> = ["dark", "system", "light"]
 
-export const ChangeTheme = () => {
-  const { palette: { mode } } = useTheme()
+interface VariantThemeButtonProps extends ButtonBaseProps {
+  isActive: boolean
+  theme?: Theme
+}
 
-  const dispatch = useAppDispatch()
+const VariantThemeButton = styled(
+  ({ isActive, ...other }: VariantThemeButtonProps) => <ButtonBase {...other} />,
+)(({ isActive, theme }: VariantThemeButtonProps) => {
+  if (theme === undefined) throw new Error("Theme is not defined")
 
-  const theme = useAppSelector((state: RootState) => state.settings.theme)
+  const { palette } = theme
+  const { mode, grey, common } = palette
 
-  const handleOnChangeTheme = (value: string) => {
-    dispatch(changeTheme({ theme: value as Themes }))
+  const isLight = mode === "light"
+
+  return {
+    fontSize: 16,
+    userSelect: "none",
+    textTransform: "uppercase",
+    borderRadius: 8,
+    padding: "8px 8px 2px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 8,
+    "&:hover": {
+      transition: ".2s",
+      backgroundColor: isLight ? grey["100"] : alpha(common.white, 0.06),
+    },
+    backgroundColor: isActive
+      ? (isLight ? grey["300"] : alpha(common.white, 0.16))
+      : undefined,
   }
+})
+
+const WrapperButtons = styled("div")(({ theme: { palette } }) => ({
+  border: `1px solid ${alpha(palette.grey["400"], palette.mode === "light" ? 1 : 0.5)}`,
+  padding: 4,
+  display: "inline-flex",
+  borderRadius: 12,
+  gap: 4,
+}))
+
+export const ChangeTheme = observer(() => {
+  const settings = useSettings()
 
   return (
-    <Box>
+    <div>
       <Text name="changeTheme" sx={{ mb: 1 }} />
 
-      <Box
-        row
-        sx={{
-          border: ({ palette }) => `1px solid ${alpha(palette.grey["400"], mode === "light" ? 1 : 0.5)}`,
-          p: 0.5,
-          display: "inline-flex",
-          borderRadius: 3,
-          gap: 0.5,
-        }}
-      >
-        {themes.map((item) => (
-          <ButtonBase
-            onClick={() => handleOnChangeTheme(item.value)}
-            key={item.value}
-            sx={{
-              fontSize: 16,
-              userSelect: "none",
-              textTransform: "uppercase",
-              borderRadius: 2,
-              px: 1,
-              pt: 1,
-              pb: 0.25,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 1,
-              "&:hover": {
-                transition: ".2s",
-                backgroundColor: ({ palette }) => (mode === "light" ? palette.grey["100"] : alpha(palette.common.white, 0.06)),
-              },
-              backgroundColor: ({ palette }) => (theme === item.value
-                ? (mode === "light" ? palette.grey["300"] : alpha(palette.common.white, 0.16))
-                : null),
-            }}
+      <WrapperButtons>
+        {themes.map((theme) => (
+          <VariantThemeButton
+            key={theme}
+            isActive={settings.theme === theme}
+            onClick={() => settings.onChangeTheme(theme)}
           >
-            <Icon name={item.icon} />
-            <Text name={item.caption} onlyText />
-          </ButtonBase>
+            <Icon name={theme} />
+            <Text name={`themes.${theme}`} onlyText />
+          </VariantThemeButton>
         ))}
-      </Box>
-    </Box>
+      </WrapperButtons>
+    </div>
   )
-}
+})

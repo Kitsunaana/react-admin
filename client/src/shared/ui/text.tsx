@@ -1,9 +1,8 @@
 import { Typography, TypographyProps } from "@mui/material"
+import { observer } from "mobx-react-lite"
+import { ReactNode } from "react"
 import { Trans, TransProps, useTranslation } from "react-i18next"
 import { useLang } from "shared/context/lang"
-import { memo, ReactNode } from "react"
-import { useAppSelector } from "shared/lib/hooks"
-import { RootState } from "app/providers/store"
 
 interface TextProps extends TypographyProps {
   name?: string
@@ -15,13 +14,20 @@ interface TextProps extends TypographyProps {
   translateOptions?: TransProps<string>
 }
 
-export const Text = memo((props: TextProps) => {
+export const Text = observer((props: TextProps) => {
   const {
-    name, caption, sx, values, value, langBase: langBaseProps, onlyText, translateOptions, ...other
+    name,
+    caption,
+    sx,
+    values,
+    value,
+    onlyText,
+    translateOptions,
+    langBase: langBaseProps,
+    ...other
   } = props
 
   useTranslation()
-  useAppSelector((state: RootState) => state.settings.language)
 
   const lang = useLang()
   const langBase = langBaseProps ?? lang

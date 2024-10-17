@@ -16,7 +16,7 @@ const edit = (id: number | null, payload: CategoryDto.PatchCategoryBody) => (
     const editCategory = (media: Common.Media[]) => {
       toast.promise(() => (
         categoriesApiV2
-          .patch(id, { ...other, media: [...other.media, ...media] })
+          .patch(id, { ...other, media: [...other.media, ...media], images: [] })
           .then(resolve)
           .catch(reject)
       ), {

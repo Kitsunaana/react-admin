@@ -39,7 +39,7 @@ export const categoriesApi = {
 
   delete: async (id: number) => $axios.delete(`/categories/${id}`).then(({ data }) => data),
 
-  post: async (payload: CategoryDto.CategoryCreateWithMedia): Promise<CategoryDto.PostCategoryResponse> => {
+  post: async (payload: CategoryDto.CategoryCreate): Promise<CategoryDto.PostCategoryResponse> => {
     try {
       validation(modifiedCategorySchemas, payload)
 
@@ -55,7 +55,7 @@ export const categoriesApi = {
 
   patch: async (
     id: number | null,
-    payload: CategoryDto.CategoryCreateWithMedia,
+    payload: CategoryDto.CategoryCreate,
   ): Promise<CategoryDto.PatchCategoryResponse> => {
     validation(modifiedCategorySchemas, payload)
 

@@ -1,23 +1,20 @@
 import { Slider } from "@mui/material"
-import { useAppDispatch, useAppSelector } from "shared/lib/hooks"
-import { RootState } from "app/providers/store"
-import { changeIconSettings } from "features/settings/model/settings-slice"
+import { observer } from "mobx-react-lite"
+import { useSettings } from "../model/context"
 
-export const ChangeIconSettingWeight = () => {
-  const weightIcon = useAppSelector((state: RootState) => state.settings.weightIcon)
+export const ChangeIconSettingWeight = observer(() => {
+  const settings = useSettings()
 
-  const dispatch = useAppDispatch()
-
-  const handleOnChangeIconThickness = (event: Event, value: number | Array<unknown>) => {
+  const handleOnChangeIconThickness = (_: Event, value: number | Array<unknown>) => {
     if (typeof value === "number") {
-      dispatch(changeIconSettings({ weightIcon: value }))
+      settings.onChangeIconSettings({ weightIcon: value })
     }
   }
 
   return (
     <Slider
       onChange={handleOnChangeIconThickness}
-      value={weightIcon}
+      value={settings.iconSettings.weightIcon}
       valueLabelDisplay="auto"
       shiftStep={30}
       step={100}
@@ -26,4 +23,4 @@ export const ChangeIconSettingWeight = () => {
       max={700}
     />
   )
-}
+})

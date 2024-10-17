@@ -1,5 +1,7 @@
 import { Skeleton } from "@mui/material"
-import { AltNameItem, openCreateAltNameDialog, openEditAltNameDialog, useLocales } from "entities/alt-name"
+import {
+  AltNameItem, openCreateAltNameDialog, openEditAltNameDialog, useLocales,
+} from "entities/alt-name"
 import { useRemoveAltName } from "features/alt-names"
 import { updateCaption } from "features/categories/ui/tabs/tab-common"
 import { observer } from "mobx-react-lite"

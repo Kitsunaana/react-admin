@@ -6,12 +6,12 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export * from "./categoryDto";
-export * from "./createGoodBody";
-export * from "./createGoodBodyCaptionPosition";
-export * from "./createGoodBodyImagesIds";
-export * from "./createGoodBodyImagesItem";
-export * from "./getAllGoodsResponse";
-export * from "./getByIdGoodResponse";
-export * from "./goodDto";
-export * from "./image";
+export * from "./categoryDto"
+export * from "./createGoodBody"
+export * from "./createGoodBodyCaptionPosition"
+export * from "./createGoodBodyImagesIds"
+export * from "./createGoodBodyImagesItem"
+export * from "./getAllGoodsResponse"
+export * from "./getByIdGoodResponse"
+export * from "./goodDto"
+export * from "./image"

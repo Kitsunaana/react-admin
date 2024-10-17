@@ -13,7 +13,7 @@ const create = (payload: CategoryDto.PostCategoryBody) => (
     const createCategory = (media: Common.Media[]) => {
       toast.promise(() => (
         categoriesApiV2
-          .post({ ...other, media: [...other.media, ...media] })
+          .post({ ...other, media: [...other.media, ...media], images: [] })
           .then(resolve)
           .catch(reject)
       ), {
