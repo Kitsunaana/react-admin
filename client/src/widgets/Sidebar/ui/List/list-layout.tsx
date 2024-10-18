@@ -75,6 +75,7 @@ export const ListLayout = observer((props: ListLayoutProps) => {
         <List component="div" disablePadding>
           {!open && sublist?.length !== 0 && (
             <ListItemButton
+              disabled={disabled}
               name={name}
               open={open}
               path={name}

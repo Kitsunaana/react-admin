@@ -4,9 +4,10 @@ import { Text } from "shared/ui/text"
 
 interface ListItemTextProps extends MUIListItemTextProps {
   disabled: boolean
+  name: string
 }
 
-export const ListItemText = memo((props: { name: string } & ListItemTextProps) => {
+export const ListItemText = memo((props: ListItemTextProps) => {
   const { disabled, name } = props
 
   return (

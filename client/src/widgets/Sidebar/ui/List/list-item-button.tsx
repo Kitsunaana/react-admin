@@ -5,7 +5,7 @@ import {
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { memo } from "react"
-import { Link, LinkProps } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { Text } from "shared/ui/text"
 import { ListItemIcon } from "./list-item-icon"
 import { ListItemText } from "./list-item-text"
@@ -32,18 +32,13 @@ const StyledListItemButton = styled(
   },
 }))
 
-export const CustomLink = memo((props: LinkProps) => (
-  <Link
-    {...props}
-    style={{
-      display: "flex",
-      width: "100%",
-      textDecoration: "none",
-      color: "inherit",
-      justifyContent: "center",
-    }}
-  />
-))
+const StyledLink = styled(Link)(() => ({
+  display: "flex",
+  width: "100%",
+  textDecoration: "none",
+  color: "inherit",
+  justifyContent: "center",
+}))
 
 export type ListItemButtonProps = {
   caption: string
@@ -74,6 +69,24 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
 
   const isShowTooltip = disabled || !open
 
+  const renderContent = (
+    <>
+      <ListItemIcon
+        open={open}
+        icon={icon}
+        disabled={disabled ?? false}
+      />
+      {
+        open && (
+          <ListItemText
+            disabled={disabled ?? false}
+            name={name}
+          />
+        )
+      }
+    </>
+  )
+
   const renderButton = (
     <StyledListItemButton
       isSelected={isSelected}
@@ -82,37 +95,11 @@ export const ListItemButton = memo((props: ListItemButtonProps) => {
       {...otherProps}
     >
       {disabled ? (
-        <>
-          <ListItemIcon
-            open={open}
-            icon={icon}
-            disabled={disabled ?? false}
-          />
-          {
-            open && (
-              <ListItemText
-                disabled={disabled ?? false}
-                name={name}
-              />
-            )
-          }
-        </>
+        renderContent
       ) : (
-        <CustomLink to={path}>
-          <ListItemIcon
-            open={open}
-            icon={icon}
-            disabled={disabled ?? false}
-          />
-          {
-            open && (
-              <ListItemText
-                disabled={disabled ?? false}
-                name={name}
-              />
-            )
-          }
-        </CustomLink>
+        <StyledLink to={path}>
+          {renderContent}
+        </StyledLink>
       )}
       {children}
     </StyledListItemButton>

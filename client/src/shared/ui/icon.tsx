@@ -70,7 +70,7 @@ const iconData = {
 
 export type IconKeys = keyof typeof iconData
 
-interface DefaultIcon extends IconProps {
+export interface DefaultIcon extends IconProps {
   name?: IconKeys | string
   help?: Omit<TooltipProps, "children">
 }

@@ -1,11 +1,11 @@
 import { styled } from "@mui/material/styles"
 import { observer } from "mobx-react-lite"
 import { MouseEvent } from "react"
-import { useListSelected } from "../../model/use-list-selected"
 import { MenuList } from "../../model/types"
+import { useListSelected } from "../../model/use-list-selected"
+import { ExpandButton } from "../expand-button"
 import { ListItemButton, ListItemButtonProps } from "./list-item-button"
 import { ListLayout } from "./list-layout"
-import { ExpandButton } from "../expand-button"
 
 export type ListProps = {
   open: boolean
@@ -88,6 +88,7 @@ export const List = observer((props: ListProps) => {
           >
             {list.sublist && list.sublist.length > 0 && (
               <ExpandButton
+                open={open}
                 name={list.name}
                 handleOnExpand={handleOnExpand}
                 isExpanded={isExpanded}
@@ -113,6 +114,7 @@ export const List = observer((props: ListProps) => {
       header={
         list.sublist.length > 0 ? (
           <ExpandButton
+            open={open}
             name={list.name}
             isExpanded={isExpanded}
             handleOnExpand={handleOnExpand}
@@ -120,6 +122,7 @@ export const List = observer((props: ListProps) => {
           />
         ) : (
           <StyledListItemButton
+            disabled={list.disabled}
             name={list.name}
             icon={list.icon}
             caption={list.caption}
