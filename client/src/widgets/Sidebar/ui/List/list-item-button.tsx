@@ -1,23 +1,46 @@
-import { memo } from "react"
 import {
   alpha,
   ListItemButton as MUIListItemButton,
   ListItemButtonProps as MUIListItemButtonProps, Tooltip,
 } from "@mui/material"
-import * as React from "react"
-import { dispatch } from "shared/lib/event"
-import { Text } from "shared/ui/text"
+import { styled } from "@mui/material/styles"
+import { memo } from "react"
 import { Link, LinkProps } from "react-router-dom"
-import { shallowEqual } from "shared/lib/utils"
-import { TRef } from "widgets/sidebar/ui/list/list"
-import { ListItemText } from "./list-item-text"
+import { Text } from "shared/ui/text"
 import { ListItemIcon } from "./list-item-icon"
+import { ListItemText } from "./list-item-text"
+
+interface StyledListItemButtonProps extends MUIListItemButtonProps {
+  isSelected: boolean;
+  open: boolean
+}
+
+const StyledListItemButton = styled(
+  ({ isSelected, open, ...other }: StyledListItemButtonProps) => <MUIListItemButton {...other} />,
+)(({ theme: { palette }, isSelected, open }) => ({
+  backgroundColor: isSelected ? alpha(palette.primary.dark, 0.10) : undefined,
+  height: 35,
+  padding: 0,
+  paddingLeft: open ? 8 : 0,
+  paddingRight: 0,
+  display: "flex",
+  alignItems: "center",
+  width: "100%",
+  justifyContent: "center",
+  "&:hover": {
+    backgroundColor: isSelected ? alpha(palette.primary.dark, 0.15) : undefined,
+  },
+}))
 
 export const CustomLink = memo((props: LinkProps) => (
   <Link
     {...props}
     style={{
-      display: "flex", width: "100%", textDecoration: "none", color: "inherit", justifyContent: "center",
+      display: "flex",
+      width: "100%",
+      textDecoration: "none",
+      color: "inherit",
+      justifyContent: "center",
     }}
   />
 ))
@@ -35,63 +58,80 @@ export type ListItemButtonProps = {
 
 export const ListItemButton = memo((props: ListItemButtonProps) => {
   const {
-    caption,
-    sx,
-    children,
-    disabled,
     icon,
+    caption,
+    name,
     path,
+    disabled,
+    children,
     optionId,
     listId,
-    open,
     isSelected,
-    name,
+    open,
+    sx,
     ...otherProps
   } = props
 
-  const onSelect = () => {
-    dispatch("selected", {
-      selectedId: listId,
-      selectedOptionId: (disabled || !optionId) ? null : optionId,
-    })
-  }
+  const isShowTooltip = disabled || !open
 
   const renderButton = (
-    <MUIListItemButton
-      onClick={onSelect}
-      sx={{
-        backgroundColor: ({ palette }) => (isSelected ? alpha(palette.primary.dark, 0.10) : undefined),
-        height: 35,
-        p: 0,
-        px: open ? 1 : 0,
-        pr: 0,
-        display: "flex",
-        alignItems: "center",
-        width: "100%",
-        justifyContent: "center",
-        "&:hover": {
-          backgroundColor: ({ palette }) => (isSelected ? alpha(palette.primary.dark, 0.15) : undefined),
-        },
-        ...sx,
-      }}
+    <StyledListItemButton
+      isSelected={isSelected}
+      open={open}
+      sx={sx}
       {...otherProps}
     >
-      <CustomLink to={path}>
-        <ListItemIcon open={open} icon={icon} disabled={disabled ?? false} />
-        {open && <ListItemText disabled={disabled ?? false} name={name} />}
-      </CustomLink>
+      {disabled ? (
+        <>
+          <ListItemIcon
+            open={open}
+            icon={icon}
+            disabled={disabled ?? false}
+          />
+          {
+            open && (
+              <ListItemText
+                disabled={disabled ?? false}
+                name={name}
+              />
+            )
+          }
+        </>
+      ) : (
+        <CustomLink to={path}>
+          <ListItemIcon
+            open={open}
+            icon={icon}
+            disabled={disabled ?? false}
+          />
+          {
+            open && (
+              <ListItemText
+                disabled={disabled ?? false}
+                name={name}
+              />
+            )
+          }
+        </CustomLink>
+      )}
       {children}
-    </MUIListItemButton>
+    </StyledListItemButton>
   )
 
-  if (disabled || !open) {
+  if (isShowTooltip) {
     return (
       <Tooltip
-        title={disabled ? <Text name="not-available" onlyText /> : <Text name={name} onlyText />}
-        placement="right"
         arrow
+        placement="right"
+        title={(
+          disabled
+            ? <Text onlyText name="notAvailable" />
+            : <Text onlyText name={name} />
+        )}
       >
-        {renderButton}
+        <div>
+          {renderButton}
+        </div>
       </Tooltip>
     )
   }

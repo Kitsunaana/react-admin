@@ -1,9 +1,36 @@
-import { memo, ReactNode, useMemo } from "react"
-import { Collapse, List } from "@mui/material"
-import * as React from "react"
+import { Collapse, CollapseProps, List } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import { observer } from "mobx-react-lite"
+import { ReactNode } from "react"
 import { Box } from "shared/ui/box"
+import { MenuList } from "../../model/types"
 import { ListItemButton } from "./list-item-button"
-import { MenuList } from "../../types"
+
+interface StyledCollapseProps extends CollapseProps {
+  isShowBorderLeft: boolean
+}
+
+const StyledCollapse = styled(
+  ({ isShowBorderLeft, ...other }: StyledCollapseProps) => <Collapse {...other} />,
+)(({ isShowBorderLeft, theme: { palette } }) => ({
+  position: "relative",
+  "&::before": {
+    content: "''",
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    top: 0,
+    left: 0,
+    borderLeft: "5px solid",
+    transition: ".2s",
+    borderBottomLeftRadius: 4,
+    borderLeftColor: (
+      isShowBorderLeft
+        ? palette.primary[palette.mode === "light" ? "light" : "dark"]
+        : "transparent"
+    ),
+  },
+}))
 
 export type ListLayoutProps = {
   header: ReactNode
@@ -13,47 +40,37 @@ export type ListLayoutProps = {
   open: boolean
 } & MenuList
 
-export const ListLayout = memo((props: ListLayoutProps) => {
+export const ListLayout = observer((props: ListLayoutProps) => {
   const {
-    header,
+    id,
     name,
-    isSelected,
-    selectedOptionId,
-    sublist,
-    isExpanded,
-    open,
     caption,
     icon,
-    id,
+    header,
+    isSelected,
+    isExpanded,
+    selectedOptionId,
+    sublist,
+    open,
+    disabled,
   } = props
 
-  const sx = useMemo(() => ({ pl: open ? 2 : 0 }), [open])
-
   return (
-    <List component="nav" disablePadding sx={{ width: open ? 240 : 47, transition: !open ? "width .3s" : null }}>
+    <List
+      component="nav"
+      disablePadding
+      sx={{
+        width: open ? 240 : 47,
+        transition: !open ? "width .3s" : null,
+      }}
+    >
       <Box flex jc>{header}</Box>
 
-      <Collapse
+      <StyledCollapse
         in={isExpanded}
         timeout={300}
         unmountOnExit
-        sx={{
-          position: "relative",
-          "&::before": {
-            content: "''",
-            position: "absolute",
-            width: 1,
-            height: 1,
-            top: 0,
-            left: 0,
-            borderLeft: "5px solid",
-            transition: ".2s",
-            borderBottomLeftRadius: 4,
-            borderLeftColor: ({ palette }) => (isExpanded && isSelected && open
-              ? (palette.mode === "light" ? palette.primary.light : palette.primary.dark)
-              : "transparent"),
-          },
-        }}
+        isShowBorderLeft={isExpanded && isSelected && open}
       >
         <List component="div" disablePadding>
           {!open && sublist?.length !== 0 && (
@@ -73,22 +90,22 @@ export const ListLayout = memo((props: ListLayoutProps) => {
 
             return (
               <ListItemButton
+                key={option.id}
                 name={option.name}
+                caption={option.caption}
+                icon={option.icon}
+                isSelected={isSelectedOption}
+                optionId={option.id}
                 listId={id}
                 open={open}
                 path={path}
-                sx={sx}
-                isSelected={isSelectedOption}
-                optionId={option.id}
-                key={option.id}
-                caption={option.caption}
-                icon={option.icon}
                 disabled={option?.disabled}
+                sx={{ pl: open ? 2 : 0 }}
               />
             )
           })}
         </List>
-      </Collapse>
+      </StyledCollapse>
     </List>
   )
 })

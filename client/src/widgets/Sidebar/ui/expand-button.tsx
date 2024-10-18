@@ -2,12 +2,10 @@ import {
   alpha,
   ButtonBase, ButtonBaseProps, Tooltip, useTheme,
 } from "@mui/material"
-import * as React from "react"
 import { memo, MouseEvent } from "react"
 import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import { TRef } from "widgets/sidebar/ui/list/list"
 
 interface ExpandButtonProps {
   handleOnExpand: (event: MouseEvent<HTMLButtonElement>) => void
@@ -19,7 +17,11 @@ interface ExpandButtonProps {
 
 export const ExpandButton = memo((props: ExpandButtonProps) => {
   const {
-    handleOnExpand, isExpanded, buttonProps, divider, name,
+    handleOnExpand,
+    isExpanded,
+    buttonProps,
+    divider,
+    name,
   } = props
 
   const { palette: { mode } } = useTheme()
@@ -30,7 +32,11 @@ export const ExpandButton = memo((props: ExpandButtonProps) => {
       sx={{
         width: 1,
         "&:hover": {
-          backgroundColor: ({ palette }) => (mode === "light" ? palette.grey["100"] : alpha(palette.common.white, 0.1)),
+          backgroundColor: ({ palette }) => (
+            mode === "light"
+              ? palette.grey["100"]
+              : alpha(palette.common.white, 0.1)
+          ),
           transition: ".3s",
         },
         ...buttonProps?.sx,
@@ -82,7 +88,7 @@ export const ExpandButton = memo((props: ExpandButtonProps) => {
         arrow
         title={(
           <>
-            <Text onlyText name={`${isExpanded ? "collapse" : "expand"}-routes`} />
+            <Text onlyText name={`${isExpanded ? "collapse" : "expand"}Routes`} />
             {" "}
             <Text onlyText name={name} />
           </>

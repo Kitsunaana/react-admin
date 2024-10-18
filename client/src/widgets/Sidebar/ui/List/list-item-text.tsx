@@ -1,7 +1,6 @@
 import { ListItemTextProps as MUIListItemTextProps } from "@mui/material/ListItemText/ListItemText"
 import { memo } from "react"
 import { Text } from "shared/ui/text"
-import * as React from "react"
 
 interface ListItemTextProps extends MUIListItemTextProps {
   disabled: boolean

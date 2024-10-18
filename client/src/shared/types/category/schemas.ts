@@ -65,6 +65,7 @@ export const createCategoriesBody = zod.object({
       mimetype: zod.string(),
       order: zod.number().or(zod.null()),
       size: zod.number(),
+      deleted: zod.boolean().optional(),
     }),
   ),
   altNames: zod.array(
@@ -164,6 +165,7 @@ export const updateCategoryBody = zod.object({
       mimetype: zod.string(),
       order: zod.number().or(zod.null()),
       size: zod.number(),
+      deleted: zod.boolean().optional(),
     }),
   ),
   altNames: zod.array(
@@ -204,6 +206,7 @@ export const updateCategoryBody = zod.object({
       data: zod.string(),
     }),
   ),
+  order: zod.number().or(zod.null()),
 })
 
 export const updateCategoryResponse = zod.object({

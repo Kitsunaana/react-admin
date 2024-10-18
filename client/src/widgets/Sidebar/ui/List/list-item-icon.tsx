@@ -1,8 +1,7 @@
+import { ListItemIcon as MUIListItemIcon } from "@mui/material"
 import { ListItemIconProps as MUIListItemIconProps } from "@mui/material/ListItemIcon/ListItemIcon"
 import { memo } from "react"
-import { ListItemIcon as MUIListItemIcon } from "@mui/material"
 import { Icon } from "shared/ui/icon"
-import * as React from "react"
 
 interface ListItemIconProps extends MUIListItemIconProps {
   icon: string
@@ -12,7 +11,10 @@ interface ListItemIconProps extends MUIListItemIconProps {
 
 export const ListItemIcon = memo((props: ListItemIconProps) => {
   const {
-    icon, disabled, open, ...other
+    icon,
+    disabled,
+    open,
+    ...other
   } = props
 
   return (

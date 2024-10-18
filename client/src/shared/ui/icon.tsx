@@ -1,10 +1,10 @@
-import { forwardRef } from "react"
 import {
   Fade,
   Icon, IconProps, Tooltip, TooltipProps,
 } from "@mui/material"
-import { useAppSelector } from "shared/lib/hooks"
-import { RootState } from "app/providers/store"
+import { useSettings } from "features/settings/model/context"
+import { observer } from "mobx-react-lite"
+import { forwardRef } from "react"
 
 const iconData = {
   defIcon: "do_not_disturb_off",
@@ -75,11 +75,11 @@ interface DefaultIcon extends IconProps {
   help?: Omit<TooltipProps, "children">
 }
 
-const Default = forwardRef<any, DefaultIcon>((props, ref) => {
+const Default = observer(forwardRef<any, DefaultIcon>((props, ref) => {
   const { name = "", help, ...other } = props
 
-  const weight = useAppSelector((state: RootState) => state.settings.weightIcon)
-  const fill = useAppSelector((state: RootState) => state.settings.fillIcon)
+  const settings = useSettings()
+  const { fillIcon, weightIcon } = settings.iconSettings
 
   const icon = other.children ?? (
     name in iconData
@@ -93,7 +93,7 @@ const Default = forwardRef<any, DefaultIcon>((props, ref) => {
         ref={ref}
         className="material-symbols-outlined"
         style={{
-          fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' 0, 'opsz' 24`,
+          fontVariationSettings: `'FILL' ${fillIcon}, 'wght' ${weightIcon}, 'GRAD' 0, 'opsz' 24`,
         }}
         {...other}
       >
@@ -111,6 +111,6 @@ const Default = forwardRef<any, DefaultIcon>((props, ref) => {
   }
 
   return renderIcon
-})
+}))
 
 export { Default as Icon }

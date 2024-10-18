@@ -10,6 +10,7 @@ export const menu = [
         name: "goods",
         caption: "Товары",
         icon: "goods",
+        disabled: true,
       },
       {
         id: 2,
@@ -22,7 +23,7 @@ export const menu = [
   },
   {
     id: 8,
-    name: "stop-list",
+    name: "stopList",
     caption: "Стоп-лист",
     icon: "stopList",
     sublist: [],
@@ -31,20 +32,22 @@ export const menu = [
     id: 9,
     name: "pricing",
     caption: "Ценообразование",
+    disabled: true,
     icon: "pricing",
     sublist: [
       {
         id: 10,
-        name: "price-list",
+        name: "priceList",
         caption: "Прайс-лист",
         disabled: true,
         icon: "priceList",
       },
       {
         id: 12,
-        name: "promo-code",
+        name: "promoCode",
         caption: "Промокоды",
         icon: "promoCode",
+        disabled: true,
       },
     ],
   },
@@ -53,12 +56,14 @@ export const menu = [
     name: "order",
     caption: "Заказы",
     icon: "orders",
+    disabled: true,
     sublist: [
       {
         id: 14,
-        name: "new-order",
+        name: "newOrder",
         caption: "Новый заказ",
         icon: "newOrder",
+        disabled: true,
       },
     ],
   },
@@ -67,6 +72,7 @@ export const menu = [
     name: "clients",
     caption: "Клиенты",
     icon: "clients",
+    disabled: true,
     sublist: [
       {
         id: 17,
@@ -99,6 +105,7 @@ export const menuBottom = [
     name: "users",
     icon: "users",
     caption: "Пользователи",
+    disabled: true,
     sublist: [
       {
         id: 31,

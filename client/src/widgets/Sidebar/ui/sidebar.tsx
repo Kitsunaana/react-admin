@@ -1,54 +1,68 @@
-import * as React from "react"
-import { Box } from "shared/ui/box"
+import { styled } from "@mui/material/styles"
+import { observer } from "mobx-react-lite"
+import { Box, BoxProps } from "shared/ui/box"
 import { Divider } from "shared/ui/divider"
-import { useAppSelector } from "shared/lib/hooks"
-import { RootState } from "app/providers/store"
-import { useDispatch } from "react-redux"
-import { toggle } from "../model/sidebar-slice"
-import { MenuList } from "../types"
+import { sidebarStore } from "../model/sidebar-store"
+import { MenuList } from "../model/types"
+import { List } from "./list/list"
 import { MenuBurger } from "./menu-burger"
-import { List } from "./List/list"
+
+interface ContainerProps extends BoxProps {
+  open: boolean
+}
+
+const Container = styled(
+  ({ open, ...other }: ContainerProps) => <Box {...other} />,
+)(({ theme: { background }, open }) => ({
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  height: "100%",
+  maxWidth: open ? 240 : 47,
+  boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
+  background: background.sectionBackground,
+  borderRadius: 12,
+  transition: "max-width .3s",
+  overflow: "hidden",
+}))
+
+const MenuBurgerContainer = styled("div")(() => ({
+  display: "flex",
+  justifyContent: "center",
+  maxWidth: 47,
+}))
+
+const ListContainer = styled("div")(() => ({
+  overflowY: "auto",
+  overflowX: "hidden",
+  flexGrow: 1,
+}))
 
 interface SidebarProps {
   open?: boolean
-
   menu: MenuList[],
   menuBottom: MenuList[]
 }
 
-export const Sidebar = (props: SidebarProps) => {
-  const { open: openProps, menuBottom, menu } = props
+export const Sidebar = observer((props: SidebarProps) => {
+  const {
+    menu,
+    menuBottom,
+    open: openProps,
+  } = props
 
-  const open = openProps ?? useAppSelector((state: RootState) => state.sidebar.open)
-  const dispatch = useDispatch()
-
-  const onToggle = (open: boolean) => dispatch(toggle({ open }))
+  const open = openProps ?? sidebarStore.open
 
   return (
-    <Box
-      flex
-      sx={{
-        width: 1,
-        height: 1,
-        maxWidth: open ? 240 : 47,
-        boxShadow: "0px 0px 5px 0px rgba(66,68,90,.37)",
-        background: ({ background }) => background.sectionBackground,
-        borderRadius: 2,
-        transition: "max-width .3s",
-        overflow: "hidden",
-      }}
-    >
-      <Box flex center sx={{ maxWidth: 47 }}>
-        <MenuBurger open={open} onClick={onToggle} />
-      </Box>
+    <Container open={open}>
+      <MenuBurgerContainer>
+        <MenuBurger
+          open={open}
+          onClick={sidebarStore.onToggle}
+        />
+      </MenuBurgerContainer>
       <Divider />
-      <Box
-        grow
-        sx={{
-          overflowY: "auto",
-          overflowX: "hidden",
-        }}
-      >
+      <ListContainer>
         {menu.map((list) => (
           <List
             key={list.id}
@@ -56,7 +70,7 @@ export const Sidebar = (props: SidebarProps) => {
             open={open}
           />
         ))}
-      </Box>
+      </ListContainer>
       <Divider />
       {menuBottom.map((list) => (
         <List
@@ -65,6 +79,6 @@ export const Sidebar = (props: SidebarProps) => {
           open={open}
         />
       ))}
-    </Box>
+    </Container>
   )
-}
+})

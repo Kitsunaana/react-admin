@@ -9,7 +9,7 @@ import { LangContext } from "shared/context/lang"
 import { Box } from "shared/ui/box"
 import { Spinner } from "shared/ui/spinner"
 import { Gallery } from "widgets/galerry"
-import { menu, menuBottom } from "widgets/sidebar/constants"
+import { menu, menuBottom } from "widgets/sidebar/model/const"
 import { Sidebar } from "widgets/sidebar/ui/sidebar"
 
 export const Pages = () => {
