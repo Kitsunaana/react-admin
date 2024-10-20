@@ -29,7 +29,9 @@ export const useListSelected = (list: MenuList) => {
   const { selectedList } = getSelectedParams(location.pathname)
 
   const [, setReload] = useState(true)
-  const [isExpanded, setIsExpanded] = useState(selectedList === list.path)
+  const [isExpanded, setIsExpanded] = useState(
+    selectedList === list.path || list.path === "users",
+  )
 
   const ref = useRef<TRef>(getSelectedIds(location.pathname, list))
 
