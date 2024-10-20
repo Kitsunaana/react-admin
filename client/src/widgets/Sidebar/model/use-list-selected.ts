@@ -15,10 +15,10 @@ const getSelectedParams = (pathname: string) => {
 
 const getSelectedIds = (pathname: string, list: MenuList) => {
   const { selectedList, selectedOption } = getSelectedParams(pathname)
-  const findSelectedOption = list.sublist.find((option) => option.name === selectedOption)
+  const findSelectedOption = list.sublist.find((option) => option.path === selectedOption)
 
   return {
-    selectedId: selectedList === list.name ? list.id : null,
+    selectedId: selectedList === list.path ? list.id : null,
     selectedOptionId: findSelectedOption?.id ?? null,
   }
 }
@@ -29,12 +29,12 @@ export const useListSelected = (list: MenuList) => {
   const { selectedList } = getSelectedParams(location.pathname)
 
   const [, setReload] = useState(true)
-  const [isExpanded, setIsExpanded] = useState(selectedList === list.name)
+  const [isExpanded, setIsExpanded] = useState(selectedList === list.path)
 
   const ref = useRef<TRef>(getSelectedIds(location.pathname, list))
 
   useEffect(() => {
-    if (list.name === selectedList) setIsExpanded(true)
+    if (list.path === selectedList) setIsExpanded(true)
 
     ref.current = getSelectedIds(location.pathname, list)
 

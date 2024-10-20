@@ -53,6 +53,7 @@ export const ListLayout = observer((props: ListLayoutProps) => {
     sublist,
     open,
     disabled,
+    path: pathList,
   } = props
 
   return (
@@ -78,7 +79,7 @@ export const ListLayout = observer((props: ListLayoutProps) => {
               disabled={disabled}
               name={name}
               open={open}
-              path={name}
+              path={pathList}
               icon={icon}
               caption={caption}
               isSelected={isSelected}
@@ -86,7 +87,7 @@ export const ListLayout = observer((props: ListLayoutProps) => {
             />
           )}
           {sublist && sublist.length > 0 && sublist.map((option) => {
-            const path = option?.disabled ? name : `${name}/${option.name}`
+            const path = option?.disabled ? pathList : `${name}/${option.path}`
             const isSelectedOption = selectedOptionId === option.id && !option.disabled
 
             return (

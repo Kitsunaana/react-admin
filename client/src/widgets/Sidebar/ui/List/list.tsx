@@ -79,7 +79,7 @@ export const List = observer((props: ListProps) => {
             name={list.name}
             icon={list.icon}
             caption={list.caption}
-            path={list.name}
+            path={list.path}
             open={open}
             isSelected={isSelected}
             listId={list.id}
@@ -126,7 +126,7 @@ export const List = observer((props: ListProps) => {
             name={list.name}
             icon={list.icon}
             caption={list.caption}
-            path={list.name}
+            path={list.path}
             open={open}
             isSelected={isSelected}
             listId={list.id}

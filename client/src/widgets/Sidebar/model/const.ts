@@ -2,12 +2,14 @@ export const menu = [
   {
     id: 0,
     name: "catalog",
+    path: "catalog",
     caption: "Каталог",
     icon: "catalog",
     sublist: [
       {
         id: 1,
         name: "goods",
+        path: "goods",
         caption: "Товары",
         icon: "goods",
         disabled: true,
@@ -15,6 +17,7 @@ export const menu = [
       {
         id: 2,
         name: "additions",
+        path: "additions",
         caption: "Дополнения",
         disabled: true,
         icon: "additional",
@@ -24,6 +27,7 @@ export const menu = [
   {
     id: 8,
     name: "stopList",
+    path: "stop-list",
     caption: "Стоп-лист",
     icon: "stopList",
     sublist: [],
@@ -31,6 +35,7 @@ export const menu = [
   {
     id: 9,
     name: "pricing",
+    path: "pricing",
     caption: "Ценообразование",
     disabled: true,
     icon: "pricing",
@@ -38,6 +43,7 @@ export const menu = [
       {
         id: 10,
         name: "priceList",
+        path: "price-list",
         caption: "Прайс-лист",
         disabled: true,
         icon: "priceList",
@@ -45,6 +51,7 @@ export const menu = [
       {
         id: 12,
         name: "promoCode",
+        path: "promo-code",
         caption: "Промокоды",
         icon: "promoCode",
         disabled: true,
@@ -54,6 +61,7 @@ export const menu = [
   {
     id: 13,
     name: "order",
+    path: "order",
     caption: "Заказы",
     icon: "orders",
     disabled: true,
@@ -61,6 +69,7 @@ export const menu = [
       {
         id: 14,
         name: "newOrder",
+        path: "new-order",
         caption: "Новый заказ",
         icon: "newOrder",
         disabled: true,
@@ -70,6 +79,7 @@ export const menu = [
   {
     id: 16,
     name: "clients",
+    path: "clients",
     caption: "Клиенты",
     icon: "clients",
     disabled: true,
@@ -77,6 +87,7 @@ export const menu = [
       {
         id: 17,
         name: "analysis",
+        path: "analysis",
         caption: "Анализ",
         disabled: true,
         icon: "analysis",
@@ -84,6 +95,7 @@ export const menu = [
       {
         id: 18,
         name: "chat",
+        path: "chat",
         caption: "Чаты",
         disabled: true,
         icon: "chat",
@@ -91,6 +103,7 @@ export const menu = [
       {
         id: 19,
         name: "favorite",
+        path: "favorite",
         caption: "Избранное",
         disabled: true,
         icon: "favorite",
@@ -103,6 +116,7 @@ export const menuBottom = [
   {
     id: 30,
     name: "users",
+    path: "users",
     icon: "users",
     caption: "Пользователи",
     disabled: true,
@@ -110,6 +124,7 @@ export const menuBottom = [
       {
         id: 31,
         name: "settings",
+        path: "settings",
         icon: "settings",
         caption: "Настройки",
       },
