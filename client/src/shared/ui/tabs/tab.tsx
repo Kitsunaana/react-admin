@@ -1,9 +1,9 @@
-import { useMemo } from "react"
 import { Tab as MUITab, useTheme } from "@mui/material"
 import { TabProps as BaseTabProps } from "@mui/material/Tab/Tab"
+import { observer } from "mobx-react-lite"
+import { useMemo } from "react"
 import { useLang } from "shared/context/lang"
 import { TabLabel } from "shared/ui/tabs/tab-label"
-import { observer } from "mobx-react-lite"
 
 interface TabProps extends Omit<BaseTabProps, "id"> {
   id: number

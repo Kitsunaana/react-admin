@@ -14,4 +14,4 @@ export const AltNameCreateAllOfAction = {
   update: "update",
   create: "create",
   remove: "remove",
-} as const;
+} as const

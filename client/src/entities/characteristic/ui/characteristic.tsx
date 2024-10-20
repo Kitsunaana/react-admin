@@ -14,7 +14,7 @@ import { HiddenIndicator } from "./hidden-indicator"
 export interface CharacteristicItemProps extends Common.CharacteristicCreate {
   onRemove: (id: number | string, caption: string) => void
   onEdit: (payload: Common.CharacteristicCreate) => void
-  getConflict: (data: Pick<Common.CharacteristicCreate, "id" | "caption">) => boolean
+  hasConflict: boolean
   isCreatedOrUpdated: boolean
 }
 
@@ -25,14 +25,13 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
     unit,
     value,
     hideClient,
+    hasConflict,
+    isCreatedOrUpdated,
     onRemove,
     onEdit,
-    getConflict,
-    isCreatedOrUpdated,
   } = props
 
   const langBase = useLang()
-  const hasConflict = getConflict({ id, caption })
 
   const handleEdit = () => {
     onEdit({

@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { AltNameBase } from "./altNameBase";
-import type { AltNameAllOf } from "./altNameAllOf";
+import type { AltNameBase } from "./altNameBase"
+import type { AltNameAllOf } from "./altNameAllOf"
 
 export type AltName = AltNameBase & AltNameAllOf;

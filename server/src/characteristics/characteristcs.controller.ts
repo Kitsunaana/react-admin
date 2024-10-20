@@ -1,7 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { CharacteristicsService } from './characteristics.service';
-import { UnitRepository } from './repository/unit';
 import { CharacteristicRepository } from './repository/characteristic';
+import { UnitRepository } from './repository/unit';
 
 @Controller('characteristics')
 export class CharacteristicsController {

@@ -1,9 +1,29 @@
 import { Checkbox } from "@mui/material"
 import { observer } from "mobx-react-lite"
-import { Box } from "shared/ui/box"
-import { GRID_CHECKBOX } from "../../model/constants"
+import { Box, BoxProps } from "shared/ui/box"
+import { styled } from "@mui/material/styles"
+import { GRID_CHECKBOX } from "../../model/const"
 import { useCategoryStores } from "../../model/context"
 import { CustomizeCaption } from "./customize-caption"
+
+const CheckboxWrapper = styled("div")(() => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  height: "33.3333%",
+}))
+
+interface CheckboxInnerProps extends BoxProps {
+  content: string
+}
+
+const CheckboxInner = styled(
+  ({ content, ...other }: CheckboxInnerProps) => <Box {...other} />,
+)(({ content }) => ({
+  display: "flex",
+  flexBasis: "33.3333%",
+  justifyContent: content,
+}))
 
 export const CheckBoxGrid = observer(() => {
   const { photoPosition } = useCategoryStores()
@@ -12,20 +32,18 @@ export const CheckBoxGrid = observer(() => {
   return (
     <>
       {GRID_CHECKBOX.map((row) => (
-        <Box key={row.id} flex ai row jc_sp sx={{ height: "33.33333333%" }}>
+        <CheckboxWrapper key={row.id}>
           {row.data.map(({ id, content, position }) => (
-            <Box
-              flex
-              row
+            <CheckboxInner
+              content={content}
               key={id}
-              sx={{ flexBasis: "33.33%", justifyContent: content }}
             >
               {captionPosition === position
                 ? (<CustomizeCaption />)
                 : (<Checkbox onChange={() => changeCaptionPosition(position)} />)}
-            </Box>
+            </CheckboxInner>
           ))}
-        </Box>
+        </CheckboxWrapper>
       ))}
     </>
   )

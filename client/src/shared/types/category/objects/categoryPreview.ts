@@ -5,9 +5,9 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { AltName } from "./alt-name/altName";
-import type { Media } from "./media/media";
-import type { CategoryPreviewOrder } from "./categoryPreviewOrder";
+import type { AltName } from "./alt-name/altName"
+import type { Media } from "./media/media"
+import type { CategoryPreviewOrder } from "./categoryPreviewOrder"
 
 export interface CategoryPreview {
   altNames: AltName[];

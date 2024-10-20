@@ -14,8 +14,7 @@ const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 170px;
   gap: 8px;
-  overflow: auto;
-  height: ${({ fullScreen }) => (fullScreen ? "100%" : "380px")};
+  height: ${({ fullScreen }) => (fullScreen ? undefined : "380px")};
 `
 
 const GridImageContainer = styled(Box)`
@@ -29,7 +28,7 @@ export const TabPhotos = observer(() => {
   const { photos } = useCategoryStores()
 
   return (
-    <Box sx={{ mt: 1 }}>
+    <Box sx={{ mt: 1, height: 1 }}>
       <Box sx={{ pb: 1 }}>
         <InputFile
           caption=""

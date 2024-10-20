@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import { z as zod } from "zod";
+import { z as zod } from "zod"
 
 export const getCharacteristicsResponseItem = zod
   .object({
@@ -17,14 +17,14 @@ export const getCharacteristicsResponseItem = zod
   .and(
     zod.object({
       id: zod.number(),
-    })
-  );
+    }),
+  )
 export const getCharacteristicsResponse = zod.array(
-  getCharacteristicsResponseItem
-);
+  getCharacteristicsResponseItem,
+)
 
 export const getUnitsResponseItem = zod.object({
   id: zod.number(),
   caption: zod.string().or(zod.null()),
-});
-export const getUnitsResponse = zod.array(getUnitsResponseItem);
+})
+export const getUnitsResponse = zod.array(getUnitsResponseItem)

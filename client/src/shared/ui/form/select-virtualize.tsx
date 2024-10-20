@@ -1,11 +1,11 @@
-import * as React from "react"
-import useMediaQuery from "@mui/material/useMediaQuery"
 import { useTheme } from "@mui/material/styles"
-import { VariableSizeList, ListChildComponentProps } from "react-window"
-import { SelectItem } from "shared/ui/form/select"
-import { Text } from "shared/ui/text"
-import { Icon } from "shared/ui/icon"
+import useMediaQuery from "@mui/material/useMediaQuery"
+import * as React from "react"
 import { forwardRef, HTMLAttributes } from "react"
+import { ListChildComponentProps, VariableSizeList } from "react-window"
+import { SelectItem } from "shared/ui/form/select"
+import { Icon } from "shared/ui/icon"
+import { Text } from "shared/ui/text"
 
 const LISTBOX_PADDING = 8
 

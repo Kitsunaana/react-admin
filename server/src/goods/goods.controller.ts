@@ -1,18 +1,8 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  UploadedFiles,
-  UseInterceptors,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
-import { GoodsService } from './goods.service';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Transform } from 'class-transformer';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { FilesService } from '../files/files.service';
+import { GoodsService } from './goods.service';
 
 export class CreateGoodDto {
   @Transform(({ value }) => JSON.parse(value))
@@ -67,11 +57,11 @@ export class GoodsController {
   constructor(
     private goodsService: GoodsService,
     private filesService: FilesService,
-  ) {}
+  ) { }
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
-  async create(@Body() dto: CreateGoodDto) {
+  async create() {
     // const good = await this.goodsService.create(dto);
     // await this.filesService.saveMedia(files, [], { goodId: good.id });
   }

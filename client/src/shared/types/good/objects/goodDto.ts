@@ -5,7 +5,7 @@
  * Good Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryDto } from "./categoryDto";
+import type { CategoryDto } from "./categoryDto"
 
 export interface GoodDto {
   caption: string;

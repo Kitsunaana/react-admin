@@ -32,7 +32,7 @@ module.exports = {
     "no-unused-vars": "warn",
     "react/require-default-props": "off",
     "react/react-in-jsx-scope": "off",
-    "react/jsx-props-no-spreading": "warn",
+    "react/jsx-props-no-spreading": "off",
     "react/function-component-definition": "off",
     "no-shadow": "off",
     "import/extensions": "off",
@@ -42,5 +42,6 @@ module.exports = {
     "consistent-return": "off",
     "no-nested-ternary": "off",
     "lines-between-class-members": "off",
+    "no-undef": "off",
   },
 }

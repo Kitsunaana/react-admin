@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { GoodsService } from './goods.service';
-import { GoodsController } from './goods.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Good } from '../entities/good.entity';
 import { FilesModule } from '../files/files.module';
+import { GoodsController } from './goods.controller';
+import { GoodsService } from './goods.service';
 
 @Module({
   providers: [GoodsService],

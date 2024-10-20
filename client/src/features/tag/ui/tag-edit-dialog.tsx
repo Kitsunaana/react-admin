@@ -1,11 +1,10 @@
 import { openEditTagDialog } from "entities/tag/model/event"
 import { observer } from "mobx-react-lite"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
-import { LangContext, useLang } from "shared/context/lang"
+import { LangContext } from "shared/context/lang"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { eventBus } from "shared/lib/event-bus"
 import { CategoryDto } from "shared/types/category"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
@@ -19,33 +18,33 @@ interface TagEditDialogProps {
 export const TagEditDialog = observer(({ onEdit }: TagEditDialogProps) => {
   const methods = useForm<CategoryDto.TagBase>()
   const editStore = useEditDialogStore()
-  const langBase = useLang()
 
   useSetDialogValues({
-    data: editStore.localData,
+    data: editStore.localData as CategoryDto.TagCreate,
     defaults: defaultValues,
     shouldHandle: [editStore.open],
     setData: [methods.reset],
     clearData: [methods.reset],
   })
 
-  useEffect(() => {
-    const event = (payload: CategoryDto.TagCreate) => editStore.openDialogV2(payload)
+  useEventBusListen(openEditTagDialog, ({ payload }) => editStore.openDialogV2(payload))
 
-    eventBus.on(openEditTagDialog, ({ payload }) => event(payload))
-    return () => eventBus.off(openEditTagDialog, ({ payload }) => event(payload))
-  }, [])
+  const handleSubmit = (payload: CategoryDto.TagCreate) => {
+    onEdit(payload)
+    editStore.closeDialog()
+  }
 
   return (
     <FormProvider {...methods}>
-      <LangContext lang={`${langBase}.dialog`}>
+      <LangContext lang="tag.dialog">
         <UpsertDialog
           header={(
             <DialogHeader
               store={editStore}
               title={(
                 <DialogHeaderCaption
-                  name="create"
+                  name="title.edit"
+                  value={editStore.localData?.caption}
                 />
               )}
             />
@@ -53,11 +52,7 @@ export const TagEditDialog = observer(({ onEdit }: TagEditDialogProps) => {
           height="auto"
           size="auto"
           store={editStore}
-          handleSubmit={(data) => {
-            console.log(data)
-            onEdit(data)
-            editStore.closeDialog()
-          }}
+          handleSubmit={handleSubmit}
           isLoading={false}
           container={<TagForm />}
           PaperProps={{

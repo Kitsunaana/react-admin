@@ -5,7 +5,7 @@
  * Good Api
  * OpenAPI spec version: 1.0.0
  */
-import type { GoodDto } from "./goodDto";
+import type { GoodDto } from "./goodDto"
 
 /**
  * Получение всех товаров

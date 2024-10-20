@@ -1,5 +1,4 @@
 import {
-  alpha,
   ButtonBase, ButtonBaseProps, Tooltip,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
@@ -21,21 +20,7 @@ interface ButtonProps extends ButtonBaseProps {
   open: boolean
 }
 
-const Button = styled(
-  ({ open, ...other }: ButtonProps) => <ButtonBase {...other} />,
-)(({ theme: { palette }, open }) => ({
-  width: "100%",
-  ...(open ? {} : {
-    "&:hover": {
-      transition: ".3s",
-      backgroundColor: (
-        (palette.mode === "light")
-          ? palette.grey["100"]
-          : alpha(palette.common.white, 0.1)
-      ),
-    },
-  }),
-}))
+const Button = ({ open, ...other }: ButtonProps) => <ButtonBase {...other} />
 
 interface IconContainerProps extends BoxProps {
   divider?: boolean
@@ -115,7 +100,9 @@ export const ExpandButton = memo((props: ExpandButtonProps) => {
           </>
         )}
       >
-        {renderButton}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {renderButton}
+        </div>
       </Tooltip>
     )
   }

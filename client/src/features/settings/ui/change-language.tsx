@@ -19,7 +19,7 @@ const languages: Record<Languages, { code: Languages, caption: string }> = {
 }
 
 export const ChangeLanguage = observer(() => {
-  const settings = useSettings()
+  const { settings } = useSettings()
 
   return (
     <Autocomplete

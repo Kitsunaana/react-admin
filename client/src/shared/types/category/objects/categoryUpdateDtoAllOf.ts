@@ -5,10 +5,10 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { AltNameCreate } from "./alt-name/altNameCreate";
-import type { CharacteristicCreate } from "./characteristic/characteristicCreate";
-import type { Image } from "./media/image";
-import type { TagCreate } from "./tagCreate";
+import type { AltNameCreate } from "./alt-name/altNameCreate"
+import type { CharacteristicCreate } from "./characteristic/characteristicCreate"
+import type { Image } from "./media/image"
+import type { TagCreate } from "./tagCreate"
 
 export type CategoryUpdateDtoAllOf = {
   altNames: AltNameCreate[];

@@ -1,4 +1,4 @@
-import { initialSettingsFields, initialSettingsRows } from "./constants"
+import { initialSettingsFields, initialSettingsRows } from "./const"
 
 export type TPosition =
   "top-left" | "top-center" | "top-right" |

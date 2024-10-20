@@ -1,26 +1,14 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  UploadedFiles,
-  UseInterceptors,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
-import { CategoriesService } from './categories.service';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { GetCategoryDto } from './dto/get-category-dto';
-import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
-import { FilesService } from '../files/files.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes } from '@nestjs/common';
+import { z } from 'zod';
 import { CharacteristicsService } from '../characteristics/characteristics.service';
+import { FilesService } from '../files/files.service';
 import { LocalesService } from '../locales/locales.service';
 import { TagsService } from '../tags/tags.service';
-import { CategoryDto } from './types';
+import { ZodValidationPipe } from './../pipes/zod-validation.pipe';
+import { CategoriesService } from './categories.service';
+import { GetCategoryDto } from './dto/get-category-dto';
+import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
+import { CategoryDto, CategorySchemas } from './types';
 
 @Controller('categories')
 export class CategoriesController {
@@ -33,11 +21,17 @@ export class CategoriesController {
   ) {}
 
   @Post('')
+  @UsePipes(new ZodValidationPipe(CategorySchemas.createCategoriesBody))
   async create(@Body() dto: CategoryDto.CategoryCreate) {
     const category = await this.categoryService.create(dto);
 
     await this.localesService.create(dto.altNames, category.id);
-    await this.filesService.create(dto.media, category.id);
+
+    await this.filesService.create(
+      dto.media.filter((media) => !media.deleted),
+      category.id,
+    );
+
     await this.characteristicsService.create(dto.characteristics, category.id);
     await this.tagsService.create(dto.tags, category.id);
 
@@ -64,15 +58,23 @@ export class CategoriesController {
     return this.categoryService.updateOrder(dto);
   }
 
-  @Patch('/:id')
-  async update(@Param('id') id: number, @Body() dto: CategoryDto.PatchCategoryBody) {
+  @Patch('/:categoryId')
+  async update(
+    @Body(new ZodValidationPipe(CategorySchemas.updateCategoryBody))
+    dto: CategoryDto.PatchCategoryBody,
+    @Param(new ZodValidationPipe(CategorySchemas.updateCategoryParams))
+    params: z.infer<typeof CategorySchemas.updateCategoryParams>,
+  ) {
+    const { categoryId } = params;
+    const id = parseInt(categoryId);
+
     await this.filesService.update(dto.media);
     await this.filesService.create(dto.media, id);
-    await this.filesService.deleteMedia(dto.media.filter((media) => media?.deleted));
+    await this.filesService.delete(dto.media.filter((media) => media?.deleted));
 
     await this.characteristicsService.update(dto.characteristics, id);
-    // await this.localesService.updateAltNamesCategory(dto.altNames, id);
-    // await this.tagsService.update(dto.tags, id);
+    await this.localesService.update(dto.altNames, id);
+    await this.tagsService.update(dto.tags, id);
 
     await this.categoryService.update(id, dto);
 

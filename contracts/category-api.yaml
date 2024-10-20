@@ -108,7 +108,7 @@ components:
       name: categoryId
       required: true
       schema:
-        type: number
+        type: string
 
   schemas:
     CategoryPreview:
@@ -324,7 +324,7 @@ components:
         media:
           type: array
           items:
-            $ref: "./media.yaml#/components/schemas/MediaUpdate"
+            $ref: "./media.yaml#/components/schemas/MediaCreate"
         altNames:
           type: array
           items:
@@ -387,7 +387,7 @@ components:
         media:
           type: array
           items:
-            $ref: "./media.yaml#/components/schemas/Media"
+            $ref: "./media.yaml#/components/schemas/MediaCreate"
         altNames:
           type: array
           items:
@@ -511,6 +511,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TagCreate"
+        order:
+          oneOf:
+            - type: number
+            - type: "null"
       required:
         - caption
         - description

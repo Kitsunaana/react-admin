@@ -4,10 +4,16 @@ import { categoriesApi as categoriesApiV2 } from "features/categories/api/catego
 import { CategoryDto } from "shared/types/category"
 import { Common } from "shared/types/common"
 import { queryClient } from "app/providers/query-client"
-import { categoryUrlStore } from "entities/category"
 import { isNumber } from "shared/lib/utils"
+import { useCategorySearchParams } from "entities/category/model/use-category-search-params"
+import { useTranslation, UseTranslationResponse } from "react-i18next"
+import { useLang } from "shared/context/lang"
 
-const edit = (id: number | null, payload: CategoryDto.PatchCategoryBody) => (
+const edit = (
+  id: number | null,
+  payload: CategoryDto.PatchCategoryBody,
+  t: UseTranslationResponse<"translation", string>["t"],
+) => (
   new Promise<CategoryDto.CategoryPreview>((resolve, reject) => {
     if (!isNumber(id)) return
 
@@ -20,16 +26,16 @@ const edit = (id: number | null, payload: CategoryDto.PatchCategoryBody) => (
           .then(resolve)
           .catch(reject)
       ), {
-        pending: "Категория обновляется",
-        error: "При обновлении категории произошла ошибка",
-        success: "Категория изменена",
+        pending: t("pending"),
+        error: t("error"),
+        success: t("success"),
       })
     }
 
     toast
       .promise(() => categoriesApiV2.filesUpload(images), {
-        pending: "Идет загрузка изображений",
-        error: "При загрузке изображений произошла ошибка",
+        pending: t("imagePending"),
+        error: t("imageError"),
       })
       .then(editCategory)
       .catch(() => editCategory([]))
@@ -37,15 +43,21 @@ const edit = (id: number | null, payload: CategoryDto.PatchCategoryBody) => (
 )
 
 export const useEditCategory = (id: number | null) => {
+  const langBase = useLang()
+
+  const { search, page } = useCategorySearchParams()
+  const { t } = useTranslation("translation", { keyPrefix: `${langBase}.edit` })
+
   const { mutate, isPending, isSuccess } = useMutation({
     mutationKey: ["category", id],
-    mutationFn: (payload: CategoryDto.PatchCategoryBody) => edit(id, payload),
+    mutationFn: (payload: CategoryDto.PatchCategoryBody) => edit(id, payload, t),
     onSuccess: (data) => {
       queryClient.setQueryData(
-        ["categories", categoryUrlStore.searchParams],
+        ["categories", search, page],
         (oldData: CategoryDto.GetAllCategoriesResponse) => ({
           ...oldData,
-          rows: oldData.rows.map((category) => (category.id === data.id ? data : category)),
+          rows: oldData.rows
+            .map((category) => (category.id === data.id ? data : category)),
         }),
       )
     },

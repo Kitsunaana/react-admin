@@ -14,7 +14,7 @@ export const useCopyPaste = (
 ) => {
   const categoryStore = useCategoryStores()
 
-  const handleCopyToClipboard = async () => {
+  const handleCopy = async () => {
     const fields = methods.getValues()
     const rows = categoryStore.getData()
 
@@ -47,7 +47,7 @@ export const useCopyPaste = (
       })),
     }
 
-    const applyiedSettings = (Object
+    const applySettings = (Object
       .entries(categoryStore.settingsFields) as Array<[keyof CategoryDto.CategoryFields, boolean]>)
       .filter(([_, value]) => value)
       .map(([key]) => key)
@@ -55,14 +55,14 @@ export const useCopyPaste = (
     apply({
       data: category,
       setData: [
-        (data) => methods.reset(include(data, applyiedSettings)),
+        (data) => methods.reset(include(data, applySettings)),
         categoryStore.setCopiedData,
       ],
     })
   }
 
   return {
-    handleCopy: handleCopyToClipboard,
+    handleCopy,
     handlePaste,
   }
 }

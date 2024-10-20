@@ -1,11 +1,15 @@
-import Autocomplete from "@mui/material/Autocomplete"
-import { Icon } from "shared/ui/icon"
 import {
-  alpha, MenuItem, AutocompleteProps, TextFieldProps, MenuItemProps,
+  alpha,
+  AutocompleteProps,
+  MenuItem,
+  MenuItemProps,
+  TextFieldProps,
 } from "@mui/material"
-import { FieldError } from "react-hook-form"
+import Autocomplete from "@mui/material/Autocomplete"
 import { forwardRef, ReactNode } from "react"
+import { FieldError } from "react-hook-form"
 import { Input } from "shared/ui/form/input"
+import { Icon } from "shared/ui/icon"
 
 interface SelectProps extends Omit<AutocompleteProps<any, any, any, any>, "renderInput">{
   error?: FieldError | undefined
@@ -13,7 +17,7 @@ interface SelectProps extends Omit<AutocompleteProps<any, any, any, any>, "rende
   startAdornmentOption?: (option: string) => ReactNode
 }
 
-export const Select = forwardRef((props: SelectProps, ref) => {
+export const Select = forwardRef((props: SelectProps) => {
   const {
     options, error, InputProps, sx, startAdornmentOption, ...other
   } = props

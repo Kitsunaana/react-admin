@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryFieldsDescription } from "./categoryFieldsDescription";
+import type { CategoryFieldsDescription } from "./categoryFieldsDescription"
 
 export interface CategoryFields {
   bgColor: string;

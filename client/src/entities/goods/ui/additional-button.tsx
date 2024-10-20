@@ -1,6 +1,5 @@
 import { IconButton } from "@mui/material"
 import { Icon } from "shared/ui/icon"
-import React from "react"
 
 export const AdditionalButton = () => (
   <IconButton

@@ -5,6 +5,7 @@ export type ConfirmationModalParams = {
   description: string | ReactNode
   closeText: string
   confirmText: string
+  langBase: string
   onClose: () => void
   onConfirm: () => void
 }

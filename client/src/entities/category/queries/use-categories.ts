@@ -1,18 +1,13 @@
 import { useQuery } from "@tanstack/react-query"
-import { validation } from "shared/lib/validation"
 import { categoriesApi } from "../api/categories-api"
-import { categoryUrlStore } from "../model/category-url-store"
-import { searchParamsSchema } from "../model/schemas"
+import { useCategorySearchParams } from "../model/use-category-search-params"
 
 export const useCategories = () => {
-  const searchParams = validation(searchParamsSchema, categoryUrlStore.getSearchParamsRecord())
+  const { page, search } = useCategorySearchParams()
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ["categories", categoryUrlStore.searchParams],
-    queryFn: () => categoriesApi.getAll({
-      page: categoryUrlStore.page,
-      ...searchParams,
-    }),
+    queryKey: ["categories", search, page],
+    queryFn: () => categoriesApi.getAll({ page, search }),
   })
 
   return {

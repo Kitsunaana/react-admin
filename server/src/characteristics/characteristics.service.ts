@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CategoryCharacteristic } from '../entities/characteristic.entity';
 import { Common } from '../shared/types/common';
-import { UnitRepository } from './repository/unit';
 import { CharacteristicRepository } from './repository/characteristic';
+import { UnitRepository } from './repository/unit';
 
 @Injectable()
 export class CharacteristicsService {
@@ -12,7 +12,7 @@ export class CharacteristicsService {
     private categoryCharacteristicsRepository: typeof CategoryCharacteristic,
     private unitRepository: UnitRepository,
     private characteristicRepository: CharacteristicRepository,
-  ) { }
+  ) {}
 
   async createCharacteristic(payload: Common.CharacteristicCreate, categoryId: number) {
     const [unit] = await this.unitRepository.findOrCreate(payload.unit);

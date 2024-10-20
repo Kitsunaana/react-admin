@@ -1,11 +1,11 @@
-import { Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
-import { Media } from './media.entity';
-import { CustomCategory } from './custom-category';
-import { CategoryCharacteristic } from './characteristic.entity';
-import { AltNameCategory, Locale } from './locale.entity';
+import { Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript';
 import { CategoryTag } from './category-tag.entity';
+import { CategoryCharacteristic } from './characteristic.entity';
+import { CustomCategory } from './custom-category';
 import { Good } from './good.entity';
+import { AltNameCategory, Locale } from './locale.entity';
+import { Media } from './media.entity';
 
 interface CategoryCreationAttrs {
   caption: string;
@@ -32,9 +32,6 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
 
   @HasOne(() => CustomCategory)
   custom: CustomCategory;
-
-  /*@HasMany(() => CategoryCharacteristic, { foreignKeyConstraint: false, constraints: false })
-  characteristics: CategoryCharacteristic[];*/
 
   @HasMany(() => CategoryCharacteristic, { foreignKeyConstraint: false, constraints: false })
   categoryCharacteristics: CategoryCharacteristic[];

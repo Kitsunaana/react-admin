@@ -1,11 +1,10 @@
 import { openCreateTagDialog } from "entities/tag"
 import { observer } from "mobx-react-lite"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreateDialogStore } from "shared/context/dialog-create-context"
-import { LangContext, useLang } from "shared/context/lang"
+import { LangContext } from "shared/context/lang"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { eventBus } from "shared/lib/event-bus"
 import { CategoryDto } from "shared/types/category"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
@@ -19,7 +18,6 @@ interface TagCreateDialogProps {
 export const TagCreateDialog = observer(({ onCreate }: TagCreateDialogProps) => {
   const methods = useForm<CategoryDto.TagBase>()
   const createStore = useCreateDialogStore()
-  const langBase = useLang()
 
   useSetDialogValues({
     data: defaultValues,
@@ -29,28 +27,23 @@ export const TagCreateDialog = observer(({ onCreate }: TagCreateDialogProps) => 
     clearData: [methods.reset],
   })
 
+  useEventBusListen(openCreateTagDialog, () => createStore.openDialogV2())
+
   const handleSubmit = (data: CategoryDto.TagBase) => {
     onCreate(data)
     createStore.closeDialog()
   }
 
-  useEffect(() => {
-    const event = () => createStore.openDialogV2()
-
-    eventBus.on(openCreateTagDialog, event)
-    return () => eventBus.off(openCreateTagDialog, event)
-  }, [])
-
   return (
     <FormProvider {...methods}>
-      <LangContext lang={`${langBase}.dialog`}>
+      <LangContext lang="tag.dialog">
         <UpsertDialog
           header={(
             <DialogHeader
               store={createStore}
               title={(
                 <DialogHeaderCaption
-                  name="create"
+                  name="title.create"
                 />
               )}
             />

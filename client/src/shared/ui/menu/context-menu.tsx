@@ -1,8 +1,8 @@
+import { styled } from "@mui/material/styles"
 import { forwardRef, ReactNode } from "react"
 import { Box } from "shared/ui/box"
-import { Text } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
-import { styled } from "@mui/material/styles"
+import { Text } from "shared/ui/text"
 
 const Menu = styled(Box)(({ theme }) => ({
   display: "flex",

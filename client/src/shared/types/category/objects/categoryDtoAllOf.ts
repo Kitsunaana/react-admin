@@ -5,10 +5,10 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { AltName } from "./alt-name/altName";
-import type { Characteristic } from "./characteristic/characteristic";
-import type { CategoryDtoAllOfOrder } from "./categoryDtoAllOfOrder";
-import type { Tag } from "./tag";
+import type { AltName } from "./alt-name/altName"
+import type { Characteristic } from "./characteristic/characteristic"
+import type { CategoryDtoAllOfOrder } from "./categoryDtoAllOfOrder"
+import type { Tag } from "./tag"
 
 export type CategoryDtoAllOf = {
   altNames: AltName[];

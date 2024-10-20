@@ -31,7 +31,7 @@ components:
         - order
         - size
 
-    MediaUpdate:
+    MediaCreate:
       type: object
       properties:
         id:

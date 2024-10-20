@@ -5,8 +5,8 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { AltName } from "./alt-name/altName";
-import type { CategoryCreateAltNamesItemAllOf } from "./categoryCreateAltNamesItemAllOf";
+import type { AltName } from "./alt-name/altName"
+import type { CategoryCreateAltNamesItemAllOf } from "./categoryCreateAltNamesItemAllOf"
 
 export type CategoryCreateAltNamesItem = AltName &
   CategoryCreateAltNamesItemAllOf;

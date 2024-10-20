@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { TagBaseIcon } from "./tagBaseIcon";
+import type { TagBaseIcon } from "./tagBaseIcon"
 
 export interface TagBase {
   caption: string;

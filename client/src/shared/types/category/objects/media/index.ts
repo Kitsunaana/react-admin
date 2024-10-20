@@ -6,7 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export * from "./image";
-export * from "./media";
-export * from "./mediaOrder";
-export * from "./mediaOrderOneOf";
+export * from "./image"
+export * from "./media"
+export * from "./mediaOrder"
+export * from "./mediaOrderOneOf"
+export * from "./mediaCreate"
+export * from "./mediaCreateOrder"

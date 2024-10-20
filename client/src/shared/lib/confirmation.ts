@@ -6,6 +6,7 @@ export type ConfirmationParams = {
   description?: string | ReactNode
   closeText?: string
   confirmText?: string
+  langBase?: string
 }
 
 export type ConfirmationContext = {

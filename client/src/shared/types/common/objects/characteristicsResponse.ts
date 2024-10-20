@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { Characteristic } from "./characteristic";
+import type { Characteristic } from "./characteristic"
 
 /**
  * Получение всех характеристик

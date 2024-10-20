@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Common
  */
-import type { MediaOrder } from "./mediaOrder";
+import type { MediaOrder } from "./mediaOrder"
 
 export interface Media {
   filename: string;

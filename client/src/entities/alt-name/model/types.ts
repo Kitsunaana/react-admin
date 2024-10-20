@@ -9,7 +9,7 @@ export type AltName = Omit<Common.AltName, "id"> & {
 
 export type DataTranslation = Pick<Common.AltName, "description" | "caption">
 
-interface ITranslate {
+export interface ITranslate {
   trans: DataTranslation
 }
 

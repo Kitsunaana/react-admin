@@ -32,6 +32,8 @@ export * from './image';
 export * from './locale';
 export * from './localesResponse';
 export * from './media';
+export * from './mediaCreate';
+export * from './mediaCreateOrder';
 export * from './mediaOrder';
 export * from './mediaOrderOneOf';
 export * from './mediaUpdate';

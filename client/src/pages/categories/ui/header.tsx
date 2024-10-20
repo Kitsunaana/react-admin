@@ -1,4 +1,3 @@
-import { categoryUrlStore } from "entities/category"
 import { ReactNode, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
@@ -29,18 +28,12 @@ export const CategoryHeader = (props: CategoryHeaderProps) => {
     },
   })
 
-  useEffect(() => {
-    categoryUrlStore.setSearchParams(window.location.href)
-
-    setValue("search", search)
-  }, [searchParams])
+  useEffect(() => { setValue("search", search) }, [searchParams])
 
   useEvent("keydown", (event: KeyboardEvent) => {
     const search = getValues("search")
 
     if (event.code === "Enter" && search !== null && isFocused) {
-      categoryUrlStore.setSearchParams(getValues())
-
       setSearchParams((prev) => {
         if (search === "") prev.delete("search")
         else prev.set("search", search)

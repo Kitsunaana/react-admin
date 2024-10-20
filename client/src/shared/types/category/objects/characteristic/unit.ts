@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { UnitCaption } from "./unitCaption";
+import type { UnitCaption } from "./unitCaption"
 
 export interface Unit {
   caption: UnitCaption;

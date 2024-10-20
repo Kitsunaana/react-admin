@@ -20,4 +20,4 @@ export const CreateGoodBodyCaptionPosition = {
   "bottom-left": "bottom-left",
   "bottom-center": "bottom-center",
   "bottom-right": "bottom-right",
-} as const;
+} as const

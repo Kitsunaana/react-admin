@@ -1,8 +1,8 @@
+import { alpha } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import { Controller, useFormContext } from "react-hook-form"
 import { Input } from "shared/ui/form/input"
 import { Text } from "shared/ui/text"
-import { alpha } from "@mui/material"
-import { styled } from "@mui/material/styles"
 
 const StyledPreview = styled(Text)(({ theme }) => ({
   border: `1px solid ${alpha(theme.palette.grey["600"], 0.5)}`,
@@ -19,7 +19,11 @@ export const Preview = () => {
   )
 }
 
-export const DescriptionInput = () => (
+interface DescriptionInputProps {
+  name?: string
+}
+
+export const DescriptionInput = ({ name }: DescriptionInputProps) => (
   <Controller
     name="description"
     render={(({ field }) => (
@@ -27,7 +31,7 @@ export const DescriptionInput = () => (
         {...field}
         fullWidth
         value={field.value ?? ""}
-        label={<Text name="description" />}
+        label={<Text name={name ?? "description"} />}
         multiline
         rows="10"
         sx={{

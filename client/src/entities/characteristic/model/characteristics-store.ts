@@ -2,13 +2,14 @@ import { makeAutoObservable, toJS } from "mobx"
 import { nanoid } from "nanoid"
 import { isEqual, isNumber, isString } from "shared/lib/utils"
 import { Common } from "shared/types/common"
+import { Action } from "./types"
 
 export class CharacteristicsStore {
   characteristics: Array<Common.CharacteristicCreate> = []
 
-  getCopyAction: () => "none" | "add" | "replace"
+  getCopyAction: () => Action
 
-  constructor(getCopyAction: () => "none" | "add" | "replace") {
+  constructor(getCopyAction: () => Action) {
     this.getCopyAction = getCopyAction
 
     makeAutoObservable(this, { applyActions: false }, { autoBind: true })

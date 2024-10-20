@@ -8,8 +8,9 @@ export type IconSettings = {
 }
 
 export interface Messages {
-  errorMessage?: string
-  notFound?: string
+  errorMessage: string
+  notFound: string
+  errorParsed: string
 }
 
 export type Settings = "icon" | "theme" | "language"

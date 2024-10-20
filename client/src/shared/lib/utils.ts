@@ -1,7 +1,4 @@
-import { ZodSchema } from "zod"
-import { validation, ValidationError } from "./validation"
-
-export const shallowEqual = (prev, next) => {
+export const shallowEqual = (prev: any, next: any) => {
   const keys = Object.keys(prev)
 
   let isEqual = true
@@ -44,6 +41,7 @@ export const base64ToFile = (base64String: string, filename: string) => {
   let n = bstr.length
   const u8arr = new Uint8Array(n)
 
+  // eslint-disable-next-line no-plusplus
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n)
   }
@@ -63,9 +61,9 @@ export const readOfClipboard = async () => {
 
 export const getNumberOrNull = (value: unknown) => (typeof value === "number" ? value : null)
 
-export const isString = (value: unknown) => typeof value === "string"
-export const isNumber = (value: unknown) => typeof value === "number"
-export const isBoolean = (value: unknown) => typeof value === "boolean"
+export const isString = (value: unknown): value is string => typeof value === "string"
+export const isNumber = (value: unknown): value is number => typeof value === "number"
+export const isBoolean = (value: unknown): value is boolean => typeof value === "boolean"
 export const isEqual = (right: unknown, left: unknown) => right === left
 
 export const exclude = <T extends object, K extends keyof T>(data: T, keys: K[]) => {
@@ -88,14 +86,4 @@ export const include = <T extends object, K extends keyof T>(data: T, keys: read
     })
 
   return Object.fromEntries(entries)
-}
-
-export const getLocalStorageData = (name: "settingsRows" | "settingsFields", schema: ZodSchema) => {
-  const data = localStorage.getItem(name)
-  try {
-    const parsedData = validation(schema, JSON.parse(data ?? "{}"))
-    return parsedData
-  } catch (error) {
-    if (error instanceof ValidationError) console.error(error.message)
-  }
 }

@@ -1,17 +1,14 @@
 import {
   Controller, FormProvider, useForm,
 } from "react-hook-form"
-import React, {
-  KeyboardEvent,
-  memo, ReactNode, useEffect, useRef, useState,
+import {
+  memo, ReactNode, useEffect, useState,
 } from "react"
 import { Box } from "shared/ui/box"
 import { Input } from "shared/ui/form/input"
-import { addEvent } from "shared/lib/event"
 import { z } from "zod"
-import { Select, SelectItem } from "shared/ui/form/select"
-import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
-import { BackButton } from "shared/ui/back-button"
+import { SelectItem } from "shared/ui/form/select"
+import { BackButton } from "shared/ui/buttons/back-button"
 import { RefetchButton } from "shared/ui/buttons/refresh-button"
 import { useQuery } from "@tanstack/react-query"
 import { $axios } from "shared/config/axios"
@@ -91,7 +88,7 @@ export const Filters = memo((props: FiltersProps) => {
     },
   })
 
-  useEvent("keydown", (event: KeyboardEvent) => {
+  useEvent("keydown", (event: any) => {
     const search = methods.getValues("search")
     if (isFocused && typeof search === "string" && event.key === "Enter") {
       setSearchParams((prev) => {
@@ -113,7 +110,8 @@ export const Filters = memo((props: FiltersProps) => {
 
     methods.setValue("search", search)
     methods.setValue("category", findCategory)
-    !!findTypeGood && methods.setValue("typeGood", findTypeGood)
+
+    if (findTypeGood) methods.setValue("typeGood", findTypeGood)
   }, [searchParams, categories])
 
   const applySearchParam = (name: string, value?: string) => {

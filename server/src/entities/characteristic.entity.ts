@@ -1,6 +1,5 @@
 import {
   BelongsTo,
-  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
@@ -18,12 +17,6 @@ export class Characteristic extends Model<Characteristic> {
 
   @Column({ type: DataType.STRING, unique: true })
   caption: string;
-
-  // @BelongsToMany(() => Category, () => CategoryCharacteristic)
-  // categories: Array<Category & { CategoryCharacteristic: CategoryCharacteristic }>;
-
-  // @HasMany(() => Category, { foreignKeyConstraint: false, constraints: false })
-  // categories: Category[];
 
   @HasMany(() => CategoryCharacteristic, { foreignKeyConstraint: false, constraints: false })
   categoryCharacteristics: CategoryCharacteristic[];

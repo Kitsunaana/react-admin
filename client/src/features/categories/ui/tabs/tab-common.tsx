@@ -1,26 +1,12 @@
-import * as React from "react"
 import { Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { Input } from "shared/ui/form/input"
 import { Box } from "shared/ui/box"
 import { Text } from "shared/ui/text"
-import { createRoute, eventBus } from "shared/lib/event-bus"
+import { eventBus } from "shared/lib/event-bus"
+import { updateCaption } from "features/categories/model/event"
 
-interface CommonTabProps {
-  langBase?: string
-}
-
-interface UpdateCaption {
-  caption?: string,
-  bgColor?: string,
-  color?: string
-  blur?: number
-}
-
-export const updateCaption = createRoute("updateCaption")
-  .withParams<UpdateCaption>()
-
-export const TabCommon = (props: CommonTabProps) => {
+export const TabCommon = () => {
   const { t } = useTranslation("translation", { keyPrefix: "global.forms.validate" })
 
   return (
@@ -59,7 +45,7 @@ export const TabCommon = (props: CommonTabProps) => {
             rows="10"
             sx={{
               "& .MuiInputBase-root": {
-                py: 0.5,
+                py: 0.25,
               },
             }}
           />

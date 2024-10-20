@@ -20,13 +20,11 @@ export const useContextMenu = () => {
     setIsOpen(false)
   }
 
-  const handleEsc = ({ key }) => {
-    if (key === "Escape") close()
-  }
-
   useClickAway(ref, close, isOpen)
 
-  useEvent("keydown", handleEsc, isOpen)
+  useEvent("keydown", (event) => {
+    if (event.key === "Escape") close()
+  }, isOpen)
 
   return {
     ref,

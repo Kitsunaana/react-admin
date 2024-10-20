@@ -1,9 +1,9 @@
-import { Icon } from "shared/ui/icon"
-import React, { memo } from "react"
 import {
   IconButton as MUIIconButton, IconButtonProps as MUIIconButtonProps, Theme,
 } from "@mui/material"
 import { SxProps } from "@mui/system"
+import { memo } from "react"
+import { Icon } from "shared/ui/icon"
 
 export interface IconButtonProps extends MUIIconButtonProps {
   name: string

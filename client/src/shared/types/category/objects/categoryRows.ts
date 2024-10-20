@@ -5,13 +5,13 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryRowsActiveImageId } from "./categoryRowsActiveImageId";
-import type { AltNameCreate } from "./alt-name/altNameCreate";
-import type { CaptionPosition } from "./captionPosition";
-import type { CharacteristicCreate } from "./characteristic/characteristicCreate";
-import type { Image } from "./media/image";
-import type { Media } from "./media/media";
-import type { TagCreate } from "./tagCreate";
+import type { CategoryRowsActiveImageId } from "./categoryRowsActiveImageId"
+import type { AltNameCreate } from "./alt-name/altNameCreate"
+import type { CaptionPosition } from "./captionPosition"
+import type { CharacteristicCreate } from "./characteristic/characteristicCreate"
+import type { Image } from "./media/image"
+import type { Media } from "./media/media"
+import type { TagCreate } from "./tagCreate"
 
 export interface CategoryRows {
   activeImageId: CategoryRowsActiveImageId;

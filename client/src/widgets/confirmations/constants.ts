@@ -1,10 +1,11 @@
 import { ConfirmationModalParams } from "./model/types"
 
 export const defaultConfirmationParams: ConfirmationModalParams = {
-  title: "Подтвердите действие",
-  description: "Вы уверены, что хотите продолжить?",
-  closeText: "Отмена",
-  confirmText: "Подтвердить",
+  title: "title",
+  description: "description",
+  closeText: "closeText",
+  confirmText: "confirmText",
+  langBase: "global.confirm",
   onClose: () => { },
   onConfirm: () => { },
 }

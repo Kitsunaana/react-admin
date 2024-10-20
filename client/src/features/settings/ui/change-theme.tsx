@@ -5,11 +5,11 @@ import {
   Theme,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import { Themes } from "features/settings/model/settings-slice"
 import { observer } from "mobx-react-lite"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import { useSettings } from "../model/context"
+import { Themes } from "../model/types"
 
 const themes: Array<Themes> = ["dark", "system", "light"]
 
@@ -57,7 +57,7 @@ const WrapperButtons = styled("div")(({ theme: { palette } }) => ({
 }))
 
 export const ChangeTheme = observer(() => {
-  const settings = useSettings()
+  const { settings } = useSettings()
 
   return (
     <div>

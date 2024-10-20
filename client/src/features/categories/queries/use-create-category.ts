@@ -1,32 +1,41 @@
 import { useMutation } from "@tanstack/react-query"
-import { toast } from "react-toastify"
-import { categoriesApi as categoriesApiV2 } from "features/categories/api/categories-api"
-import { CategoryDto } from "shared/types/category"
 import { queryClient } from "app/providers/query-client"
-import { categoryUrlStore } from "entities/category"
+import { useCategorySearchParams } from "entities/category/model/use-category-search-params"
+import { categoriesApi as categoriesApiV2 } from "features/categories/api/categories-api"
+import { useTranslation, UseTranslationResponse } from "react-i18next"
+import { toast } from "react-toastify"
+import { useLang } from "shared/context/lang"
+import { CategoryDto } from "shared/types/category"
 import { Common } from "shared/types/common"
 
-const create = (payload: CategoryDto.PostCategoryBody) => (
+const create = (
+  payload: CategoryDto.PostCategoryBody,
+  t: UseTranslationResponse<"translation", string>["t"],
+) => (
   new Promise<CategoryDto.CategoryPreview>((resolve, reject) => {
     const { images, ...other } = payload
 
     const createCategory = (media: Common.Media[]) => {
       toast.promise(() => (
         categoriesApiV2
-          .post({ ...other, media: [...other.media, ...media], images: [] })
+          .post({
+            ...other,
+            images: [],
+            media: [...other.media, ...media],
+          })
           .then(resolve)
           .catch(reject)
       ), {
-        pending: "Создается категория",
-        error: "При создании категории произошла ошибка",
-        success: "Категория добавлена",
+        pending: t("pending"),
+        error: t("error"),
+        success: t("success"),
       })
     }
 
     toast
       .promise(() => categoriesApiV2.filesUpload(images), {
-        pending: "Идет загрузка изображений",
-        error: "При загрузке изображений произошла ошибка",
+        pending: t("imagePending"),
+        error: t("imageError"),
       })
       .then(createCategory)
       .catch(() => createCategory([]))
@@ -34,12 +43,17 @@ const create = (payload: CategoryDto.PostCategoryBody) => (
 )
 
 export const useCreateCategory = () => {
+  const langBase = useLang()
+
+  const { search, page } = useCategorySearchParams()
+  const { t } = useTranslation("translation", { keyPrefix: `${langBase}.create` })
+
   const { mutate, isPending, isSuccess } = useMutation({
     mutationKey: ["categories"],
-    mutationFn: create,
+    mutationFn: (payload: CategoryDto.PostCategoryBody) => create(payload, t),
     onSuccess: (data) => {
       queryClient.setQueryData(
-        ["categories", categoryUrlStore.searchParams],
+        ["categories", search, page],
         (oldData: CategoryDto.GetAllCategoriesResponse) => ({
           count: oldData.count + 1,
           rows: oldData.rows.concat([data]),

@@ -70,7 +70,8 @@ export const CreateEditForm = observer(() => {
           />
         )}
       />
-      <DescriptionInput />
+
+      <DescriptionInput name="forms.description" />
     </Box>
   )
 })

@@ -5,13 +5,13 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryCreateWithMediaActiveImageId } from "./categoryCreateWithMediaActiveImageId";
-import type { AltNameCreate } from "./alt-name/altNameCreate";
-import type { CaptionPosition } from "./captionPosition";
-import type { CharacteristicCreate } from "./characteristic/characteristicCreate";
-import type { CategoryCreateWithMediaDescription } from "./categoryCreateWithMediaDescription";
-import type { Media } from "./media/media";
-import type { TagCreate } from "./tagCreate";
+import type { CategoryCreateWithMediaActiveImageId } from "./categoryCreateWithMediaActiveImageId"
+import type { AltNameCreate } from "./alt-name/altNameCreate"
+import type { CaptionPosition } from "./captionPosition"
+import type { CharacteristicCreate } from "./characteristic/characteristicCreate"
+import type { CategoryCreateWithMediaDescription } from "./categoryCreateWithMediaDescription"
+import type { Media } from "./media/media"
+import type { TagCreate } from "./tagCreate"
 
 export interface CategoryCreateWithMedia {
   activeImageId: CategoryCreateWithMediaActiveImageId;

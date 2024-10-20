@@ -14,4 +14,4 @@ export const CharacteristicCreateAllOfAction = {
   create: "create",
   update: "update",
   remove: "remove",
-} as const;
+} as const

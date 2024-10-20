@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { SxProps, Theme } from "@mui/material"
 import styled from "styled-components"

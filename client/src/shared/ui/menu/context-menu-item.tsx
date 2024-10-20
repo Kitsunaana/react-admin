@@ -1,8 +1,8 @@
-import { memo } from "react"
 import { AlertColor, MenuItem } from "@mui/material"
-import { Text } from "shared/ui/text"
-import { Icon } from "shared/ui/icon"
 import { styled } from "@mui/material/styles"
+import { memo } from "react"
+import { Icon } from "shared/ui/icon"
+import { Text } from "shared/ui/text"
 
 const StyledMenuItem = styled(MenuItem)(() => ({
   display: "flex",

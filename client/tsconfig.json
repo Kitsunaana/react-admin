@@ -5,8 +5,8 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2021",
-    "module": "es2020",
+    "target": "ESNext",
+    "module": "ESNext",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -32,8 +32,9 @@
       ]
     },
     "lib": [
-      "es2021.full",
-      "dom"
+      "ES2016",
+      "ESNext",
+      "DOM",
     ]
   },
   "ts-node": {

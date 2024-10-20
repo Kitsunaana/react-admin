@@ -8,7 +8,7 @@ import { RowItem } from "shared/ui/row-item"
 import { Tag } from "./tag"
 
 interface TagItemProps extends CategoryDto.TagCreate {
-  onRemove: (id: number | string, caption: string) => Promise<void>
+  onRemove: (data: CategoryDto.TagCreate) => Promise<void>
   onEdit: (data: CategoryDto.TagCreate) => void
   isCreatedOrUpdated: boolean
 }
@@ -41,7 +41,11 @@ export const TagItem = (props: TagItemProps) => {
               icon, color, caption, id,
             })}
           />
-          <IconButtonDelete onClick={() => onRemove(id, caption)} />
+          <IconButtonDelete
+            onClick={() => onRemove({
+              icon, color, caption, id,
+            })}
+          />
         </Box>
       </RowItem>
     </LangContext>

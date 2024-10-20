@@ -11,7 +11,7 @@ import type { CaptionPosition } from './captionPosition';
 import type { CharacteristicCreate } from './characteristic/characteristicCreate';
 import type { CategoryCreateDescription } from './categoryCreateDescription';
 import type { Image } from './media/image';
-import type { Media } from './media/media';
+import type { MediaCreate } from './media/mediaCreate';
 import type { TagCreate } from './tagCreate';
 
 export interface CategoryCreate {
@@ -26,6 +26,6 @@ export interface CategoryCreate {
   description: CategoryCreateDescription;
   images: Image[];
   isShowPhotoWithGoods: boolean;
-  media: Media[];
+  media: MediaCreate[];
   tags: TagCreate[];
 }

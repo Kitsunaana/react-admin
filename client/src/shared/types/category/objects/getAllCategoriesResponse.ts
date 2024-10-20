@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryPreview } from "./categoryPreview";
+import type { CategoryPreview } from "./categoryPreview"
 
 export type GetAllCategoriesResponse = {
   count: number;

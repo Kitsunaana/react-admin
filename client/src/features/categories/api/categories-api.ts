@@ -64,6 +64,13 @@ export const categoriesApi = {
     return validation(CategorySchemas.updateCategoryResponse, data)
   },
 
+  updatePosition: async (payload: { id: number, order: number }): Promise<number[]> => {
+    const { data } = await $axios
+      .patch<number[]>(`${URL}/order`, payload)
+
+    return data
+  },
+
   fakeFilesUpload: async (): Promise<Common.Media[]> => new Promise((resolve) => {
     resolve([
       {

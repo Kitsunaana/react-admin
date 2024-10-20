@@ -1,6 +1,5 @@
-import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import React from "react"
+import { Text } from "shared/ui/text"
 
 interface RefetchButtonProps {
   onRefetch: () => void

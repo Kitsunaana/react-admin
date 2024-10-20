@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryBase } from "./categoryBase";
-import type { CategoryUpdateDtoAllOf } from "./categoryUpdateDtoAllOf";
+import type { CategoryBase } from "./categoryBase"
+import type { CategoryUpdateDtoAllOf } from "./categoryUpdateDtoAllOf"
 
 export type CategoryUpdateDto = CategoryBase & CategoryUpdateDtoAllOf;

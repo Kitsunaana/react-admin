@@ -7,8 +7,8 @@ import {
   URL,
   URL_TRANSLATE,
 } from "../model/config"
-import { translateSchema } from "../model/schemas"
-import { DataTranslation, FetchTranslateResponse } from "../model/types"
+import { localesSchema, translateSchema } from "../model/schemas"
+import { DataTranslation, FetchTranslateResponse, ITranslate } from "../model/types"
 
 const getData = (locale: Common.Locale, category: DataTranslation) => ({
   from: "auto",
@@ -29,25 +29,26 @@ const getConfig = (host: string, key: string) => ({
 
 export const altNameApi = {
   getAll: async (): Promise<Common.Locale[]> => (
-    $axios.get(URL).then(({ data }) => data)
+    $axios.get(URL).then(({ data }) => validation(localesSchema, data))
   ),
 
   translate: async (
     locale: Common.Locale,
     category: DataTranslation,
   ): Promise<FetchTranslateResponse> => {
-    try {
-      const payload = getData(locale, category)
-      const config = getConfig(HOST, KEY)
+    const payload = getData(locale, category)
+    const config = getConfig(HOST, KEY)
 
-      const { data } = await $axios.post(URL_TRANSLATE, payload, config)
+    const { data } = await $axios.post<ITranslate>(URL_TRANSLATE, payload, config)
 
-      return {
-        data: validation(translateSchema, data),
-        locale,
-      }
-    } catch (error) {
-      throw new Error((error as Error).message)
+    return {
+      data: validation(translateSchema, {
+        trans: {
+          ...data.trans,
+          description: data.trans.description ?? "",
+        },
+      }),
+      locale,
     }
   },
 }

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { CategoriesService } from './categories.service';
-import { CategoriesController } from './categories.controller';
-import { FilesModule } from '../files/files.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { SequelizeModule as BaseSequelizeModule } from '../sequelize/sequelize.module';
+import { CharacteristicsModule } from '../characteristics/characteristics.module';
 import { Category } from '../entities/category.entity';
 import { CustomCategory } from '../entities/custom-category';
-import { CharacteristicsModule } from '../characteristics/characteristics.module';
+import { FilesModule } from '../files/files.module';
 import { LocalesModule } from '../locales/locales.module';
+import { SequelizeModule as BaseSequelizeModule } from '../sequelize/sequelize.module';
 import { TagsModule } from '../tags/tags.module';
+import { CategoriesController } from './categories.controller';
+import { CategoriesService } from './categories.service';
 
 @Module({
   providers: [CategoriesService],

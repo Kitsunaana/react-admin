@@ -1,15 +1,10 @@
 import { Badge as MUIBadge, Tooltip } from "@mui/material"
-import { Icon } from "shared/ui/icon"
-import { memo, useState } from "react"
-import { Box, BoxProps } from "shared/ui/box"
-import { dispatch } from "shared/lib/event"
-import { Common } from "shared/types/common"
-import { styled } from "@mui/material/styles"
 import { badgeClasses } from "@mui/material/Badge"
-
-interface TooltipImageViewProps {
-  images?: Common.Media[]
-}
+import { styled } from "@mui/material/styles"
+import { memo, useState } from "react"
+import { Common } from "shared/types/common"
+import { Box, BoxProps } from "shared/ui/box"
+import { Icon } from "shared/ui/icon"
 
 export const Image = styled("img")`
   width: 110px;
@@ -37,7 +32,14 @@ export const Badge = styled(MUIBadge)(({ theme }) => ({
   },
 }))
 
-export const TooltipImageView = memo(({ images }: TooltipImageViewProps) => {
+interface TooltipImageViewProps {
+  images?: Common.Media[]
+  onOpenGallery: (data: { index: number, images: (Common.Media | Common.Image)[] }) => void
+}
+
+export const TooltipImageView = memo((props: TooltipImageViewProps) => {
+  const { images, onOpenGallery } = props
+
   const [open, setOpen] = useState(false)
 
   if (!images || images.length === 0) return null
@@ -60,7 +62,7 @@ export const TooltipImageView = memo(({ images }: TooltipImageViewProps) => {
               src={image.path}
               onClick={() => {
                 setOpen(false)
-                dispatch("gallery", { images, index })
+                onOpenGallery({ images, index })
               }}
             />
           ))}

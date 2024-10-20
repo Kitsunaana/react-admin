@@ -2,9 +2,9 @@ import { AltNamesStore } from "entities/alt-name"
 import { CharacteristicsStore } from "entities/characteristic/model/characteristics-store"
 import { TagsStore } from "entities/tag"
 import { makeAutoObservable } from "mobx"
-import { getLocalStorageData } from "shared/lib/utils"
+import { getDefaultValue } from "shared/lib/local-storage"
 import { CategoryDto } from "shared/types/category"
-import { initialSettingsFields, initialSettingsRows } from "../constants"
+import { initialSettingsFields, initialSettingsRows } from "../const"
 import { settingFieldsSchema, settingsRowsSchema } from "../schemas"
 import { Action, KeysSettingsFields, KeysSettingsRows } from "../types"
 import { PhotoPositionStore } from "./photo-position-store"
@@ -25,8 +25,19 @@ export class RootStore {
 
     makeAutoObservable(this, {}, { autoBind: true })
 
-    this.settingsRows = getLocalStorageData("settingsRows", settingsRowsSchema)
-    this.settingsFields = getLocalStorageData("settingsFields", settingFieldsSchema)
+    getDefaultValue<typeof this.settingsRows>({
+      key: "settingsRows",
+      schema: settingsRowsSchema,
+      parse: true,
+      onSuccess: (settings) => { this.settingsRows = settings },
+    })
+
+    getDefaultValue<typeof this.settingsFields>({
+      key: "settingsFields",
+      schema: settingFieldsSchema,
+      parse: true,
+      onSuccess: (settings) => { this.settingsFields = settings },
+    })
   }
 
   destroy = () => { this.createStores() }

@@ -1,13 +1,13 @@
 import {
   TextField,
   TextFieldProps,
-  inputBaseClasses,
   formLabelClasses,
+  inputBaseClasses,
 } from "@mui/material"
+import { styled as muiStyled } from "@mui/material/styles"
 import { ChangeEvent, forwardRef } from "react"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { Text } from "shared/ui/text"
-import { styled as muiStyled } from "@mui/material/styles"
 
 export const StyledInput = muiStyled(TextField)(() => ({
   [`& .${inputBaseClasses.input}`]: {

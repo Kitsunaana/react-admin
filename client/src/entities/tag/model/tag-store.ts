@@ -2,11 +2,16 @@ import { makeAutoObservable, toJS } from "mobx"
 import { nanoid } from "nanoid"
 import { isNumber, isString } from "shared/lib/utils"
 import { CategoryDto } from "shared/types/category"
+import { Action } from "./types"
 
 export class TagsStore {
   tags: CategoryDto.TagCreate[] = []
 
-  constructor(private getCopyAction: () => "add" | "replace" | "none") {
+  getCopyAction: () => Action
+
+  constructor(getCopyAction: () => Action) {
+    this.getCopyAction = getCopyAction
+
     makeAutoObservable(this, {}, { autoBind: true })
   }
 

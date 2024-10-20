@@ -48,7 +48,7 @@ export class LocalesService {
     );
   }
 
-  async updateAltNamesCategory(altNames: Common.AltNameCreate[], categoryId: number) {
+  async update(altNames: Common.AltNameCreate[], categoryId: number) {
     await Promise.all(
       altNames.map(async (altName) => {
         if (altName.action === 'update') return this.updateAltName(altName, categoryId);

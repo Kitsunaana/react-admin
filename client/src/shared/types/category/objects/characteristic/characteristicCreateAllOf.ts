@@ -5,8 +5,8 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CharacteristicCreateAllOfAction } from "./characteristicCreateAllOfAction";
-import type { CharacteristicCreateAllOfId } from "./characteristicCreateAllOfId";
+import type { CharacteristicCreateAllOfAction } from "./characteristicCreateAllOfAction"
+import type { CharacteristicCreateAllOfId } from "./characteristicCreateAllOfId"
 
 export type CharacteristicCreateAllOf = {
   action?: CharacteristicCreateAllOfAction;

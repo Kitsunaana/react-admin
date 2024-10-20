@@ -1,10 +1,10 @@
-import AccordionSummary, { accordionSummaryClasses } from "@mui/material/AccordionSummary"
 import {
   Accordion as MUIAccordion, AccordionProps as MUIAccordionProps, accordionClasses,
 } from "@mui/material"
 import AccordionDetails from "@mui/material/AccordionDetails"
-import React, { ReactNode, useState } from "react"
+import AccordionSummary, { accordionSummaryClasses } from "@mui/material/AccordionSummary"
 import { styled } from "@mui/material/styles"
+import React, { ReactNode, useState } from "react"
 
 export const AccordionContainer = styled(MUIAccordion)(({ theme }) => ({
   boxShadow: "0px 0px 0px rgba(0,0,0,0)",

@@ -6,10 +6,11 @@ interface PaginationProps extends MUIPaginationProps {}
 export const Pagination = (props: PaginationProps) => {
   const { count, onChange, ...other } = props
 
-  const [_, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   return (
     <MUIPagination
+      page={Number(searchParams.get("page")) || 1}
       count={Math.ceil((count ?? 0) / 25)}
       variant="outlined"
       shape="rounded"

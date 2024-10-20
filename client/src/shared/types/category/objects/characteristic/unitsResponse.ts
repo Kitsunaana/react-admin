@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { Unit } from "./unit";
+import type { Unit } from "./unit"
 
 /**
  * Получение всех единиц измерения

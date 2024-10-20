@@ -1,82 +1,42 @@
-import { useTheme } from "@mui/material"
-import { CategoryRow } from "entities/category"
 import { useCategories } from "entities/category/queries/use-categories"
 import { AltNameCreateDialog } from "features/alt-names"
 import { AltNameEditDialog } from "features/alt-names/ui/alt-name-edit-dialog"
 import { CategoryDialog } from "features/categories"
-import { StoreProvider } from "features/categories/model/context"
-import { useRemoveCategory } from "features/categories/queries/use-remove-category"
+import { CategoryStoreProvider } from "features/categories/model/context"
 import { CharacteristicCreateDialog, CharacteristicEditDialog } from "features/characteristics"
 import { TagCreateDialog, TagEditDialog } from "features/tag"
 import { observer } from "mobx-react-lite"
 import { CategoryHeader } from "pages/categories/ui/header"
 import { RootDialogProvider } from "shared/context/dialog-context"
 import { LangContext, useLang } from "shared/context/lang"
-import { Common } from "shared/types/common"
-import { BackButton } from "shared/ui/back-button"
+import { BackButton } from "shared/ui/buttons/back-button"
 import { Box } from "shared/ui/box"
 import { CreateButton } from "shared/ui/buttons/create-button"
 import { RefetchButton } from "shared/ui/buttons/refresh-button"
-import { EmptyList } from "shared/ui/empty-list"
 import { Mark } from "shared/ui/mark"
 import { Pagination } from "shared/ui/pagination"
-import { Spinner } from "shared/ui/spinner"
 import { Table } from "shared/ui/table"
 import { Text } from "shared/ui/text"
-
-export const findCaption = (altNames: Common.AltName[], defaultValue: string = ""): string => {
-  const readLocale = localStorage.getItem("lngAdmin")
-
-  const altName = altNames?.find((altName) => altName.locale.code === readLocale)
-  console.log(readLocale)
-
-  return altName?.caption ?? defaultValue
-}
+import { CategoryList } from "pages/categories/ui/category-list"
 
 const CategoriesPage = observer(() => {
-  const { categories, refetchCategories, isLoadingCategories } = useCategories()
-  const onRemoveCategory = useRemoveCategory()
+  const {
+    categories,
+    isLoadingCategories,
+    refetchCategories,
+  } = useCategories()
 
-  const { palette } = useTheme()
   const langBase = useLang()
-
-  const renderContent = () => {
-    const categoriesIsEmpty = categories?.rows.length === 0
-
-    const isShowEmptyList = categoriesIsEmpty && !isLoadingCategories
-
-    if (isLoadingCategories) {
-      return (
-        <Box flex ai jc sx={{ height: 1 }}>
-          <Spinner
-            color={palette.warning.dark}
-            height={100}
-            width={100}
-          />
-        </Box>
-      )
-    }
-    if (isShowEmptyList) return <EmptyList />
-    if (!categories) return null
-
-    return categories.rows.map((category) => (
-      <CategoryRow
-        key={category.id}
-        id={category.id}
-        caption={findCaption(category.altNames, category.caption)}
-        images={category?.media}
-        order={category.order}
-        onRemoveCategory={onRemoveCategory}
-      />
-    ))
-  }
 
   return (
     <RootDialogProvider>
       <Table
         content={(
           <LangContext lang={`${langBase}.rows`}>
-            {renderContent()}
+            <CategoryList
+              categories={categories?.rows ?? []}
+              isLoading={isLoadingCategories}
+            />
           </LangContext>
         )}
         header={(
@@ -104,13 +64,13 @@ const CategoriesPage = observer(() => {
                   },
                 }}
               />
-              <Pagination count={categories?.count} />
+              <Pagination count={categories?.rows.length ?? 0} />
             </Box>
           </LangContext>
         )}
       />
 
-      <StoreProvider>
+      <CategoryStoreProvider>
         <CategoryDialog
           renderTagCreateDialog={(handleCreate) => (
             <TagCreateDialog onCreate={handleCreate} />
@@ -131,7 +91,7 @@ const CategoriesPage = observer(() => {
             <CharacteristicEditDialog onEdit={handleEdit} />
           )}
         />
-      </StoreProvider>
+      </CategoryStoreProvider>
 
     </RootDialogProvider>
   )

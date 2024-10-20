@@ -1,14 +1,16 @@
 import { alpha } from "@mui/material"
-import { Text } from "shared/ui/text"
-import { Vertical } from "shared/ui/divider"
-import { observer } from "mobx-react-lite"
-import { IconButton } from "shared/ui/buttons/icon-button"
-import { ReactNode } from "react"
 import { styled } from "@mui/material/styles"
-import { Mark } from "shared/ui/mark"
-import { Box } from "shared/ui/box"
+import { observer } from "mobx-react-lite"
+import { ReactNode } from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
+import { useLang } from "shared/context/lang"
 import { DialogStore } from "shared/stores/dialog-store"
+import { Box } from "shared/ui/box"
+import { IconButton } from "shared/ui/buttons/icon-button"
+import { Vertical } from "shared/ui/divider"
+import { Mark } from "shared/ui/mark"
+import { Text } from "shared/ui/text"
 
 const HeaderContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -74,6 +76,9 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
     store,
   } = props
 
+  const langBase = useLang()
+  const { t } = useTranslation("translation", { keyPrefix: langBase })
+
   const fullscreenState = store.fullScreen
     ? "fullscreenClose"
     : "fullscreenOpen"
@@ -82,8 +87,8 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
     if (!onCopyClick) return
 
     await toast.promise(onCopyClick(), {
-      success: "Данные для перноса скопированы",
-      error: "При копировании данных произошла ошибка",
+      error: t("notify.copyError"),
+      success: t("notify.copySuccess"),
     })
   }
 
@@ -91,8 +96,8 @@ export const DialogHeader = observer((props: DialogHeaderProps) => {
     if (!onPasteClick) return
 
     await toast.promise(onPasteClick(), {
-      success: "Данные успешно вставлены",
-      error: "Не валидные данные для вставки",
+      error: t("notify.pasteError"),
+      success: t("notify.pasteSuccess"),
     })
   }
 

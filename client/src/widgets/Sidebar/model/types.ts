@@ -6,8 +6,7 @@ export type MenuItemBase = {
   disabled?: boolean
 };
 
-export type MenuItem = {
-} & MenuItemBase;
+export type MenuItem = {} & MenuItemBase;
 
 export type MenuList = {
   sublist: MenuItem[],

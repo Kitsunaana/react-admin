@@ -1,8 +1,10 @@
-import { IconButtonBase as BaseIconButton, IconButtonProps } from "shared/ui/buttons/icon-button-base"
-import { Box } from "shared/ui/box"
 import {
-  Badge as MUIBadge, BadgeProps, CircularProgress, TooltipProps,
+  BadgeProps, CircularProgress,
+  Badge as MUIBadge,
+  TooltipProps,
 } from "@mui/material"
+import { Box } from "shared/ui/box"
+import { IconButtonBase as BaseIconButton, IconButtonProps } from "shared/ui/buttons/icon-button-base"
 import styled from "styled-components"
 
 interface ButtonProps extends IconButtonProps {

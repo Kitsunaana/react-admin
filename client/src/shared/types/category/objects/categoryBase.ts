@@ -5,9 +5,9 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryBaseActiveImageId } from "./categoryBaseActiveImageId";
-import type { CaptionPosition } from "./captionPosition";
-import type { Media } from "./media/media";
+import type { CategoryBaseActiveImageId } from "./categoryBaseActiveImageId"
+import type { CaptionPosition } from "./captionPosition"
+import type { Media } from "./media/media"
 
 export interface CategoryBase {
   activeImageId: CategoryBaseActiveImageId;

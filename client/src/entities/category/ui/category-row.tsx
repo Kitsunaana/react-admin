@@ -1,5 +1,3 @@
-import { UseMutationOptions } from "@tanstack/react-query"
-import { $axios } from "shared/config/axios"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { useContextMenu } from "shared/hooks/use-context-menu"
@@ -14,19 +12,6 @@ import { Text } from "shared/ui/text"
 import { TooltipImageView } from "shared/ui/tooltip-image-view"
 import styled from "styled-components"
 import { CategoryContextMenu } from "./context-menu"
-
-interface CategoryRowProps {
-  id: number
-  caption: string
-  images?: Common.Media[]
-  order: number | null
-  onRemoveCategory: (categoryId: (number | null)) => Promise<void>
-}
-
-export const updatePositionOptions = (id: number): UseMutationOptions<any, any, number> => ({
-  mutationKey: ["categories", id],
-  mutationFn: (order: number) => $axios.patch("/categories/order", { order, id }),
-})
 
 const CustomRowItem = styled(RowItem)`
   margin-bottom: 0px;
@@ -45,19 +30,33 @@ const CustomRowItem = styled(RowItem)`
   }
 `
 
+interface CategoryRowProps {
+  id: number
+  caption: string
+  images?: Common.Media[]
+  order: number | null
+  isLoading: boolean
+  onOpenGallery: (data: { index: number, images: (Common.Media | Common.Image)[] }) => void
+  onRemoveCategory: (categoryId: (number | null)) => Promise<void>
+  onUpdatePosition: (payload: { id: number, order: number }) => void
+}
+
 export const CategoryRow = (props: CategoryRowProps) => {
   const {
     id,
     caption,
     images,
     order,
+    isLoading,
+    onOpenGallery,
+    onUpdatePosition,
     onRemoveCategory,
   } = props
 
-  const editStore = useEditDialogStore()
   const langBase = useLang()
-  const navigate = useNavigateGoods(caption)
   const menu = useContextMenu()
+  const editStore = useEditDialogStore()
+  const navigate = useNavigateGoods(caption)
 
   const handleOnEdit = () => {
     menu.close()
@@ -71,7 +70,7 @@ export const CategoryRow = (props: CategoryRowProps) => {
 
   return (
     <CustomRowItem
-      bgColor={menu.isOpen ? "primary" : undefined}
+      bgColor={menu.isOpen && "primary"}
       onContextMenu={menu.open}
     >
       <Text caption={caption} />
@@ -88,7 +87,10 @@ export const CategoryRow = (props: CategoryRowProps) => {
         </LangContext>
       )}
       <Box flex row ai sx={{ height: 1 }}>
-        <TooltipImageView images={images} />
+        <TooltipImageView
+          onOpenGallery={onOpenGallery}
+          images={images}
+        />
         <Vertical />
         <IconButton
           name="goods"
@@ -102,9 +104,10 @@ export const CategoryRow = (props: CategoryRowProps) => {
         />
         <Vertical />
         <Position
+          onUpdate={onUpdatePosition}
+          isLoading={isLoading}
           order={order}
           id={id}
-          updatePositionOptions={updatePositionOptions}
         />
         <Vertical />
         <IconButton

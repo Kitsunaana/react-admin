@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { MediaOrder } from "./mediaOrder";
+import type { MediaOrder } from "./mediaOrder"
 
 export interface Media {
   filename: string;

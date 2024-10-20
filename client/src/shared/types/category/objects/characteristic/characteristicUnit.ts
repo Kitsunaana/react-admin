@@ -5,6 +5,6 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CharacteristicUnitOneOf } from "./characteristicUnitOneOf";
+import type { CharacteristicUnitOneOf } from "./characteristicUnitOneOf"
 
 export type CharacteristicUnit = string | CharacteristicUnitOneOf;

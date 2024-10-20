@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CharacteristicBaseUnit } from "./characteristicBaseUnit";
+import type { CharacteristicBaseUnit } from "./characteristicBaseUnit"
 
 export interface CharacteristicBase {
   caption?: string;

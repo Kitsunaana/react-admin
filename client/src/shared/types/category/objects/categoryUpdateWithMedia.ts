@@ -5,13 +5,14 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryUpdateWithMediaActiveImageId } from "./categoryUpdateWithMediaActiveImageId";
-import type { AltNameCreate } from "./alt-name/altNameCreate";
-import type { CaptionPosition } from "./captionPosition";
-import type { CharacteristicCreate } from "./characteristic/characteristicCreate";
-import type { CategoryUpdateWithMediaDescription } from "./categoryUpdateWithMediaDescription";
-import type { Media } from "./media/media";
-import type { TagCreate } from "./tagCreate";
+import type { CategoryUpdateWithMediaActiveImageId } from "./categoryUpdateWithMediaActiveImageId"
+import type { AltNameCreate } from "./alt-name/altNameCreate"
+import type { CaptionPosition } from "./captionPosition"
+import type { CharacteristicCreate } from "./characteristic/characteristicCreate"
+import type { CategoryUpdateWithMediaDescription } from "./categoryUpdateWithMediaDescription"
+import type { Media } from "./media/media"
+import type { CategoryUpdateWithMediaOrder } from "./categoryUpdateWithMediaOrder"
+import type { TagCreate } from "./tagCreate"
 
 export interface CategoryUpdateWithMedia {
   activeImageId: CategoryUpdateWithMediaActiveImageId;
@@ -25,5 +26,6 @@ export interface CategoryUpdateWithMedia {
   description: CategoryUpdateWithMediaDescription;
   isShowPhotoWithGoods: boolean;
   media: Media[];
+  order?: CategoryUpdateWithMediaOrder;
   tags: TagCreate[];
 }

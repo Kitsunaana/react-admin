@@ -8,7 +8,7 @@ import { useMemo } from "react"
 const Theme = observer((props) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-schemas: dark)")
 
-  const settings = useSettings()
+  const { settings } = useSettings()
   const mode = settings.theme
 
   const theme = useMemo(() => {

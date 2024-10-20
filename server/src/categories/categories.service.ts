@@ -1,29 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { FilesService } from '../files/files.service';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { Category } from '../entities/category.entity';
-import { GetCategoryDto } from './dto/get-category-dto';
 import { Op, Sequelize } from 'sequelize';
-import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
-import { Media } from '../entities/media.entity';
-import { CustomCategory, Position } from '../entities/custom-category';
-import { CategoryCharacteristic, Characteristic } from '../entities/characteristic.entity';
-import { Unit } from '../entities/units.entity';
-import { AltNameCategory, Locale } from '../entities/locale.entity';
-import { Tag } from '../entities/tag.entity';
 import { CategoryTag } from '../entities/category-tag.entity';
+import { Category } from '../entities/category.entity';
+import { CategoryCharacteristic, Characteristic } from '../entities/characteristic.entity';
+import { CustomCategory } from '../entities/custom-category';
+import { AltNameCategory, Locale } from '../entities/locale.entity';
+import { Media } from '../entities/media.entity';
+import { Tag } from '../entities/tag.entity';
+import { Unit } from '../entities/units.entity';
+import { FilesService } from '../files/files.service';
+import { GetCategoryDto } from './dto/get-category-dto';
+import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
 import { CategoryDto } from './types';
-
-export class CreateCategoryDto {
-  isShowPhotoWithGoods: boolean;
-  bgColor: string;
-  color: string;
-  blur: number;
-  captionPosition: Position;
-  activeImageId: string;
-}
 
 @Injectable()
 export class CategoriesService {
@@ -34,7 +23,7 @@ export class CategoriesService {
   ) {}
 
   async create(dto: CategoryDto.PostCategoryBody) {
-    const category = await this.categoryRepository.create({ ...dto, order: null } as Category);
+    const category = await this.categoryRepository.create({ ...dto, order: null });
 
     await this.customCategoryRepository.create({
       isShowPhotoWithGoods: dto.isShowPhotoWithGoods,
@@ -49,7 +38,7 @@ export class CategoriesService {
     return category;
   }
 
-  async update(id: number, dto: CategoryDto.PatchCategoryBody) {
+  async update(id: number, dto: Partial<CategoryDto.PatchCategoryBody>) {
     const category = await this.categoryRepository.update(
       {
         order: dto.order,
@@ -114,7 +103,11 @@ export class CategoriesService {
           : {},
         limit,
         ...(query?.page ? { offset: (query.page - 1) * limit } : {}),
-        order: [['order', 'DESC']],
+        order: [
+          [Sequelize.literal(`"order" IS NOT NULL`), 'desc'],
+          ['order', 'desc'],
+          ['createdAt', 'asc'],
+        ],
       })
       .then((rows) => ({ count, rows }));
   }
@@ -126,7 +119,7 @@ export class CategoriesService {
       rejectOnEmpty: false,
     });
 
-    await this.filesService.deleteMedia(category.media);
+    await this.filesService.delete(category.media);
     return await category.destroy();
   }
 
@@ -165,7 +158,7 @@ export class CategoriesService {
       order: [
         [Sequelize.literal(`"media"."order" IS NOT NULL`), 'desc'],
         [Sequelize.col('media.order'), 'desc'],
-        [Sequelize.col('media.createdAt'), 'desc'],
+        [Sequelize.col('media.createdAt'), 'asc'],
       ],
     });
 

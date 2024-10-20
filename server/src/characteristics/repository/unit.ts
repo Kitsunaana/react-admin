@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Unit } from '../../entities/units.entity';
 import sequelize, { Op } from 'sequelize';
+import { Unit } from '../../entities/units.entity';
 
 @Injectable()
 export class UnitRepository {

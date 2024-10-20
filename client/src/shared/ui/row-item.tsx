@@ -1,7 +1,7 @@
-import { Box, BoxProps } from "shared/ui/box"
 import { AlertColor, alpha } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { isString } from "shared/lib/utils"
+import { Box, BoxProps } from "shared/ui/box"
 
 type Colors = AlertColor | "primary" | "secondary"
 

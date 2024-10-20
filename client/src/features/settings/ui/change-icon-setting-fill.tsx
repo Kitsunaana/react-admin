@@ -5,7 +5,7 @@ import { Text } from "shared/ui/text"
 import { useSettings } from "../model/context"
 
 export const ChangeIconSettingFill = observer(() => {
-  const settings = useSettings()
+  const { settings } = useSettings()
 
   const handleOnChangeIconFill = (event: ChangeEvent<HTMLInputElement>) => {
     settings.onChangeIconSettings({ fillIcon: event.target.checked ? 1 : 0 })

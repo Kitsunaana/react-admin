@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryCreate } from "./categoryCreate";
+import type { CategoryCreate } from "./categoryCreate"
 
 /**
  * Создание категории

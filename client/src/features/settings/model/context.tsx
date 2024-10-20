@@ -1,68 +1,53 @@
-import { useMediaQuery } from "@mui/material"
 import {
   createContext,
-  FC, PropsWithChildren, useContext, useLayoutEffect, useState,
+  FC, PropsWithChildren, useContext,
+  useState,
 } from "react"
-import { toast } from "react-toastify"
-import { ErrorReject, getDefaultValue } from "../lib/get-default-value"
-import { DEFAULT_SETTINGS, messages } from "./const"
+import { ErrorReject, getDefaultValue } from "shared/lib/local-storage"
+import { defautlSettings } from "./const"
 import { iconSettingsSchema, languageSchema, themeSchema } from "./schemas"
 import { createSettingsStore, SettingsStore } from "./settings-store"
 import {
-  DefaultSettings, IconSettings, Languages,
+  IconSettings, Languages,
   Themes,
 } from "./types"
 
-export const SettingsContext = createContext<SettingsStore>(
-  createSettingsStore(DEFAULT_SETTINGS as DefaultSettings),
+type UseSettings = { settings: SettingsStore, errors: Partial<Record<string, ErrorReject>> }
+
+export const SettingsContext = createContext<UseSettings>(
+  { settings: createSettingsStore(defautlSettings), errors: {} },
 )
 
 export const SettingsContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const prefersDarkMode = useMediaQuery("(prefers-color-schemas: dark)")
+  const settings = { ...defautlSettings }
+  const errors: Partial<Record<string, ErrorReject>> = {}
 
-  const getTheme = (mode: string) => (
-    mode === "system" ? (prefersDarkMode ? "dark" : "light") : mode
-  )
+  getDefaultValue<Themes>({
+    key: "theme",
+    schema: themeSchema,
+    onSuccess: (theme) => { settings.theme = theme },
+    onError: (error) => { errors[error.name] = error },
+  })
 
-  const [store, setStore] = useState<SettingsStore | null>(
-    createSettingsStore(DEFAULT_SETTINGS as DefaultSettings),
-  )
+  getDefaultValue<Languages>({
+    key: "lngAdmin",
+    schema: languageSchema,
+    onSuccess: (language) => { settings.language = language },
+    onError: (error) => { errors[error.name] = error },
+  })
 
-  const showToast = (error: ErrorReject) => {
-    const mode = getTheme(DEFAULT_SETTINGS.theme)
+  getDefaultValue<IconSettings>({
+    key: "iconSettings",
+    schema: iconSettingsSchema,
+    parse: true,
+    onSuccess: (iconSettings) => { settings.iconSettings = iconSettings },
+    onError: (error) => { errors[error.name] = error },
+  })
 
-    toast[error.type](error.message, {
-      position: "bottom-right",
-      hideProgressBar: true,
-      autoClose: false,
-      theme: mode,
-    })
-  }
-
-  useLayoutEffect(() => {
-    (async () => {
-      await Promise.all(
-        [
-          getDefaultValue<Themes>(themeSchema, "theme", messages.theme)
-            .then((theme) => { DEFAULT_SETTINGS.theme = theme })
-            .catch(showToast),
-
-          getDefaultValue<Languages>(languageSchema, "lngAdmin", messages.language)
-            .then((language) => { DEFAULT_SETTINGS.language = language })
-            .catch(showToast),
-
-          getDefaultValue<IconSettings>(iconSettingsSchema, "iconSettings", messages.icon, true)
-            .then((icon) => { DEFAULT_SETTINGS.iconSettings = icon })
-            .catch(showToast),
-        ],
-      )
-
-      setStore(createSettingsStore(DEFAULT_SETTINGS as DefaultSettings))
-    })()
-  }, [])
+  const [store] = useState<UseSettings>({ settings: createSettingsStore(settings), errors })
 
   return (
-    <SettingsContext.Provider value={store as SettingsStore}>
+    <SettingsContext.Provider value={store}>
       {children}
     </SettingsContext.Provider>
   )

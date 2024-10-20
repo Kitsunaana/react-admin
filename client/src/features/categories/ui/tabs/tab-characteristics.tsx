@@ -16,6 +16,7 @@ import { Vertical } from "shared/ui/divider"
 import { EmptyList } from "shared/ui/empty-list"
 import { Text } from "shared/ui/text"
 import styled from "styled-components"
+import { useLang } from "shared/context/lang"
 import { useCategoryStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
@@ -33,8 +34,9 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
 export const TabCharacteristics = observer(() => {
   const { characteristics } = useCategoryStores()
   const { fullScreen } = useEditDialogStore()
+  const langBase = useLang()
 
-  const handleRemove = useRemoveCharacteristic(characteristics.remove)
+  const handleRemove = useRemoveCharacteristic(langBase)
 
   return (
     <Box flex row grow sx={{ height: 1 }}>
@@ -48,9 +50,9 @@ export const TabCharacteristics = observer(() => {
               unit={item.unit}
               hideClient={item.hideClient}
               caption={item.caption}
-              onRemove={handleRemove}
+              onRemove={() => handleRemove(item, characteristics.remove)}
               onEdit={(payload) => eventBus.emit(openEditCharacteristicDialog(payload))}
-              getConflict={characteristics.getConflict}
+              hasConflict={characteristics.getConflict({ caption: item.caption, id: item.id })}
               isCreatedOrUpdated={characteristics.isCreatedOrUpdated(item.id)}
             />
           ))}

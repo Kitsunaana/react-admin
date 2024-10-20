@@ -1,7 +1,7 @@
-import { InjectModel } from '@nestjs/sequelize';
-import { Characteristic } from '../../entities/characteristic.entity';
-import sequelize, { Op } from 'sequelize';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import sequelize, { Op } from 'sequelize';
+import { Characteristic } from '../../entities/characteristic.entity';
 
 @Injectable()
 export class CharacteristicRepository {

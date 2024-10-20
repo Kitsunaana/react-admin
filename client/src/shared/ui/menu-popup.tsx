@@ -18,7 +18,6 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
     backgroundImage: theme.background.sectionBackground,
     padding: "0px 4px",
     overflow: "visible",
-    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
     marginTop: 12,
     borderRadius: 12,
 

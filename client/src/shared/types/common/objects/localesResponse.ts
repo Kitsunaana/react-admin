@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { Locale } from "./locale";
+import type { Locale } from "./locale"
 
 /**
  * Получение всех локалей

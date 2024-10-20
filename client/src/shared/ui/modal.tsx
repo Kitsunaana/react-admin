@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import styled from "styled-components"
 import { useEvent } from "../hooks/use-event"
 import { CrossLightIcon } from "./close-icon"
+import { useSettings } from "features/settings"
 
 const ModalWrapper = styled.div`
   position: fixed;
@@ -14,8 +15,11 @@ const ModalWrapper = styled.div`
   overflow-y: auto;
 `
 
-const ModalInner = styled.div`
-  background-color: #fff;
+const ModalInner = styled.div<{ mode: "dark" | "light" }>`
+  background-color: ${({ mode }) => (
+    mode === "light" ? "#fff" : "#121212"
+  )};
+  background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
   min-height: 240px;
   border-radius: 16px;
   position: relative;
@@ -70,7 +74,7 @@ const Footer = styled.div`
 `
 
 const Body = styled.div`
-    padding: 0px 8px;
+    padding: 0px 0px;
 `
 
 interface ModalProps {
@@ -82,6 +86,8 @@ interface ModalProps {
 export const Modal = (props: ModalProps) => {
   const { onClose, isOpen, children } = props
 
+  const { settings } = useSettings()
+
   useEvent("keydown", (event) => {
     if (event.key === "Escape") onClose()
   })
@@ -90,7 +96,7 @@ export const Modal = (props: ModalProps) => {
 
   const modal = (
     <ModalWrapper>
-      <ModalInner data-id="modal">
+      <ModalInner data-id="modal" mode={settings.mode}>
         <CloseButton onClick={onClose}>
           <CrossLightIcon />
         </CloseButton>

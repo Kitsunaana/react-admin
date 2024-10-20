@@ -98,5 +98,7 @@ export class AltNamesStore {
 
   getData = () => ({ altNames: toJS(this.altNames) })
 
-  setAltNames = (altNames: (Common.AltName | Common.AltNameCreate)[]) => { this.altNames = altNames }
+  setAltNames = (altNames: (Common.AltName | Common.AltNameCreate)[]) => {
+    this.altNames = altNames
+  }
 }

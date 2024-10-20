@@ -4,8 +4,8 @@ import { Controller } from "react-hook-form"
 import { Checkbox, FormControlLabel, Slider } from "@mui/material"
 import { ColorInput } from "shared/ui/form/input-color"
 import { eventBus } from "shared/lib/event-bus"
-import { updateCaption } from "features/categories/ui/tabs/tab-common"
 import { Icon } from "shared/ui/icon"
+import { updateCaption } from "features/categories/model/event"
 import { Gallery } from "../photo-position/gallery"
 
 export const TabPhotoPosition = () => (
@@ -68,7 +68,7 @@ export const TabPhotoPosition = () => (
                 valueLabelDisplay="auto"
                 max={20}
                 marks={[{ value: 10, label: <Icon name="zoomEffect" fontSize="small" /> }]}
-                onChange={(event, value) => {
+                onChange={(_, value) => {
                   field.onChange(value)
                   eventBus.emit(updateCaption({
                     blur: Array.isArray(value) ? value[0] : value,

@@ -6,16 +6,16 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export * from "./altName";
-export * from "./altNameAllOf";
-export * from "./altNameBase";
-export * from "./altNameBaseDescription";
-export * from "./altNameBaseDescriptionOneOf";
-export * from "./altNameCreate";
-export * from "./altNameCreateAllOf";
-export * from "./altNameCreateAllOfAction";
-export * from "./altNameCreateAllOfId";
-export * from "./altNameDescription";
-export * from "./altNameDescriptionOneOf";
-export * from "./locale";
-export * from "./localesResponse";
+export * from "./altName"
+export * from "./altNameAllOf"
+export * from "./altNameBase"
+export * from "./altNameBaseDescription"
+export * from "./altNameBaseDescriptionOneOf"
+export * from "./altNameCreate"
+export * from "./altNameCreateAllOf"
+export * from "./altNameCreateAllOfAction"
+export * from "./altNameCreateAllOfId"
+export * from "./altNameDescription"
+export * from "./altNameDescriptionOneOf"
+export * from "./locale"
+export * from "./localesResponse"

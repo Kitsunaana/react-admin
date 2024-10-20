@@ -3,7 +3,7 @@ import { CreateEditForm } from "features/alt-names/ui/alt-name-edit-form"
 import { observer } from "mobx-react-lite"
 import { FormProvider, useForm } from "react-hook-form"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
-import { LangContext, useLang } from "shared/context/lang"
+import { LangContext } from "shared/context/lang"
 import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { Common } from "shared/types/common"
@@ -17,7 +17,6 @@ interface AltNameEditDialogProps {
 export const AltNameEditDialog = observer(({ onEdit } : AltNameEditDialogProps) => {
   const editStore = useEditDialogStore()
   const methods = useForm()
-  const langBase = useLang()
 
   useSetDialogValues({
     data: editStore.localData as Common.AltNameCreate,
@@ -37,14 +36,15 @@ export const AltNameEditDialog = observer(({ onEdit } : AltNameEditDialogProps) 
 
   return (
     <FormProvider {...methods}>
-      <LangContext lang={`${langBase}.dialog`}>
+      <LangContext lang="altNames.dialog">
         <UpsertDialog
           header={(
             <DialogHeader
               store={editStore}
               title={(
                 <DialogHeaderCaption
-                  name="create"
+                  name="title.edit"
+                  value={editStore.localData?.caption}
                 />
               )}
             />

@@ -1,14 +1,14 @@
+import { Dialog as MUIDialog } from "@mui/material"
 import { DialogProps as MUIDialogProps } from "@mui/material/Dialog/Dialog"
+import { observer } from "mobx-react-lite"
 import { FC, ReactNode, useEffect } from "react"
 import { useFormContext } from "react-hook-form"
-import { observer } from "mobx-react-lite"
-import { Dialog as MUIDialog } from "@mui/material"
-import { Box } from "shared/ui/box"
-import { SaveButton } from "shared/ui/dialog/save-button"
-import { CancelButton } from "shared/ui/dialog/cancel-button"
-import styled, { css } from "styled-components"
-import { Skeleton } from "shared/ui/skeleton"
 import { DialogStore } from "shared/stores/dialog-store"
+import { Box } from "shared/ui/box"
+import { CancelButton } from "shared/ui/dialog/cancel-button"
+import { SaveButton } from "shared/ui/dialog/save-button"
+import { Skeleton } from "shared/ui/skeleton"
+import styled, { css } from "styled-components"
 
 interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   tabs?: ReactNode

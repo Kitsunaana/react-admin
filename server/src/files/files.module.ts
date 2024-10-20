@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { FilesService } from './files.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Media } from '../entities/media.entity';
+import { FilesService } from './files.service';
 
 @Module({
   providers: [FilesService],

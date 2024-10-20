@@ -66,6 +66,10 @@ const iconData = {
   tags: "loyalty",
   arrowRight: "navigate_next",
   settings_v2: "settings",
+  fields: "text_fields_alt",
+  rows: "add_row_above",
+  none: "filter_none",
+  replace: "find_replace",
 }
 
 export type IconKeys = keyof typeof iconData
@@ -78,7 +82,7 @@ export interface DefaultIcon extends IconProps {
 const Default = observer(forwardRef<any, DefaultIcon>((props, ref) => {
   const { name = "", help, ...other } = props
 
-  const settings = useSettings()
+  const { settings } = useSettings()
   const { fillIcon, weightIcon } = settings.iconSettings
 
   const icon = other.children ?? (
@@ -103,8 +107,9 @@ const Default = observer(forwardRef<any, DefaultIcon>((props, ref) => {
   )
 
   if (help) {
+    const props = { arrow: true, ...help }
     return (
-      <Tooltip {...help}>
+      <Tooltip {...props}>
         {renderIcon}
       </Tooltip>
     )

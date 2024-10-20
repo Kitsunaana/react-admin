@@ -1,9 +1,9 @@
+import { alpha, CircularProgress } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import {
   DetailedHTMLProps, ImgHTMLAttributes, useState,
 } from "react"
 import { Box } from "shared/ui/box"
-import { alpha, CircularProgress } from "@mui/material"
-import { styled } from "@mui/material/styles"
 
 const ImageLoader = styled(Box)(({ theme }) => ({
   display: "flex",

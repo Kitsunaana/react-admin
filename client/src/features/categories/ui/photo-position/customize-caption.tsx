@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { FieldValues, useFormContext, UseFormGetValues } from "react-hook-form"
-import { eventBus } from "shared/lib/event-bus"
 import { Text } from "shared/ui/text"
-import { updateCaption } from "../tabs/tab-common"
+import { updateCaption } from "features/categories/model/event"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 
 type FieldsRecord = {
   caption: string
@@ -29,7 +29,7 @@ export const CustomizeCaption = () => {
   const { getValues } = useFormContext()
   const [caption, setCaption] = useState(() => setCaptionValues(getValues))
 
-  eventBus.on(updateCaption, ({ payload }) => {
+  useEventBusListen(updateCaption, ({ payload }) => {
     setCaption((prevState) => ({
       caption: payload.caption ?? prevState.caption,
       bgColor: payload.bgColor ?? prevState.bgColor,
@@ -64,7 +64,7 @@ export const CustomizeCaption = () => {
         padding: "4px 8px",
         background: caption.bgColor,
         borderRadius: "8px",
-        boxShadow: `${caption.bgColor} 0px 4px 30px`,
+        boxShadow: `${caption.bgColor} 0px 4px 15px`,
         backdropFilter: `blur(${caption.blur}px)`,
         border: "1px solid rgba(255, 255, 255, 0.12)",
       }}

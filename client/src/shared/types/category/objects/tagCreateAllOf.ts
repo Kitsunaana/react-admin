@@ -5,8 +5,8 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { TagCreateAllOfAction } from "./tagCreateAllOfAction";
-import type { TagCreateAllOfId } from "./tagCreateAllOfId";
+import type { TagCreateAllOfAction } from "./tagCreateAllOfAction"
+import type { TagCreateAllOfId } from "./tagCreateAllOfId"
 
 export type TagCreateAllOf = {
   action?: TagCreateAllOfAction;

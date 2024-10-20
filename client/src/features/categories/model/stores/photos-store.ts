@@ -1,9 +1,10 @@
 import { makeAutoObservable, toJS } from "mobx"
 import { nanoid } from "nanoid"
-import { dispatch } from "shared/lib/event"
 import { Common } from "shared/types/common"
+import { eventBus } from "shared/lib/event-bus"
+import { openGallery } from "features/categories/model/event"
 import { PhotoPositionStore } from "./photo-position-store"
-import { Action } from "./dialog-store"
+import { Action } from "../types"
 
 export class PhotosStore {
   images: Common.Image[] = []
@@ -29,7 +30,7 @@ export class PhotosStore {
   openGallery = (id: number | string) => {
     const findIndex = this.mergedImages.findIndex((image) => image.id === id)
 
-    dispatch("gallery", { images: this.mergedImages, index: findIndex })
+    eventBus.emit(openGallery({ index: findIndex, images: this.mergedImages }))
   }
 
   updateOrder = (order: number, id: string) => {

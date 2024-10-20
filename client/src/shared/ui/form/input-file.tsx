@@ -1,10 +1,10 @@
+import { styled } from "@mui/material/styles"
+import { nanoid } from "nanoid"
 import { ChangeEvent, memo, useRef } from "react"
+import { Common } from "shared/types/common"
 import { Box, BoxProps } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import { styled } from "@mui/material/styles"
-import { nanoid } from "nanoid"
-import { TImage } from "features/categories/model/types"
 
 const InputFileContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -28,7 +28,7 @@ interface InputFileProps extends BoxProps {
   multiple: boolean
   name: string
   disabled?: boolean
-  onFilesUpload: (files: TImage[]) => void
+  onFilesUpload: (files: Common.Image[]) => void
 }
 
 export const InputFile = memo((props: InputFileProps) => {
@@ -49,7 +49,7 @@ export const InputFile = memo((props: InputFileProps) => {
   }
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const files: TImage[] = []
+    const files: Common.Image[] = []
 
     Array.prototype.forEach.call(event.target.files, (file: File) => {
       if (multiple) {

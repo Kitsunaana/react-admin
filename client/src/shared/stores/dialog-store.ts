@@ -18,10 +18,10 @@ export class DialogStore {
     this.localData = payload
   }
 
-  openDialog(id: Id, localData?: Record<string, any>) {
+  openDialog(id: Id) {
     this.open = true
     this.id = id
-    this.localData = localData
+    this.tab = 0
   }
 
   closeDialog() {
@@ -30,7 +30,9 @@ export class DialogStore {
     this.tab = 0
   }
 
-  onToggleSizeScreen() { this.fullScreen = !this.fullScreen }
+  onToggleSizeScreen() {
+    this.fullScreen = !this.fullScreen
+  }
 
   changeTab(tab: number) { this.tab = tab }
 }

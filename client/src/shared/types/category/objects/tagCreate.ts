@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { TagBase } from "./tagBase";
-import type { TagCreateAllOf } from "./tagCreateAllOf";
+import type { TagBase } from "./tagBase"
+import type { TagCreateAllOf } from "./tagCreateAllOf"
 
 export type TagCreate = TagBase & TagCreateAllOf;

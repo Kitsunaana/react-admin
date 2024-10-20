@@ -1,7 +1,7 @@
 import { AlertColor, alpha, useTheme } from "@mui/material"
-import { Text as BaseText } from "shared/ui/text"
-import { Mark } from "shared/ui/mark"
 import { styled } from "@mui/material/styles"
+import { Mark } from "shared/ui/mark"
+import { Text as BaseText } from "shared/ui/text"
 
 interface TagProps {
   caption: string

@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryDto } from "./categoryDto";
+import type { CategoryDto } from "./categoryDto"
 
 /**
  * Получение категории по id

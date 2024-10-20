@@ -3,9 +3,8 @@ import {
   AltNameItem, openCreateAltNameDialog, openEditAltNameDialog, useLocales,
 } from "entities/alt-name"
 import { useRemoveAltName } from "features/alt-names"
-import { updateCaption } from "features/categories/ui/tabs/tab-common"
 import { observer } from "mobx-react-lite"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { useCreateDialogStore } from "shared/context/dialog-create-context"
 import { eventBus } from "shared/lib/event-bus"
@@ -15,6 +14,8 @@ import { Vertical } from "shared/ui/divider"
 import { EmptyList } from "shared/ui/empty-list"
 import { Text } from "shared/ui/text"
 import styled from "styled-components"
+import { updateCaption } from "features/categories/model/event"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { useCategoryStores } from "../../model/context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
@@ -29,30 +30,27 @@ const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean
   height: ${({ fullScreen }) => (fullScreen ? "calc(100% - 60px)" : "432px")};
 `
 
+const getCaptionLength = (caption?: string) => (caption ?? "").length
+
 export const TabAltNames = observer(() => {
+  const { locales } = useLocales()
   const { altNames } = useCategoryStores()
-  const { fullScreen, openDialog } = useCreateDialogStore()
+  const { fullScreen } = useCreateDialogStore()
+
   const onRemoveAltName = useRemoveAltName(altNames.remove)
   const methods = useFormContext()
-  const { locales } = useLocales()
 
-  const getCaptionLength = (caption?: string) => (
-    (caption ?? methods.getValues("caption") as string ?? "").length
-  )
+  const [disabled, setDisabled] = useState(getCaptionLength(methods.getValues("caption")) < 3)
 
-  const [disabled, setDisabled] = useState(() => getCaptionLength() < 3)
-
-  useEffect(() => { setDisabled(getCaptionLength() < 3) }, [methods.getValues("caption")])
+  useEventBusListen(updateCaption, ({ payload }) => {
+    setDisabled(getCaptionLength(payload.caption) < 3)
+  })
 
   const freeLocales = altNames.getFreeLocale(locales ?? [])
 
   const isShowCharacteristics = altNames.filteredItems.length > 0
   const isShowSkeletons = freeLocales.length > 0 && altNames.isLoading
   const isShowEmptyList = altNames.filteredItems.length === 0 && !altNames.isLoading
-
-  eventBus.on(updateCaption, ({ payload }) => {
-    setDisabled(getCaptionLength(payload.caption) < 3)
-  })
 
   const handleTranslateClick = () => {
     const caption = methods.getValues("caption")
@@ -70,7 +68,7 @@ export const TabAltNames = observer(() => {
               key={altName.id}
               disabled={altNames.isLoading}
               handleRemove={onRemoveAltName}
-              handleEdit={(paylod) => eventBus.emit(openEditAltNameDialog(paylod))}
+              handleEdit={(payload) => eventBus.emit(openEditAltNameDialog(payload))}
               {...altName}
             />
           ))}

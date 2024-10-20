@@ -1,7 +1,7 @@
+import { formLabelClasses, inputBaseClasses } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import { MuiColorInput, MuiColorInputProps } from "mui-color-input"
 import { forwardRef } from "react"
-import { styled } from "@mui/material/styles"
-import { inputBaseClasses, formLabelClasses } from "@mui/material"
 
 const StyledColorInput = styled(MuiColorInput)(() => ({
   [`& .${inputBaseClasses.root}`]: {

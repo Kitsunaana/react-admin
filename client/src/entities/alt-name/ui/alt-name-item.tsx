@@ -33,7 +33,7 @@ const StyledAltNameItem = styled((props: RowItemProps & { disabled: boolean }) =
 
 interface AltNameItemProps extends AltName {
   disabled?: boolean
-  handleRemove: (id: (string | number), caption: string) => Promise<void>
+  handleRemove: (altName: Common.AltNameCreate) => Promise<void>
   handleEdit: (payload: Common.AltNameCreate) => void
 }
 
@@ -58,7 +58,9 @@ export const AltNameItem = (props: AltNameItemProps) => {
   }
 
   const onOpenDeleteDialog = async () => {
-    await handleRemove(id, caption)
+    await handleRemove({
+      caption, locale, description, id,
+    })
   }
 
   return (

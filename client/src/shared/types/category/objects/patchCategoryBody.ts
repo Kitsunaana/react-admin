@@ -5,7 +5,7 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryUpdate } from "./categoryUpdate";
+import type { CategoryUpdate } from "./categoryUpdate"
 
 /**
  * Редактирование категории

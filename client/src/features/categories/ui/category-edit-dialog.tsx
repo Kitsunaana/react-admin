@@ -1,5 +1,5 @@
 import { useGetCategory } from "entities/category/queries/use-category"
-import { CATEGORY_DEFAULT_VALUES, CATEGORY_FIELDS, TABS } from "features/categories/model/constants"
+import { CATEGORY_DEFAULT_VALUES, CATEGORY_FIELDS, TABS } from "features/categories/model/const"
 import { useCategoryStores } from "features/categories/model/context"
 import { useEditCategory } from "features/categories/queries/use-edit-category"
 import { ContentContainer } from "features/categories/ui/content-container"
@@ -8,6 +8,7 @@ import {
   FormProvider, useForm,
 } from "react-hook-form"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
+import { LangContext, useLang } from "shared/context/lang"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import {
   getNumberOrNull, include,
@@ -21,6 +22,8 @@ import { useCopyPaste } from "../model/use-copy"
 import { PasteSettings } from "./paste-settings/paste-settings"
 
 export const CategoryEditDialog = observer(() => {
+  const langBase = useLang()
+
   const methods = useForm<CategoryDto.CategoryCreate>({ defaultValues: CATEGORY_DEFAULT_VALUES })
   const dialogStore = useEditDialogStore()
   const categoryStore = useCategoryStores()
@@ -69,22 +72,26 @@ export const CategoryEditDialog = observer(() => {
             showActions
             settings={(
               <MenuPopup>
-                <PasteSettings />
+                <LangContext lang={`${langBase}.settings`}>
+                  <PasteSettings />
+                </LangContext>
               </MenuPopup>
             )}
             title={(
               <DialogHeaderCaption
                 name="title.edit"
-                value="Пиццы"
+                value={category?.caption}
               />
             )}
           />
         )}
         tabs={(
-          <TabsContainer
-            tabs={TABS}
-            requiredFields={["caption"]}
-          />
+          <LangContext lang={`${langBase}.tabs`}>
+            <TabsContainer
+              tabs={TABS}
+              requiredFields={["caption"]}
+            />
+          </LangContext>
         )}
         PaperProps={{
           sx: {

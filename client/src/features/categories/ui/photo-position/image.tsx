@@ -1,5 +1,13 @@
 import { useImage } from "shared/hooks/use-image"
 import { Image as ImageBase } from "shared/ui/image"
+import styled from "styled-components"
+
+const StyledImage = styled(ImageBase)`
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8;
+`
 
 interface CustomImageProps {
   path?: string
@@ -13,13 +21,7 @@ export const Image = (props: CustomImageProps) => {
   const src = useImage(path ?? data)
 
   return (
-    <ImageBase
-      style={{
-        width: "100%",
-        height: "250px",
-        objectFit: "cover",
-        borderRadius: 8,
-      }}
+    <StyledImage
       src={src}
       alt={caption}
     />

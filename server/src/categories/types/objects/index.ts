@@ -37,6 +37,7 @@ export * from './categoryUpdateOrder';
 export * from './categoryUpdateWithMedia';
 export * from './categoryUpdateWithMediaActiveImageId';
 export * from './categoryUpdateWithMediaDescription';
+export * from './categoryUpdateWithMediaOrder';
 export * from './getAllCategoriesResponse';
 export * from './getByIdCategoryResponse';
 export * from './patchCategoryBody';

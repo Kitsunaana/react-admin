@@ -1,6 +1,6 @@
+import { ButtonProps } from "@mui/material"
 import Button from "@mui/material/Button"
 import { Text } from "shared/ui/text"
-import { ButtonProps } from "@mui/material"
 
 interface CancelButtonProps extends ButtonProps{
   onClick: () => void

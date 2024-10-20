@@ -1,9 +1,7 @@
-import Button from "@mui/material/Button"
-import { Text } from "shared/ui/text"
-import * as React from "react"
-import { memo } from "react"
-import { shallowEqual } from "shared/lib/utils"
 import { ButtonProps } from "@mui/material"
+import Button from "@mui/material/Button"
+import { memo } from "react"
+import { Text } from "shared/ui/text"
 
 interface SaveButtonProps extends ButtonProps {
   onClick: () => void

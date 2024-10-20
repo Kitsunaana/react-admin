@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import * as process from 'process';
-import { FilesModule } from './files/files.module';
-import { CategoriesModule } from './categories/categories.module';
-import { LocalesModule } from './locales/locales.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { SequelizeModule } from './sequelize/sequelize.module';
+import * as process from 'process';
+import { CategoriesModule } from './categories/categories.module';
 import { CharacteristicsModule } from './characteristics/characteristics.module';
-import { TagsModule } from './tags/tags.module';
+import { FilesModule } from './files/files.module';
 import { GoodsModule } from './goods/goods.module';
+import { LocalesModule } from './locales/locales.module';
+import { SequelizeModule } from './sequelize/sequelize.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [

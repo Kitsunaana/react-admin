@@ -14,7 +14,7 @@ import { Text } from "shared/ui/text"
 
 export const TagForm = () => {
   const { getValues, watch } = useFormContext()
-  const { t } = useTranslation()
+  const { t } = useTranslation("translation", { keyPrefix: "global.forms" })
 
   const caption = watch("caption") ?? getValues("caption")
   const icon = watch("icon") ?? getValues("icon")
@@ -100,7 +100,7 @@ export const TagForm = () => {
           render={({ field }) => (
             <ColorInput
               {...field}
-              sx={{ width: "30%" }}
+              style={{ width: "30%" }}
               label={<Text onlyText name="forms.color" />}
               PopoverProps={{
                 anchorOrigin: {

@@ -5,6 +5,6 @@
  * Category Api
  * OpenAPI spec version: 1.0.0
  */
-import type { AltNameDescriptionOneOf } from "./altNameDescriptionOneOf";
+import type { AltNameDescriptionOneOf } from "./altNameDescriptionOneOf"
 
 export type AltNameDescription = string | AltNameDescriptionOneOf;

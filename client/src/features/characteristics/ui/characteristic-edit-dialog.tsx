@@ -2,7 +2,7 @@ import { openEditCharacteristicDialog } from "entities/characteristic"
 import { observer } from "mobx-react-lite"
 import { FormProvider, useForm } from "react-hook-form"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
-import { LangContext, useLang } from "shared/context/lang"
+import { LangContext } from "shared/context/lang"
 import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { Common } from "shared/types/common"
@@ -18,7 +18,6 @@ interface CharacteristicEditDialogProps {
 export const CharacteristicEditDialog = observer(({ onEdit }: CharacteristicEditDialogProps) => {
   const editStore = useEditDialogStore()
   const methods = useForm()
-  const langBase = useLang()
 
   useSetDialogValues({
     data: editStore.localData as Common.CharacteristicCreate,
@@ -39,14 +38,15 @@ export const CharacteristicEditDialog = observer(({ onEdit }: CharacteristicEdit
 
   return (
     <FormProvider {...methods}>
-      <LangContext lang={`${langBase}.dialog`}>
+      <LangContext lang="characteristic.dialog">
         <UpsertDialog
           header={(
             <DialogHeader
               store={editStore}
               title={(
                 <DialogHeaderCaption
-                  name="create"
+                  name="title.edit"
+                  value={editStore.localData?.caption}
                 />
               )}
             />

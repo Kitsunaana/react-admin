@@ -1,10 +1,10 @@
-import { useMemo } from "react"
-import { Tabs } from "shared/ui/tabs/tabs"
-import { useFormContext, useFormState } from "react-hook-form"
-import { Tab } from "shared/ui/tabs/tab"
 import { observer } from "mobx-react-lite"
+import { useMemo } from "react"
+import { useFormContext, useFormState } from "react-hook-form"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { useLang } from "shared/context/lang"
+import { Tab } from "shared/ui/tabs/tab"
+import { Tabs } from "shared/ui/tabs/tabs"
 
 export interface ITab {
   id: number
