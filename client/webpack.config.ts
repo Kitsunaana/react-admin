@@ -10,6 +10,8 @@ export default (env: any): webpack.Configuration => {
     port: env?.port ?? 4444,
   }
 
+  console.log(env);
+
   const paths: BuildPaths = {
     entry: path.resolve(__dirname, "src", "index.tsx"),
     build: path.resolve(__dirname, "build"),

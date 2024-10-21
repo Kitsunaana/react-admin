@@ -7,12 +7,12 @@ import { Models } from '../entities';
     SequelizeModulePackage.forRootAsync({
       imports: undefined,
       useFactory: () => ({
-        username: 'postgres',
-        password: 'postgres',
-        database: 'postgres',
-        host: '127.0.0.1',
+        username: process.env.DATABASE_USERNAME,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME,
+        host: process.env.DATABASE_HOST,
         dialect: 'postgres',
-        port: 8913,
+        port: Number(process.env.DATABASE_PORT),
         models: Models,
         autoLoadModels: true,
         synchronize: true,
@@ -24,4 +24,4 @@ import { Models } from '../entities';
     }),
   ],
 })
-export class SequelizeModule {}
+export class SequelizeModule { }

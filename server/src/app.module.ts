@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import * as process from 'process';
 import { CategoriesModule } from './categories/categories.module';
 import { CharacteristicsModule } from './characteristics/characteristics.module';
 import { FilesModule } from './files/files.module';
@@ -21,7 +20,7 @@ import { TagsModule } from './tags/tags.module';
       serveRoot: '/uploads',
       rootPath: join(__dirname, '..', 'uploads'),
     }),
-    ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env` }),
+    ConfigModule.forRoot(),
     FilesModule,
     CategoriesModule,
     LocalesModule,
@@ -31,4 +30,4 @@ import { TagsModule } from './tags/tags.module';
     GoodsModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }
