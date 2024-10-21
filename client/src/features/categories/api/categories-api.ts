@@ -1,3 +1,4 @@
+import axios from "axios"
 import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
 import { CategoryDto, CategorySchemas } from "shared/types/category"
@@ -18,7 +19,7 @@ export const categoriesApi = {
         formData.append("upload_preset", "ml_default")
         formData.append("file", image.data as unknown as Blob)
 
-        const { data } = await $axios.post<ImageUploadResponse>(IMAGE_UPLOAD_URL, formData, {
+        const { data } = await axios.post<ImageUploadResponse>(IMAGE_UPLOAD_URL, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
