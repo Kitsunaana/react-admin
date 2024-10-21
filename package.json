@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "install:all": "cd client && npm install && cd ../server && npm install",
+    "start:client": "cd client && npm run start:vite",
+    "start:server": "cd server && npm run start:dev",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
