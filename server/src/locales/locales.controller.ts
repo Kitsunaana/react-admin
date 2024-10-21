@@ -2,9 +2,9 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { LocalesService } from './locales.service';
 import { translate } from './translate';
 
-@Controller('api/locales')
+@Controller('locales')
 export class LocalesController {
-  constructor(private localeService: LocalesService) {}
+  constructor(private localeService: LocalesService) { }
 
   @Get('/:lng')
   getLanguage(@Param() { lng }: { lng: string }) {
