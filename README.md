@@ -56,68 +56,74 @@ cd client && npm run start
 ```
 
 ## Что реализовано
-1. [Локализация, смена темы, настройки иконок](#a-namesection1a-локализация-смена-темы-настройки-иконок)
-2. [Обзор диалогового окна](#a-namesection2a-обзор-диалогового-окна)
-3. [Множественная загрузка изображений, галерея](#a-namesection3a-множественная-загрузка-изображений-галерея)
-4. [Настройка позиции текста на фото](#a-namesection4a-настройка-позиции-текста-на-фото)
-5. [Добавление характеристик](#a-namesection5a-добавление-характеристик)
-6. [Добавление переводов с использованием Translate api](#a-namesection6a-добавление-переводов-с-использованием-translate-api)
-7. [Добавление тегов](#a-namesection7a-добавление-тегов)
-8. [Копирование/вставка данных](#a-namesection8a-копированиевставка-данных)
-9. [Редактирование категории](#a-namesection9a-редактирование-категории)
-10. [Изменение последовательности категорий](#a-namesection10a-изменение-последовательности-категорий)
-11. [Поиск по категориям](#a-namesection11a-поиск-по-категориям)
-12. [Локализация для динамически создаваемых записей](#a-namesection12a-локализация-для-динамически-создаваемых-записей)
-13. [Сайдбар](#a-namesection13a-сайдбар)
-14. [Контекстное меню](#a-namesection14a-контекстное-меню)
-
-
-<a href="https://cdnv.boomstream.com/balancer/size:1280/k9CdpBqA-a4.jpg">
-    <img alt="" src="https://cdnv.boomstream.com/balancer/size:200/k9CdpBqA-a4.jpg">
-</a>
+1. [Локализация, смена темы, настройки иконок](#section1)
+2. [Обзор диалогового окна](#section2)
+3. [Множественная загрузка изображений, галерея](#section3)
+4. [Настройка позиции текста на фото](#section4)
+5. [Добавление характеристик](#section5)
+6. [Добавление переводов с использованием Translate api](#section6)
+7. [Добавление тегов](#section7)
+8. [Копирование/вставка данных](#section8)
+9. [Редактирование категории](#section9)
+10. [Изменение последовательности категорий](#section10)
+11. [Поиск по категориям](#section11)
+12. [Локализация для динамически создаваемых записей](#section12)
+13. [Сайдбар](#section13)
+14. [Контекстное меню](#section14)
 
 ### <a name="section1"></a> Локализация, смена темы, настройки иконок
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/dIxDJyOd?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/mHtIYwSu-a1.jpg)](https://play.boomstream.com/dIxDJyOd?autostart=1)
 
 ### <a name="section2"></a> Обзор диалогового окна
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/NeRLoztY?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/szPQghC5-a2.jpg)](https://play.boomstream.com/NeRLoztY?autostart=1)
 
 ### <a name="section3"></a> Множественная загрузка изображений, галерея
-[![Видео]()]()
-
+[Ссылка на видео](https://play.boomstream.com/3ccQiLQ7?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/SW4f6Iev-a7.jpg)](https://play.boomstream.com/3ccQiLQ7?autostart=1)
 
 ### <a name="section4"></a> Настройка позиции текста на фото
-[![Видео](https://cdnv.boomstream.com/balancer/size:200/k9CdpBqA-a4.jpg)](https://play.boomstream.com/S6ux3KL4)
+[Ссылка на видео](https://play.boomstream.com/S6ux3KL4?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/k9CdpBqA-a4.jpg)](https://play.boomstream.com/S6ux3KL4?autostart=1)
 
 ### <a name="section5"></a> Добавление характеристик
-[![Видео](https://cdnv.boomstream.com/balancer/RigylViP-a2.jpg)](https://play.boomstream.com/fCoHGaxk)
-
+[Ссылка на видео](https://play.boomstream.com/fCoHGaxk?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/RigylViP-a2.jpg)](https://play.boomstream.com/fCoHGaxk?autostart=1)
 
 ### <a name="section6"></a> Добавление переводов с использованием Translate api
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/2Kde6u6l?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/iyGSgvZ1-a13.jpg)](https://play.boomstream.com/2Kde6u6l?autostart=1)
 
 ### <a name="section7"></a> Добавление тегов
-[![Видео]()]()
-
+[Ссылка на видео](https://play.boomstream.com/vuS3DLw6?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/WUAYciXj-a12.jpg)](https://play.boomstream.com/vuS3DLw6?autostart=1)
 
 ### <a name="section8"></a> Копирование/вставка данных
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/AAOnApoW?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/nEstCxxx-a7.jpg)](https://play.boomstream.com/AAOnApoW?autostart=1)
 
 ### <a name="section9"></a> Редактирование категории
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/LKIgRQ1F?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/QsJR24lI-a2.jpg)](https://play.boomstream.com/LKIgRQ1F?autostart=1)
 
 ### <a name="section10"></a> Изменение последовательности категорий
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/RC5vL9Fi?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/Us3Dd7RU-a1.jpg)](https://play.boomstream.com/RC5vL9Fi?autostart=1)
 
 ### <a name="section11"></a> Поиск по категориям
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/ervRuD70?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/sB1OIdMr-a1.jpg)](https://play.boomstream.com/ervRuD70?autostart=1)
 
 ### <a name="section12"></a> Локализация для динамически создаваемых записей
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/VBSy8jH0?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/H6bb5v6w-a1.jpg)](https://play.boomstream.com/VBSy8jH0?autostart=1)
 
 ### <a name="section13"></a> Сайдбар
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/214Rc0Tk?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/eswEBHBI-a1.jpg)](https://play.boomstream.com/214Rc0Tk?autostart=1)
 
 ### <a name="section14"></a> Контекстное меню
-[![Видео]()]()
+[Ссылка на видео](https://play.boomstream.com/qNFmSVCk?autostart=1)<br />
+[![Видео](https://cdnv.boomstream.com/balancer/size:300/mK8ojI2L-a2.jpg)](https://play.boomstream.com/qNFmSVCk?autostart=1)
 
