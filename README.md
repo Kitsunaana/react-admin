@@ -71,48 +71,53 @@ cd client && npm run start
 13. [Сайдбар](#a-namesection13a-сайдбар)
 14. [Контекстное меню](#a-namesection14a-контекстное-меню)
 
-...
+
+<a href="https://cdnv.boomstream.com/balancer/size:1280/k9CdpBqA-a4.jpg">
+    <img alt="" src="https://cdnv.boomstream.com/balancer/size:200/k9CdpBqA-a4.jpg">
+</a>
 
 ### <a name="section1"></a> Локализация, смена темы, настройки иконок
-![example-1](https://i.postimg.cc/3JXHcJVY/1-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section2"></a> Обзор диалогового окна
-![example-2](https://i.postimg.cc/bYTF4DLy/2-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section3"></a> Множественная загрузка изображений, галерея
-![example-3](https://i.postimg.cc/zGLtLdNv/3-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
+
 
 ### <a name="section4"></a> Настройка позиции текста на фото
-![example-4](https://i.postimg.cc/sDg0zj0p/4-ezgif-com-video-to-gif-converter.gif)
+[![Видео](https://cdnv.boomstream.com/balancer/size:200/k9CdpBqA-a4.jpg)](https://play.boomstream.com/S6ux3KL4)
 
 ### <a name="section5"></a> Добавление характеристик
-![example-5](https://i.postimg.cc/J0P6XvtD/5-ezgif-com-video-to-gif-converter.gif)
+[![Видео](https://cdnv.boomstream.com/balancer/RigylViP-a2.jpg)](https://play.boomstream.com/fCoHGaxk)
+
 
 ### <a name="section6"></a> Добавление переводов с использованием Translate api
-![example-6](https://i.postimg.cc/QxYYx2Rv/6-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section7"></a> Добавление тегов
-![example-7](https://i.postimg.cc/y8wf0F6P/7-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 
 ### <a name="section8"></a> Копирование/вставка данных
-![example-8](https://i.postimg.cc/bJR3XWxC/8-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section9"></a> Редактирование категории
-![example-9](https://i.postimg.cc/GthzbKzc/9-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section10"></a> Изменение последовательности категорий
-![example-10](https://i.postimg.cc/C10mQSqn/10-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section11"></a> Поиск по категориям
-![example-11](https://i.postimg.cc/1zwvBffZ/11-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section12"></a> Локализация для динамически создаваемых записей
-![example-12](https://i.postimg.cc/J40KgTGx/12-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section13"></a> Сайдбар
-![example-13](https://i.postimg.cc/4yLPycFp/13-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
 ### <a name="section14"></a> Контекстное меню
-![example-14](https://i.postimg.cc/CMmmcyLd/14-ezgif-com-video-to-gif-converter.gif)
+[![Видео]()]()
 
