@@ -287,7 +287,7 @@ export const translate = {
       notify: {
         errorValidate: 'Не правильно указаны настройки <strong>{{value}}</strong> в localStorage',
         infoNotFound:
-          'Настройки для <strong>{{value}}</strong> не найдены,' +
+          'Настройки для <strong>{{value}}</strong> не найдены, ' +
           'используется параметры по умолчанию',
         errorParsed: 'Данные <strong>{{value}}</strong> для парсинга повреждены',
       },

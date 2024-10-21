@@ -7,7 +7,10 @@ export const useImage = (data?: string | File): string => {
   if (data === undefined) return ""
 
   useEffect(() => {
-    if (!(data instanceof File)) return
+    if (!(data instanceof File)) {
+      setSrc(data)
+      return
+    }
 
     const reader = new FileReader()
     reader.onloadend = () => {
