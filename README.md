@@ -73,57 +73,57 @@ cd client && npm run start
 
 ### <a name="section1"></a> Локализация, смена темы, настройки иконок
 [Ссылка на видео](https://play.boomstream.com/dIxDJyOd?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/mHtIYwSu-a1.jpg)](https://play.boomstream.com/dIxDJyOd?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/mHtIYwSu-a1.jpg" />
 
 ### <a name="section2"></a> Обзор диалогового окна
 [Ссылка на видео](https://play.boomstream.com/NeRLoztY?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/szPQghC5-a2.jpg)](https://play.boomstream.com/NeRLoztY?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/szPQghC5-a2.jpg" />
+
 
 ### <a name="section3"></a> Множественная загрузка изображений, галерея
 [Ссылка на видео](https://play.boomstream.com/3ccQiLQ7?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/SW4f6Iev-a7.jpg)](https://play.boomstream.com/3ccQiLQ7?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/SW4f6Iev-a7.jpg" />
 
 ### <a name="section4"></a> Настройка позиции текста на фото
 [Ссылка на видео](https://play.boomstream.com/S6ux3KL4?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/k9CdpBqA-a4.jpg)](https://play.boomstream.com/S6ux3KL4?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/k9CdpBqA-a4.jpg" />
 
 ### <a name="section5"></a> Добавление характеристик
 [Ссылка на видео](https://play.boomstream.com/fCoHGaxk?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/RigylViP-a2.jpg)](https://play.boomstream.com/fCoHGaxk?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/RigylViP-a2.jpg" />
 
 ### <a name="section6"></a> Добавление переводов с использованием Translate api
 [Ссылка на видео](https://play.boomstream.com/2Kde6u6l?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/iyGSgvZ1-a13.jpg)](https://play.boomstream.com/2Kde6u6l?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/iyGSgvZ1-a13.jpg" />
 
 ### <a name="section7"></a> Добавление тегов
 [Ссылка на видео](https://play.boomstream.com/vuS3DLw6?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/WUAYciXj-a12.jpg)](https://play.boomstream.com/vuS3DLw6?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/WUAYciXj-a12.jpg" />
 
 ### <a name="section8"></a> Копирование/вставка данных
 [Ссылка на видео](https://play.boomstream.com/AAOnApoW?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/nEstCxxx-a7.jpg)](https://play.boomstream.com/AAOnApoW?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/nEstCxxx-a7.jpg" />
 
 ### <a name="section9"></a> Редактирование категории
 [Ссылка на видео](https://play.boomstream.com/LKIgRQ1F?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/QsJR24lI-a2.jpg)](https://play.boomstream.com/LKIgRQ1F?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/QsJR24lI-a2.jpg" />
 
 ### <a name="section10"></a> Изменение последовательности категорий
 [Ссылка на видео](https://play.boomstream.com/RC5vL9Fi?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/Us3Dd7RU-a1.jpg)](https://play.boomstream.com/RC5vL9Fi?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/Us3Dd7RU-a1.jpg" />
 
 ### <a name="section11"></a> Поиск по категориям
 [Ссылка на видео](https://play.boomstream.com/ervRuD70?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/sB1OIdMr-a1.jpg)](https://play.boomstream.com/ervRuD70?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/sB1OIdMr-a1.jpg" />
 
 ### <a name="section12"></a> Локализация для динамически создаваемых записей
 [Ссылка на видео](https://play.boomstream.com/VBSy8jH0?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/H6bb5v6w-a1.jpg)](https://play.boomstream.com/VBSy8jH0?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/H6bb5v6w-a1.jpg" />
 
 ### <a name="section13"></a> Сайдбар
 [Ссылка на видео](https://play.boomstream.com/214Rc0Tk?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/eswEBHBI-a1.jpg)](https://play.boomstream.com/214Rc0Tk?autostart=1)
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/eswEBHBI-a1.jpg" />
 
 ### <a name="section14"></a> Контекстное меню
 [Ссылка на видео](https://play.boomstream.com/qNFmSVCk?autostart=1)<br />
-[![Видео](https://cdnv.boomstream.com/balancer/size:300/mK8ojI2L-a2.jpg)](https://play.boomstream.com/qNFmSVCk?autostart=1)
-
+<img style="width: 700px;" src="https://cdnv.boomstream.com/balancer/mK8ojI2L-a2.jpg" />
