@@ -6,7 +6,7 @@ import {
   TextFieldProps,
 } from "@mui/material"
 import Autocomplete from "@mui/material/Autocomplete"
-import { forwardRef, ReactNode } from "react"
+import { ReactNode } from "react"
 import { FieldError } from "react-hook-form"
 import { Input } from "shared/ui/form/input"
 import { Icon } from "shared/ui/icon"
@@ -17,7 +17,7 @@ interface SelectProps extends Omit<AutocompleteProps<any, any, any, any>, "rende
   startAdornmentOption?: (option: string) => ReactNode
 }
 
-export const Select = forwardRef((props: SelectProps) => {
+export const Select = (props: SelectProps) => {
   const {
     options, error, InputProps, sx, startAdornmentOption, ...other
   } = props
@@ -85,7 +85,7 @@ export const Select = forwardRef((props: SelectProps) => {
       {...other}
     />
   )
-})
+}
 
 export const SelectItem = (props: MenuItemProps) => {
   const { sx, children, ...other } = props

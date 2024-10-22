@@ -11,6 +11,7 @@ import { useCategoryStores } from "./context"
 export const useCopyPaste = (
   methods: UseFormReturn<CategoryDto.CategoryCreate>,
   apply: UseSetValuesApply,
+  callback?: (payload: CategoryDto.CategoryCreate) => void,
 ) => {
   const categoryStore = useCategoryStores()
 
@@ -55,10 +56,15 @@ export const useCopyPaste = (
     apply({
       data: category,
       setData: [
-        (data) => methods.reset(include(data, applySettings)),
         categoryStore.setCopiedData,
+        (data) => methods.reset({
+          ...methods.getValues(),
+          ...include(data, applySettings),
+        }),
       ],
     })
+
+    callback?.({ ...category, ...methods.getValues() })
   }
 
   return {

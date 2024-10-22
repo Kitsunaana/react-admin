@@ -1,7 +1,3 @@
-import { CATEGORY_DEFAULT_VALUES, TABS } from "features/categories/model/const"
-import { useCategoryStores } from "features/categories/model/context"
-import { useCreateCategory } from "features/categories/queries/use-create-category"
-import { ContentContainer } from "features/categories/ui/content-container"
 import { observer } from "mobx-react-lite"
 import { FormProvider, useForm } from "react-hook-form"
 import { useCreateDialogStore } from "shared/context/dialog-create-context"
@@ -14,8 +10,14 @@ import { MenuPopup } from "shared/ui/menu-popup"
 import { TabsContainer } from "shared/ui/tabs/tabs-container"
 import { LangContext, useLang } from "shared/context/lang"
 import { Text } from "shared/ui/text"
+import { eventBus } from "shared/lib/event-bus"
+import { ContentContainer } from "./content-container"
+import { useCreateCategory } from "../queries/use-create-category"
+import { useCategoryStores } from "../model/context"
+import { CATEGORY_DEFAULT_VALUES, TABS } from "../model/const"
 import { useCopyPaste } from "../model/use-copy"
 import { PasteSettings } from "./paste-settings/paste-settings"
+import { updateCaption } from "../model/event"
 
 export const useClearDialog = () => {
   const langBase = "catalog.confirm.clear"
@@ -49,7 +51,9 @@ export const CategoryCreateDialog = observer(() => {
     shouldHandle: [dialogStore.open],
   })
 
-  const { handleCopy, handlePaste } = useCopyPaste(methods, apply)
+  const { handleCopy, handlePaste } = useCopyPaste(methods, apply, (payload) => {
+    eventBus.emit(updateCaption({ caption: payload.caption }))
+  })
 
   const handleSubmit = (payload: CategoryDto.CategoryFields) => {
     onCreate({
