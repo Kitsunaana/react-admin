@@ -12,6 +12,7 @@ interface TextProps extends TypographyProps {
   langBase?: string
   onlyText?: boolean
   translateOptions?: TransProps<string>
+  fontSize?: number
 }
 
 export const Text = observer((props: TextProps) => {
@@ -23,6 +24,7 @@ export const Text = observer((props: TextProps) => {
     value,
     onlyText,
     translateOptions,
+    fontSize,
     langBase: langBaseProps,
     ...other
   } = props
@@ -43,7 +45,7 @@ export const Text = observer((props: TextProps) => {
   if (onlyText && translate) return translate
 
   return (
-    <Typography sx={{ fontSize: "inherit", ...sx }} {...other}>
+    <Typography sx={{ fontSize: fontSize ?? "inherit", ...sx }} {...other}>
       {caption}
       {translate}
     </Typography>

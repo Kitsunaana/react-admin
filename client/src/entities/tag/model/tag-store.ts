@@ -1,7 +1,7 @@
 import { makeAutoObservable, toJS } from "mobx"
-import { nanoid } from "nanoid"
 import { isNumber, isString } from "shared/lib/utils"
 import { CategoryDto } from "shared/types/category"
+import { nanoid } from "nanoid"
 import { Action } from "./types"
 
 export class TagsStore {
@@ -15,9 +15,10 @@ export class TagsStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  create = (payload: CategoryDto.TagBase) => {
+  create = (payload: CategoryDto.TagBase & { id: string }) => {
     this.tags.push({
-      ...payload, action: "create", id: nanoid(),
+      ...payload,
+      action: "create",
     })
   }
 
@@ -56,11 +57,11 @@ export class TagsStore {
         const tagCaptions = this.filteredTags.map((tag) => tag.caption)
         const filteredTags = tags.filter((tag) => !tagCaptions.includes(tag.caption))
 
-        filteredTags.map(this.create)
+        filteredTags.forEach((tag) => this.create({ ...tag, id: nanoid() }))
       },
       replace: () => {
         this.tags.forEach(({ id }) => this.remove(id))
-        tags.forEach(this.create)
+        tags.forEach((tag) => this.create({ ...tag, id: nanoid() }))
       },
     }
 

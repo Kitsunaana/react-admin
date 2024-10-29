@@ -1,6 +1,6 @@
 import { Autocomplete } from "@mui/material"
 import { useLocales } from "entities/alt-name"
-import { useCategoryStores } from "features/categories/model/context"
+import { useCategoryStores } from "features/categories/@dialog/ui/context"
 import { observer } from "mobx-react-lite"
 import { Controller, useFormContext } from "react-hook-form"
 import { useTranslation } from "react-i18next"

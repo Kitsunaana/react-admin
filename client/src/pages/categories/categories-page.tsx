@@ -2,7 +2,7 @@ import { useCategories } from "entities/category/queries/use-categories"
 import { AltNameCreateDialog } from "features/alt-names"
 import { AltNameEditDialog } from "features/alt-names/ui/alt-name-edit-dialog"
 import { CategoryDialog } from "features/categories"
-import { CategoryStoreProvider } from "features/categories/model/context"
+import { CategoryStoreProvider } from "features/categories/@dialog/ui/context"
 import { CharacteristicCreateDialog, CharacteristicEditDialog } from "features/characteristics"
 import { TagCreateDialog, TagEditDialog } from "features/tag"
 import { observer } from "mobx-react-lite"
@@ -69,29 +69,6 @@ const CategoriesPage = observer(() => {
           </LangContext>
         )}
       />
-
-      <CategoryStoreProvider>
-        <CategoryDialog
-          renderTagCreateDialog={(handleCreate) => (
-            <TagCreateDialog onCreate={handleCreate} />
-          )}
-          renderTagEditDialog={(handleEdit) => (
-            <TagEditDialog onEdit={handleEdit} />
-          )}
-          renderAltNameCreateDialog={(handleCreate) => (
-            <AltNameCreateDialog onCreate={handleCreate} />
-          )}
-          renderAltNameEditDialog={(handleEdit) => (
-            <AltNameEditDialog onEdit={handleEdit} />
-          )}
-          renderCharacteristicCreateDialog={(handleCreate) => (
-            <CharacteristicCreateDialog onCreate={handleCreate} />
-          )}
-          renderCharacteristicEditDialog={(handleEdit) => (
-            <CharacteristicEditDialog onEdit={handleEdit} />
-          )}
-        />
-      </CategoryStoreProvider>
 
     </RootDialogProvider>
   )

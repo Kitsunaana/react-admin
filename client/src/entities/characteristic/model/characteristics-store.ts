@@ -19,11 +19,10 @@ export class CharacteristicsStore {
     return this.characteristics.filter((item) => item.action !== "remove")
   }
 
-  create = (payload: Common.CharacteristicBase) => {
+  create = (payload: Common.CharacteristicBase & { id: string }) => {
     this.characteristics.push({
       ...payload,
       action: "create",
-      id: nanoid(),
     })
   }
 
@@ -73,10 +72,10 @@ export class CharacteristicsStore {
 
     const actions = {
       none: () => { },
-      add: () => filteredCharacteristics.map(this.create),
+      add: () => filteredCharacteristics.map((item) => this.create({ ...item, id: nanoid() })),
       replace: () => {
         this.characteristics.forEach(({ id }) => this.remove(id))
-        characteristics.forEach(this.create)
+        characteristics.forEach((item) => this.create({ ...item, id: nanoid() }))
       },
     }
 

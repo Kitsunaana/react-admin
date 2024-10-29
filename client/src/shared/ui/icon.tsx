@@ -70,6 +70,8 @@ const iconData = {
   rows: "add_row_above",
   none: "filter_none",
   replace: "find_replace",
+  undo: "undo",
+  redo: "redo",
 }
 
 export type IconKeys = keyof typeof iconData

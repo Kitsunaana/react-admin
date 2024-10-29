@@ -1,8 +1,8 @@
 import { makeAutoObservable, toJS } from "mobx"
-import { nanoid } from "nanoid"
 import { toast } from "react-toastify"
 import { isEqual, isNumber, isString } from "shared/lib/utils"
 import { Common } from "shared/types/common"
+import { nanoid } from "nanoid"
 import { altNameApi } from "../api/alt-name-api"
 import { DataTranslation, FetchTranslateData } from "../model/types"
 
@@ -20,8 +20,8 @@ export class AltNamesStore {
     return this.altNames.filter((item) => item.action !== "remove")
   }
 
-  create = (data: Common.AltNameBase) => {
-    this.altNames.push({ ...data, action: "create", id: nanoid() })
+  create = (data: Common.AltNameBase & { id: string }) => {
+    this.altNames.push({ ...data, action: "create" })
   }
 
   edit = (data: Common.AltNameCreate) => {
@@ -75,6 +75,7 @@ export class AltNamesStore {
     translates.map(({ data, locale }) => this.create({
       ...data.trans,
       locale,
+      id: nanoid(),
     }))
   }
 

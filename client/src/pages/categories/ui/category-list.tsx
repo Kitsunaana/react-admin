@@ -6,7 +6,7 @@ import { EmptyList } from "shared/ui/empty-list"
 import { CategoryRow } from "entities/category"
 import { CategoryDto } from "shared/types/category"
 import { eventBus } from "shared/lib/event-bus"
-import { openGallery } from "features/categories/model/event"
+import { openGallery } from "features/categories/@dialog/domain/event"
 import { findCaption } from "../lib/find-caption"
 
 interface CategoryListProps {
