@@ -21,7 +21,9 @@ export const buildPlugins = ({ paths, isDev }: BuildOptions) => [
     API_URL: JSON.stringify(process.env.API_URL),
   }),
   new webpack.HotModuleReplacementPlugin(),
-  new BundleAnalyzerPlugin({ openAnalyzer: false }),
-  ...(isDev ? [new ReactRefreshWebpackPlugin()] : []),
+  ...(isDev ? [
+    new ReactRefreshWebpackPlugin(),
+    new BundleAnalyzerPlugin({ openAnalyzer: false }),
+  ] : []),
   new Dotenv(),
 ]
