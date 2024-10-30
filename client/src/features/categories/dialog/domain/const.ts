@@ -1,7 +1,5 @@
 import { CategoryDto } from "shared/types/category"
-import {
-  ITab, Tabs, TPositionCheckbox, Action,
-} from "./types"
+import { ITab, TPositionCheckbox } from "./types"
 
 export const TABS: ITab[] = [
   {
@@ -67,21 +65,4 @@ export const CATEGORY_DEFAULT_VALUES: CategoryDto.CategoryFields = {
   color: "",
   blur: 8,
   isShowPhotoWithGoods: false,
-}
-
-export const initialSettingsRows: Record<Tabs, Action> = {
-  characteristics: "add",
-  images: "add",
-  tags: "add",
-}
-
-export const initialSettingsFields = {
-  caption: true,
-  description: false,
-  blur: false,
-  bgColor: true,
-  color: false,
-  isShowPhotoWithGoods: false,
-  activeImageId: true,
-  captionPosition: true,
 }

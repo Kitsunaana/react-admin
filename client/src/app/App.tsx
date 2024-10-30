@@ -7,6 +7,7 @@ import { Pages } from "pages/pages"
 import { useSettings, useShowErrors } from "features/settings"
 import { styled } from "@mui/material/styles"
 import { menu, menuBottom, Sidebar } from "widgets/sidebar"
+import { RootCategoryDialog } from "widgets/category-dialog/ui/dialog"
 
 const Wrapper = styled("div")(() => ({
   height: "100vh",
@@ -38,6 +39,8 @@ export const App = observer(() => {
         <Gallery />
         <Pages />
       </Inner>
+
+      <RootCategoryDialog />
 
       <ToastContainer
         autoClose={3000}

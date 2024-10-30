@@ -1,9 +1,4 @@
-import { initialSettingsFields, initialSettingsRows } from "./const"
-
-export type TPosition =
-  "top-left" | "top-center" | "top-right" |
-  "center-left" | "center-center" | "center-right" |
-  "bottom-left" | "bottom-center" | "bottom-right"
+import { CategoryDto } from "shared/types/category"
 
 export interface ITab {
   id: number
@@ -15,7 +10,7 @@ export interface ITab {
 export type TPositionCheckbox = {
   id: number
   content: string
-  position: TPosition
+  position: CategoryDto.CategoryDto["captionPosition"]
 }
 
 export interface ImageUploadResponse {
@@ -41,9 +36,3 @@ export interface ImageUploadResponse {
   version_id: string
   width: number
 }
-
-export type Action = "add" | "replace" | "none"
-export type KeysSettingsFields = keyof typeof initialSettingsFields
-export type KeysSettingsRows = keyof typeof initialSettingsRows
-
-export type Tabs = "characteristics" | "images" | "tags"

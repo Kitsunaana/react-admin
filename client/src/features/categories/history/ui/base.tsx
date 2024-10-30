@@ -1,9 +1,9 @@
-import { Mark, MarkProps } from "shared/ui/mark"
 import { FC, PropsWithChildren } from "react"
-import { RowItem } from "shared/ui/row-item"
 import { Box } from "shared/ui/box"
-import { Text } from "shared/ui/text"
 import { Icon } from "shared/ui/icon"
+import { Mark, MarkProps } from "shared/ui/mark"
+import { RowItem } from "shared/ui/row-item"
+import { Text } from "shared/ui/text"
 
 interface MarkEventProps extends MarkProps {}
 
@@ -30,7 +30,9 @@ export const TemplateEvent: FC<PropsWithChildren<TemplateEventProps>> = (props) 
 
   return (
     <RowItem
-      sx={{ cursor: "pointer", py: 0.25, minHeight: "unset" }}
+      sx={{
+        cursor: "pointer", py: 0.25, minHeight: 30,
+      }}
       bgColor={selected && "warning"}
       onClick={onClick}
     >
@@ -62,7 +64,7 @@ export const PrevCurrentValueProperty = (props: PrevCurrentValuePropertyProps) =
 
   return (
     <RowItem
-      sx={{ cursor: "pointer", py: 0.25, minHeight: "unset" }}
+      sx={{ cursor: "pointer", py: 0.25, minHeight: 30 }}
       bgColor={selected && "warning"}
       onClick={onClick}
     >

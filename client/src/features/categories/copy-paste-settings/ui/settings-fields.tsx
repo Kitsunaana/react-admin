@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import { useMemo } from "react"
 import { useLang } from "shared/context/lang"
 import { Text } from "shared/ui/text"
+import { KeysSettingsFields } from "../domain/types"
 
 interface InputSettingsProps {
   onChangeSettingsFields: (name: KeysSettingsFields, value: boolean) => void

@@ -2,21 +2,21 @@ import { makeAutoObservable, toJS } from "mobx"
 import { nanoid } from "nanoid"
 import { isEqual, isNumber, isString } from "shared/lib/utils"
 import { Common } from "shared/types/common"
-import { Action } from "./types"
+import { Action } from "../domain/types"
+import { CharacteristicsStoreImpl } from "../domain/interface.store"
 
-export class CharacteristicsStore {
-  characteristics: Array<Common.CharacteristicCreate> = []
+export class CharacteristicsStore implements CharacteristicsStoreImpl {
+  characteristics: Array<Common.CharacteristicCreate | Common.Characteristic> = []
 
-  getCopyAction: () => Action
-
-  constructor(getCopyAction: () => Action) {
-    this.getCopyAction = getCopyAction
-
+  constructor() {
     makeAutoObservable(this, { applyActions: false }, { autoBind: true })
   }
 
   get filteredItems() {
-    return this.characteristics.filter((item) => item.action !== "remove")
+    return this.characteristics.filter((item) => {
+      if ("action" in item) return item.action !== "remove"
+      return item
+    })
   }
 
   create = (payload: Common.CharacteristicBase & { id: string }) => {
@@ -53,20 +53,22 @@ export class CharacteristicsStore {
     const findCharacteristics = this.filteredItems.find((tag) => tag.id === id)
     if (findCharacteristics === undefined) return false
 
-    return findCharacteristics.action === "create" || findCharacteristics.action === "update"
+    if ("action" in findCharacteristics) {
+      return findCharacteristics.action === "create" || findCharacteristics.action === "update"
+    }
+
+    return false
   }
 
-  getConflict = (payload: Pick<Common.CharacteristicCreate, "caption" | "id">) => (
+  getConflict = (data: Pick<Common.CharacteristicCreate, "caption" | "id">) => (
     !!this.filteredItems.find((item) => (
-      item.caption === payload.caption && item.id !== payload.id
+      item.caption === data.caption && item.id !== data.id
     ))
   )
 
   getData = () => ({ characteristics: toJS(this.characteristics) })
 
-  applyActions = (characteristics: Common.CharacteristicCreate[]) => {
-    const action = this.getCopyAction()
-
+  applyActions = (characteristics: Common.CharacteristicBase[]) => {
     const captionItems = this.characteristics.map((item) => item.caption)
     const filteredCharacteristics = characteristics.filter((item) => !captionItems.includes(item.caption))
 
@@ -79,11 +81,11 @@ export class CharacteristicsStore {
       },
     }
 
-    return actions[action]
+    return actions
   }
 
-  setCopiedCharacteristics(characteristics: Common.CharacteristicCreate[]) {
-    this.applyActions(characteristics)()
+  setCopiedCharacteristics(action: Action, characteristics: Common.CharacteristicBase[]) {
+    this.applyActions(characteristics)[action]()
   }
 
   setCharacteristics(characteristics: (Common.Characteristic | Common.CharacteristicCreate)[]) {

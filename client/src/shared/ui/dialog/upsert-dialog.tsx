@@ -23,6 +23,8 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   store: DialogStore
   close?: boolean
   footer?: ReactNode
+  onClose?: () => void
+  onSave?: () => void
 }
 
 const ButtonContainer = styled.div`
@@ -68,6 +70,8 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
     store,
     close,
     footer,
+    onClose,
+    onSave,
     ...other
   } = props
 
@@ -75,8 +79,15 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
 
   useEffect(() => { if (close) store.closeDialog() }, [close])
 
-  const onClose = () => store.closeDialog()
-  const onSubmit = () => methods.handleSubmit(handleSubmit)()
+  const handleClose = () => {
+    onClose?.()
+    store.closeDialog()
+  }
+
+  const handleSave = () => {
+    onSave?.()
+    methods.handleSubmit(handleSubmit)()
+  }
 
   return (
     <DialogWrapper
@@ -124,11 +135,11 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
         {footer}
         <Box flex row ai gap ml="auto" mr={0}>
           <SaveButton
-            onClick={onSubmit}
+            onClick={handleSave}
             disabled={isLoading}
           />
           <CancelButton
-            onClick={onClose}
+            onClick={handleClose}
             disabled={isLoading}
           />
         </Box>

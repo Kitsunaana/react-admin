@@ -1,8 +1,8 @@
-import { TemplateEvent, TemplateEventProps } from "features/categories/@history/ui/base"
-import { AddImagesEvent } from "features/categories/@history/domain/events"
 import { Box } from "shared/ui/box"
-import { Text } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
+import { Text } from "shared/ui/text"
+import { AddImagesEvent } from "../../domain/events"
+import { TemplateEvent, TemplateEventProps } from "../base"
 
 interface AddImagesEventProps extends TemplateEventProps {
   event: AddImagesEvent

@@ -5,8 +5,8 @@ import { LangContext, useLang } from "shared/context/lang"
 import { CategoryDto } from "shared/types/category"
 import { Common } from "shared/types/common"
 import { nanoid } from "nanoid"
-import { useCategoryStores } from "../context"
-import { CategoryCreateDialog } from "./category-create-dialog"
+import { useCategoryStores } from "features/categories/dialog/ui/context"
+import { CategoryCreateDialog } from "widgets/category-dialog/ui/category-create-dialog"
 import { CategoryEditDialog } from "./category-edit-dialog"
 
 interface CategoryDialogProps {
@@ -29,9 +29,9 @@ export const CategoryDialog = observer((props: CategoryDialogProps) => {
   } = props
 
   const {
-    tags,
-    altNames,
-    characteristics,
+    tagsStore,
+    altNamesStore,
+    characteristicsStore,
     historyStore,
   } = useCategoryStores()
 
@@ -47,7 +47,7 @@ export const CategoryDialog = observer((props: CategoryDialogProps) => {
       <RootDialogProvider>
         {renderTagCreateDialog?.((payload) => {
           const newPayload = { ...payload, id: nanoid() }
-          tags.create(newPayload)
+          tagsStore.create(newPayload)
 
           historyStore.recordEvent({
             id: nanoid(),
@@ -57,7 +57,7 @@ export const CategoryDialog = observer((props: CategoryDialogProps) => {
           })
         })}
         {renderTagEditDialog?.((payload) => {
-          tags.edit(payload)
+          tagsStore.edit(payload)
 
           historyStore.recordEvent({
             id: nanoid(),
@@ -71,7 +71,7 @@ export const CategoryDialog = observer((props: CategoryDialogProps) => {
       <RootDialogProvider>
         {renderAltNameCreateDialog?.((payload) => {
           const newPayload = { ...payload, id: nanoid() }
-          altNames.create(newPayload)
+          altNamesStore.create(newPayload)
 
           historyStore.recordEvent({
             id: nanoid(),
@@ -81,7 +81,7 @@ export const CategoryDialog = observer((props: CategoryDialogProps) => {
           })
         })}
         {renderAltNameEditDialog?.((payload) => {
-          altNames.edit(payload)
+          altNamesStore.edit(payload)
 
           historyStore.recordEvent({
             id: nanoid(),
@@ -95,7 +95,7 @@ export const CategoryDialog = observer((props: CategoryDialogProps) => {
       <RootDialogProvider>
         {renderCharacteristicCreateDialog?.((payload) => {
           const newPayload = { ...payload, id: nanoid() }
-          characteristics.create(newPayload)
+          characteristicsStore.create(newPayload)
 
           historyStore.recordEvent({
             id: nanoid(),
@@ -105,7 +105,7 @@ export const CategoryDialog = observer((props: CategoryDialogProps) => {
           })
         })}
         {renderCharacteristicEditDialog?.((payload) => {
-          characteristics.edit(payload)
+          characteristicsStore.edit(payload)
 
           historyStore.recordEvent({
             id: nanoid(),

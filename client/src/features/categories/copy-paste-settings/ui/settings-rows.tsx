@@ -1,6 +1,7 @@
 import Divider from "@mui/material/Divider"
 import { ButtonGroup } from "shared/ui/buttons/toggle-button"
 import { Text } from "shared/ui/text"
+import { KeysSettingsRows, Action } from "../domain/types"
 
 interface SettingsRowsProps {
   settings: Record<string, string>

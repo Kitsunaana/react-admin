@@ -1,7 +1,7 @@
 import { Dialog } from "@mui/material"
-import { openGallery } from "features/categories"
 import { observer } from "mobx-react-lite"
 import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
+import { openGallery } from "features/categories/dialog/domain/event"
 import { galleryStore } from "../model/gallery-store"
 import { GalleryActions } from "./gallery-actions/gallery-actions"
 import { Navigation } from "./navigation"

@@ -1,5 +1,5 @@
-import { Category } from "features/categories/@history/model/category-history.store"
 import { Common } from "shared/types/common"
+import { Category } from "../domain/types"
 
 export const getOriginalName = (category: Category): string | null => {
   if (category.activeImageId === null) return null

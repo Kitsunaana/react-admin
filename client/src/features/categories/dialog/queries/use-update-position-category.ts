@@ -2,7 +2,7 @@ import { useCategorySearchParams } from "entities/category/model/use-category-se
 import { useMutation } from "@tanstack/react-query"
 import { queryClient } from "app/providers/query-client"
 import { CategoryDto } from "shared/types/category"
-import { categoriesApi } from "features/categories/api/categories-api"
+import { categoriesApi } from "features/categories/dialog/api/categories-api"
 
 export const useUpdatePosition = () => {
   const { search, page } = useCategorySearchParams()

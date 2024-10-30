@@ -1,5 +1,5 @@
 import { useGetCategory } from "entities/category"
-import { useCopyPaste } from "features/categories/copy-paste-settings/hooks/use-copy"
+import { useCopyPaste } from "features/categories/copy-paste-settings/hooks/use-copy-paste"
 import { PasteSettings } from "features/categories/copy-paste-settings/ui/paste-settings"
 import { CATEGORY_DEFAULT_VALUES, CATEGORY_FIELDS, TABS } from "features/categories/dialog/domain/const"
 import { useEditCategory } from "features/categories/dialog/queries/use-edit-category"
@@ -12,7 +12,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { getNumberOrNull, include } from "shared/lib/utils"
+import { getNumberOrNull, include, isNumber } from "shared/lib/utils"
 import { CategoryDto } from "shared/types/category"
 import { Box } from "shared/ui/box"
 import { IconButton } from "shared/ui/buttons/icon-button"
@@ -20,6 +20,38 @@ import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-heade
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
 import { MenuPopup } from "shared/ui/menu-popup"
 import { TabsContainer } from "shared/ui/tabs/tabs-container"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
+import { openEditCategoryDialog } from "widgets/category-dialog"
+import { Text } from "shared/ui/text"
+import { useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
+
+export const useOpenDialogFromUrl = () => {
+  const dialogStore = useEditDialogStore()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useEffect(() => {
+    const readId = searchParams.get("edit")
+    if (readId === null) return
+
+    const transformId = parseInt(readId, 10)
+
+    if (isNumber(transformId)) dialogStore.openDialog(transformId)
+  }, [])
+
+  const handleClearParams = () => {
+    searchParams.delete("edit")
+
+    setSearchParams((prev) => {
+      prev.delete("edit")
+      return prev
+    })
+  }
+
+  return {
+    handleClearParams,
+  }
+}
 
 export const CategoryEditDialog = observer(() => {
   const langBase = useLang()
@@ -27,6 +59,11 @@ export const CategoryEditDialog = observer(() => {
   const methods = useForm<CategoryDto.CategoryCreate>({ defaultValues: CATEGORY_DEFAULT_VALUES })
   const dialogStore = useEditDialogStore()
   const categoryStore = useCategoryStores()
+  const { handleClearParams } = useOpenDialogFromUrl()
+
+  useEventBusListen(openEditCategoryDialog, ({ payload }) => {
+    dialogStore.openDialog(payload.id)
+  })
 
   const { category, isLoadingGet } = useGetCategory(getNumberOrNull(dialogStore.id))
   const { onEdit, isLoadingEdit, isSuccessEdit } = useEditCategory(getNumberOrNull(dialogStore.id))
@@ -46,8 +83,16 @@ export const CategoryEditDialog = observer(() => {
     shouldHandle: [dialogStore.open],
   })
 
-  const { handleCopy, handlePaste } = useCopyPaste(apply, methods)
-  const { handleUndo, handleRedo, handleMoveToEvent } = useUndoRedoCategory(apply, methods)
+  const { handleUndo, handleRedo, handleMoveToEvent } = useUndoRedoCategory(
+    apply,
+    methods,
+    categoryStore.historyStore,
+    categoryStore.setData,
+  )
+  const { handleCopy, handlePaste } = useCopyPaste(apply, methods, {
+    getData: categoryStore.getData,
+    setCopiedData: categoryStore.setCopiedData,
+  })
 
   const handleSubmit = (fields: CategoryDto.CategoryFields) => {
     const rows = categoryStore.getData()
@@ -62,6 +107,8 @@ export const CategoryEditDialog = observer(() => {
   return (
     <FormProvider {...methods}>
       <UpsertDialog
+        onClose={handleClearParams}
+        onSave={handleClearParams}
         close={isSuccessEdit}
         store={dialogStore}
         handleSubmit={handleSubmit}
@@ -99,6 +146,7 @@ export const CategoryEditDialog = observer(() => {
         footer={(
           <Box flex row gap ai>
             <CategoryHistory
+              historyStore={categoryStore.historyStore}
               moveToVersion={handleMoveToEvent}
               onUndo={handleUndo}
               onRedo={handleRedo}
@@ -107,11 +155,21 @@ export const CategoryEditDialog = observer(() => {
               name="undo"
               disabled={!categoryStore.historyStore.canUndo}
               onClick={handleUndo}
+              help={{
+                title: (
+                  <Text name="undo" />
+                ),
+              }}
             />
             <IconButton
               name="redo"
               disabled={!categoryStore.historyStore.canRedo}
               onClick={handleRedo}
+              help={{
+                title: (
+                  <Text name="redo" />
+                ),
+              }}
             />
           </Box>
         )}

@@ -37,7 +37,7 @@ interface TabCharacteristicsProps {
 }
 
 export const TabCharacteristics = observer(({ tab }: TabCharacteristicsProps) => {
-  const { characteristics, historyStore } = useCategoryStores()
+  const { characteristicsStore, historyStore } = useCategoryStores()
   const { fullScreen } = useEditDialogStore()
   const langBase = useLang()
 
@@ -45,9 +45,9 @@ export const TabCharacteristics = observer(({ tab }: TabCharacteristicsProps) =>
 
   return (
     <Box flex row grow sx={{ height: 1 }}>
-      {characteristics.filteredItems.length > 0 ? (
+      {characteristicsStore.filteredItems.length > 0 ? (
         <CharacteristicsContainer fullScreen={fullScreen}>
-          {characteristics.filteredItems.map((item: Common.CharacteristicCreate) => (
+          {characteristicsStore.filteredItems.map((item: Common.CharacteristicCreate) => (
             <Characteristic
               id={item.id}
               key={item.id}
@@ -56,7 +56,7 @@ export const TabCharacteristics = observer(({ tab }: TabCharacteristicsProps) =>
               hideClient={item.hideClient}
               caption={item.caption}
               onRemove={() => {
-                handleRemove(item, characteristics.remove)
+                handleRemove(item, characteristicsStore.remove)
 
                 historyStore.recordEvent({
                   id: nanoid(),
@@ -66,8 +66,8 @@ export const TabCharacteristics = observer(({ tab }: TabCharacteristicsProps) =>
                 })
               }}
               onEdit={(payload) => eventBus.emit(openEditCharacteristicDialog(payload))}
-              hasConflict={characteristics.getConflict({ caption: item.caption, id: item.id })}
-              isCreatedOrUpdated={characteristics.isCreatedOrUpdated(item.id)}
+              hasConflict={characteristicsStore.getConflict({ caption: item.caption, id: item.id })}
+              isCreatedOrUpdated={characteristicsStore.isCreatedOrUpdated(item.id)}
             />
           ))}
         </CharacteristicsContainer>

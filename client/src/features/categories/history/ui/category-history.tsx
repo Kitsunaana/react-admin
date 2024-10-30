@@ -1,31 +1,42 @@
 import { observer } from "mobx-react-lite"
 import { useState } from "react"
-import { useCategoryStores } from "features/categories/@dialog/ui/context"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { Drawer } from "@mui/material"
 import { Box } from "shared/ui/box"
-import { ShowEvents } from "features/categories/@history/ui/show-events"
+import { Text } from "shared/ui/text"
+import { EventList } from "./event-list"
+import { HistoryStoreImpl } from "../domain/interface-history.store"
 
 interface CategoryHistoryProps {
+  historyStore: HistoryStoreImpl
   moveToVersion: (index: number) => void
   onUndo: () => void
   onRedo: () => void
 }
 
 export const CategoryHistory = observer((props: CategoryHistoryProps) => {
-  const { moveToVersion, onUndo, onRedo } = props
+  const {
+    onUndo,
+    onRedo,
+    moveToVersion,
+    historyStore,
+  } = props
 
   const [open, setOpen] = useState(false)
-  const categoryStores = useCategoryStores()
 
   const toggleDrawer = () => setOpen((prevState) => !prevState)
 
   return (
     <div>
       <IconButton
-        disabled={categoryStores.categoryWithEvents.length === 0}
+        disabled={historyStore.categoryWithEvents.length === 0}
         name="history"
         onClick={toggleDrawer}
+        help={{
+          title: (
+            <Text name="history" />
+          ),
+        }}
       />
       <Drawer
         sx={{ zIndex: 10000 }}
@@ -33,10 +44,10 @@ export const CategoryHistory = observer((props: CategoryHistoryProps) => {
         open={open}
         onClose={toggleDrawer}
       >
-
         <Box sx={{ overflow: "auto" }}>
-          <ShowEvents
-            events={categoryStores.categoryWithEvents}
+          <EventList
+            cursor={historyStore._cursor}
+            events={historyStore.categoryWithEvents}
             moveToVersion={moveToVersion}
           />
         </Box>
@@ -45,13 +56,14 @@ export const CategoryHistory = observer((props: CategoryHistoryProps) => {
           <IconButton
             name="undo"
             onClick={onUndo}
+            disabled={!historyStore.canUndo}
           />
           <IconButton
             name="redo"
             onClick={onRedo}
+            disabled={!historyStore.canRedo}
           />
         </Box>
-
       </Drawer>
     </div>
   )

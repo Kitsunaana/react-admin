@@ -20,10 +20,10 @@ const ActiveImageContainer = styled(Box)`
 `
 
 export const Gallery = observer(() => {
-  const { photoPosition, historyStore } = useCategoryStores()
+  const { photoPositionStore, historyStore } = useCategoryStores()
 
   const renderImage = () => {
-    const image = photoPosition.activeImage
+    const image = photoPositionStore.activeImage
     if (!image) return null
 
     if ("originalName" in image) {
@@ -39,17 +39,17 @@ export const Gallery = observer(() => {
 
   return (
     <Box flex row ai>
-      {photoPosition.isShowButton && (
+      {photoPositionStore.isShowButton && (
         <IconButton
           name="prev"
           onClick={() => {
-            photoPosition.setPrevImage()
+            photoPositionStore.setPrevImage()
 
             historyStore.recordEvent({
               id: nanoid(),
               tab: 2,
               type: "changeActiveImageId",
-              value: photoPosition.activeImageId,
+              value: photoPositionStore.activeImageId,
             })
           }}
         />
@@ -60,16 +60,16 @@ export const Gallery = observer(() => {
         </ActiveImageContainer>
         {renderImage()}
       </Box>
-      {photoPosition.isShowButton && (
+      {photoPositionStore.isShowButton && (
         <IconButton
           onClick={() => {
-            photoPosition.setNextImage()
+            photoPositionStore.setNextImage()
 
             historyStore.recordEvent({
               id: nanoid(),
               tab: 2,
               type: "changeActiveImageId",
-              value: photoPosition.activeImageId,
+              value: photoPositionStore.activeImageId,
             })
           }}
           name="next"

@@ -58,10 +58,12 @@ const Filename = styled(Text)`
 `
 
 const DeleteImageButton = styled(IconButton)`
-  padding: 4px;
-  min-width: unset;
-  border-radius: 50%;
-  color: white;
+  && {
+    padding: 4px;
+    min-width: unset;
+    border-radius: 50%;
+    color: white;
+  }
 `
 
 export const Image = memo((props: ImageProps) => {
@@ -104,11 +106,11 @@ export const Image = memo((props: ImageProps) => {
       >
         <Filename caption={name} />
         {isShowUpdateOrder && (
-        <UpdateOrder
-          id={id}
-          order={order}
-          onClick={onUpdateOrder}
-        />
+          <UpdateOrder
+            id={id}
+            order={order}
+            onClick={onUpdateOrder}
+          />
         )}
         <DeleteImageButton
           name="clear"

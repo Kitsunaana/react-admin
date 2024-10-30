@@ -1,12 +1,12 @@
-import { Controller } from "react-hook-form"
+import { Controller, useFormContext } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { Input } from "shared/ui/form/input"
 import { Box } from "shared/ui/box"
 import { Text } from "shared/ui/text"
 import { eventBus } from "shared/lib/event-bus"
-import { updateCaption } from "features/categories/@dialog/domain/event"
-import { useCategoryStores } from "features/categories/@dialog/ui/context"
 import { nanoid } from "nanoid"
+import { updateCaption } from "features/categories/dialog/domain/event"
+import { useCategoryStores } from "features/categories/dialog/ui/context"
 
 interface TabCommonProps {
   tab: number
@@ -16,6 +16,10 @@ export const TabCommon = ({ tab }: TabCommonProps) => {
   const { t } = useTranslation("translation", { keyPrefix: "global.forms.validate" })
 
   const categoryStores = useCategoryStores()
+  const methods = useFormContext()
+
+  const caption = methods.getValues("caption")
+  const description = methods.getValues("description")
 
   return (
     <Box flex ai gap sx={{ mt: 1 }}>
@@ -34,6 +38,8 @@ export const TabCommon = ({ tab }: TabCommonProps) => {
             label={<Text onlyText name="forms.caption" />}
             helperText={error?.message ? t(error.message, { value: 3 }) : ""}
             onBlur={(event) => {
+              if (event.target.value === caption) return
+
               categoryStores.historyStore.recordEvent({
                 id: nanoid(),
                 tab,
@@ -65,6 +71,8 @@ export const TabCommon = ({ tab }: TabCommonProps) => {
               },
             }}
             onBlur={(event) => {
+              if (event.target.value === description) return
+
               categoryStores.historyStore.recordEvent({
                 id: nanoid(),
                 tab,

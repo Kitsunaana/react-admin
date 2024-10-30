@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { FieldValues, useFormContext, UseFormGetValues } from "react-hook-form"
 import { Text } from "shared/ui/text"
-import { updateCaption } from "features/categories/@dialog/domain/event"
 import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
+import { updateCaption } from "features/categories/dialog/domain/event"
 
 type FieldsRecord = {
   caption: string

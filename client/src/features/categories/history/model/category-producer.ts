@@ -1,9 +1,9 @@
 import { CategoryDto } from "shared/types/category"
-import { CategoryEvents } from "features/categories/@history/domain/events"
 import { produce } from "immer"
 import { toJS } from "mobx"
 import { isEqual, isNumber, isString } from "shared/lib/utils"
 import { Common } from "shared/types/common"
+import { CategoryEvents } from "../domain/events"
 
 export const categoryProducer = (
   rootState: CategoryDto.CategoryCreate,

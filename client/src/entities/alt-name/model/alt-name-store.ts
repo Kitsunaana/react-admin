@@ -3,10 +3,11 @@ import { toast } from "react-toastify"
 import { isEqual, isNumber, isString } from "shared/lib/utils"
 import { Common } from "shared/types/common"
 import { nanoid } from "nanoid"
+import { AltNamesStoreImpl } from "entities/alt-name/domain/interface.store"
 import { altNameApi } from "../api/alt-name-api"
-import { DataTranslation, FetchTranslateData } from "../model/types"
+import { DataTranslation, FetchTranslateData } from "../domain/types"
 
-export class AltNamesStore {
+export class AltNamesStore implements AltNamesStoreImpl {
   isLoading = false
   altNames: Common.AltNameCreate[] = []
 

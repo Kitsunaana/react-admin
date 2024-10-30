@@ -4,7 +4,7 @@ import { useCategorySearchParams } from "entities/category/model/use-category-se
 import { toast } from "react-toastify"
 import { CategoryDto } from "shared/types/category"
 import { useTranslation } from "react-i18next"
-import { categoriesApi } from "../../api/categories-api"
+import { categoriesApi } from "features/categories/dialog/api/categories-api"
 
 export const useRemoveCategoryMutation = () => {
   const { t } = useTranslation("translation", { keyPrefix: "catalog.dialog.remove" })

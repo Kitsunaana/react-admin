@@ -2,7 +2,7 @@ import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
 import { Schemas } from "shared/types/common"
 import { getCharacteristicsResponse } from "../model/schemas"
-import { CharacteristicsResponse, UnitsResponse } from "../model/types"
+import { CharacteristicsResponse, UnitsResponse } from "../domain/types"
 
 const URL = "characteristics"
 

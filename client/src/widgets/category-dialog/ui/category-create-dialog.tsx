@@ -1,25 +1,27 @@
-import { observer } from "mobx-react-lite"
-import { FormProvider, useForm } from "react-hook-form"
-import { useCreateDialogStore } from "shared/context/dialog-create-context"
-import { useSetDialogValues, UseSetValuesClear } from "shared/hooks/use-set-dialog-values"
 import { useGetConfirmation } from "shared/lib/confirmation"
+import { useSetDialogValues, UseSetValuesClear } from "shared/hooks/use-set-dialog-values"
+import { Text } from "shared/ui/text"
+import { observer } from "mobx-react-lite"
+import { LangContext, useLang } from "shared/context/lang"
+import { FormProvider, useForm } from "react-hook-form"
 import { CategoryDto } from "shared/types/category"
-import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { CATEGORY_DEFAULT_VALUES, TABS } from "features/categories/dialog/domain/const"
+import { useCreateDialogStore } from "shared/context/dialog-create-context"
+import { useCategoryStores } from "features/categories/dialog/ui/context"
+import { useCreateCategory } from "features/categories/dialog/queries/use-create-category"
+import { PasteSettings, useCopyPaste } from "features/categories/copy-paste-settings"
+import { eventBus } from "shared/lib/event-bus"
+import { updateCaption } from "features/categories/dialog/domain/event"
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
+import { ContentContainer } from "features/categories/dialog/ui/content-container"
+import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { MenuPopup } from "shared/ui/menu-popup"
 import { TabsContainer } from "shared/ui/tabs/tabs-container"
-import { LangContext, useLang } from "shared/context/lang"
-import { Text } from "shared/ui/text"
-import { eventBus } from "shared/lib/event-bus"
 import { Box } from "shared/ui/box"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { ContentContainer } from "../content-container"
-import { useCreateCategory } from "../../queries/use-create-category"
-import { useCategoryStores } from "../context"
-import { CATEGORY_DEFAULT_VALUES, TABS } from "../../domain/const"
-import { useCopyPaste } from "../../../@copy-paste-settings/hooks/use-copy"
-import { PasteSettings } from "./paste-settings/paste-settings"
-import { updateCaption } from "../../domain/event"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
+import { openCreateCategoryDialog } from "widgets/category-dialog"
+import { CategoryHistory, useUndoRedoCategory } from "features/categories/history"
 
 export const useClearDialog = () => {
   const langBase = "catalog.confirm.clear"
@@ -44,6 +46,10 @@ export const CategoryCreateDialog = observer(() => {
   const categoryStore = useCategoryStores()
   const handleClear = useClearDialog()
 
+  useEventBusListen(openCreateCategoryDialog, () => {
+    dialogStore.openDialogV2()
+  })
+
   const { onCreate, isLoadingCreate, isSuccessCreate } = useCreateCategory()
 
   const { apply, clear } = useSetDialogValues({
@@ -56,9 +62,20 @@ export const CategoryCreateDialog = observer(() => {
     shouldHandle: [dialogStore.open],
   })
 
-  const { handleCopy, handlePaste } = useCopyPaste(apply, methods, (payload) => {
-    eventBus.emit(updateCaption({ caption: payload.caption }))
+  const { handleCopy, handlePaste } = useCopyPaste(apply, methods, {
+    getData: categoryStore.getData,
+    setCopiedData: categoryStore.setCopiedData,
+    callback: (payload) => {
+      eventBus.emit(updateCaption({ caption: payload.caption }))
+    },
   })
+
+  const { handleUndo, handleRedo, handleMoveToEvent } = useUndoRedoCategory(
+    apply,
+    methods,
+    categoryStore.historyStore,
+    categoryStore.setData,
+  )
 
   const handleSubmit = (payload: CategoryDto.CategoryFields) => {
     onCreate({
@@ -92,7 +109,6 @@ export const CategoryCreateDialog = observer(() => {
             title={(
               <DialogHeaderCaption
                 name="title.create"
-                value="Пиццы"
               />
             )}
           />
@@ -107,22 +123,30 @@ export const CategoryCreateDialog = observer(() => {
         )}
         footer={(
           <Box flex row gap ai>
+            <CategoryHistory
+              historyStore={categoryStore.historyStore}
+              moveToVersion={handleMoveToEvent}
+              onUndo={handleUndo}
+              onRedo={handleRedo}
+            />
             <IconButton
               name="undo"
               disabled={!categoryStore.historyStore.canUndo}
-              onClick={() => {
-                categoryStore.historyStore.undo()
-
-                methods.reset(categoryStore.category)
+              onClick={handleUndo}
+              help={{
+                title: (
+                  <Text name="undo" />
+                ),
               }}
             />
             <IconButton
               name="redo"
               disabled={!categoryStore.historyStore.canRedo}
-              onClick={() => {
-                categoryStore.historyStore.redo()
-
-                methods.reset(categoryStore.category)
+              onClick={handleRedo}
+              help={{
+                title: (
+                  <Text name="redo" />
+                ),
               }}
             />
           </Box>

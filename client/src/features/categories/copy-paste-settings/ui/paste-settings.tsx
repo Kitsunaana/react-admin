@@ -6,6 +6,7 @@ import { TabPanel } from "shared/ui/tabs/tab-panel"
 import { Tabs } from "shared/ui/tabs/tabs"
 import { SettingsFields } from "./settings-fields"
 import { SettingsRows } from "./settings-rows"
+import { categorySettingsStore } from "../model/category-settings.store"
 
 const tabs = [{ id: 0, caption: "rows" }, { id: 1, caption: "fields" }]
 
@@ -17,7 +18,7 @@ export const PasteSettings = observer(() => {
     settingsFields,
     handleChangeSettingsFields,
     handleChangeSettingsRows,
-  } = useCategoryStores()
+  } = categorySettingsStore
 
   const [selectedTab, setSelectedTab] = useState(0)
   const [height, setHeight] = useState(0)

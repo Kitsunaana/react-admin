@@ -14,9 +14,9 @@ import { Vertical } from "shared/ui/divider"
 import { EmptyList } from "shared/ui/empty-list"
 import { Text } from "shared/ui/text"
 import styled from "styled-components"
-import { updateCaption } from "features/categories/@dialog/domain/event"
 import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { nanoid } from "nanoid"
+import { updateCaption } from "features/categories/dialog/domain/event"
 import { useCategoryStores } from "../context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
@@ -39,10 +39,10 @@ interface TabAltNamesProps {
 
 export const TabAltNames = observer(({ tab }: TabAltNamesProps) => {
   const { locales } = useLocales()
-  const { altNames, historyStore } = useCategoryStores()
+  const { altNamesStore, historyStore } = useCategoryStores()
   const { fullScreen } = useCreateDialogStore()
 
-  const onRemoveAltName = useRemoveAltName(altNames.remove)
+  const onRemoveAltName = useRemoveAltName(altNamesStore.remove)
   const methods = useFormContext()
 
   const [disabled, setDisabled] = useState(getCaptionLength(methods.getValues("caption")) < 3)
@@ -51,27 +51,27 @@ export const TabAltNames = observer(({ tab }: TabAltNamesProps) => {
     setDisabled(getCaptionLength(payload.caption) < 3)
   })
 
-  const freeLocales = altNames.getFreeLocale(locales ?? [])
+  const freeLocales = altNamesStore.getFreeLocale(locales ?? [])
 
-  const isShowCharacteristics = altNames.filteredItems.length > 0
-  const isShowSkeletons = freeLocales.length > 0 && altNames.isLoading
-  const isShowEmptyList = altNames.filteredItems.length === 0 && !altNames.isLoading
+  const isShowCharacteristics = altNamesStore.filteredItems.length > 0
+  const isShowSkeletons = freeLocales.length > 0 && altNamesStore.isLoading
+  const isShowEmptyList = altNamesStore.filteredItems.length === 0 && !altNamesStore.isLoading
 
   const handleTranslateClick = () => {
     const caption = methods.getValues("caption")
     const description = methods.getValues("description")
 
-    altNames.translate({ caption, description }, freeLocales)
+    altNamesStore.translate({ caption, description }, freeLocales)
   }
 
   return (
     <Box flex row grow sx={{ height: 1 }}>
       {!isShowEmptyList ? (
         <CharacteristicsContainer fullScreen={fullScreen}>
-          {isShowCharacteristics && altNames.filteredItems.map((altName) => (
+          {isShowCharacteristics && altNamesStore.filteredItems.map((altName) => (
             <AltNameItem
               key={altName.id}
-              disabled={altNames.isLoading}
+              disabled={altNamesStore.isLoading}
               handleRemove={async (payload) => {
                 await onRemoveAltName(payload)
 
@@ -101,14 +101,14 @@ export const TabAltNames = observer(({ tab }: TabAltNamesProps) => {
       <Box sx={{ pt: 1 }} flex ai>
         <IconButton
           name="add"
-          isLoading={altNames.isLoading}
+          isLoading={altNamesStore.isLoading}
           onClick={() => eventBus.emit(openCreateAltNameDialog({}))}
           help={{ title: <Text onlyText name="actions.add" /> }}
         />
         <IconButton
           name="translate"
           disabled={disabled}
-          isLoading={altNames.isLoading}
+          isLoading={altNamesStore.isLoading}
           help={{ title: <Text onlyText name="actions.translate" /> }}
           onClick={handleTranslateClick}
         />

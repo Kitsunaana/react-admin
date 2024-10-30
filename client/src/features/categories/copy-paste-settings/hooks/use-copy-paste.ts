@@ -1,23 +1,32 @@
-// import { useCategoryStores } from "features/categories/dialog/ui/context"
 import { UseFormReturn } from "react-hook-form"
 import { UseSetValuesApply } from "shared/hooks/use-set-dialog-values"
 import {
-  base64ToFile, copyToClipboard, fileToBase64, include, readOfClipboard,
+  base64ToFile,
+  copyToClipboard,
+  fileToBase64,
+  include,
+  readOfClipboard,
 } from "shared/lib/utils"
 import { validation } from "shared/lib/validation"
 import { CategoryDto, CategorySchemas } from "shared/types/category"
 import { Common } from "shared/types/common"
+import { categorySettingsStore } from "../model/category-settings.store"
+import { Settings } from "../domain/types"
+
+interface UseCopyPasteOptions {
+  getData: () => CategoryDto.CategoryRows,
+  setCopiedData: (payload: CategoryDto.CategoryRows, settings: Settings) => void
+  callback?: (payload: CategoryDto.CategoryCreate) => void
+}
 
 export const useCopyPaste = (
   apply: UseSetValuesApply,
   methods: UseFormReturn<CategoryDto.CategoryCreate>,
-  callback?: (payload: CategoryDto.CategoryCreate) => void,
+  options: UseCopyPasteOptions,
 ) => {
-  const categoryStore = useCategoryStores()
-
   const handleCopy = async () => {
     const fields = methods.getValues()
-    const rows = categoryStore.getData()
+    const rows = options.getData()
 
     const stringifyImages = async (images: Common.Image[]) => Promise.all(
       images.map(async (image) => ({
@@ -49,14 +58,17 @@ export const useCopyPaste = (
     }
 
     const applySettings = (Object
-      .entries(categoryStore.settingsFields) as Array<[keyof CategoryDto.CategoryFields, boolean]>)
+      .entries(categorySettingsStore.settingsFields) as Array<[keyof CategoryDto.CategoryFields, boolean]>)
       .filter(([_, value]) => value)
       .map(([key]) => key)
 
     apply({
       data: category,
       setData: [
-        categoryStore.setCopiedData,
+        (data) => options.setCopiedData(data, {
+          ...categorySettingsStore.settingsFields,
+          ...categorySettingsStore.settingsRows,
+        }),
         (data) => methods.reset({
           ...methods.getValues(),
           ...include(data, applySettings),
@@ -64,7 +76,7 @@ export const useCopyPaste = (
       ],
     })
 
-    callback?.({ ...category, ...methods.getValues() })
+    options.callback?.({ ...category, ...methods.getValues() })
   }
 
   return {

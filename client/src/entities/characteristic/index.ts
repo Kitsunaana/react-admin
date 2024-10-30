@@ -2,3 +2,4 @@ export { openCreateCharacteristicDialog, openEditCharacteristicDialog } from "./
 export { useGetCharacteristics } from "./queries/use-get-characteristics"
 export { useGetUnits } from "./queries/use-get-units"
 export { Characteristic } from "./ui/characteristic"
+// export { CharacteristicsStoreImpl } from "./domain/interface.store"

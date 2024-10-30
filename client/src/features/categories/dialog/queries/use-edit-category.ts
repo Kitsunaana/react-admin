@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "react-toastify"
-import { categoriesApi as categoriesApiV2 } from "features/categories/api/categories-api"
 import { CategoryDto } from "shared/types/category"
 import { Common } from "shared/types/common"
 import { queryClient } from "app/providers/query-client"
@@ -8,6 +7,7 @@ import { isNumber } from "shared/lib/utils"
 import { useCategorySearchParams } from "entities/category/model/use-category-search-params"
 import { useTranslation, UseTranslationResponse } from "react-i18next"
 import { useLang } from "shared/context/lang"
+import { categoriesApi } from "features/categories/dialog/api/categories-api"
 
 const edit = (
   id: number | null,
@@ -21,7 +21,7 @@ const edit = (
 
     const editCategory = (media: Common.Media[]) => {
       toast.promise(() => (
-        categoriesApiV2
+        categoriesApi
           .patch(id, { ...other, media: [...other.media, ...media], images: [] })
           .then(resolve)
           .catch(reject)
@@ -33,7 +33,7 @@ const edit = (
     }
 
     toast
-      .promise(() => categoriesApiV2.filesUpload(images), {
+      .promise(() => categoriesApi.filesUpload(images), {
         pending: t("imagePending"),
         error: t("imageError"),
       })

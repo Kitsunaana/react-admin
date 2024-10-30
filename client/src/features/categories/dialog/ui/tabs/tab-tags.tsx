@@ -25,15 +25,15 @@ interface TabTagsProps {
 }
 
 export const TabTags = observer(({ tab }: TabTagsProps) => {
-  const { tags, historyStore } = useCategoryStores()
+  const { tagsStore, historyStore } = useCategoryStores()
 
-  const handleRemoveTag = useRemoveTag(tags.remove)
+  const handleRemoveTag = useRemoveTag(tagsStore.remove)
 
   return (
     <Box flex row grow sx={{ height: 1 }}>
-      {tags.filteredTags.length > 0 ? (
+      {tagsStore.filteredTags.length > 0 ? (
         <TagsContainer>
-          {tags.filteredTags.map((tag) => (
+          {tagsStore.filteredTags.map((tag) => (
             <TagItem
               key={tag.id}
               id={tag.id}
@@ -51,7 +51,7 @@ export const TabTags = observer(({ tab }: TabTagsProps) => {
                 })
               }}
               onEdit={(payload) => eventBus.emit(openEditTagDialog(payload))}
-              isCreatedOrUpdated={tags.isCreatedOrUpdated(tag.id)}
+              isCreatedOrUpdated={tagsStore.isCreatedOrUpdated(tag.id)}
             />
           ))}
         </TagsContainer>

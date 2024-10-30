@@ -25,21 +25,23 @@ const PreviewGalleryContainer = styled(Box)<BoxProps>`
 `
 
 const ButtonBox = styled(Box)<BoxProps>`
-  position: relative;
-  left: 164px;
-  display: flex;
-  white-space: nowrap;
-  transition: transform 0.5s ease-in-out;
+    position: relative;
+    left: 164px;
+    display: flex;
+    white-space: nowrap;
+    transition: transform 0.5s ease-in-out;
 `
 
 const ButtonImage = styled(ButtonBase)<ButtonBaseProps>`
-  min-width: 154px;
-  margin: 5px;
-  display: inline-block;
-  height: 80px;
-  background-color: #97a9b2;
-  border-radius: 8px;
-  overflow: hidden;
+  && {
+      min-width: 154px;
+      margin: 5px;
+      display: inline-block;
+      height: 80px;
+      background-color: #97a9b2;
+      border-radius: 8px;
+      overflow: hidden;
+  }
 `
 
 const Counter = styled(Box)<BoxProps>`

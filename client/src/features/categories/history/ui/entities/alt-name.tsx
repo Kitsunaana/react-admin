@@ -1,20 +1,20 @@
-import { AddAltNameEvent, RemoveAltNameEvent, UpdateAltNameEvent } from "features/categories/@history/domain/events"
-import { Box } from "shared/ui/box"
-import { Text } from "shared/ui/text"
-import { Category } from "features/categories/@history/model/category-history.store"
-import { Icon } from "shared/ui/icon"
 import { Common } from "shared/types/common"
-import { MarkEvent, TemplateEvent } from "features/categories/@history/ui/base"
+import { Box } from "shared/ui/box"
+import { Icon } from "shared/ui/icon"
+import { Text } from "shared/ui/text"
+import { AddAltNameEvent, RemoveAltNameEvent, UpdateAltNameEvent } from "../../domain/events"
+import { Category } from "../../domain/types"
+import { MarkEvent, TemplateEvent, TemplateEventProps } from "../base"
 
-interface AltNameAddEventProps {
+interface AltNameAddEventProps extends TemplateEventProps {
   event: AddAltNameEvent
 }
 
 export const AltNameAddEvent = (props: AltNameAddEventProps) => {
-  const { event } = props
+  const { event, ...other } = props
 
   return (
-    <TemplateEvent selected={false} onClick={() => {}}>
+    <TemplateEvent {...other}>
       <Box flex row gap ai fontSize={12}>
         <Text caption="Добавлено альтернативное название" />
         <MarkEvent color="success">{event.value.caption}</MarkEvent>
@@ -24,19 +24,19 @@ export const AltNameAddEvent = (props: AltNameAddEventProps) => {
   )
 }
 
-interface AltNameUpdateEventProps {
+interface AltNameUpdateEventProps extends TemplateEventProps {
   event: UpdateAltNameEvent
   prev: Category
 }
 
 export const AltNameUpdateEvent = (props: AltNameUpdateEventProps) => {
-  const { event, prev } = props
+  const { event, prev, ...other } = props
 
   const findAltName = (prev.altNames as (Common.AltNameCreate | Common.AltName)[])
     .find((altName) => altName.id === event.value.id)
 
   return (
-    <TemplateEvent selected={false} onClick={() => {}}>
+    <TemplateEvent {...other}>
       <Box flex row gap ai fontSize={12}>
         <Text caption="Альтернативное название обновлено" />
         <Box flex row gap={0.25}>
@@ -53,19 +53,19 @@ export const AltNameUpdateEvent = (props: AltNameUpdateEventProps) => {
   )
 }
 
-interface AltNameRemoveEventProps {
+interface AltNameRemoveEventProps extends TemplateEventProps {
   event: RemoveAltNameEvent
   prev: Category
 }
 
 export const AltNameRemoveEvent = (props: AltNameRemoveEventProps) => {
-  const { event, prev } = props
+  const { event, prev, ...other } = props
 
   const findAltName = (prev.altNames as (Common.AltNameCreate | Common.AltNameCreate)[])
     .find((altName) => altName.id === event.value)
 
   return (
-    <TemplateEvent selected={false} onClick={() => {}}>
+    <TemplateEvent {...other}>
       <Box flex row gap ai fontSize={12}>
         <Text caption="Альтернативное название удалено" />
         <Box flex row gap={0.25}>

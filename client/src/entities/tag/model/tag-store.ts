@@ -2,16 +2,13 @@ import { makeAutoObservable, toJS } from "mobx"
 import { isNumber, isString } from "shared/lib/utils"
 import { CategoryDto } from "shared/types/category"
 import { nanoid } from "nanoid"
-import { Action } from "./types"
+import { TagsStoreImpl } from "entities/tag/domain/tags.store"
+import { Action } from "../domain/types"
 
-export class TagsStore {
-  tags: CategoryDto.TagCreate[] = []
+export class TagsStore implements TagsStoreImpl {
+  tags: Array<CategoryDto.TagCreate | CategoryDto.Tag> = []
 
-  getCopyAction: () => Action
-
-  constructor(getCopyAction: () => Action) {
-    this.getCopyAction = getCopyAction
-
+  constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
@@ -22,7 +19,7 @@ export class TagsStore {
     })
   }
 
-  edit = (payload: CategoryDto.TagCreate) => {
+  edit = (payload: CategoryDto.TagCreate | CategoryDto.Tag) => {
     this.tags = this.tags
       .map((item) => (item.id !== payload.id
         ? item
@@ -46,11 +43,9 @@ export class TagsStore {
 
   getData = () => ({ tags: toJS(this.tags) })
 
-  setTags = (tags: (CategoryDto.Tag | CategoryDto.TagCreate)[]) => { this.tags = tags }
+  setTags = (tags: Array<CategoryDto.Tag | CategoryDto.TagCreate>) => { this.tags = tags }
 
-  setCopiedTags(tags: CategoryDto.TagBase[]) {
-    const action = this.getCopyAction()
-
+  setCopiedTags(action: Action, tags: Array<CategoryDto.TagBase>) {
     const actions = {
       none: () => { },
       add: () => {
@@ -72,10 +67,17 @@ export class TagsStore {
     const findTag = this.tags.find((tag) => tag.id === id)
     if (findTag === undefined) return false
 
-    return findTag.action === "create" || findTag.action === "update"
+    if ("action" in findTag) {
+      return findTag.action === "create" || findTag.action === "update"
+    }
+
+    return false
   }
 
   get filteredTags() {
-    return this.tags.filter((tag) => tag.action !== "remove")
+    return this.tags.filter((tag) => {
+      if ("action" in tag) return tag.action !== "remove"
+      return tag
+    })
   }
 }

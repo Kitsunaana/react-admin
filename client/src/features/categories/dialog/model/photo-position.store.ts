@@ -1,17 +1,17 @@
 import { makeAutoObservable, reaction } from "mobx"
-import { TPosition } from "features/categories/@dialog/domain/types"
 import { CategoryDto } from "shared/types/category"
+import { PhotoPositionStoreImpl } from "../domain/interface-photo-position.store"
 import { PhotosStore } from "./photos.store"
 
-export class PhotoPositionStore {
-  captionPosition: TPosition = "center-center"
+export class PhotoPositionStore implements PhotoPositionStoreImpl {
+  captionPosition: CategoryDto.CategoryDto["captionPosition"] = "center-center"
   activeImageId: null | string = null
 
   _indexActiveImage = 0
 
-  photosStore: PhotosStore
+  photosStore: Pick<PhotosStore, "mergedImages">
 
-  constructor(photosStore: PhotosStore) {
+  constructor(photosStore: Pick<PhotosStore, "mergedImages">) {
     this.photosStore = photosStore
     const { mergedImages } = this.photosStore
 
@@ -36,6 +36,17 @@ export class PhotoPositionStore {
   }
 
   get isShowButton() { return this.photosStore.mergedImages.length > 1 }
+
+  setCopiedPhotoPosition = (
+    actions: {
+      activeImageId: boolean,
+      captionPosition: boolean
+    },
+    data: Pick<CategoryDto.CategoryDto, "activeImageId" | "captionPosition">,
+  ) => {
+    if (actions.activeImageId) this.activeImageId = data.activeImageId
+    if (actions.captionPosition) this.captionPosition = data.captionPosition
+  }
 
   setPhotoPosition = (data: Pick<CategoryDto.CategoryDto, "activeImageId" | "captionPosition">) => {
     Object.assign(this, data)
@@ -82,7 +93,7 @@ export class PhotoPositionStore {
       : mergedImages.length - 1
   }
 
-  changeCaptionPosition = (newCaptionPosition: TPosition) => {
+  changeCaptionPosition = (newCaptionPosition: CategoryDto.CategoryDto["captionPosition"]) => {
     this.captionPosition = newCaptionPosition
   }
 

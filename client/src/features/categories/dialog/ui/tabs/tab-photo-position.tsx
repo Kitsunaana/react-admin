@@ -5,11 +5,11 @@ import { Checkbox, FormControlLabel, Slider } from "@mui/material"
 import { ColorInput } from "shared/ui/form/input-color"
 import { eventBus } from "shared/lib/event-bus"
 import { Icon } from "shared/ui/icon"
-import { updateCaption } from "features/categories/@dialog/domain/event"
-import { useCategoryStores } from "features/categories/@dialog/ui/context"
 import { observer } from "mobx-react-lite"
 import { nanoid } from "nanoid"
-import { Gallery } from "features/categories/@dialog/ui/tabs/photo-position/gallery"
+import { useCategoryStores } from "features/categories/dialog/ui/context"
+import { updateCaption } from "features/categories/dialog/domain/event"
+import { Gallery } from "features/categories/dialog/ui/tabs/photo-position/gallery"
 
 export const TabPhotoPosition = observer(() => {
   const categoryStores = useCategoryStores()

@@ -8,7 +8,7 @@ import { Vertical } from "shared/ui/divider"
 import { Mark } from "shared/ui/mark"
 import { RowItem, RowItemProps } from "shared/ui/row-item"
 import { Text } from "shared/ui/text"
-import { AltName } from "../model/types"
+import { AltName } from "../domain/types"
 
 const StyledAltNameItem = styled((props: RowItemProps & { disabled: boolean }) => {
   const { disabled, ...other } = props

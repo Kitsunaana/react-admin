@@ -2,24 +2,16 @@ import { makeAutoObservable, toJS } from "mobx"
 import { nanoid } from "nanoid"
 import { Common } from "shared/types/common"
 import { eventBus } from "shared/lib/event-bus"
-import { openGallery } from "features/categories/@dialog/domain/event"
-import { PhotoPositionStore } from "./photo-position-store"
-import { Action } from "../domain/types"
+import { openGallery } from "features/categories/dialog/domain/event"
+import { PhotosStoreImpl } from "../domain/interface-photos.store"
 
-export class PhotosStore {
+type Action = "add" | "replace" | "none"
+
+export class PhotosStore implements PhotosStoreImpl {
   images: Common.Image[] = []
   media: (Common.Media & { deleted?: boolean })[] = []
 
-  getPhotoPositionStore: () => PhotoPositionStore
-  getCopyAction: () => Action
-
-  constructor(
-    getPhotoPositionStore: () => PhotoPositionStore,
-    getCopyAction: () => Action,
-  ) {
-    this.getPhotoPositionStore = getPhotoPositionStore
-    this.getCopyAction = getCopyAction
-
+  constructor() {
     makeAutoObservable(this, { applyActions: false }, { autoBind: true })
   }
 
@@ -48,20 +40,14 @@ export class PhotosStore {
   }
 
   createMedia = (payload: Common.Media[]) => {
-    let newImageId: null | string = null
-
     this.media = this.media.concat(payload.map(({ id, ...other }) => {
       const newId = nanoid()
-
-      if (id === this.getPhotoPositionStore().activeImageId) { newImageId = newId }
 
       return {
         ...other,
         id: newId,
       }
     }))
-
-    this.getPhotoPositionStore().setActiveImageId(newImageId)
   }
 
   setUploadedFiles = (files: Common.Image[]) => { this.images = [...this.images, ...files] }
@@ -90,8 +76,14 @@ export class PhotosStore {
     this.images.concat(images)
   }
 
-  setCopiedMedia = (payload: { media: Common.Media[], images: Common.Image[] }) => {
-    const actions = this.applyActions()
+  setCopiedMedia = (
+    action: Action,
+    payload: {
+      media: Common.Media[],
+      images: Common.Image[]
+    },
+  ) => {
+    const actions = this.applyActions(action)
 
     actions.images(payload.images)()
     actions.media(payload.media)()
@@ -118,14 +110,10 @@ export class PhotosStore {
     },
   })
 
-  applyActions = () => {
-    const action = this.getCopyAction()
-
-    return {
-      images: (payload: Common.Image[]) => this.imagesActions(payload)[action],
-      media: (payload: Common.Media[]) => this.mediaActions(payload)[action],
-    }
-  }
+  applyActions = (action: Action) => ({
+    images: (payload: Common.Image[]) => this.imagesActions(payload)[action],
+    media: (payload: Common.Media[]) => this.mediaActions(payload)[action],
+  })
 
   getData = () => ({
     media: toJS(this.media),

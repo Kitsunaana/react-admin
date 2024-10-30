@@ -27,8 +27,8 @@ const CheckboxInner = styled(
 }))
 
 export const CheckBoxGrid = observer(() => {
-  const { photoPosition, historyStore } = useCategoryStores()
-  const { captionPosition, changeCaptionPosition } = photoPosition
+  const { photoPositionStore, historyStore } = useCategoryStores()
+  const { captionPosition, changeCaptionPosition } = photoPositionStore
 
   return (
     <>

@@ -1,4 +1,3 @@
-import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { useContextMenu } from "shared/hooks/use-context-menu"
 import { useNavigateGoods } from "shared/hooks/use-navigate-goods"
@@ -14,19 +13,21 @@ import styled from "styled-components"
 import { CategoryContextMenu } from "./context-menu"
 
 const CustomRowItem = styled(RowItem)`
-  margin-bottom: 0px;
-  min-height: 48px;
-  border-radius: 0px;
-  gap: 10px;
-    
-  &:last-child {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-    
-  &:first-of-type {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+  && {
+    margin-bottom: 0px;
+    min-height: 48px;
+    border-radius: 0px;
+    gap: 10px;
+
+    &:last-child {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    &:first-of-type {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
   }
 `
 
@@ -39,6 +40,7 @@ interface CategoryRowProps {
   onOpenGallery: (data: { index: number, images: (Common.Media | Common.Image)[] }) => void
   onRemoveCategory: (categoryId: (number | null)) => Promise<void>
   onUpdatePosition: (payload: { id: number, order: number }) => void
+  onOpenEditDialog: (id: number) => void
 }
 
 export const CategoryRow = (props: CategoryRowProps) => {
@@ -51,16 +53,16 @@ export const CategoryRow = (props: CategoryRowProps) => {
     onOpenGallery,
     onUpdatePosition,
     onRemoveCategory,
+    onOpenEditDialog,
   } = props
 
   const langBase = useLang()
   const menu = useContextMenu()
-  const editStore = useEditDialogStore()
   const navigate = useNavigateGoods(caption)
 
   const handleOnEdit = () => {
     menu.close()
-    editStore.openDialog(id)
+    onOpenEditDialog(id)
   }
 
   const handleOnDelete = async () => {

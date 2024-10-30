@@ -1,6 +1,5 @@
 import { Autocomplete } from "@mui/material"
 import { useLocales } from "entities/alt-name"
-import { useCategoryStores } from "features/categories/@dialog/ui/context"
 import { observer } from "mobx-react-lite"
 import { Controller, useFormContext } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -11,14 +10,15 @@ import { Input } from "shared/ui/form/input"
 import { SelectItem } from "shared/ui/form/select"
 import { Mark } from "shared/ui/mark"
 import { Text } from "shared/ui/text"
+import { useCategoryStores } from "features/categories/dialog/ui/context"
 
 export const CreateEditForm = observer(() => {
   const { t } = useTranslation("translation", { keyPrefix: "global.forms.validate" })
-  const { altNames } = useCategoryStores()
+  const { altNamesStore } = useCategoryStores()
   const { locales } = useLocales()
   const methods = useFormContext()
 
-  const excludedLocales = altNames.exclude(locales || [], methods.getValues("locale"))
+  const excludedLocales = altNamesStore.exclude(locales || [], methods.getValues("locale"))
 
   return (
     <Box flex gap sx={{ height: 1, pt: 1 }}>

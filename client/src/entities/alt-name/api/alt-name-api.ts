@@ -7,8 +7,8 @@ import {
   URL,
   URL_TRANSLATE,
 } from "../model/config"
-import { localesSchema, translateSchema } from "../model/schemas"
-import { DataTranslation, FetchTranslateResponse, ITranslate } from "../model/types"
+import { localesSchema, translateSchema } from "../domain/schemas"
+import { DataTranslation, FetchTranslateResponse, ITranslate } from "../domain/types"
 
 const getData = (locale: Common.Locale, category: DataTranslation) => ({
   from: "auto",

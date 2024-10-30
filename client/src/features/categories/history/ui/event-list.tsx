@@ -1,31 +1,25 @@
-import { CategoryWithEvents } from "features/categories/@dialog/model/category-dialog.store"
-import { useCategoryStores } from "features/categories/@dialog/ui/context"
 import { Box } from "shared/ui/box"
 import { MarkProps } from "shared/ui/mark"
-import {
-  AltNameAddEvent,
-  AltNameRemoveEvent,
-  AltNameUpdateEvent,
-} from "features/categories/@history/ui/entities/alt-name"
-import { TagAddEvent, TagRemoveEvent, TagUpdateEvent } from "features/categories/@history/ui/entities/tag"
+import { CategoryWithEvents } from "../domain/types"
+import { findImage, findMedia, getOriginalName } from "../model/lib"
+import { PrevCurrentValueProperty } from "./base"
+import { AltNameAddEvent, AltNameRemoveEvent, AltNameUpdateEvent } from "./entities/alt-name"
 import {
   CharacteristicAddEvent,
   CharacteristicRemoveEvent,
   CharacteristicUpdateEvent,
-} from "features/categories/@history/ui/entities/characteristic"
-import { PrevCurrentValueProperty } from "features/categories/@history/ui/base"
-import { ImagesAddEvent } from "features/categories/@history/ui/entities/images"
-import { findImage, findMedia, getOriginalName } from "features/categories/@history/domain/lib"
+} from "./entities/characteristic"
+import { ImagesAddEvent } from "./entities/images"
+import { TagAddEvent, TagRemoveEvent, TagUpdateEvent } from "./entities/tag"
 
 interface ShowEventsProps {
   events: CategoryWithEvents[]
   moveToVersion: (index: number) => void
+  cursor: number
 }
 
-export const ShowEvents = (props: ShowEventsProps) => {
-  const { events, moveToVersion } = props
-
-  const categoryStores = useCategoryStores()
+export const EventList = (props: ShowEventsProps) => {
+  const { events, moveToVersion, cursor } = props
 
   return (
     <Box flex m={1}>
@@ -34,6 +28,11 @@ export const ShowEvents = (props: ShowEventsProps) => {
         let prevValue: string | null = ""
         let currentValue: string | null = ""
         let currentValueColor: MarkProps["color"] = "success"
+
+        const baseProps = {
+          onClick: () => moveToVersion(index),
+          selected: index === cursor,
+        }
 
         switch (event.type) {
           case "changeActiveImageId": {
@@ -135,6 +134,7 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "addCharacteristic": {
             return (
               <CharacteristicAddEvent
+                {...baseProps}
                 key={event.id}
                 event={event}
               />
@@ -144,6 +144,7 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "updateCharacteristic": {
             return (
               <CharacteristicUpdateEvent
+                {...baseProps}
                 key={event.id}
                 event={event}
                 prev={lastData}
@@ -154,6 +155,7 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "removeCharacteristic": {
             return (
               <CharacteristicRemoveEvent
+                {...baseProps}
                 key={event.id}
                 event={event}
                 prev={lastData}
@@ -164,6 +166,7 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "addAltName": {
             return (
               <AltNameAddEvent
+                {...baseProps}
                 key={event.id}
                 event={event}
               />
@@ -173,6 +176,7 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "updateAltName": {
             return (
               <AltNameUpdateEvent
+                {...baseProps}
                 key={event.id}
                 event={event}
                 prev={lastData}
@@ -183,6 +187,7 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "removeAltName": {
             return (
               <AltNameRemoveEvent
+                {...baseProps}
                 key={event.id}
                 prev={lastData}
                 event={event}
@@ -193,6 +198,7 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "addTag": {
             return (
               <TagAddEvent
+                {...baseProps}
                 key={event.id}
                 event={event}
               />
@@ -202,6 +208,7 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "updateTag": {
             return (
               <TagUpdateEvent
+                {...baseProps}
                 key={event.id}
                 event={event}
                 prev={lastData}
@@ -212,9 +219,20 @@ export const ShowEvents = (props: ShowEventsProps) => {
           case "removeTag": {
             return (
               <TagRemoveEvent
+                {...baseProps}
                 key={event.id}
                 event={event}
                 prev={lastData}
+              />
+            )
+          }
+
+          case "addImages": {
+            return (
+              <ImagesAddEvent
+                {...baseProps}
+                key={event.id}
+                event={event}
               />
             )
           }
@@ -223,26 +241,14 @@ export const ShowEvents = (props: ShowEventsProps) => {
             break
         }
 
-        if (event.type === "addImages") {
-          return (
-            <ImagesAddEvent
-              key={event.id}
-              selected={false}
-              onClick={() => {}}
-              event={event}
-            />
-          )
-        }
-
         return (
           <PrevCurrentValueProperty
+            {...baseProps}
             key={event.id}
             caption={caption}
             currentValue={currentValue}
             prevValue={prevValue}
             currentValueColor={currentValueColor}
-            onClick={() => moveToVersion(index)}
-            selected={index === categoryStores.historyStore._cursor}
           />
         )
       })}

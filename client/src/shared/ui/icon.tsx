@@ -72,6 +72,7 @@ const iconData = {
   replace: "find_replace",
   undo: "undo",
   redo: "redo",
+  history: "history_edu",
 }
 
 export type IconKeys = keyof typeof iconData

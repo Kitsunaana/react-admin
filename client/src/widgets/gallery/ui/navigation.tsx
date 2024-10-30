@@ -23,12 +23,14 @@ export const NavigationContainer = styled(Box)<BoxProps>`
 `
 
 export const NavigationButton = styled(Button)<ButtonProps & { theme: Theme }>`
-  background-color: ${({ theme: { palette } }) => (
+  && {
+    background-color: ${({ theme: { palette } }) => (
     palette.primary[palette.mode === "dark" ? "dark" : "light"]
   )};
-  min-width: 0;
-  padding: 8px;
-  border-radius: 8px;
+    min-width: 0;
+    padding: 8px;
+    border-radius: 8px;
+  }
 `
 
 export const Navigation = observer(() => {

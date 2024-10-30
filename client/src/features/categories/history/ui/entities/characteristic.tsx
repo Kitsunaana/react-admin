@@ -1,24 +1,24 @@
+import { Common } from "shared/types/common"
+import { Box } from "shared/ui/box"
+import { Icon } from "shared/ui/icon"
+import { Text } from "shared/ui/text"
 import {
   AddCharacteristicEvent,
   RemoveCharacteristicEvent,
   UpdateCharacteristicEvent,
-} from "features/categories/@history/domain/events"
-import { Box } from "shared/ui/box"
-import { Text } from "shared/ui/text"
-import { Category } from "features/categories/@history/model/category-history.store"
-import { Icon } from "shared/ui/icon"
-import { Common } from "shared/types/common"
-import { MarkEvent, TemplateEvent } from "features/categories/@history/ui/base"
+} from "../../domain/events"
+import { Category } from "../../domain/types"
+import { MarkEvent, TemplateEvent, TemplateEventProps } from "../base"
 
-interface CharacteristicAddEventProps {
+interface CharacteristicAddEventProps extends TemplateEventProps {
   event: AddCharacteristicEvent
 }
 
 export const CharacteristicAddEvent = (props: CharacteristicAddEventProps) => {
-  const { event } = props
+  const { event, ...other } = props
 
   return (
-    <TemplateEvent selected={false} onClick={() => {}}>
+    <TemplateEvent {...other}>
       <Box flex row gap ai fontSize={12}>
         <Text caption="Добавлена характеристика" />
         <MarkEvent color="success">
@@ -33,19 +33,19 @@ export const CharacteristicAddEvent = (props: CharacteristicAddEventProps) => {
   )
 }
 
-interface CharacteristicUpdateEventProps {
+interface CharacteristicUpdateEventProps extends TemplateEventProps {
   prev: Category
   event: UpdateCharacteristicEvent
 }
 
 export const CharacteristicUpdateEvent = (props: CharacteristicUpdateEventProps) => {
-  const { event, prev } = props
+  const { event, prev, ...other } = props
 
   const findCharacteristic = (prev.characteristics as (Common.CharacteristicCreate | Common.Characteristic)[])
     .find((characteristic) => characteristic.id === event.value.id)
 
   return (
-    <TemplateEvent selected={false} onClick={() => {}}>
+    <TemplateEvent {...other}>
       <Box flex row gap={0.5} ai fontSize={12}>
         <Text caption="Характеристика обновлена" />
         <MarkEvent color="warning">
@@ -68,13 +68,13 @@ export const CharacteristicUpdateEvent = (props: CharacteristicUpdateEventProps)
   )
 }
 
-interface CharacteristicRemoveEventProps {
+interface CharacteristicRemoveEventProps extends TemplateEventProps {
   event: RemoveCharacteristicEvent
   prev: Category
 }
 
 export const CharacteristicRemoveEvent = (props: CharacteristicRemoveEventProps) => {
-  const { event, prev } = props
+  const { event, prev, ...other } = props
 
   const findCharacteristic = (
     prev.characteristics as (Common.CharacteristicCreate | Common.Characteristic)[]
@@ -82,7 +82,7 @@ export const CharacteristicRemoveEvent = (props: CharacteristicRemoveEventProps)
     .find((characteristic) => characteristic.id === event.value)
 
   return (
-    <TemplateEvent selected={false} onClick={() => {}}>
+    <TemplateEvent {...other}>
       <Box flex row gap ai fontSize={12}>
         <Text caption="Характеристика удалена" />
         <Box flex row gap={0.25}>

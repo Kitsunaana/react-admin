@@ -4,7 +4,7 @@ import { InputFile } from "shared/ui/form/input-file"
 import styled from "styled-components"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { nanoid } from "nanoid"
-import { Image } from "features/categories/@dialog/ui/tabs/photos/image"
+import { Image } from "features/categories/dialog/ui/tabs/photos/image"
 import { useCategoryStores } from "../context"
 
 const GridImage = styled((props: BoxProps & { fullScreen: boolean }) => {
@@ -30,7 +30,7 @@ interface TabPhotosProps {
 
 export const TabPhotos = observer(({ tab }: TabPhotosProps) => {
   const { fullScreen } = useEditDialogStore()
-  const { photos, historyStore } = useCategoryStores()
+  const { photosStore, historyStore } = useCategoryStores()
 
   return (
     <Box sx={{ mt: 1, height: 1 }}>
@@ -41,7 +41,7 @@ export const TabPhotos = observer(({ tab }: TabPhotosProps) => {
           multiple
           accept="image/!*"
           onFilesUpload={(files) => {
-            photos.setUploadedFiles(files)
+            photosStore.setUploadedFiles(files)
 
             historyStore.recordEvent({
               id: nanoid(),
@@ -54,16 +54,16 @@ export const TabPhotos = observer(({ tab }: TabPhotosProps) => {
       </Box>
       <GridImageContainer>
         <GridImage fullScreen={fullScreen}>
-          {photos.filteredMedia && photos.filteredMedia.map((item) => (
+          {photosStore.filteredMedia && photosStore.filteredMedia.map((item) => (
             <Image
               key={item.id}
               id={item.id}
               url={item.path}
               name={item.originalName}
               order={item.order as number | null}
-              onOpenGallery={photos.openGallery}
+              onOpenGallery={photosStore.openGallery}
               onUpdateOrder={(order, id) => {
-                photos.updateOrder(order, id)
+                photosStore.updateOrder(order, id)
 
                 historyStore.recordEvent({
                   id: nanoid(),
@@ -73,7 +73,7 @@ export const TabPhotos = observer(({ tab }: TabPhotosProps) => {
                 })
               }}
               onClear={(id) => {
-                photos.clearMedia(id)
+                photosStore.clearMedia(id)
 
                 historyStore.recordEvent({
                   id: nanoid(),
@@ -84,7 +84,7 @@ export const TabPhotos = observer(({ tab }: TabPhotosProps) => {
               }}
             />
           ))}
-          {photos.images && photos.images.map((item) => (
+          {photosStore.images && photosStore.images.map((item) => (
             <Image
               local
               key={item.id}
@@ -92,7 +92,7 @@ export const TabPhotos = observer(({ tab }: TabPhotosProps) => {
               file={item.data as File}
               name={item.caption}
               onClearLocal={(id) => {
-                photos.clearImage(id)
+                photosStore.clearImage(id)
 
                 historyStore.recordEvent({
                   id: nanoid(),
@@ -101,7 +101,7 @@ export const TabPhotos = observer(({ tab }: TabPhotosProps) => {
                   imageId: id,
                 })
               }}
-              onOpenGallery={photos.openGallery}
+              onOpenGallery={photosStore.openGallery}
             />
           ))}
         </GridImage>
