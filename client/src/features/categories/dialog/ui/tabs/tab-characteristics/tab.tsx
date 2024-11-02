@@ -5,9 +5,9 @@ import { eventBus } from "shared/lib/event-bus"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { EmptyList } from "shared/ui/empty-list"
 import { Text } from "shared/ui/text"
-import { useCategoryStores } from "../context"
-import { TabCharacteristicsLayout } from "./tab-characteristics/layout"
-import { CharacteristicsList } from "./tab-characteristics/list"
+import { useCategoryStores } from "../../context"
+import { TabCharacteristicsLayout } from "./layout"
+import { CharacteristicsList } from "./list"
 
 interface TabCharacteristicsProps {
   tab: number
@@ -45,6 +45,17 @@ export const TabCharacteristics = (props: TabCharacteristicsProps) => {
                 <Text
                   onlyText
                   name="actions.help"
+                />
+              ),
+            }}
+          />
+          <IconButton
+            name="keyboard"
+            help={{
+              title: (
+                <Text
+                  onlyText
+                  name="actions.keyboard"
                 />
               ),
             }}

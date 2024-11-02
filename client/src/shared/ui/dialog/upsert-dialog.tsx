@@ -3,6 +3,9 @@ import { DialogProps as MUIDialogProps } from "@mui/material/Dialog/Dialog"
 import { observer } from "mobx-react-lite"
 import { FC, ReactNode, useEffect } from "react"
 import { useFormContext } from "react-hook-form"
+import { ConfirmationParams, useGetConfirmation } from "shared/lib/confirmation"
+import { useKeyboard } from "shared/lib/keyboard-manager"
+import { isBoolean } from "shared/lib/utils"
 import { DialogStore } from "shared/stores/dialog-store"
 import { Box } from "shared/ui/box"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
@@ -25,6 +28,8 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   footer?: ReactNode
   onClose?: () => void
   onSave?: () => void
+  confirmSave?: ConfirmationParams | boolean
+  confirmClose?: ConfirmationParams | boolean
 }
 
 const ButtonContainer = styled.div`
@@ -72,6 +77,8 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
     footer,
     onClose,
     onSave,
+    confirmClose,
+    confirmSave,
     ...other
   } = props
 
@@ -89,11 +96,48 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
     methods.handleSubmit(handleSubmit)()
   }
 
+  const getConfirmation = useGetConfirmation()
+
+  useKeyboard({
+    key: "Enter",
+    disabled: !store.open && !store.id,
+    callback: async (event) => {
+      if (event.ctrlKey && confirmSave) {
+        const confirmation = await getConfirmation(isBoolean(confirmSave) ? {
+          closeText: "cancel",
+          confirmText: "save",
+          description: "descriptionSave",
+          langBase: "global.dialog.confirm.save",
+        } : confirmSave)
+
+        if (confirmation) handleSave()
+      }
+    },
+  })
+
+  useKeyboard({
+    key: "Escape",
+    disabled: !store.open,
+    callback: async () => {
+      if (confirmClose) {
+        const confirmation = await getConfirmation(isBoolean(confirmClose) ? {
+          closeText: "cancel",
+          confirmText: "close",
+          description: "descriptionClose",
+          langBase: "global.dialog.confirm.close",
+        } : confirmClose)
+
+        if (confirmation) handleClose()
+      }
+    },
+  })
+
   return (
     <DialogWrapper
       open={store.open}
       fullScreen={store.fullScreen}
       size={size ?? "auto"}
+      disableEscapeKeyDown
       {...other}
     >
       <Box sx={{ mx: 1 }}>

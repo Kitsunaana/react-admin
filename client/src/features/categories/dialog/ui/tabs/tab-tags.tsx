@@ -10,6 +10,9 @@ import { EmptyList } from "shared/ui/empty-list"
 import { Text } from "shared/ui/text"
 import styled from "styled-components"
 import { nanoid } from "nanoid"
+import { useKeyboard } from "shared/lib/keyboard-manager"
+import { useCreateDialogStore } from "shared/context/dialog-create-context"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { useCategoryStores } from "../context"
 
 const TagsContainer = styled(Box)`
@@ -26,8 +29,24 @@ interface TabTagsProps {
 
 export const TabTags = observer(({ tab }: TabTagsProps) => {
   const { tagsStore, historyStore } = useCategoryStores()
+  const createDialogStore = useCreateDialogStore()
+  const editDialogStore = useEditDialogStore()
 
-  const handleRemoveTag = useRemoveTag(tagsStore.remove)
+  const handleRemoveTag = useRemoveTag()
+
+  const disabledDialog = createDialogStore.tab !== tab && editDialogStore.tab !== tab
+
+  useKeyboard({
+    key: "Ф",
+    disabled: disabledDialog,
+    callback: () => eventBus.emit(openCreateTagDialog({})),
+  })
+
+  useKeyboard({
+    key: "A",
+    disabled: disabledDialog,
+    callback: () => eventBus.emit(openCreateTagDialog({})),
+  })
 
   return (
     <Box flex row grow sx={{ height: 1 }}>
@@ -41,13 +60,15 @@ export const TabTags = observer(({ tab }: TabTagsProps) => {
               color={tag.color}
               caption={tag.caption}
               onRemove={async (payload) => {
-                await handleRemoveTag(payload)
+                await handleRemoveTag(payload, (id) => {
+                  tagsStore.remove(id)
 
-                historyStore.recordEvent({
-                  id: nanoid(),
-                  tab,
-                  type: "removeTag",
-                  value: payload.id,
+                  historyStore.recordEvent({
+                    id: nanoid(),
+                    tab,
+                    type: "removeTag",
+                    value: payload.id,
+                  })
                 })
               }}
               onEdit={(payload) => eventBus.emit(openEditTagDialog(payload))}

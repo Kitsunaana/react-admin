@@ -17,6 +17,8 @@ import styled from "styled-components"
 import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { nanoid } from "nanoid"
 import { updateCaption } from "features/categories/dialog/domain/event"
+import { useKeyboard } from "shared/lib/keyboard-manager"
+import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { useCategoryStores } from "../context"
 
 const CharacteristicsContainer = styled((props: BoxProps & { fullScreen: boolean }) => {
@@ -40,15 +42,30 @@ interface TabAltNamesProps {
 export const TabAltNames = observer(({ tab }: TabAltNamesProps) => {
   const { locales } = useLocales()
   const { altNamesStore, historyStore } = useCategoryStores()
-  const { fullScreen } = useCreateDialogStore()
+  const createDialogStore = useCreateDialogStore()
+  const editDialogStore = useEditDialogStore()
 
-  const onRemoveAltName = useRemoveAltName(altNamesStore.remove)
+  const onRemoveAltName = useRemoveAltName()
   const methods = useFormContext()
 
   const [disabled, setDisabled] = useState(getCaptionLength(methods.getValues("caption")) < 3)
 
   useEventBusListen(updateCaption, ({ payload }) => {
     setDisabled(getCaptionLength(payload.caption) < 3)
+  })
+
+  const disabledDialog = createDialogStore.tab !== tab && editDialogStore.tab !== tab
+
+  useKeyboard({
+    key: "Ф",
+    disabled: disabledDialog,
+    callback: () => eventBus.emit(openCreateAltNameDialog({})),
+  })
+
+  useKeyboard({
+    key: "A",
+    disabled: disabledDialog,
+    callback: () => eventBus.emit(openCreateAltNameDialog({})),
   })
 
   const freeLocales = altNamesStore.getFreeLocale(locales ?? [])
@@ -67,19 +84,23 @@ export const TabAltNames = observer(({ tab }: TabAltNamesProps) => {
   return (
     <Box flex row grow sx={{ height: 1 }}>
       {!isShowEmptyList ? (
-        <CharacteristicsContainer fullScreen={fullScreen}>
+        <CharacteristicsContainer
+          fullScreen={createDialogStore.fullScreen || editDialogStore.fullScreen}
+        >
           {isShowCharacteristics && altNamesStore.filteredItems.map((altName) => (
             <AltNameItem
               key={altName.id}
               disabled={altNamesStore.isLoading}
               handleRemove={async (payload) => {
-                await onRemoveAltName(payload)
+                await onRemoveAltName(payload, (id) => {
+                  altNamesStore.remove(id)
 
-                historyStore.recordEvent({
-                  id: nanoid(),
-                  tab,
-                  type: "removeAltName",
-                  value: payload.id,
+                  historyStore.recordEvent({
+                    id: nanoid(),
+                    tab,
+                    type: "removeAltName",
+                    value: payload.id,
+                  })
                 })
               }}
               handleEdit={(payload) => eventBus.emit(openEditAltNameDialog(payload))}

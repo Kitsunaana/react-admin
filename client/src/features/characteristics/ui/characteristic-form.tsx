@@ -30,6 +30,7 @@ export const CharacteristicForm = () => {
             options={(characteristicsQuery.characteristics || []).map((option) => option.caption)}
             InputProps={{
               ...field,
+              autoFocus: true,
               error: !!error,
               helperText: error?.message ? t(`validate.${error.message}`, { value: 3 }) : null,
               label: <Text name="forms.caption" />,

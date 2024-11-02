@@ -5,11 +5,11 @@ import { RowItem } from "shared/ui/row-item"
 import { Mark } from "shared/ui/mark"
 import { Box } from "shared/ui/box"
 
-export const useRemoveAltName = (remove: (id: number | string) => void) => {
+export const useRemoveAltName = () => {
   const langBase = "altNames.confirm.remove"
   const getConfirmation = useGetConfirmation()
 
-  return async (altName: Common.AltNameCreate) => {
+  return async (altName: Common.AltNameCreate, remove: (id: number | string) => void) => {
     const confirmation = await getConfirmation({
       langBase,
       confirmText: "confirm",

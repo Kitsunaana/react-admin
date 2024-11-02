@@ -8,6 +8,7 @@ import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { CategoryDto } from "shared/types/category"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 import { defaultValues } from "../model/const"
 import { TagForm } from "./tag-form"
 
@@ -28,6 +29,12 @@ export const TagCreateDialog = observer(({ onCreate }: TagCreateDialogProps) => 
   })
 
   useEventBusListen(openCreateTagDialog, () => createStore.openDialogV2())
+
+  useKeyboard({
+    key: "Escape",
+    disabled: !createStore.open,
+    callback: createStore.closeDialog,
+  })
 
   const handleSubmit = (data: CategoryDto.TagBase) => {
     onCreate(data)

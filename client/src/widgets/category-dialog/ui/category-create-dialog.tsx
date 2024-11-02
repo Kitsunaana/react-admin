@@ -22,6 +22,8 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { openCreateCategoryDialog } from "widgets/category-dialog"
 import { CategoryHistory, useUndoRedoCategory } from "features/categories/history"
+import { useKeyboard } from "shared/lib/keyboard-manager"
+import { Mark } from "shared/ui/mark"
 
 export const useClearDialog = () => {
   const langBase = "catalog.confirm.clear"
@@ -50,6 +52,7 @@ export const CategoryCreateDialog = observer(() => {
     dialogStore.openDialogV2()
   })
 
+  const getConfirmation = useGetConfirmation()
   const { onCreate, isLoadingCreate, isSuccessCreate } = useCreateCategory()
 
   const { apply, clear } = useSetDialogValues({
@@ -76,6 +79,38 @@ export const CategoryCreateDialog = observer(() => {
     categoryStore.historyStore,
     categoryStore.setData,
   )
+
+  useKeyboard({
+    key: "Escape",
+    disabled: !dialogStore.open,
+    callback: async () => {
+      const close = await getConfirmation({
+        langBase: "catalog.dialog",
+        description: "confirmText",
+        confirmText: "yes",
+      })
+
+      if (close === false) return
+
+      dialogStore.closeDialog()
+    },
+  })
+
+  /* useKeyboard({
+    key: "z",
+    disabled: !categoryStore.historyStore.canUndo,
+    callback: (event) => {
+      if (event.ctrlKey) handleUndo()
+    },
+  })
+
+  useKeyboard({
+    key: "Z",
+    disabled: !categoryStore.historyStore.canRedo,
+    callback: (event) => {
+      if (event.shiftKey) handleRedo()
+    },
+  }) */
 
   const handleSubmit = (payload: CategoryDto.CategoryFields) => {
     onCreate({
@@ -135,7 +170,13 @@ export const CategoryCreateDialog = observer(() => {
               onClick={handleUndo}
               help={{
                 title: (
-                  <Text name="undo" />
+                  <Text
+                    name="undo"
+                    value="Ctrl+Z"
+                    translateOptions={{
+                      components: { strong: <Mark /> },
+                    }}
+                  />
                 ),
               }}
             />
@@ -145,7 +186,13 @@ export const CategoryCreateDialog = observer(() => {
               onClick={handleRedo}
               help={{
                 title: (
-                  <Text name="redo" />
+                  <Text
+                    name="redo"
+                    value="Ctrl+Shift+Z"
+                    translateOptions={{
+                      components: { strong: <Mark /> },
+                    }}
+                  />
                 ),
               }}
             />

@@ -73,6 +73,8 @@ const iconData = {
   undo: "undo",
   redo: "redo",
   history: "history_edu",
+  help: "help",
+  keyboard: "keyboard",
 }
 
 export type IconKeys = keyof typeof iconData

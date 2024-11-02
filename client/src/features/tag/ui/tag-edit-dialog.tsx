@@ -8,6 +8,7 @@ import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { CategoryDto } from "shared/types/category"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 import { defaultValues } from "../model/const"
 import { TagForm } from "./tag-form"
 
@@ -28,6 +29,12 @@ export const TagEditDialog = observer(({ onEdit }: TagEditDialogProps) => {
   })
 
   useEventBusListen(openEditTagDialog, ({ payload }) => editStore.openDialogV2(payload))
+
+  useKeyboard({
+    key: "Escape",
+    disabled: !editStore.open,
+    callback: editStore.closeDialog,
+  })
 
   const handleSubmit = (payload: CategoryDto.TagCreate) => {
     onEdit(payload)

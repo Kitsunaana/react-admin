@@ -4,8 +4,10 @@ import { IconButton } from "shared/ui/buttons/icon-button"
 import { Drawer } from "@mui/material"
 import { Box } from "shared/ui/box"
 import { Text } from "shared/ui/text"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 import { EventList } from "./event-list"
 import { HistoryStoreImpl } from "../domain/interface-history.store"
+import { Mark } from "shared/ui/mark"
 
 interface CategoryHistoryProps {
   historyStore: HistoryStoreImpl
@@ -26,15 +28,39 @@ export const CategoryHistory = observer((props: CategoryHistoryProps) => {
 
   const toggleDrawer = () => setOpen((prevState) => !prevState)
 
+  const disabled = historyStore.categoryWithEvents.length === 0
+
+  useKeyboard({
+    key: "H",
+    disabled,
+    callback: ({ ctrlKey, altKey }) => {
+      if (ctrlKey && altKey) toggleDrawer()
+    },
+  })
+
+  useKeyboard({
+    key: "h",
+    disabled,
+    callback: ({ ctrlKey, altKey }) => {
+      if (ctrlKey && altKey) toggleDrawer()
+    },
+  })
+
   return (
     <div>
       <IconButton
-        disabled={historyStore.categoryWithEvents.length === 0}
+        disabled={disabled}
         name="history"
         onClick={toggleDrawer}
         help={{
           title: (
-            <Text name="history" />
+            <Text
+              name="history"
+              value="Ctrl+Alt+H"
+              translateOptions={{
+                components: { strong: <Mark /> },
+              }}
+            />
           ),
         }}
       />

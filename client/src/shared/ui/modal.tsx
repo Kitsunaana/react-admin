@@ -2,7 +2,6 @@ import { ReactNode } from "react"
 import { createPortal } from "react-dom"
 import styled from "styled-components"
 import { useSettings } from "features/settings"
-import { useEvent } from "../hooks/use-event"
 import { CrossLightIcon } from "./close-icon"
 
 const ModalWrapper = styled.div`
@@ -87,10 +86,6 @@ export const Modal = (props: ModalProps) => {
   const { onClose, isOpen, children } = props
 
   const { settings } = useSettings()
-
-  useEvent("keydown", (event) => {
-    if (event.key === "Escape") onClose()
-  })
 
   if (!isOpen) return null
 

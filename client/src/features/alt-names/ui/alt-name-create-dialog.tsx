@@ -9,6 +9,7 @@ import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { Common } from "shared/types/common"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 
 const defaultValues = {
   locale: null,
@@ -33,6 +34,12 @@ export const AltNameCreateDialog = observer(({ onCreate }: AltNameCreateDialogPr
   })
 
   useEventBusListen(openCreateAltNameDialog, () => createStore.openDialogV2({}))
+
+  useKeyboard({
+    key: "Escape",
+    disabled: !createStore.open,
+    callback: createStore.closeDialog,
+  })
 
   const handleSubmit = (data: Common.AltNameBase) => {
     onCreate(data)

@@ -25,6 +25,9 @@ import { openEditCategoryDialog } from "widgets/category-dialog"
 import { Text } from "shared/ui/text"
 import { useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
+import { useKeyboard } from "shared/lib/keyboard-manager"
+import { useGetConfirmation } from "shared/lib/confirmation"
+import { Mark } from "shared/ui/mark"
 
 export const useOpenDialogFromUrl = () => {
   const dialogStore = useEditDialogStore()
@@ -79,7 +82,7 @@ export const CategoryEditDialog = observer(() => {
       (data) => categoryStore.historyStore.setCategory(data),
       (data) => methods.reset(include(data, CATEGORY_FIELDS)),
     ],
-    clearData: [categoryStore.destroy, methods.reset], // categoryStore.historyStore.reset
+    clearData: [categoryStore.destroy, methods.reset],
     shouldHandle: [dialogStore.open],
   })
 
@@ -92,6 +95,39 @@ export const CategoryEditDialog = observer(() => {
   const { handleCopy, handlePaste } = useCopyPaste(apply, methods, {
     getData: categoryStore.getData,
     setCopiedData: categoryStore.setCopiedData,
+  })
+
+  useKeyboard({
+    key: "z",
+    disabled: !categoryStore.historyStore.canUndo && !dialogStore.open,
+    callback: ({ ctrlKey }) => {
+      if (ctrlKey) handleUndo()
+    },
+  })
+
+  useKeyboard({
+    key: "f",
+    callback: ({ ctrlKey, altKey }) => {
+      if (ctrlKey && altKey) dialogStore.onToggleSizeScreen()
+    },
+  })
+
+  useKeyboard({
+    key: "ArrowRight",
+    callback: (event) => {
+      if (event.ctrlKey) {
+        dialogStore.changeTab(Math.min(dialogStore.tab + 1, 5))
+      }
+    },
+  })
+
+  useKeyboard({
+    key: "ArrowLeft",
+    callback: (event) => {
+      if (event.ctrlKey) {
+        dialogStore.changeTab(Math.max(0, dialogStore.tab - 1))
+      }
+    },
   })
 
   const handleSubmit = (fields: CategoryDto.CategoryFields) => {
@@ -107,6 +143,8 @@ export const CategoryEditDialog = observer(() => {
   return (
     <FormProvider {...methods}>
       <UpsertDialog
+        confirmClose
+        confirmSave
         onClose={handleClearParams}
         onSave={handleClearParams}
         close={isSuccessEdit}
@@ -157,7 +195,13 @@ export const CategoryEditDialog = observer(() => {
               onClick={handleUndo}
               help={{
                 title: (
-                  <Text name="undo" />
+                  <Text
+                    name="undo"
+                    value="Ctrl+Z"
+                    translateOptions={{
+                      components: { strong: <Mark /> },
+                    }}
+                  />
                 ),
               }}
             />
@@ -167,7 +211,13 @@ export const CategoryEditDialog = observer(() => {
               onClick={handleRedo}
               help={{
                 title: (
-                  <Text name="redo" />
+                  <Text
+                    name="redo"
+                    value="Ctrl+Shift+Z"
+                    translateOptions={{
+                      components: { strong: <Mark /> },
+                    }}
+                  />
                 ),
               }}
             />

@@ -327,6 +327,19 @@ export const translate = {
         save: 'Сохранить',
         cancel: 'Отменить',
         clear: 'Очистить форму',
+
+        confirm: {
+          close: {
+            close: 'Закрыть',
+            cancel: 'Отмена',
+            descriptionClose: 'Вы уверены, что хотите закрыть диалоговое окно',
+          },
+          save: {
+            save: 'Сохранить',
+            cancel: 'Отменить',
+            descriptionSave: 'Сохрнаить все заполненные данные?',
+          },
+        },
       },
     },
     tag: {
@@ -418,6 +431,9 @@ export const translate = {
         },
       },
       dialog: {
+        history: 'История мзменений <strong>{{value}}</strong>',
+        undo: 'Отменить <strong>{{value}}</strong>',
+        redo: 'Повторить <strong>{{value}}</strong>',
         notify: {
           copyError: 'При копировании данных произошла ошибка',
           copySuccess: 'Данные для перноса скопированы',

@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles"
 import { observer } from "mobx-react-lite"
 import { Box, BoxProps } from "shared/ui/box"
 import { Divider } from "shared/ui/divider"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 import { sidebarStore } from "../model/sidebar-store"
 import { MenuList } from "../model/types"
 import { List } from "./list/list"
@@ -52,6 +53,14 @@ export const Sidebar = observer((props: SidebarProps) => {
   } = props
 
   const open = openProps ?? sidebarStore.open
+
+  useKeyboard({
+    key: "Escape",
+    callback: () => {
+      console.log("sidebar escape")
+      sidebarStore.onToggle()
+    },
+  })
 
   return (
     <Container open={open}>

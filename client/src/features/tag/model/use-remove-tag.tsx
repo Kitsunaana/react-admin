@@ -6,11 +6,11 @@ import { Tag } from "entities/tag"
 import { Box } from "shared/ui/box"
 import { Mark } from "shared/ui/mark"
 
-export const useRemoveTag = (handleRemove: (id: number | string) => void) => {
+export const useRemoveTag = () => {
   const langBase = "tag.confirm.remove"
   const getConfirmation = useGetConfirmation()
 
-  return async (tag: CategoryDto.TagCreate) => {
+  return async (tag: CategoryDto.TagCreate, handleRemove: (id: number | string) => void) => {
     const confirmation = await getConfirmation({
       langBase,
       confirmText: "confirm",

@@ -9,6 +9,7 @@ import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { Common } from "shared/types/common"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 
 interface AltNameEditDialogProps {
   onEdit: (payload: Common.AltNameCreate) => void
@@ -27,6 +28,12 @@ export const AltNameEditDialog = observer(({ onEdit } : AltNameEditDialogProps) 
 
   useEventBusListen(openEditAltNameDialog, ({ payload }) => {
     editStore.openDialogV2(payload)
+  })
+
+  useKeyboard({
+    key: "Escape",
+    disabled: !editStore.open,
+    callback: editStore.closeDialog,
   })
 
   const handleSubmit = (data: Common.AltNameCreate) => {
