@@ -8,7 +8,6 @@ import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
 import { Common } from "shared/types/common"
 import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
 import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
-import { useKeyboard } from "shared/lib/keyboard-manager"
 import { defaultValues } from "../model/const"
 import { CharacteristicForm } from "./characteristic-form"
 
@@ -31,12 +30,6 @@ export const CharacteristicEditDialog = observer(({ onEdit }: CharacteristicEdit
   useEventBusListen(openEditCharacteristicDialog, ({ payload }) => (
     editStore.openDialogV2(payload)
   ))
-
-  // useKeyboard({
-  //   key: "Escape",
-  //   disabled: !editStore.open,
-  //   callback: editStore.closeDialog,
-  // })
 
   const handleSubmit = (data: Common.CharacteristicCreate) => {
     onEdit(data)
