@@ -27,7 +27,6 @@ import { useOpenDialogFromUrl } from "../model/use-open-dialog-fron-url"
 import { useEditCategory } from "../queries/use-edit-category"
 import { ContentContainer } from "./content-container"
 import { useCategoryStores } from "./context"
-import { nanoid } from "nanoid"
 
 export const CategoryEditDialog = observer(() => {
   const langBase = useLang()

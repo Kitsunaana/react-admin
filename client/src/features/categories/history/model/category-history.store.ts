@@ -1,4 +1,4 @@
-import { autorun, makeAutoObservable, toJS } from "mobx"
+import { makeAutoObservable, toJS } from "mobx"
 import { CategoryDto } from "shared/types/category"
 import { CategoryEvents } from "../domain/events"
 import { HistoryStoreImpl } from "../domain/interface-history.store"
