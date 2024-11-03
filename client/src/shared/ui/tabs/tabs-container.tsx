@@ -17,6 +17,7 @@ interface TabsProps {
   tabs: ITab[]
   requiredFields?: string[]
   store: DialogStore
+  handleChangeTab?: (tab: number) => void
 }
 
 export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
@@ -37,7 +38,7 @@ export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
 
 export const TabsContainer = observer((props: TabsProps) => {
   const {
-    tabs, store, requiredFields = [],
+    tabs, store, handleChangeTab, requiredFields = [],
   } = props
 
   const langBase = useLang()
@@ -55,7 +56,10 @@ export const TabsContainer = observer((props: TabsProps) => {
         icon={item.icon}
         isError={isError}
         isActive={tab === item.id}
-        changeTab={changeTab}
+        changeTab={(tab) => {
+          changeTab(tab)
+          handleChangeTab?.(tab)
+        }}
         langBase={langBase}
       />
     )

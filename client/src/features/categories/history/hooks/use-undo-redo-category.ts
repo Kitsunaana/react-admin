@@ -5,12 +5,18 @@ import { CategoryDto } from "shared/types/category"
 import { Category } from "../domain/types"
 import { HistoryStoreImpl } from "../domain/interface-history.store"
 
-export const useUndoRedoCategory = (
-  apply: UseSetValuesApply,
-  methods: UseFormReturn<CategoryDto.CategoryCreate>,
-  historyStore: HistoryStoreImpl,
-  setData: (payload: Category) => void,
-) => {
+interface UseUndoRedoCategoryOptions {
+  apply: UseSetValuesApply
+  methods: UseFormReturn<CategoryDto.CategoryCreate>
+  historyStore: HistoryStoreImpl
+  setData: (payload: Category) => void
+}
+
+export const useUndoRedoCategory = (options: UseUndoRedoCategoryOptions) => {
+  const {
+    apply, methods, setData, historyStore,
+  } = options
+
   const dialogStore = useEditDialogStore()
 
   const changeTab = () => {

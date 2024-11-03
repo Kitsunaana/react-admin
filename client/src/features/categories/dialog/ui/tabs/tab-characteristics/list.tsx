@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles"
 import {
   Characteristic,
-  openEditCharacteristicDialog
+  openEditCharacteristicDialog,
 } from "entities/characteristic"
 import { useRemoveCharacteristic } from "features/characteristics"
 import { observer } from "mobx-react-lite"

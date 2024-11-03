@@ -5,9 +5,9 @@ import { Drawer } from "@mui/material"
 import { Box } from "shared/ui/box"
 import { Text } from "shared/ui/text"
 import { useKeyboard } from "shared/lib/keyboard-manager"
+import { Mark } from "shared/ui/mark"
 import { EventList } from "./event-list"
 import { HistoryStoreImpl } from "../domain/interface-history.store"
-import { Mark } from "shared/ui/mark"
 
 interface CategoryHistoryProps {
   historyStore: HistoryStoreImpl

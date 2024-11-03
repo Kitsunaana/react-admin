@@ -521,6 +521,13 @@ export const translate = {
           description: 'Вы действительно хотите удалить характиристику <strong>{{value}}</strong>',
           confirm: 'Да, удалить',
         },
+        keyboard: {
+          selectNext: 'Выбрать следующую характеристику',
+          selectPrev: 'Выбрать предыдущую характеристику',
+          createCharacteristic: 'Создать характеристику',
+          editCharacteristic: 'Редактировать характеристику, если она выбрана',
+          removeCharacteristic: 'Удалить характеристику, если она выбрана',
+        },
       },
       rows: {
         forCategory: 'Для категории',

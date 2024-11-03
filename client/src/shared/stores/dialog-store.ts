@@ -25,7 +25,7 @@ export class DialogStore {
   }
 
   closeDialog() {
-    console.log("close");
+    console.log("close")
 
     this.id = null
     this.open = false
@@ -37,6 +37,8 @@ export class DialogStore {
   }
 
   changeTab(tab: number) {
+    console.log(tab);
+
     this.tab = tab
   }
 }

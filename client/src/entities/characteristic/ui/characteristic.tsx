@@ -1,4 +1,3 @@
-import { alpha } from "@mui/material"
 import { observer } from "mobx-react-lite"
 import { useCallback, useMemo } from "react"
 import { LangContext, useLang } from "shared/context/lang"
@@ -46,14 +45,21 @@ export const Characteristic = observer((props: CharacteristicItemProps) => {
   return (
     <LangContext lang={`${langBase}.rows`}>
       <RowItem
-        sx={{
-          ...(active ? {
-            border: ({ palette }) => `1px solid ${alpha(palette.primary.light, 1)}`,
-          } : {}),
-        }}
         color={hasConflict ? "error" : (isCreatedOrUpdated && "warning")}
         bgColor={hasConflict && "error"}
-        onDoubleClick={(handleEdit)}
+        onDoubleClick={handleEdit}
+        sx={{
+          ...(active ? {
+            border: ({ palette }) => (
+              `1px solid ${palette.mode === "light" ? palette.primary.light : palette.warning.dark}`
+            ),
+            ...(isCreatedOrUpdated ? {
+              borderLeft: ({ palette }) => (
+                `5px solid ${palette.mode === "light" ? palette.primary.light : palette.warning.dark}`
+              ),
+            } : {}),
+          } : {}),
+        }}
       >
         {useMemo(() => (
           <Box flex row ai>

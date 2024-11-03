@@ -1,3 +1,5 @@
+import { CategoryCreateDialog } from "features/categories/dialog/ui/category-create-dialog"
+import { CategoryEditDialog } from "features/categories/dialog/ui/category-edit-dialog"
 import { useCategoryStores } from "features/categories/dialog/ui/context"
 import { observer } from "mobx-react-lite"
 import { nanoid } from "nanoid"
@@ -6,8 +8,6 @@ import { RootDialogProvider } from "shared/context/dialog-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { CategoryDto } from "shared/types/category"
 import { Common } from "shared/types/common"
-import { CategoryCreateDialog } from "widgets/category-dialog/ui/category-create-dialog"
-import { CategoryEditDialog } from "./category-edit-dialog"
 
 interface CategoryDialogProps {
   renderTagCreateDialog?: (handleCreate: (payload: CategoryDto.TagBase) => void) => ReactNode

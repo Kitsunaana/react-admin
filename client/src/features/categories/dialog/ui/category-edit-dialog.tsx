@@ -1,23 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGetCategory } from "entities/category"
-import { useCopyPaste } from "features/categories/copy-paste-settings/hooks/use-copy-paste"
-import { PasteSettings } from "features/categories/copy-paste-settings/ui/paste-settings"
-import { CATEGORY_DEFAULT_VALUES, CATEGORY_FIELDS, TABS } from "features/categories/dialog/domain/const"
-import { useEditCategory } from "features/categories/dialog/queries/use-edit-category"
-import { ContentContainer } from "features/categories/dialog/ui/content-container"
-import { useCategoryStores } from "features/categories/dialog/ui/context"
-import { useUndoRedoCategory } from "features/categories/history/hooks/use-undo-redo-category"
-import { CategoryHistory } from "features/categories/history/ui/category-history"
+import { PasteSettings, useCopyPaste } from "features/categories/copy-paste-settings"
+import { CategoryHistory, useUndoRedoCategory } from "features/categories/history"
 import { observer } from "mobx-react-lite"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { useSearchParams } from "react-router-dom"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
 import { useSetDialogValues } from "shared/hooks/use-set-dialog-values"
-import { useKeyboard } from "shared/lib/keyboard-manager"
-import { getNumberOrNull, include, isNumber } from "shared/lib/utils"
+import { eventBus } from "shared/lib/event-bus"
+import { getNumberOrNull, include } from "shared/lib/utils"
 import { CategoryDto } from "shared/types/category"
 import { Box } from "shared/ui/box"
 import { IconButton } from "shared/ui/buttons/icon-button"
@@ -27,44 +19,15 @@ import { Mark } from "shared/ui/mark"
 import { MenuPopup } from "shared/ui/menu-popup"
 import { TabsContainer } from "shared/ui/tabs/tabs-container"
 import { Text } from "shared/ui/text"
-import { openEditCategoryDialog } from "widgets/category-dialog"
-import { z } from "zod"
-
-export const useOpenDialogFromUrl = () => {
-  const dialogStore = useEditDialogStore()
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  useEffect(() => {
-    const readId = searchParams.get("edit")
-    if (readId === null) return
-
-    const transformId = parseInt(readId, 10)
-
-    if (isNumber(transformId)) dialogStore.openDialog(transformId)
-  }, [])
-
-  const handleClearParams = () => {
-    searchParams.delete("edit")
-
-    setSearchParams((prev) => {
-      prev.delete("edit")
-      return prev
-    })
-  }
-
-  return {
-    handleClearParams,
-  }
-}
-
-const validationCategorySchema = z.object({
-  caption: z.string().nonempty({ message: "required" }).min(3, { message: "minLength" }),
-  bgColor: z.string(),
-  blur: z.number().min(0).max(20),
-  color: z.string(),
-  description: z.string(),
-  isShowPhotoWithGoods: z.boolean(),
-})
+import { CATEGORY_DEFAULT_VALUES, CATEGORY_FIELDS, TABS } from "../domain/const"
+import { openEditCategoryDialog, updateCaption } from "../domain/event"
+import { validationCategorySchema } from "../domain/schemas"
+import { useDialogKeyboardEvents } from "../model/use-dialog-keyboard-events"
+import { useOpenDialogFromUrl } from "../model/use-open-dialog-fron-url"
+import { useEditCategory } from "../queries/use-edit-category"
+import { ContentContainer } from "./content-container"
+import { useCategoryStores } from "./context"
+import { nanoid } from "nanoid"
 
 export const CategoryEditDialog = observer(() => {
   const langBase = useLang()
@@ -100,38 +63,28 @@ export const CategoryEditDialog = observer(() => {
     shouldHandle: [dialogStore.open],
   })
 
-  const { handleUndo, handleRedo, handleMoveToEvent } = useUndoRedoCategory(
+  const { handleUndo, handleRedo, handleMoveToEvent } = useUndoRedoCategory({
     apply,
     methods,
-    categoryStore.historyStore,
-    categoryStore.setData,
-  )
-  const { handleCopy, handlePaste } = useCopyPaste(apply, methods, {
+    historyStore: categoryStore.historyStore,
+    setData: categoryStore.setData,
+  })
+
+  const { handleCopy, handlePaste } = useCopyPaste({
+    apply,
+    methods,
     getData: categoryStore.getData,
     setCopiedData: categoryStore.setCopiedData,
+    callback: (payload) => eventBus.emit(updateCaption({ caption: payload.caption })),
   })
 
-  useKeyboard({
-    key: "z",
-    disabled: !categoryStore.historyStore.canUndo && !dialogStore.open,
-    callback: ({ ctrlKey }) => {
-      if (ctrlKey) handleUndo()
-    },
-  })
-
-  useKeyboard({
-    key: "Z",
-    disabled: !categoryStore.historyStore.canRedo && !dialogStore.open,
-    callback: ({ ctrlKey, shiftKey }) => {
-      if (ctrlKey && shiftKey) handleRedo()
-    },
-  })
-
-  useKeyboard({
-    key: "f",
-    callback: ({ ctrlKey, altKey }) => {
-      if (ctrlKey && altKey) dialogStore.onToggleSizeScreen()
-    },
+  useDialogKeyboardEvents({
+    open: dialogStore.open,
+    canRedo: categoryStore.historyStore.canRedo,
+    canUndo: categoryStore.historyStore.canUndo,
+    onRedo: handleRedo,
+    onUndo: handleUndo,
+    onToggleFullscreen: dialogStore.onToggleSizeScreen,
   })
 
   const handleSubmit = (fields: CategoryDto.CategoryFields) => {

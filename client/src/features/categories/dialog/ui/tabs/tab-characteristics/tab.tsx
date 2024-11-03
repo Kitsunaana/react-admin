@@ -2,7 +2,7 @@ import {
   openCreateCharacteristicDialog,
   openEditCharacteristicDialog,
 } from "entities/characteristic"
-import { useKeyboardEvents } from "features/categories/dialog/model/use-keyboard-events"
+import { useTabKeyboardEvents } from "features/categories/dialog/model/use-tab-keyboard-events"
 import { useRemoveCharacteristic } from "features/characteristics"
 import { observer } from "mobx-react-lite"
 import { nanoid } from "nanoid"
@@ -24,27 +24,27 @@ const keyboardInfo = [
   {
     id: 1,
     control: "Ctrl+ArrowDown",
-    caption: "Выбрать следующую характеристику",
+    caption: "selectNext",
   },
   {
     id: 2,
     control: "Ctrl+ArrowUp",
-    caption: "Выбрать предыдущую характеристику",
+    caption: "selectPrev",
   },
   {
     id: 3,
     control: "Ctrl+Alt+A",
-    caption: "Создать характеристику",
+    caption: "createCharacteristic",
   },
   {
     id: 4,
     control: "Ctrl+Alt+E",
-    caption: "Редактировать характеристику, если она выбрана или на неё наведен курсор",
+    caption: "editCharacteristic",
   },
   {
     id: 5,
     control: "Ctrl+Alt+D",
-    caption: "Удалить характеристику, если она выбрана или на неё наведен курсор",
+    caption: "removeCharacteristic",
   },
 ]
 
@@ -60,23 +60,27 @@ export const TabCharacteristics = observer((props: TabCharacteristicsProps) => {
   const { characteristicsStore, historyStore } = useCategoryStores()
   const getConfirmation = useGetConfirmation()
 
-  const getKeyboardInfo = useCallback(() => getConfirmation({
-    langBase: "global.dialog.confirm.keyboard",
-    closeText: "close",
-    confirmText: "ok",
-    title: "keyboardControl",
-    description: (
-      <Box flex gap>
-        {keyboardInfo.map((info) => (
-          <Box key={info.id} ai="start" flex row gap>
-            <Mark fontSize={12}>{info.control}</Mark>
-            <span>—</span>
-            <Text caption={info.caption} />
-          </Box>
-        ))}
-      </Box>
-    ),
-  }), [])
+  const getKeyboardInfo = useCallback(() => {
+    const langBase = "global.dialog.confirm.keyboard"
+
+    return getConfirmation({
+      langBase,
+      closeText: "close",
+      confirmText: "ok",
+      title: "keyboardControl",
+      description: (
+        <Box flex gap>
+          {keyboardInfo.map((info) => (
+            <Box key={info.id} ai="start" flex row gap>
+              <Mark fontSize={12}>{info.control}</Mark>
+              <span>—</span>
+              <Text langBase="characteristic.confirm.keyboard" name={info.caption} />
+            </Box>
+          ))}
+        </Box>
+      ),
+    })
+  }, [])
 
   const handleRemove = useCallback((payload: Common.CharacteristicCreate) => (
     handleRemoveConfirm(payload, (id) => {
@@ -91,7 +95,7 @@ export const TabCharacteristics = observer((props: TabCharacteristicsProps) => {
     })
   ), [])
 
-  const selected = useKeyboardEvents(
+  const selected = useTabKeyboardEvents(
     {
       getNodes: (ref) => ref.current?.children ?? [] as unknown as HTMLCollection,
       itemsCount: characteristicsStore.filteredItems.length - 1,

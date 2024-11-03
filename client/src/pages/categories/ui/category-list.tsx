@@ -7,8 +7,7 @@ import { CategoryDto } from "shared/types/category"
 import { eventBus } from "shared/lib/event-bus"
 import { useRemoveCategory } from "features/categories/dialog/queries/use-remove-category"
 import { useUpdatePosition } from "features/categories/dialog/queries/use-update-position-category"
-import { openGallery } from "features/categories/dialog/domain/event"
-import { openEditCategoryDialog } from "widgets/category-dialog"
+import { openEditCategoryDialog, openGallery } from "features/categories/dialog/domain/event"
 import { findCaption } from "../lib/find-caption"
 
 interface CategoryListProps {

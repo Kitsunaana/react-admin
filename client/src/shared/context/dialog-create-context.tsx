@@ -2,7 +2,7 @@ import {
   createContext,
   FC,
   PropsWithChildren,
-  useState
+  useState,
 } from "react"
 import { useStrictContext } from "shared/lib/react"
 import { DialogStore } from "shared/stores/dialog-store"

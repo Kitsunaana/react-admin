@@ -18,7 +18,7 @@ interface UseKeyboardEvents {
 
 type SelectedRef = { index: null | number, show: boolean }
 
-export const useKeyboardEvents = (info: UseKeyboardEventInfo, events?: UseKeyboardEvents) => {
+export const useTabKeyboardEvents = (info: UseKeyboardEventInfo, events?: UseKeyboardEvents) => {
   const { itemsCount, getNodes } = info
 
   const refBox = useRef<HTMLDivElement | null>(null)

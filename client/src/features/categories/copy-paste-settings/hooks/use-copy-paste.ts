@@ -14,16 +14,16 @@ import { categorySettingsStore } from "../model/category-settings.store"
 import { Settings } from "../domain/types"
 
 interface UseCopyPasteOptions {
+  apply: UseSetValuesApply
+  methods: UseFormReturn<CategoryDto.CategoryCreate>
   getData: () => CategoryDto.CategoryRows,
   setCopiedData: (payload: CategoryDto.CategoryRows, settings: Settings) => void
   callback?: (payload: CategoryDto.CategoryCreate) => void
 }
 
-export const useCopyPaste = (
-  apply: UseSetValuesApply,
-  methods: UseFormReturn<CategoryDto.CategoryCreate>,
-  options: UseCopyPasteOptions,
-) => {
+export const useCopyPaste = (options: UseCopyPasteOptions) => {
+  const { methods, apply } = options
+
   const handleCopy = async () => {
     const fields = methods.getValues()
     const rows = options.getData()

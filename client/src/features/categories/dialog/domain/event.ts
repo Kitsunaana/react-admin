@@ -18,3 +18,9 @@ interface OpenGallery {
 
 export const openGallery = createRoute("openGallery")
   .withParams<OpenGallery>()
+
+export const openCreateCategoryDialog = createRoute("openCreateCategoryDialog")
+  .withParams()
+
+export const openEditCategoryDialog = createRoute("openEditCategoryDialog")
+  .withParams<{ id: number }>()

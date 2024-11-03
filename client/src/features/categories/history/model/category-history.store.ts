@@ -1,9 +1,9 @@
-import { makeAutoObservable, toJS } from "mobx"
+import { autorun, makeAutoObservable, toJS } from "mobx"
 import { CategoryDto } from "shared/types/category"
-import { categoryProducer } from "./category-producer"
 import { CategoryEvents } from "../domain/events"
 import { HistoryStoreImpl } from "../domain/interface-history.store"
-import { CategoryWithEvents, Category } from "../domain/types"
+import { Category, CategoryWithEvents } from "../domain/types"
+import { categoryProducer } from "./category-producer"
 
 export class HistoryStore implements HistoryStoreImpl {
   _category: Category | undefined = undefined
