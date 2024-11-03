@@ -1,10 +1,7 @@
 import { MutableRefObject, useRef, useState } from "react"
-import { useCreateDialogStore } from "shared/context/dialog-create-context"
-import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { useKeyboard } from "shared/lib/keyboard-manager"
 
 interface UseKeyboardEventInfo {
-  tab: number
   itemsCount: number
   getNodes?: (ref: MutableRefObject<HTMLDivElement | null>) => HTMLCollection
 }
@@ -16,24 +13,19 @@ interface UseKeyboardEvents {
   onNextItemSelect?: (findNode: Element, event: KeyboardEvent) => void
   onPrevItemSelect?: (findNode: Element, event: KeyboardEvent) => void
   onRemoveItem?: (index: number, event: KeyboardEvent) => void
+  onGetKeyboardInfo: () => void
 }
 
 type SelectedRef = { index: null | number, show: boolean }
 
 export const useKeyboardEvents = (info: UseKeyboardEventInfo, events?: UseKeyboardEvents) => {
-  const { itemsCount, tab, getNodes } = info
-
-  const createDialogStore = useCreateDialogStore()
-  const editDialogStore = useEditDialogStore()
+  const { itemsCount, getNodes } = info
 
   const refBox = useRef<HTMLDivElement | null>(null)
-
   const [selected, setSelected] = useState<SelectedRef>({ index: null, show: false })
 
-  const disabledDialog = createDialogStore.tab !== tab && editDialogStore.tab !== tab
-
   const handleOpenCreateDialog = (event: KeyboardEvent) => {
-    if (event.ctrlKey && event.altKey) {
+    if (event.altKey && event.ctrlKey) {
       events?.onOpenCreateDialog?.(event)
     }
   }
@@ -105,8 +97,14 @@ export const useKeyboardEvents = (info: UseKeyboardEventInfo, events?: UseKeyboa
   }
 
   useKeyboard({
+    key: "k",
+    callback: ({ altKey, ctrlKey }) => {
+      if (altKey && ctrlKey) events?.onGetKeyboardInfo()
+    },
+  })
+
+  useKeyboard({
     key: "a",
-    disabled: disabledDialog,
     callback: handleOpenCreateDialog,
   })
 

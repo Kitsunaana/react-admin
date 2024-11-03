@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useGetCategory } from "entities/category"
 import { useCopyPaste } from "features/categories/copy-paste-settings/hooks/use-copy-paste"
 import { PasteSettings } from "features/categories/copy-paste-settings/ui/paste-settings"
@@ -27,6 +28,7 @@ import { MenuPopup } from "shared/ui/menu-popup"
 import { TabsContainer } from "shared/ui/tabs/tabs-container"
 import { Text } from "shared/ui/text"
 import { openEditCategoryDialog } from "widgets/category-dialog"
+import { z } from "zod"
 
 export const useOpenDialogFromUrl = () => {
   const dialogStore = useEditDialogStore()
@@ -55,10 +57,23 @@ export const useOpenDialogFromUrl = () => {
   }
 }
 
+const validationCategorySchema = z.object({
+  caption: z.string().nonempty({ message: "required" }).min(3, { message: "minLength" }),
+  bgColor: z.string(),
+  blur: z.number().min(0).max(20),
+  color: z.string(),
+  description: z.string(),
+  isShowPhotoWithGoods: z.boolean(),
+})
+
 export const CategoryEditDialog = observer(() => {
   const langBase = useLang()
 
-  const methods = useForm<CategoryDto.CategoryCreate>({ defaultValues: CATEGORY_DEFAULT_VALUES })
+  const methods = useForm<CategoryDto.CategoryCreate>({
+    defaultValues: CATEGORY_DEFAULT_VALUES,
+    resolver: zodResolver(validationCategorySchema),
+  })
+
   const dialogStore = useEditDialogStore()
   const categoryStore = useCategoryStores()
   const { handleClearParams } = useOpenDialogFromUrl()
@@ -105,27 +120,17 @@ export const CategoryEditDialog = observer(() => {
   })
 
   useKeyboard({
+    key: "Z",
+    disabled: !categoryStore.historyStore.canRedo && !dialogStore.open,
+    callback: ({ ctrlKey, shiftKey }) => {
+      if (ctrlKey && shiftKey) handleRedo()
+    },
+  })
+
+  useKeyboard({
     key: "f",
     callback: ({ ctrlKey, altKey }) => {
       if (ctrlKey && altKey) dialogStore.onToggleSizeScreen()
-    },
-  })
-
-  useKeyboard({
-    key: "ArrowRight",
-    callback: (event) => {
-      if (event.ctrlKey) {
-        dialogStore.changeTab(Math.min(dialogStore.tab + 1, 5))
-      }
-    },
-  })
-
-  useKeyboard({
-    key: "ArrowLeft",
-    callback: (event) => {
-      if (event.ctrlKey) {
-        dialogStore.changeTab(Math.max(0, dialogStore.tab - 1))
-      }
     },
   })
 
@@ -150,7 +155,7 @@ export const CategoryEditDialog = observer(() => {
         store={dialogStore}
         handleSubmit={handleSubmit}
         isLoading={(isLoadingGet || isLoadingEdit) && dialogStore.id !== null}
-        container={<ContentContainer />}
+        container={<ContentContainer tab={dialogStore.tab} />}
         header={(
           <DialogHeader
             store={dialogStore}
@@ -175,6 +180,7 @@ export const CategoryEditDialog = observer(() => {
         tabs={(
           <LangContext lang={`${langBase}.tabs`}>
             <TabsContainer
+              store={dialogStore}
               tabs={TABS}
               requiredFields={["caption"]}
             />

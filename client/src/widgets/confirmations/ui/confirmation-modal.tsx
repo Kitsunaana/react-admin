@@ -1,11 +1,11 @@
 import Button from "@mui/material/Button"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 import { isString } from "shared/lib/utils"
+import { Mark } from "shared/ui/mark"
 import { Modal } from "shared/ui/modal"
 import { Text } from "shared/ui/text"
-import { useKeyboard } from "shared/lib/keyboard-manager"
 import { defaultConfirmationParams } from "../constants"
 import { ConfirmationModalParams } from "../model/types"
-import { Mark } from "shared/ui/mark"
 
 interface ConfirmationModalProps {
   params: ConfirmationModalParams
@@ -21,7 +21,9 @@ export const ConfirmationModal = (props: ConfirmationModalProps) => {
 
   useKeyboard({
     key: "Enter",
-    callback: params.onConfirm,
+    callback: ({ ctrlKey }) => {
+      if (ctrlKey) params.onConfirm()
+    },
   })
 
   const getLangBase = (property: keyof ConfirmationModalParams) => (
@@ -62,7 +64,7 @@ export const ConfirmationModal = (props: ConfirmationModalProps) => {
             name={params.confirmText}
             langBase={getLangBase("confirmText")}
           />
-          <Mark style={{ fontSize: 10, textTransform: "capitalize" }}>Enter</Mark>
+          <Mark style={{ fontSize: 10, textTransform: "capitalize" }}>Ctrl+Enter</Mark>
         </Button>
         <Button
           sx={{ borderRadius: 2, display: "flex", gap: 1 }}

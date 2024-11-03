@@ -1,17 +1,17 @@
-import { createDialogStore } from "shared/stores/dialog-store"
 import {
-  FC,
   createContext,
+  FC,
   PropsWithChildren,
-  useContext,
-  useState,
+  useState
 } from "react"
+import { useStrictContext } from "shared/lib/react"
+import { DialogStore } from "shared/stores/dialog-store"
 
-const RootCreateDialogStoreContext = createContext(createDialogStore())
-export const useCreateDialogStore = () => useContext(RootCreateDialogStoreContext)
+const RootCreateDialogStoreContext = createContext<DialogStore | null>(null)
+export const useCreateDialogStore = () => useStrictContext(RootCreateDialogStoreContext)
 
 export const StoreCreateDialogProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [state] = useState(createDialogStore)
+  const [state] = useState(new DialogStore())
 
   return (
     <RootCreateDialogStoreContext.Provider value={state}>

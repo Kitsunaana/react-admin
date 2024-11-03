@@ -1,11 +1,11 @@
+import { useCategoryStores } from "features/categories/dialog/ui/context"
 import { observer } from "mobx-react-lite"
+import { nanoid } from "nanoid"
 import { ReactNode } from "react"
 import { RootDialogProvider } from "shared/context/dialog-context"
 import { LangContext, useLang } from "shared/context/lang"
 import { CategoryDto } from "shared/types/category"
 import { Common } from "shared/types/common"
-import { nanoid } from "nanoid"
-import { useCategoryStores } from "features/categories/dialog/ui/context"
 import { CategoryCreateDialog } from "widgets/category-dialog/ui/category-create-dialog"
 import { CategoryEditDialog } from "./category-edit-dialog"
 
@@ -40,8 +40,10 @@ export const CategoryDialog = observer((props: CategoryDialogProps) => {
   return (
     <>
       <LangContext lang={`${langBase}.dialog`}>
-        <CategoryEditDialog />
-        <CategoryCreateDialog />
+        <RootDialogProvider>
+          <CategoryCreateDialog />
+          <CategoryEditDialog />
+        </RootDialogProvider>
       </LangContext>
 
       <RootDialogProvider>

@@ -25,6 +25,8 @@ export class DialogStore {
   }
 
   closeDialog() {
+    console.log("close");
+
     this.id = null
     this.open = false
     this.tab = 0
@@ -34,7 +36,9 @@ export class DialogStore {
     this.fullScreen = !this.fullScreen
   }
 
-  changeTab(tab: number) { this.tab = tab }
+  changeTab(tab: number) {
+    this.tab = tab
+  }
 }
 
 export const createDialogStore = () => new DialogStore()

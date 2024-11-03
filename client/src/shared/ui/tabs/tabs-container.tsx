@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite"
 import { useMemo } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
-import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { useLang } from "shared/context/lang"
+import { DialogStore } from "shared/stores/dialog-store"
 import { Tab } from "shared/ui/tabs/tab"
 import { Tabs } from "shared/ui/tabs/tabs"
 
@@ -16,6 +16,7 @@ export interface ITab {
 interface TabsProps {
   tabs: ITab[]
   requiredFields?: string[]
+  store: DialogStore
 }
 
 export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
@@ -36,12 +37,12 @@ export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
 
 export const TabsContainer = observer((props: TabsProps) => {
   const {
-    tabs, requiredFields = [],
+    tabs, store, requiredFields = [],
   } = props
 
   const langBase = useLang()
   const tabsWithWarning = useTabsWarning(tabs, requiredFields)
-  const { tab, changeTab } = useEditDialogStore()
+  const { tab, changeTab } = store
 
   const memoizedTabsArray = useMemo(() => tabs.map((item) => {
     const isError = tabsWithWarning.includes(item.id)

@@ -8,7 +8,6 @@ export const allQueuesAreEmpty = (): boolean => (
 )
 
 export const getQueue = (key: Key): Queue | undefined => keyToQueue[key]
-
 export const getOrCreateQueue = (key: Key): Queue => {
   const queue = getQueue(key)
 

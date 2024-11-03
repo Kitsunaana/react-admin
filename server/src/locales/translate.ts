@@ -339,6 +339,11 @@ export const translate = {
             cancel: 'Отменить',
             descriptionSave: 'Сохрнаить все заполненные данные?',
           },
+          keyboard: {
+            ok: 'Ок',
+            close: 'Закрыть',
+            keyboardControl: 'Управление клавишами',
+          },
         },
       },
     },
@@ -525,6 +530,7 @@ export const translate = {
       },
       actions: {
         add: 'Создать',
+        keyboard: 'Управление клавишами',
       },
       dialog: {
         title: {

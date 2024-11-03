@@ -1,29 +1,30 @@
-import { useGetConfirmation } from "shared/lib/confirmation"
-import { useSetDialogValues, UseSetValuesClear } from "shared/hooks/use-set-dialog-values"
-import { Text } from "shared/ui/text"
-import { observer } from "mobx-react-lite"
-import { LangContext, useLang } from "shared/context/lang"
-import { FormProvider, useForm } from "react-hook-form"
-import { CategoryDto } from "shared/types/category"
-import { CATEGORY_DEFAULT_VALUES, TABS } from "features/categories/dialog/domain/const"
-import { useCreateDialogStore } from "shared/context/dialog-create-context"
-import { useCategoryStores } from "features/categories/dialog/ui/context"
-import { useCreateCategory } from "features/categories/dialog/queries/use-create-category"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { PasteSettings, useCopyPaste } from "features/categories/copy-paste-settings"
-import { eventBus } from "shared/lib/event-bus"
+import { CATEGORY_DEFAULT_VALUES, TABS } from "features/categories/dialog/domain/const"
 import { updateCaption } from "features/categories/dialog/domain/event"
-import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
+import { useCreateCategory } from "features/categories/dialog/queries/use-create-category"
 import { ContentContainer } from "features/categories/dialog/ui/content-container"
-import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
-import { MenuPopup } from "shared/ui/menu-popup"
-import { TabsContainer } from "shared/ui/tabs/tabs-container"
+import { useCategoryStores } from "features/categories/dialog/ui/context"
+import { CategoryHistory, useUndoRedoCategory } from "features/categories/history"
+import { observer } from "mobx-react-lite"
+import { FormProvider, useForm } from "react-hook-form"
+import { useCreateDialogStore } from "shared/context/dialog-create-context"
+import { LangContext, useLang } from "shared/context/lang"
+import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
+import { useSetDialogValues, UseSetValuesClear } from "shared/hooks/use-set-dialog-values"
+import { useGetConfirmation } from "shared/lib/confirmation"
+import { eventBus } from "shared/lib/event-bus"
+import { CategoryDto } from "shared/types/category"
 import { Box } from "shared/ui/box"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
-import { openCreateCategoryDialog } from "widgets/category-dialog"
-import { CategoryHistory, useUndoRedoCategory } from "features/categories/history"
-import { useKeyboard } from "shared/lib/keyboard-manager"
+import { DialogHeader, DialogHeaderCaption } from "shared/ui/dialog/dialog-header"
+import { UpsertDialog } from "shared/ui/dialog/upsert-dialog"
 import { Mark } from "shared/ui/mark"
+import { MenuPopup } from "shared/ui/menu-popup"
+import { TabsContainer } from "shared/ui/tabs/tabs-container"
+import { Text } from "shared/ui/text"
+import { openCreateCategoryDialog } from "widgets/category-dialog"
+import { z } from "zod"
 
 export const useClearDialog = () => {
   const langBase = "catalog.confirm.clear"
@@ -40,10 +41,22 @@ export const useClearDialog = () => {
   }
 }
 
+const validationCategorySchema = z.object({
+  caption: z.string().nonempty({ message: "required" }).min(3, { message: "minLength" }),
+  bgColor: z.string(),
+  blur: z.number().min(0).max(20),
+  color: z.string(),
+  description: z.string(),
+  isShowPhotoWithGoods: z.boolean(),
+})
+
 export const CategoryCreateDialog = observer(() => {
   const langBase = useLang()
 
-  const methods = useForm<CategoryDto.CategoryCreate>({ defaultValues: CATEGORY_DEFAULT_VALUES })
+  const methods = useForm<CategoryDto.CategoryCreate>({
+    defaultValues: CATEGORY_DEFAULT_VALUES,
+    resolver: zodResolver(validationCategorySchema),
+  })
   const dialogStore = useCreateDialogStore()
   const categoryStore = useCategoryStores()
   const handleClear = useClearDialog()
@@ -52,7 +65,6 @@ export const CategoryCreateDialog = observer(() => {
     dialogStore.openDialogV2()
   })
 
-  const getConfirmation = useGetConfirmation()
   const { onCreate, isLoadingCreate, isSuccessCreate } = useCreateCategory()
 
   const { apply, clear } = useSetDialogValues({
@@ -80,38 +92,6 @@ export const CategoryCreateDialog = observer(() => {
     categoryStore.setData,
   )
 
-  useKeyboard({
-    key: "Escape",
-    disabled: !dialogStore.open,
-    callback: async () => {
-      const close = await getConfirmation({
-        langBase: "catalog.dialog",
-        description: "confirmText",
-        confirmText: "yes",
-      })
-
-      if (close === false) return
-
-      dialogStore.closeDialog()
-    },
-  })
-
-  /* useKeyboard({
-    key: "z",
-    disabled: !categoryStore.historyStore.canUndo,
-    callback: (event) => {
-      if (event.ctrlKey) handleUndo()
-    },
-  })
-
-  useKeyboard({
-    key: "Z",
-    disabled: !categoryStore.historyStore.canRedo,
-    callback: (event) => {
-      if (event.shiftKey) handleRedo()
-    },
-  }) */
-
   const handleSubmit = (payload: CategoryDto.CategoryFields) => {
     onCreate({
       ...payload,
@@ -122,11 +102,13 @@ export const CategoryCreateDialog = observer(() => {
   return (
     <FormProvider {...methods}>
       <UpsertDialog
+        confirmSave
+        confirmClose
         close={isSuccessCreate}
         store={dialogStore}
         handleSubmit={handleSubmit}
         isLoading={isLoadingCreate}
-        container={<ContentContainer />}
+        container={<ContentContainer tab={dialogStore.tab} />}
         header={(
           <DialogHeader
             store={dialogStore}
@@ -151,6 +133,7 @@ export const CategoryCreateDialog = observer(() => {
         tabs={(
           <LangContext lang={`${langBase}.tabs`}>
             <TabsContainer
+              store={dialogStore}
               tabs={TABS}
               requiredFields={["caption"]}
             />

@@ -1,5 +1,6 @@
 import { Dialog as MUIDialog } from "@mui/material"
 import { DialogProps as MUIDialogProps } from "@mui/material/Dialog/Dialog"
+import { styled } from "@mui/material/styles"
 import { observer } from "mobx-react-lite"
 import { FC, ReactNode, useEffect } from "react"
 import { useFormContext } from "react-hook-form"
@@ -11,7 +12,7 @@ import { Box } from "shared/ui/box"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { Skeleton } from "shared/ui/skeleton"
-import styled, { css } from "styled-components"
+import styledComponent, { css } from "styled-components"
 
 interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   tabs?: ReactNode
@@ -32,21 +33,22 @@ interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
   confirmClose?: ConfirmationParams | boolean
 }
 
-const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: 8px;
-  align-self: flex-end;
-  padding: 8px;
-  width: 100%;
-`
+const ButtonContainer = styled("div")(() => ({
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "row",
+  gap: 8,
+  alignSelf: "flex-end",
+  padding: 8,
+  width: "100%",
+}))
 
 interface DialogWrapperProps extends MUIDialogProps {
   fullScreen: boolean
   size: "auto" | number
 }
-const DialogWrapper = styled(({ size, ...other }: DialogWrapperProps) => <MUIDialog {...other} />)`
+
+const DialogWrapper = styledComponent(({ size, ...other }: DialogWrapperProps) => <MUIDialog {...other} />)`
   & .MuiPaper-root {
     display: flex;
     border-radius: 16px;
@@ -82,6 +84,7 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
     ...other
   } = props
 
+  const getConfirmation = useGetConfirmation()
   const methods = useFormContext()
 
   useEffect(() => { if (close) store.closeDialog() }, [close])
@@ -96,21 +99,23 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
     methods.handleSubmit(handleSubmit)()
   }
 
-  const getConfirmation = useGetConfirmation()
-
   useKeyboard({
     key: "Enter",
     disabled: !store.open && !store.id,
     callback: async (event) => {
-      if (event.ctrlKey && confirmSave) {
-        const confirmation = await getConfirmation(isBoolean(confirmSave) ? {
-          closeText: "cancel",
-          confirmText: "save",
-          description: "descriptionSave",
-          langBase: "global.dialog.confirm.save",
-        } : confirmSave)
+      if (event.ctrlKey) {
+        if (confirmSave) {
+          const confirmation = await getConfirmation(isBoolean(confirmSave) ? {
+            closeText: "cancel",
+            confirmText: "save",
+            description: "descriptionSave",
+            langBase: "global.dialog.confirm.save",
+          } : confirmSave)
 
-        if (confirmation) handleSave()
+          if (confirmation) handleSave()
+        } else {
+          handleSave()
+        }
       }
     },
   })
@@ -128,6 +133,28 @@ export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
         } : confirmClose)
 
         if (confirmation) handleClose()
+      } else {
+        handleClose()
+      }
+    },
+  })
+
+  useKeyboard({
+    key: "ArrowRight",
+    disabled: !store.open,
+    callback: ({ ctrlKey, altKey }: KeyboardEvent) => {
+      if (ctrlKey && altKey) {
+        store.changeTab(Math.min(store.tab + 1, 5))
+      }
+    },
+  })
+
+  useKeyboard({
+    key: "ArrowLeft",
+    disabled: !store.open,
+    callback: ({ altKey, ctrlKey }) => {
+      if (ctrlKey && altKey) {
+        store.changeTab(Math.max(0, store.tab - 1))
       }
     },
   })

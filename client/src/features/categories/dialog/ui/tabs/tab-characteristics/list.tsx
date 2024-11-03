@@ -1,14 +1,12 @@
 import { styled } from "@mui/material/styles"
 import {
   Characteristic,
-  openCreateCharacteristicDialog,
-  openEditCharacteristicDialog,
+  openEditCharacteristicDialog
 } from "entities/characteristic"
-import { useKeyboardEvents } from "features/categories/dialog/model/use-keyboard-events"
 import { useRemoveCharacteristic } from "features/characteristics"
 import { observer } from "mobx-react-lite"
 import { nanoid } from "nanoid"
-import { forwardRef, useCallback } from "react"
+import { forwardRef, MutableRefObject, useCallback } from "react"
 import { useCreateDialogStore } from "shared/context/dialog-create-context"
 import { useEditDialogStore } from "shared/context/dialog-edit-context"
 import { useLang } from "shared/context/lang"
@@ -32,9 +30,19 @@ const CharacteristicsContainer = styled(
 
 interface CharacteristicsListProps {
   tab: number
+  indexSelected: number | null
+  showSelected: boolean
+  refBox: MutableRefObject<HTMLDivElement | null>
 }
 
-export const CharacteristicsList = observer(({ tab }: CharacteristicsListProps) => {
+export const CharacteristicsList = observer((props: CharacteristicsListProps) => {
+  const {
+    tab,
+    indexSelected,
+    showSelected,
+    refBox,
+  } = props
+
   const { characteristicsStore, historyStore } = useCategoryStores()
   const createDialogStore = useCreateDialogStore()
   const editDialogStore = useEditDialogStore()
@@ -55,41 +63,18 @@ export const CharacteristicsList = observer(({ tab }: CharacteristicsListProps) 
     })
   ), [])
 
-  const selected = useKeyboardEvents(
-    {
-      tab,
-      getNodes: (ref) => ref.current?.children ?? [] as unknown as HTMLCollection,
-      itemsCount: characteristicsStore.filteredItems.length - 1,
-    },
-    {
-      onOpenCreateDialog: () => eventBus.emit(openCreateCharacteristicDialog({})),
-      onOpenEditDialog: (index) => {
-        const findCharacteristic = characteristicsStore.filteredItems[index]
-
-        if (findCharacteristic) {
-          eventBus.emit(openEditCharacteristicDialog(findCharacteristic))
-        }
-      },
-      onRemoveItem: async (index) => {
-        const findCharacteristic = characteristicsStore.filteredItems[index]
-
-        if (findCharacteristic) handleRemove(findCharacteristic)
-      },
-    },
-  )
-
   const onEdit = useCallback((payload: Common.CharacteristicCreate) => {
     eventBus.emit(openEditCharacteristicDialog(payload))
   }, [])
 
   return (
     <CharacteristicsContainer
-      ref={selected.refBox}
+      ref={refBox}
       fullScreen={createDialogStore.fullScreen || editDialogStore.fullScreen}
     >
       {characteristicsStore.filteredItems.map((item, index) => (
         <Characteristic
-          active={(selected.index === index) && selected.show}
+          active={(indexSelected === index) && showSelected}
           id={item.id}
           key={item.id}
           value={item.value}
