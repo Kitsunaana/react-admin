@@ -3,8 +3,12 @@ import { CategoryCharacteristic } from './characteristic.entity';
 
 @Table({ timestamps: false })
 export class Unit extends Model<Unit> {
-  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
-  id: number;
+  @Column({
+    unique: true,
+    primaryKey: true,
+    type: DataType.STRING,
+  })
+  id: string;
 
   @Column({ type: DataType.STRING, unique: true })
   caption: string;
