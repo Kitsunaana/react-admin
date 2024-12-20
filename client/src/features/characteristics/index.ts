@@ -1,3 +1,3 @@
-export { useRemoveCharacteristic } from "./model/use-remove-characteristic"
-export { CharacteristicCreateDialog } from "./ui/characteristic-create-dialog"
-export { CharacteristicEditDialog } from "./ui/characteristic-edit-dialog"
+export { CreateModal as CreateModalCharacteristic } from "./facade/create/create-modal"
+export { EditModal as EditModalCharacteristic } from "./facade/edit/edit-modal"
+export { useStartRemove as useStartRemoveCharacteristic } from "./facade/use-start-remove"
