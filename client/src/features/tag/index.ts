@@ -1,3 +1,3 @@
-export { useRemoveTag } from "./model/use-remove-tag"
-export { TagCreateDialog } from "./ui/tag-create-dialog"
-export { TagEditDialog } from "./ui/tag-edit-dialog"
+export { CreateModal as CreateModalTag } from "./facade/create/create-modal"
+export { EditModal as EditModalTag } from "./facade/edit/edit-modal"
+export { RemoveModal as RemoveModalTag } from "./facade/remove/remove-modal"
