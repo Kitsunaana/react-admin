@@ -1,6 +1,7 @@
 import { useGetAllCharacteristics, useGetAllUnits } from "entities/characteristic"
 import { FormProvider } from "react-hook-form"
-import { useModalKeyboardManage } from "shared/hooks/use-modal-keyboard-manage"
+import { useKeyboard } from "shared/lib/keyboard-manager"
+import { ctrlKey } from "shared/lib/keyboard-manager/middleware"
 import { characteristicEditStore } from "../../model/characteristic-edit-store"
 import { DefaultFields } from "../../ui/default-fields"
 import { RootForm } from "../../ui/root-form"
@@ -20,7 +21,10 @@ export const CharacteristicEditForm = ({ formId }: { formId: string }) => {
     },
   })
 
-  useModalKeyboardManage({ submit: editForm.handleKeyDownSubmit })
+  useKeyboard({
+    key: "Enter",
+    callback: ctrlKey(editForm.handleKeyDownSubmit),
+  })
 
   return (
     <FormProvider {...editForm.form}>

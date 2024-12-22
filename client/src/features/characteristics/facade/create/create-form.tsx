@@ -1,6 +1,7 @@
 import { useGetAllCharacteristics, useGetAllUnits } from "entities/characteristic"
 import { FormProvider } from "react-hook-form"
-import { useModalKeyboardManage } from "shared/hooks/use-modal-keyboard-manage"
+import { useKeyboard } from "shared/lib/keyboard-manager"
+import { ctrlKey } from "shared/lib/keyboard-manager/middleware"
 import { characteristicCreateStore } from "../../model/characteristic-create-store"
 import { DefaultFields } from "../../ui/default-fields"
 import { RootForm } from "../../ui/root-form"
@@ -14,7 +15,10 @@ export const CharacteristicCreateForm = ({ formId }: { formId: string }) => {
     onSubmit: characteristicCreateStore.submitCreate,
   })
 
-  useModalKeyboardManage({ submit: createForm.handleKeyDownSubmit })
+  useKeyboard({
+    key: "Enter",
+    callback: ctrlKey(createForm.handleKeyDownSubmit),
+  })
 
   return (
     <FormProvider {...createForm.form}>

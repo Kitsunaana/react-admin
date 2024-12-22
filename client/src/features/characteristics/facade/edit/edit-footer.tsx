@@ -1,10 +1,13 @@
-import { useModalKeyboardManage } from "shared/hooks/use-modal-keyboard-manage"
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 import { characteristicEditStore } from "../../model/characteristic-edit-store"
 
 export const EditFooter = ({ formId }: { formId: string }) => {
-  useModalKeyboardManage({ cancel: characteristicEditStore.cancelEdit })
+  useKeyboard({
+    key: "Escape",
+    callback: characteristicEditStore.cancelEdit,
+  })
 
   return (
     <>
