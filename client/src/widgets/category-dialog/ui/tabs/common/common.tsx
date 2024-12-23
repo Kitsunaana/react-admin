@@ -1,19 +1,25 @@
 import { Input } from "shared/ui/form/input"
 import { Text } from "shared/ui/text"
 import { Controller } from "react-hook-form"
+import { CategoryFields } from "shared/types/new_types/types"
 import { Description, Container } from "./styles"
 import { useCommonForm } from "../../../view-model/form/use-common-form"
-import { useCategoryForm } from "../../../view-model/form/use-category-form"
 
-export const Common = () => {
+export const Common = ({ defaultValue }: { defaultValue: CategoryFields }) => {
   const commonForm = useCommonForm()
-  const categoryForm = useCategoryForm({})
 
   return (
     <Container>
       <Controller
         name="caption"
-        defaultValue={categoryForm.defaultValue.caption}
+        defaultValue={defaultValue.caption}
+        rules={{
+          required: "required",
+          minLength: {
+            message: "minLength",
+            value: 3,
+          },
+        }}
         render={({ field, fieldState }) => (
           <Input
             {...field}
@@ -34,7 +40,7 @@ export const Common = () => {
 
       <Controller
         name="description"
-        defaultValue={categoryForm.defaultValue.description}
+        defaultValue={defaultValue.description}
         render={({ field }) => (
           <Description
             {...field}
