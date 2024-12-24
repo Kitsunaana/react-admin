@@ -1,9 +1,9 @@
-import { Input } from "shared/ui/form/input"
-import { Text } from "shared/ui/text"
 import { Controller } from "react-hook-form"
 import { CategoryFields } from "shared/types/new_types/types"
-import { Description, Container } from "./styles"
+import { Input } from "shared/ui/form/input"
+import { Text } from "shared/ui/text"
 import { useCommonForm } from "../../../view-model/form/use-common-form"
+import { Container, Description } from "./styles"
 
 export const Common = ({ defaultValue }: { defaultValue: CategoryFields }) => {
   const commonForm = useCommonForm()

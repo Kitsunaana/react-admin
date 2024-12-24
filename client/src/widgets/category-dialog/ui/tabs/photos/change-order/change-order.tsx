@@ -1,7 +1,7 @@
 import { memo } from "react"
+import { useToggle } from "shared/hooks/use-toggle"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import { useToggle } from "shared/hooks/use-toggle"
 import { ChangeOrderButton } from "../change-order-button"
 import {
   ArrowDownButton, ArrowUpButton, Container, Count,

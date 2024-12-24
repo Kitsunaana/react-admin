@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { Vertical } from "shared/ui/divider"
-import { Container, Actions } from "./styles"
+import { Actions, Container } from "./styles"
 
 export const Layout = ({
   list,

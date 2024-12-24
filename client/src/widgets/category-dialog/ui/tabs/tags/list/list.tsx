@@ -1,8 +1,8 @@
 import { TagRow } from "entities/tag"
 import { observer } from "mobx-react-lite"
 import { useListKeyboardEvents } from "shared/hooks/use-tab-keyboard-events"
-import { TagContainer } from "./styles"
 import { useTags } from "../../../../facade/use-tags"
+import { TagContainer } from "./styles"
 
 export const List = observer(() => {
   const tags = useTags()

@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
-import { Box } from "shared/ui/box"
 import { Vertical } from "shared/ui/divider"
+import { Actions, Container } from "./styles"
 
 export const Layout = ({
   list,
@@ -9,11 +9,9 @@ export const Layout = ({
   list: ReactNode
   actions: ReactNode
 }) => (
-  <Box flex row grow sx={{ height: 1 }}>
+  <Container>
     {list}
     <Vertical />
-    <Box flex ai sx={{ pt: 1 }}>
-      {actions}
-    </Box>
-  </Box>
+    <Actions>{actions}</Actions>
+  </Container>
 )

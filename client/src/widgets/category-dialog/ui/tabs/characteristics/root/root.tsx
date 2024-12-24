@@ -1,17 +1,17 @@
 import { observer } from "mobx-react-lite"
+import { createRoute, eventBus } from "shared/lib/event-bus"
+import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { EmptyList } from "shared/ui/empty-list"
 import { Text } from "shared/ui/text"
-import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
-import { createRoute, eventBus } from "shared/lib/event-bus"
+import { useCharacteristicStore } from "../../../../model/characteristics/use-characteristic-store"
 import { Layout } from "../layout"
 import { List } from "../list"
-import { useCharacteristicStore } from "../../../../model/use-characteristic-store"
 
 const openCreateModal = createRoute("characteristic.create.open")
 
 export const Root = observer(() => {
-  const isEmpty = useCharacteristicStore((store) => store.isEmpty)
+  const isEmpty = useCharacteristicStore((store) => store.list.isEmpty)
 
   const startCreate = () => eventBus.emit(openCreateModal())
 

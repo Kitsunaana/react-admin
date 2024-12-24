@@ -1,6 +1,6 @@
+import { forwardRef } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import styled from "styled-components"
-import { forwardRef } from "react"
 
 interface CharacteristicsContainerProps extends BoxProps {
   fullscreen: boolean

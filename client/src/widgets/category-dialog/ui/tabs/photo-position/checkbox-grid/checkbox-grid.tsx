@@ -1,14 +1,11 @@
 import { Checkbox } from "@mui/material"
 import { observer } from "mobx-react-lite"
+import { GRID_CHECKBOX } from "../../../../domain/const"
+import { usePhotoPositionStore } from "../../../../model/photo-position/use-photo-position-store"
 import { Caption } from "../caption"
 import { CheckboxInner, CheckboxWrapper } from "./styles"
-import { usePhotoPositionStore } from "../../../../model/photo-position/use-photo-position-store"
-import { usePhotoPositionForm } from "../../../../view-model/form/use-photo-position-form"
-import { GRID_CHECKBOX } from "../../../../domain/const"
 
 export const CheckboxGrid = observer(() => {
-  const photoPositionForm = usePhotoPositionForm()
-
   const captionPosition = usePhotoPositionStore((store) => store.captionPosition)
   const changeCaptionPosition = usePhotoPositionStore((store) => store.changeCaptionPosition)
 
@@ -19,15 +16,8 @@ export const CheckboxGrid = observer(() => {
           {row.data.map(({ id, content, position }) => (
             <CheckboxInner content={content} key={id}>
               {captionPosition === position
-                ? (<Caption />)
-                : (
-                  <Checkbox
-                    onChange={() => (
-                      photoPositionForm
-                        .handleCaptionPositionChange(position, changeCaptionPosition)
-                    )}
-                  />
-                )}
+                ? <Caption />
+                : <Checkbox onChange={() => changeCaptionPosition(position)} />}
             </CheckboxInner>
           ))}
         </CheckboxWrapper>

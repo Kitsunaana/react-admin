@@ -1,9 +1,9 @@
 import { observer } from "mobx-react-lite"
-import { InputFile } from "shared/ui/form/input-file"
 import { useModalStore } from "shared/hooks/use-modal-store"
-import { GridImage, GridImageContainer, Container } from "./styles"
-import { Photo } from "../photo"
+import { InputFile } from "shared/ui/form/input-file"
 import { usePhotos } from "../../../../facade/use-photos"
+import { Photo } from "../photo"
+import { Container, GridImage, GridImageContainer } from "./styles"
 
 export const Root = observer(() => {
   const fullscreen = useModalStore((store) => store.fullscreen)
@@ -20,7 +20,7 @@ export const Root = observer(() => {
       <GridImageContainer fullscreen={fullscreen}>
         <GridImage>
           {photos.media.map((media) => <Photo key={media.id} {...media} />)}
-          {photos.images.map((image) => <Photo key={image.id} {...image} />)}
+          {photos.images.map((image) => (<Photo key={image.id} {...image} />))}
         </GridImage>
       </GridImageContainer>
     </Container>

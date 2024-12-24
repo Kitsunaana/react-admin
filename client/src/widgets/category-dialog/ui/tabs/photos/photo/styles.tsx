@@ -1,7 +1,7 @@
 import { alpha, styled } from "@mui/material/styles"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { Text } from "shared/ui/text"
 import { Image } from "shared/ui/image"
+import { Text } from "shared/ui/text"
 
 export const ImageContainer = styled("div")(() => ({
   position: "relative",

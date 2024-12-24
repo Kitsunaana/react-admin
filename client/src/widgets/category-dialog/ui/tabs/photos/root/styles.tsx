@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles"
-import { Box } from "shared/ui/box"
 import { DetailedHTMLProps, HTMLAttributes } from "react"
+import { Box } from "shared/ui/box"
 
 export const Container = styled("div")(() => ({
   marginTop: 8,

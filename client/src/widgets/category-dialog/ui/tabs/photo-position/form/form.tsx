@@ -1,18 +1,20 @@
 import { FormControlLabel, Slider } from "@mui/material"
+import { memo } from "react"
 import { Controller } from "react-hook-form"
+import { shallowEqual } from "shared/lib/utils"
+import { CategoryFields } from "shared/types/new_types/types"
 import { ColorInput } from "shared/ui/form/input-color"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import { CategoryFields } from "shared/types/new_types/types"
+import { usePhotoPositionForm } from "../../../../view-model/form/use-photo-position-form"
 import {
-  IsShowPhotoWithGoods,
   ContainerInputs,
   EffectBlurBox,
+  IsShowPhotoWithGoods,
   SliderBox,
 } from "./styles"
-import { usePhotoPositionForm } from "../../../../view-model/form/use-photo-position-form"
 
-export const Form = ({ defaultValue }: { defaultValue: CategoryFields }) => {
+export const Form = memo(({ defaultValue }: { defaultValue: CategoryFields }) => {
   const photoPositionForm = usePhotoPositionForm()
 
   return (
@@ -88,4 +90,4 @@ export const Form = ({ defaultValue }: { defaultValue: CategoryFields }) => {
       </ContainerInputs>
     </>
   )
-}
+}, shallowEqual)
