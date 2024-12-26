@@ -1,22 +1,16 @@
-import { Box } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
+import { Root } from "./styles"
 
-interface HiddenIndicatorProps {
+export const HiddenIndicator = ({
+  hidden,
+}: {
   hidden: boolean
-}
-
-export const HiddenIndicator = (props: HiddenIndicatorProps) => {
-  const { hidden } = props
-
+}) => {
   if (!hidden) return null
 
   return (
-    <Box
-      flex
-      ai
-      row
-      sx={{ mr: 1 }}
+    <Root
       help={{ title: <Text name="hiddenForClient" /> }}
     >
       <Icon
@@ -24,6 +18,6 @@ export const HiddenIndicator = (props: HiddenIndicatorProps) => {
         fontSize="small"
         color="warning"
       />
-    </Box>
+    </Root>
   )
 }

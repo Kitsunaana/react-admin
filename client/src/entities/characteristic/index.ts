@@ -1,5 +1,4 @@
-export { openCreateCharacteristicDialog, openEditCharacteristicDialog } from "./model/event"
-export { useGetCharacteristics } from "./queries/use-get-characteristics"
-export { useGetUnits } from "./queries/use-get-units"
-export { Characteristic } from "./ui/characteristic"
-// export { CharacteristicsStoreImpl } from "./domain/interface.store"
+export { useGetAll as useGetAllCharacteristics } from "./queries/use-get-all"
+export { useGetUnits as useGetAllUnits } from "./queries/use-get-units"
+
+export { CharacteristicRow } from "./ui/root"

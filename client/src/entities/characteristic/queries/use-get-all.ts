@@ -1,14 +1,15 @@
 import { useQuery } from "@tanstack/react-query"
-import { characteristicsApi } from "../api/characteristics-api"
+import { characteristicsApi } from "../api"
 
-export const useGetCharacteristics = () => {
+export const useGetAll = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["characteristics"],
     queryFn: characteristicsApi.getAll,
   })
 
   return {
-    characteristics: data,
-    isLoadingGet: isLoading,
+    data: data || [],
+    captions: (data || []).map((c) => c.caption),
+    isLoading,
   }
 }
