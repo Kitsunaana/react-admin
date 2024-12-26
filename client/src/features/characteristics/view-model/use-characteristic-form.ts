@@ -35,7 +35,7 @@ export const useCharacteristicForm = ({
     form.handleSubmit(onSubmit)()
   }
 
-  const handleKeyDownSubmit = form.handleSubmit(onSubmit)
+  const handleKeyDownSubmit = () => form.handleSubmit(onSubmit)()
 
   const defaultValue = getDefaultValue()
 

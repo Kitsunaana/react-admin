@@ -1,8 +1,8 @@
 import { useGetAllCharacteristics, useGetAllUnits } from "entities/characteristic"
 import { FormProvider } from "react-hook-form"
 import { useKeyboard } from "shared/lib/keyboard-manager"
-import { ctrlKey } from "shared/lib/keyboard-manager/middleware"
-import { characteristicCreateStore } from "../../model/characteristic-create-store"
+import { ctrlKey } from "shared/lib/keyboard-manager/handlers"
+import { createStore } from "../../model/create-store"
 import { DefaultFields } from "../../ui/default-fields"
 import { RootForm } from "../../ui/root-form"
 import { useCharacteristicForm } from "../../view-model/use-characteristic-form"
@@ -12,7 +12,7 @@ export const CharacteristicCreateForm = ({ formId }: { formId: string }) => {
   const units = useGetAllUnits()
 
   const createForm = useCharacteristicForm({
-    onSubmit: characteristicCreateStore.submitCreate,
+    onSubmit: createStore.submitCreate,
   })
 
   useKeyboard({
