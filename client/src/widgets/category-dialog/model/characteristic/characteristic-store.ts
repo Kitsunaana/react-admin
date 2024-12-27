@@ -6,21 +6,19 @@ import { RecordEvent } from "../../model/history/events"
 import { ListMethods } from "../list"
 import {
   characteristicCreateEvent,
-  characteristicRemoveEvent,
-  characteristicEditEvent,
-  getFilteredItems,
+  characteristicEditEvent, characteristicRemoveEvent,
 } from "./characteristic"
 import { PasteAction } from "../../domain/settings"
 
-export class CharacteristicStore implements ListMethods<Characteristic> {
+export class CharacteristicStore {
   constructor(
     private recordEvent: RecordEvent,
-    private list: ListMethods<Characteristic>,
+    public list: ListMethods<Characteristic>,
   ) {
     makeAutoObservable(this, {}, { autoBind: true })
 
     eventBus.on(characteristicCreateEvent, ({ payload }) => {
-      this.create(payload)
+      this.list.create(payload)
 
       this.recordEvent({
         id: nanoid(),
@@ -31,7 +29,7 @@ export class CharacteristicStore implements ListMethods<Characteristic> {
     })
 
     eventBus.on(characteristicEditEvent, ({ payload }) => {
-      this.edit(payload)
+      this.list.edit(payload)
 
       this.recordEvent({
         id: nanoid(),
@@ -40,59 +38,22 @@ export class CharacteristicStore implements ListMethods<Characteristic> {
         tab: 3,
       })
     })
-  }
 
-  get array(): Characteristic[] {
-    return this.list.array
-  }
+    eventBus.on(characteristicRemoveEvent, ({ payload }) => {
+      this.list.remove(payload.id)
 
-  get count() {
-    return this.list.count
-  }
-
-  get isEmpty() {
-    return this.list.isEmpty
-  }
-
-  set(data: Characteristic[]) {
-    this.list.set(data)
-  }
-
-  get() {
-    return this.list.get()
-  }
-
-  create(payload: Characteristic) {
-    this.list.create(payload)
-  }
-
-  edit(payload: Characteristic) {
-    this.list.edit(payload)
-  }
-
-  remove(id: string) {
-    this.list.remove(id)
-  }
-
-  delete(data: Characteristic) {
-    eventBus.emit(characteristicRemoveEvent({
-      data,
-      callback: (id: string) => {
-        this.remove(id)
-
-        this.recordEvent({
-          id: nanoid(),
-          type: "removeCharacteristic",
-          value: id,
-          tab: 3,
-        })
-      },
-    }))
+      this.recordEvent({
+        id: nanoid(),
+        type: "removeCharacteristic",
+        value: payload.id,
+        tab: 3,
+      })
+    })
   }
 
   isAlreadyExists(data: Characteristic) {
     return Boolean(
-      this.array.find((c) => c.caption === data.caption && c.id !== data.id),
+      this.list.array.find((c) => c.caption === data.caption && c.id !== data.id),
     )
   }
 
@@ -100,22 +61,45 @@ export class CharacteristicStore implements ListMethods<Characteristic> {
     return data.status === "create" || data.status === "update"
   }
 
-  setCopiedCharacteristics(action: PasteAction, data: Characteristic[]) {
-    const buildCharacteristic = (data: Characteristic) => {
-      this.create({ ...data, status: "create", id: nanoid() })
-    }
+  getItemsCaption(items: Characteristic[]) {
+    return items.map((c) => c.caption)
+  }
 
-    const addCopied = (data: Characteristic[]) => (
-      getFilteredItems(this.array, data)
-        .map(buildCharacteristic)
-    )
+  getFilteredItems = (items: Characteristic[], excludeItems: Characteristic[]) => {
+    const captionItems = this.getItemsCaption(items)
 
-    const replaceCopied = (data: Characteristic[]) => {
-      this.array.forEach((c) => this.remove(c.id))
-      data.forEach(buildCharacteristic)
-    }
+    return excludeItems.filter((item) => !captionItems.includes(item.caption))
+  }
 
-    if (action === "add") return addCopied(data)
-    if (action === "replace") return replaceCopied(data)
+  createItems(data: Characteristic) {
+    this.list.create({ ...data, status: "create", id: nanoid() })
+  }
+
+  removeAll() {
+    this.list.array.forEach((c) => this.list.remove(c.id))
+  }
+
+  addItems(items: Characteristic[]) {
+    this
+      .getFilteredItems(this.list.array, items)
+      .map(this.createItems)
+  }
+
+  replaceItems(items: Characteristic[]) {
+    this.removeAll()
+
+    items.forEach(this.createItems)
+  }
+
+  getState(data: Characteristic) {
+    const isCreatedOrUpdated = this.isCreatedOrUpdated(data)
+    const hasConflict = this.isAlreadyExists(data)
+
+    return hasConflict ? "error" : (isCreatedOrUpdated && "warning")
+  }
+
+  setCopied(action: PasteAction, data: Characteristic[]) {
+    if (action === "add") return this.addItems(data)
+    if (action === "replace") return this.replaceItems(data)
   }
 }

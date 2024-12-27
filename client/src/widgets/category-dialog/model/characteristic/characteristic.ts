@@ -1,6 +1,7 @@
 import { createRoute, eventBus } from "shared/lib/event-bus"
 import { Characteristic } from "shared/types/new_types/types"
 
+// events
 export const characteristicCreateEvent = createRoute("characteristic.create.submit")
   .withParams<Characteristic>()
 
@@ -8,23 +9,20 @@ export const characteristicEditEvent = createRoute("characteristic.edit.submit")
   .withParams<Characteristic>()
 
 export const characteristicRemoveEvent = createRoute("characteristic.remove.submit")
-  .withParams<{ data: Characteristic, callback:(id: string) => void }>()
+  .withParams<{ id: string }>()
 
+// open modals
 const openEditModalEvent = createRoute("characteristic.edit.open")
   .withParams<Characteristic>()
 
-const openCreateModal = createRoute("characteristic.create.open")
+const openCreateModalEvent = createRoute("characteristic.create.open")
 
-export const openEditCharacteristicModal = (payload: Characteristic) => (
-  eventBus.emit(openEditModalEvent(payload))
-)
+const openRemoveModalEvent = createRoute("characteristic.remove.open")
+  .withParams<Characteristic>()
 
-export const openCreateCharacteristicModal = () => eventBus.emit(openCreateModal())
+// actions
+export const startCreateCharacteristic = () => eventBus.emit(openCreateModalEvent())
 
-const getItemsCaption = (items: Characteristic[]) => items.map((item) => item.caption)
+export const startEditCharacteristic = (payload: Characteristic) => eventBus.emit(openEditModalEvent(payload))
 
-export const getFilteredItems = (items: Characteristic[], exclude: Characteristic[]) => {
-  const captionItems = getItemsCaption(items)
-
-  return exclude.filter((item) => !captionItems.includes(item.caption))
-}
+export const startRemoveCharacteristic = (data: Characteristic) => eventBus.emit(openRemoveModalEvent(data))

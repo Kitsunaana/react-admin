@@ -1,35 +1,59 @@
 import { CharacteristicRow } from "entities/characteristic"
 import { observer } from "mobx-react-lite"
-import { useListKeyboardEvents } from "shared/hooks/use-tab-keyboard-events"
 import { EmptyList } from "shared/ui/empty-list"
 import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
-import { openCreateCharacteristicModal } from "widgets/category-dialog/model/characteristic/characteristic"
-import { useCharacteristicStore } from "widgets/category-dialog/model/characteristic/use-characteristic-store"
-import { useCharacteristics } from "../../../../facade/use-characteristics"
+import { useState } from "react"
+import {
+  startCreateCharacteristic,
+  startEditCharacteristic, startRemoveCharacteristic,
+} from "../../../../model/characteristic/characteristic"
+import { useCharacteristicStore } from "../../../../model/characteristic/use-characteristic-store"
 import { CharacteristicsContainer } from "./styles"
+import { createSelectionItem } from "../../../../view-model/selection-item-store"
 
 export const List = observer(() => {
-  const isEmpty = useCharacteristicStore((store) => store.isEmpty)
-  const characteristics = useCharacteristics()
+  const [selectionItem] = useState(createSelectionItem)
 
-  const selected = useListKeyboardEvents()
+  const characteristics = useCharacteristicStore((store) => store.list.array)
+  const isEmpty = useCharacteristicStore((store) => store.list.isEmpty)
+  const count = useCharacteristicStore((store) => store.list.count)
+
+  const isAlreadyExists = useCharacteristicStore((store) => store.isAlreadyExists)
+  const isCreatedOrUpdated = useCharacteristicStore((store) => store.isCreatedOrUpdated)
+
+  useKeyboard({
+    key: "ArrowDown",
+    callback: () => selectionItem.nextItem(count),
+  })
+
+  useKeyboard({
+    key: "ArrowUp",
+    callback: () => selectionItem.prevItem(count),
+  })
+
+  useKeyboard({
+    key: "q",
+    callback: altCtrlKey(selectionItem.unselect),
+  })
 
   useKeyboard({
     key: "a",
-    callback: altCtrlKey(openCreateCharacteristicModal),
+    callback: altCtrlKey(startCreateCharacteristic),
   })
 
   if (isEmpty) return <EmptyList />
 
   return (
-    <CharacteristicsContainer ref={selected.refBox}>
+    <CharacteristicsContainer>
       {characteristics.map((characteristic, index) => (
         <CharacteristicRow
-          {...characteristic}
-          key={characteristic.data.id}
-          onEdit={characteristic.edit}
-          onRemove={characteristic.remove}
-          active={(selected.index === index) && selected.show}
+          key={characteristic.id}
+          data={characteristic}
+          onEdit={startEditCharacteristic}
+          onRemove={startRemoveCharacteristic}
+          active={selectionItem.isSelection(index)}
+          hasConflict={isAlreadyExists(characteristic)}
+          isCreatedOrUpdated={isCreatedOrUpdated(characteristic)}
         />
       ))}
     </CharacteristicsContainer>

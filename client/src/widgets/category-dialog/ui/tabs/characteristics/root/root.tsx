@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { Text } from "shared/ui/text"
-import { openCreateCharacteristicModal } from "widgets/category-dialog/model/characteristic/characteristic"
+import { startCreateCharacteristic } from "../../../../model/characteristic/characteristic"
 import { Layout } from "../layout"
 import { List } from "../list"
 
@@ -11,7 +11,7 @@ export const Root = observer(() => (
     actions={(
       <IconButton
         name="add"
-        onClick={openCreateCharacteristicModal}
+        onClick={startCreateCharacteristic}
         help={{
           title: (
             <Text
@@ -21,6 +21,6 @@ export const Root = observer(() => (
           ),
         }}
       />
-      )}
+    )}
   />
 ))
