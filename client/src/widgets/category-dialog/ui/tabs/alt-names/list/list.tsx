@@ -2,6 +2,9 @@ import { AltNameRow } from "entities/alt-name"
 import { observer } from "mobx-react-lite"
 import { useListKeyboardEvents } from "shared/hooks/use-tab-keyboard-events"
 import { Skeleton } from "shared/ui/skeleton"
+import { EmptyList } from "shared/ui/empty-list"
+import { nanoid } from "nanoid"
+import { useAltNameStore } from "../../../../model/alt-names/use-alt-name-store"
 import { useAltNames } from "../../../../facade/use-alt-names"
 import { AltNamesContainer } from "./styles"
 
@@ -14,18 +17,25 @@ export const List = observer(({
 }) => {
   const altNames = useAltNames()
   const selected = useListKeyboardEvents()
+  const isEmpty = useAltNameStore((store) => store.isEmpty)
+
+  if (isEmpty) return <EmptyList />
 
   if (isLoading) {
     return (
       <AltNamesContainer>
-        {new Array(showSkeletonCount).fill(null).map((_, index) => (
-          <Skeleton
-            key={index}
-            height={40}
-            variant="rectangular"
-            sx={{ borderRadius: 2, mb: 0.5 }}
-          />
-        ))}
+        {(
+          Array
+            .from({ length: showSkeletonCount }, () => nanoid())
+            .map((id) => (
+              <Skeleton
+                key={id}
+                height={40}
+                variant="rectangular"
+                sx={{ borderRadius: 2, mb: 0.5 }}
+              />
+            ))
+        )}
       </AltNamesContainer>
     )
   }

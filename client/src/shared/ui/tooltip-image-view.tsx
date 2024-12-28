@@ -2,9 +2,9 @@ import { Badge as MUIBadge, Tooltip } from "@mui/material"
 import { badgeClasses } from "@mui/material/Badge"
 import { styled } from "@mui/material/styles"
 import { memo, useState } from "react"
-import { Common } from "shared/types/common"
 import { Box, BoxProps } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
+import { Media, Image as TypeImage } from "shared/types/new_types/types"
 
 export const Image = styled("img")`
   width: 110px;
@@ -33,8 +33,11 @@ export const Badge = styled(MUIBadge)(({ theme }) => ({
 }))
 
 interface TooltipImageViewProps {
-  images?: Common.Media[]
-  onOpenGallery: (data: { index: number, images: (Common.Media | Common.Image)[] }) => void
+  images?: Media[]
+  onOpenGallery: (data: {
+    index: number,
+    images: (Media | TypeImage)[]
+  }) => void
 }
 
 export const TooltipImageView = memo((props: TooltipImageViewProps) => {

@@ -1,5 +1,7 @@
 import { makeAutoObservable } from "mobx"
 import { CaptionPosition, Image, Media } from "shared/types/new_types/types"
+import { nanoid } from "nanoid"
+import { RecordEvent } from "../../model/history/events"
 
 type Photo = Media | Image
 
@@ -19,7 +21,7 @@ export class PhotoPositionStore {
 
   indexActiveImage = 0
 
-  constructor() {
+  constructor(private recordEvent: RecordEvent) {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
@@ -34,11 +36,13 @@ export class PhotoPositionStore {
   setCopiedPhotoPosition(
     actions: CopiedPhotoPositionActions,
     data: CopiedPhotoPositionData,
+    photos: Photo[],
   ) {
-    if (actions.activeImageId) this.activeImageId = data.activeImageId
-    if (actions.captionPosition) this.captionPosition = data.captionPosition
+    if (actions.activeImageId) this.setActiveImageId(data.activeImageId, photos)
+    if (actions.captionPosition) this.changeCaptionPosition(data.captionPosition)
   }
 
+  // TODO
   setPhotoPosition(photos: Photo[], data: {
     activeImageId: string | null
     captionPosition: CaptionPosition
@@ -60,6 +64,17 @@ export class PhotoPositionStore {
     if (findIndex !== -1) this.indexActiveImage = findIndex
   }
 
+  changeCaptionPosition(captionPosition: CaptionPosition) {
+    this.captionPosition = captionPosition
+
+    this.recordEvent({
+      id: nanoid(),
+      type: "changeCaptionPosition",
+      value: this.captionPosition,
+      tab: 2,
+    })
+  }
+
   changeActiveImageId(photos: Photo[]) {
     const findImage = photos[this.indexActiveImage]
 
@@ -68,9 +83,16 @@ export class PhotoPositionStore {
       : photos.length > 0
         ? photos[0].id
         : null
+
+    this.recordEvent({
+      id: nanoid(),
+      type: "changeActiveImageId",
+      value: this.activeImageId,
+      tab: 2,
+    })
   }
 
-  setNextImage(photos: Photo[], change?: (photoId: string | null) => void) {
+  setNextImage(photos: Photo[]) {
     const indexActiveImage = this.getIndexActiveImage(photos)
 
     this.indexActiveImage = photos[indexActiveImage + 1]
@@ -78,10 +100,9 @@ export class PhotoPositionStore {
       : 0
 
     this.changeActiveImageId(photos)
-    change?.(this.activeImageId)
   }
 
-  setPrevImage(photos: Photo[], change?: (photoId: string | null) => void) {
+  setPrevImage(photos: Photo[]) {
     const indexActiveImage = this.getIndexActiveImage(photos)
 
     this.indexActiveImage = photos[indexActiveImage - 1]
@@ -89,14 +110,9 @@ export class PhotoPositionStore {
       : photos.length - 1
 
     this.changeActiveImageId(photos)
-    change?.(this.activeImageId)
   }
 
-  changeCaptionPosition(captionPosition: CaptionPosition) {
-    this.captionPosition = captionPosition
-  }
-
-  getData() {
+  get() {
     return {
       captionPosition: this.captionPosition,
       activeImageId: this.activeImageId,

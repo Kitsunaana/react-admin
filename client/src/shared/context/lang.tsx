@@ -20,7 +20,13 @@ const context = createContext<LangStore | null>(null)
 
 const createLangStore = (lang: string) => new LangStore(lang)
 
-export const useLang = (defaultValue: string = "global") => useContext(context)?.lang ?? defaultValue
+export const useLang = (merge?: string) => {
+  const readLangBase = useContext(context)?.lang
+
+  if (merge) return `${readLangBase}.${merge}`
+
+  return readLangBase ?? "global"
+}
 
 interface LangContextProps {
   children: ReactNode

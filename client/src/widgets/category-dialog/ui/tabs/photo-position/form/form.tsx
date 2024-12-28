@@ -1,8 +1,6 @@
 import { FormControlLabel, Slider } from "@mui/material"
 import { memo } from "react"
 import { Controller } from "react-hook-form"
-import { shallowEqual } from "shared/lib/utils"
-import { CategoryFields } from "shared/types/new_types/types"
 import { ColorInput } from "shared/ui/form/input-color"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
@@ -13,8 +11,12 @@ import {
   IsShowPhotoWithGoods,
   SliderBox,
 } from "./styles"
+import { useCategoryFormContext } from "../../../../view-model/form/use-category-form"
 
-export const Form = memo(({ defaultValue }: { defaultValue: CategoryFields }) => {
+export const Form = memo(() => {
+  const defaultValue = useCategoryFormContext((state) => state.defaultValue)
+  const control = useCategoryFormContext((state) => state.control)
+
   const photoPositionForm = usePhotoPositionForm()
 
   return (
@@ -24,6 +26,7 @@ export const Form = memo(({ defaultValue }: { defaultValue: CategoryFields }) =>
         control={(
           <Controller
             name="isShowPhotoWithGoods"
+            control={control}
             defaultValue={defaultValue.isShowPhotoWithGoods}
             render={({ field }) => (
               <IsShowPhotoWithGoods
@@ -39,6 +42,7 @@ export const Form = memo(({ defaultValue }: { defaultValue: CategoryFields }) =>
       <ContainerInputs>
         <Controller
           name="bgColor"
+          control={control}
           defaultValue={defaultValue.bgColor}
           render={({ field }) => (
             <ColorInput
@@ -52,6 +56,7 @@ export const Form = memo(({ defaultValue }: { defaultValue: CategoryFields }) =>
 
         <Controller
           name="color"
+          control={control}
           defaultValue={defaultValue.color}
           render={({ field }) => (
             <ColorInput
@@ -68,6 +73,7 @@ export const Form = memo(({ defaultValue }: { defaultValue: CategoryFields }) =>
           <SliderBox>
             <Controller
               name="blur"
+              control={control}
               defaultValue={defaultValue.blur}
               render={({ field }) => (
                 <Slider
@@ -90,4 +96,4 @@ export const Form = memo(({ defaultValue }: { defaultValue: CategoryFields }) =>
       </ContainerInputs>
     </>
   )
-}, shallowEqual)
+})

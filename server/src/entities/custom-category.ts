@@ -14,8 +14,12 @@ export type Position =
 
 @Table({ timestamps: false })
 export class CustomCategory extends Model<CustomCategory> {
-  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true, unique: true })
-  id: number;
+  @Column({
+    unique: true,
+    primaryKey: true,
+    type: DataType.STRING,
+  })
+  id: string;
 
   @Column({ type: DataType.BOOLEAN })
   isShowPhotoWithGoods: boolean;
@@ -49,7 +53,7 @@ export class CustomCategory extends Model<CustomCategory> {
 
   @Column
   @ForeignKey(() => Category)
-  categoryId: number;
+  categoryId: string;
 
   @BelongsTo(() => Category)
   category: Category;

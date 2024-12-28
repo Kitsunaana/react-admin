@@ -60,7 +60,7 @@ export const ToggleButton = (props: ToggleButtonProps) => {
 
 interface ToggleButtonGroupProps<T> {
   name: string
-  options: string[]
+  readonly options: string[]
   defaultValue: T
   onChange: (name: string, value: T) => void
 }

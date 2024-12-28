@@ -5,7 +5,7 @@ import { Category } from '../entities/category.entity';
 import { CustomCategory } from '../entities/custom-category';
 import { FilesModule } from '../files/files.module';
 import { LocalesModule } from '../locales/locales.module';
-import { SequelizeModule as BaseSequelizeModule } from '../sequelize/sequelize.module';
+import { SequelizeModule as BaseSequelizeModule } from '../shared/sequelize/sequelize.module';
 import { TagsModule } from '../tags/tags.module';
 import { CategoriesController } from './categories.controller';
 import { CategoriesService } from './categories.service';

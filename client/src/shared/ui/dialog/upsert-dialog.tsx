@@ -1,37 +1,12 @@
 import { Dialog as MUIDialog } from "@mui/material"
 import { DialogProps as MUIDialogProps } from "@mui/material/Dialog/Dialog"
 import { styled } from "@mui/material/styles"
-import { observer } from "mobx-react-lite"
-import { FC, ReactNode, useEffect } from "react"
-import { useFormContext } from "react-hook-form"
-import { ConfirmationParams, useGetConfirmation } from "shared/lib/confirmation"
-import { useKeyboard } from "shared/lib/keyboard-manager"
-import { isBoolean } from "shared/lib/utils"
-import { DialogStore } from "shared/stores/dialog-store"
+import { HTMLAttributes, ReactNode } from "react"
 import { Box } from "shared/ui/box"
-import { CancelButton } from "shared/ui/dialog/cancel-button"
-import { SaveButton } from "shared/ui/dialog/save-button"
 import { Skeleton } from "shared/ui/skeleton"
 import styledComponent, { css } from "styled-components"
-
-interface DialogPropsV2 extends Omit<MUIDialogProps, "container" | "open"> {
-  tabs?: ReactNode
-  container?: ReactNode
-  langBase?: string
-  title?: string
-  size?: "auto"
-  height?: number | string
-  header?: ReactNode
-  isLoading: boolean
-  handleSubmit: (data: any) => void
-  store: DialogStore
-  close?: boolean
-  footer?: ReactNode
-  onClose?: () => void
-  onSave?: () => void
-  confirmSave?: ConfirmationParams | boolean
-  confirmClose?: ConfirmationParams | boolean
-}
+import { useModalStore } from "shared/hooks/use-modal-store"
+import { observer } from "mobx-react-lite"
 
 const ButtonContainer = styled("div")(() => ({
   display: "flex",
@@ -43,7 +18,7 @@ const ButtonContainer = styled("div")(() => ({
   width: "100%",
 }))
 
-interface DialogWrapperProps extends MUIDialogProps {
+type DialogWrapperProps = MUIDialogProps & HTMLAttributes<HTMLDivElement> & {
   fullScreen: boolean
   size: "auto" | number
 }
@@ -63,158 +38,101 @@ const DialogWrapper = styledComponent(({ size, ...other }: DialogWrapperProps) =
   }
 `
 
-export const UpsertDialog: FC<DialogPropsV2> = observer((props) => {
-  const {
-    langBase: langBaseProps,
-    handleSubmit,
-    title,
-    height,
-    size,
-    tabs,
-    container,
-    header,
-    isLoading,
-    store,
-    close,
-    footer,
-    onClose,
-    onSave,
-    confirmClose,
-    confirmSave,
-    ...other
-  } = props
-
-  const getConfirmation = useGetConfirmation()
-  const methods = useFormContext()
-
-  useEffect(() => { if (close) store.closeDialog() }, [close])
-
-  const handleClose = () => {
-    onClose?.()
-    store.closeDialog()
-  }
-
-  const handleSave = () => {
-    onSave?.()
-    methods.handleSubmit(handleSubmit)()
-  }
-
-  useKeyboard({
-    key: "Enter",
-    disabled: !store.open && !store.id,
-    callback: async (event) => {
-      if (event.ctrlKey) {
-        if (confirmSave) {
-          const confirmation = await getConfirmation(isBoolean(confirmSave) ? {
-            closeText: "cancel",
-            confirmText: "save",
-            description: "descriptionSave",
-            langBase: "global.dialog.confirm.save",
-          } : confirmSave)
-
-          if (confirmation) handleSave()
-        } else {
-          handleSave()
-        }
-      }
-    },
-  })
-
-  useKeyboard({
-    key: "Escape",
-    disabled: !store.open,
-    callback: async () => {
-      if (confirmClose) {
-        const confirmation = await getConfirmation(isBoolean(confirmClose) ? {
-          closeText: "cancel",
-          confirmText: "close",
-          description: "descriptionClose",
-          langBase: "global.dialog.confirm.close",
-        } : confirmClose)
-
-        if (confirmation) handleClose()
-      } else {
-        handleClose()
-      }
-    },
-  })
-
-  useKeyboard({
-    key: "ArrowRight",
-    disabled: !store.open,
-    callback: ({ ctrlKey, altKey }: KeyboardEvent) => {
-      if (ctrlKey && altKey) {
-        store.changeTab(Math.min(store.tab + 1, 5))
-      }
-    },
-  })
-
-  useKeyboard({
-    key: "ArrowLeft",
-    disabled: !store.open,
-    callback: ({ altKey, ctrlKey }) => {
-      if (ctrlKey && altKey) {
-        store.changeTab(Math.max(0, store.tab - 1))
-      }
-    },
-  })
+export const ModalWrapper = observer(({
+  open,
+  size,
+  children,
+  nesting = 1,
+}: {
+  open: boolean
+  size?: "auto"
+  children?: ReactNode
+  nesting?: number
+}) => {
+  const modal = useModalStore()
 
   return (
     <DialogWrapper
-      open={store.open}
-      fullScreen={store.fullScreen}
+      open={open}
+      fullScreen={modal.fullscreen}
       size={size ?? "auto"}
       disableEscapeKeyDown
-      {...other}
+      PaperProps={{
+        sx: {
+          maxWidth: modal.fullscreen
+            ? `${100 - ((nesting - 1) * 5)}% !important`
+            : `${900 - (nesting - 1) * 60}px !important`,
+          maxHeight: `${100 - ((nesting - 1) * 5)}% !important`,
+          ...(modal.fullscreen && nesting === 1
+            ? { borderRadius: "0px !important" }
+            : {}),
+        },
+      }}
     >
-      <Box sx={{ mx: 1 }}>
-        {isLoading ? (
-          <Skeleton
-            height={38}
-            sx={{
-              padding: 1,
-              borderRadius: 2,
-              margin: "8px 0px 4px",
-              transformOrigin: "top",
-              transform: "unset",
-            }}
-          />
-        ) : (header)}
-      </Box>
-
-      <Box grow sx={{ height: height ?? 450, pt: 0 }}>
-        <Box flex sx={{ height: 1 }}>
-          {isLoading ? (
-            <Skeleton
-              width="100%"
-              height={37}
-              borderRadius={0}
-            />
-          ) : (tabs)}
-          <Box sx={{ px: 1, height: 1, overflow: "hidden" }}>
-            {isLoading ? (
-              <Skeleton
-                height="100%"
-                width="100%"
-                sx={{ margin: 0 }}
-              />
-            ) : (container)}
-          </Box>
-        </Box>
-      </Box>
-      <ButtonContainer>
-        {footer}
-        <Box flex row ai gap ml="auto" mr={0}>
-          <SaveButton
-            onClick={handleSave}
-            disabled={isLoading}
-          />
-          <CancelButton
-            onClick={handleClose}
-            disabled={isLoading}
-          />
-        </Box>
-      </ButtonContainer>
+      {children}
     </DialogWrapper>
   )
 })
+
+export const ModalContainer = observer(({
+  header,
+  tabs,
+  body,
+  footer,
+  height,
+  isLoading,
+}: {
+  header?: ReactNode
+  tabs?: ReactNode
+  body?: ReactNode
+  footer?: {
+    right?: ReactNode,
+    left?: ReactNode
+  }
+  height?: number | string
+  isLoading?: boolean
+}) => (
+  <>
+    <Box sx={{ mx: 1 }}>
+      {isLoading ? (
+        <Skeleton
+          height={38}
+          sx={{
+            padding: 1,
+            borderRadius: 2,
+            margin: "8px 0px 4px",
+            transformOrigin: "top",
+            transform: "unset",
+          }}
+        />
+      ) : (header)}
+    </Box>
+
+    <Box grow sx={{ height: height ?? 450, pt: 0 }}>
+      <Box flex sx={{ height: 1 }}>
+        {isLoading ? (
+          <Skeleton
+            width="100%"
+            height={37}
+            borderRadius={0}
+          />
+        ) : (tabs)}
+        <Box sx={{ px: 1, height: 1, overflow: "hidden" }}>
+          {isLoading ? (
+            <Skeleton
+              height="100%"
+              width="100%"
+              sx={{ margin: 0 }}
+            />
+          ) : (body)}
+        </Box>
+      </Box>
+    </Box>
+    <ButtonContainer>
+      {footer?.left}
+      <Box flex row ai gap ml="auto" mr={0}>
+        {footer?.right}
+      </Box>
+    </ButtonContainer>
+  </>
+))

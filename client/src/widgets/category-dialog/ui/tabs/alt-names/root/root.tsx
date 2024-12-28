@@ -5,32 +5,39 @@ import { createRoute, eventBus } from "shared/lib/event-bus"
 import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
 import { AltName } from "shared/types/new_types/types"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { EmptyList } from "shared/ui/empty-list"
 import { Text } from "shared/ui/text"
+import { useCallback } from "react"
+import { useCategoryFormContext } from "../../../../view-model/form/use-category-form"
 import { useAltNameStore } from "../../../../model/alt-names/use-alt-name-store"
 import { Layout } from "../layout/layout"
 import { List } from "../list/list"
 
-const openModalEvent = createRoute("altName.create.open")
+const openCreateAltNameModalEvent = createRoute("altName.create.open")
   .withParams<{ altNames: AltName[] }>()
 
+const startCreateAltName = (altNames: AltName[]) => eventBus.emit(openCreateAltNameModalEvent({ altNames }))
+
 export const Root = observer(() => {
+  const control = useCategoryFormContext((state) => state.control)
+
   const list = useAltNameStore((store) => store.altNames)
   const translate = useAltNameStore((store) => store.translate)
   const isLoading = useAltNameStore((store) => store.isLoading)
-  const isEmpty = useAltNameStore((store) => store.isEmpty)
 
   const locales = useGetAllLocales()
   const freeLocales = useAltNameStore((store) => store.getFreeLocale(locales.data))
 
-  const startCreate = () => eventBus.emit(openModalEvent({ altNames: list }))
-
-  const [caption, description] = useWatch({ name: ["caption", "description"] })
+  const [caption, description] = useWatch({
+    control,
+    name: ["caption", "description"],
+  })
 
   const handleTranslate = () => translate({ caption, description }, freeLocales)
 
   const isShowSkeletons = freeLocales.length > 0 && isLoading
   const disabled = caption.length < 3
+
+  const handleStartCreate = useCallback(() => startCreateAltName(list), [list])
 
   useKeyboard({
     key: "t",
@@ -40,12 +47,12 @@ export const Root = observer(() => {
 
   useKeyboard({
     key: "a",
-    callback: altCtrlKey(startCreate),
+    callback: altCtrlKey(handleStartCreate),
   })
 
   return (
     <Layout
-      list={isEmpty ? <EmptyList /> : (
+      list={(
         <List
           showSkeletonCount={freeLocales.length}
           isLoading={isShowSkeletons}
@@ -55,7 +62,7 @@ export const Root = observer(() => {
         <>
           <IconButton
             name="add"
-            onClick={startCreate}
+            onClick={handleStartCreate}
             help={{
               title: (
                 <Text

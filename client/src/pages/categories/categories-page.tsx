@@ -1,28 +1,31 @@
-import { useCategories } from "entities/category/queries/use-categories"
 import { observer } from "mobx-react-lite"
 import { CategoryHeader } from "pages/categories/ui/header"
 import { LangContext, useLang } from "shared/context/lang"
 import { BackButton } from "shared/ui/buttons/back-button"
 import { Box } from "shared/ui/box"
-// import { CreateButton } from "shared/ui/buttons/create-button"
 import { RefetchButton } from "shared/ui/buttons/refresh-button"
 import { Mark } from "shared/ui/mark"
 import { Pagination } from "shared/ui/pagination"
 import { Table } from "shared/ui/table"
 import { Text } from "shared/ui/text"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { eventBus } from "shared/lib/event-bus"
-import { openCreateCategoryDialog } from "widgets/category-dialog"
+import { useGetAllCategories } from "entities/category"
+import { createRoute, eventBus } from "shared/lib/event-bus"
 import { CategoryList } from "./ui/category-list"
+
+const openCategoryModalEvent = createRoute("category.create.open")
+  .withParams()
 
 const CategoriesPage = observer(() => {
   const {
     categories,
-    isLoadingCategories,
-    refetchCategories,
-  } = useCategories()
+    isLoading,
+    refetch,
+  } = useGetAllCategories()
 
   const langBase = useLang()
+
+  const startCreateCategory = () => eventBus.emit(openCategoryModalEvent({}))
 
   return (
     <Table
@@ -30,22 +33,22 @@ const CategoriesPage = observer(() => {
         <LangContext lang={`${langBase}.rows`}>
           <CategoryList
             categories={categories?.rows ?? []}
-            isLoading={isLoadingCategories}
+            isLoading={isLoading}
           />
         </LangContext>
-        )}
+      )}
       header={(
         <LangContext lang={`${langBase}.top`}>
           <CategoryHeader
             actions={(
               <>
-                <RefetchButton onRefetch={refetchCategories} />
+                <RefetchButton onRefetch={refetch} />
                 <IconButton
                   name="add"
                   color="success"
                   fontSize={20}
+                  onClick={startCreateCategory}
                   help={{ title: <Text onlyText name="add" /> }}
-                  onClick={() => eventBus.emit(openCreateCategoryDialog({}))}
                 />
                 <BackButton />
               </>
@@ -68,7 +71,7 @@ const CategoriesPage = observer(() => {
             <Pagination count={categories?.rows.length ?? 0} />
           </Box>
         </LangContext>
-        )}
+      )}
     />
   )
 })

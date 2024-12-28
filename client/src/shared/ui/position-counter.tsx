@@ -53,8 +53,8 @@ const Container = styled((props: ContainerProps) => <Box flex ai row gap jc {...
 interface PositionProps {
   order: number | null
   sx?: SxProps<Theme>
-  id: number
-  onUpdate: (payload: { id: number, order: number }) => void
+  id: string
+  onUpdate: (payload: { id: string, order: number }) => void
   isLoading: boolean
 }
 

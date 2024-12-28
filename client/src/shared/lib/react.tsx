@@ -1,4 +1,6 @@
-import { Context, createContext, useContext } from "react"
+import {
+  Context, createContext, useContext,
+} from "react"
 
 export const useStrictContext = <T, >(context: Context<T | null>) => {
   const value = useContext(context)

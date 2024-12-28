@@ -18,12 +18,6 @@ export type AltName = AltNameFields & {
   status: "update" | "create" | "remove"
 }
 
-export type AltNameForm = {
-  locale: null | Locale
-  description: string
-  caption: string
-}
-
 export interface TranslateBody {
   caption: string
   description: string

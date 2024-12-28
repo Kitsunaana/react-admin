@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { AltName } from "shared/types/new_types/types"
 import { createRoute, eventBus } from "shared/lib/event-bus"
-import { useAltNameStore } from "../model/use-alt-name-store"
+import { useAltNameStore } from "../model/alt-names/use-alt-name-store"
 
 const openModalEvent = createRoute("altName.edit.open")
   .withParams<{ payload: AltName, altNames: AltName[] }>()

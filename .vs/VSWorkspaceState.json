@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\client",
+    "\\client\\src",
+    "\\client\\src\\features",
+    "\\client\\src\\features\\characteristics",
+    "\\server",
+    "\\server\\src",
+    "\\server\\src\\categories"
+  ],
+  "SelectedNode": "\\server\\src\\categories\\categories.controller.ts",
+  "PreviewInSolutionExplorer": false
+}

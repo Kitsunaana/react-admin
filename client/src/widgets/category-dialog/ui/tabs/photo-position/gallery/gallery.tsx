@@ -9,8 +9,9 @@ import { ActivePhotoContainer, CheckboxContainer, Container } from "./styles"
 
 export const Gallery = observer(() => {
   const isShowButton = usePhotosStore((store) => store.photos.length > 1)
+  const photos = usePhotosStore((store) => store.photos)
 
-  const activeImage = usePhotoPositionStore((store) => store.activeImage)
+  const activeImage = usePhotoPositionStore((store) => store.getActiveImage(photos))
 
   const nextImage = usePhotoPositionStore((store) => store.setNextImage)
   const prevImage = usePhotoPositionStore((store) => store.setPrevImage)
@@ -20,7 +21,7 @@ export const Gallery = observer(() => {
       {isShowButton && (
         <IconButton
           name="prev"
-          onClick={prevImage}
+          onClick={() => prevImage(photos)}
         />
       )}
       <ActivePhotoContainer>
@@ -32,7 +33,7 @@ export const Gallery = observer(() => {
       {isShowButton && (
         <IconButton
           name="next"
-          onClick={nextImage}
+          onClick={() => nextImage(photos)}
         />
       )}
     </Container>

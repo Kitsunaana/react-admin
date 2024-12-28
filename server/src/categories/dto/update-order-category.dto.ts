@@ -1,9 +1,11 @@
-import { IsNumber } from 'class-validator';
+import { z } from 'zod';
 
-export class UpdateOrderCategoryDto {
-  @IsNumber()
-  readonly order: number;
+export type PatchOrderCategoryDto = {
+  order: number;
+  id: string;
+};
 
-  @IsNumber()
-  readonly id: number;
-}
+export const patchOrderCategorySchema = z.object({
+  order: z.number(),
+  id: z.string(),
+});

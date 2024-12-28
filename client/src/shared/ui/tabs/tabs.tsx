@@ -23,7 +23,6 @@ const StyledTabs = styled(MUITabs)(() => ({
 
 interface TabsProps extends BaseTabsProps {
   tab: number
-  hasError?: boolean
   tabs: ReactNode
 }
 
@@ -31,7 +30,6 @@ export const Tabs = memo((props: TabsProps) => {
   const {
     tab,
     tabs,
-    hasError = false,
     ...other
   } = props
 

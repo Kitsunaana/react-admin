@@ -2,17 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize, { Op } from 'sequelize';
 import { Characteristic } from '../../entities/characteristic.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CharacteristicRepository {
   constructor(
     @InjectModel(Characteristic) private characteristicsRepository: typeof Characteristic,
-  ) {}
+  ) { }
 
   async findOrCreate(caption: string) {
     return await this.characteristicsRepository.findOrCreate({
       where: { caption },
-      defaults: { caption },
+      defaults: { caption, id: uuidv4() },
     });
   }
 

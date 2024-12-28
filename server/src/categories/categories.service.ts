@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 import { CategoryTag } from '../entities/category-tag.entity';
-import { Category } from '../entities/category.entity';
+import { Category as CategoryEntity } from '../entities/category.entity';
 import { CategoryCharacteristic, Characteristic } from '../entities/characteristic.entity';
 import { CustomCategory } from '../entities/custom-category';
 import { AltNameCategory, Locale } from '../entities/locale.entity';
@@ -10,42 +11,52 @@ import { Media } from '../entities/media.entity';
 import { Tag } from '../entities/tag.entity';
 import { Unit } from '../entities/units.entity';
 import { FilesService } from '../files/files.service';
-import { GetCategoryDto } from './dto/get-category-dto';
-import { UpdateOrderCategoryDto } from './dto/update-order-category.dto';
-import { CategoryDto } from './types';
+import { GetCategoryDto } from './dto/get-category.dto';
+import { PatchCategoryDto } from './dto/patch-category.dto';
+import { PostCategoryDto } from './dto/post-category.dto';
+import { PatchOrderCategoryDto } from './dto/update-order-category.dto';
 
 @Injectable()
 export class CategoriesService {
   constructor(
-    @InjectModel(Category) private categoryRepository: typeof Category,
+    @InjectModel(CategoryEntity) private categoryRepository: typeof CategoryEntity,
     @InjectModel(CustomCategory) private customCategoryRepository: typeof CustomCategory,
     private filesService: FilesService,
   ) {}
 
-  async create(dto: CategoryDto.PostCategoryBody) {
-    const category = await this.categoryRepository.create({ ...dto, order: null });
+  async create(dto: PostCategoryDto) {
+    const category = await this.categoryRepository.create({
+      order: null,
+      caption: dto.caption,
+      description: dto.description,
+      id: uuidv4(),
+    });
 
     await this.customCategoryRepository.create({
+      id: uuidv4(),
       isShowPhotoWithGoods: dto.isShowPhotoWithGoods,
       bgColor: dto.bgColor,
       color: dto.color,
       blur: dto.blur,
       captionPosition: dto.captionPosition,
-      activeImageId: dto.activeImageId as string | null,
+      activeImageId: dto.activeImageId,
       categoryId: category.id,
     });
 
     return category;
   }
 
-  async update(id: number, dto: Partial<CategoryDto.PatchCategoryBody>) {
+  async update(id: string, dto: PatchCategoryDto) {
     const category = await this.categoryRepository.update(
       {
         order: dto.order,
         caption: dto.caption,
         description: dto.description,
       },
-      { where: { id }, returning: false },
+      {
+        where: { id },
+        returning: false,
+      },
     );
 
     await this.customCategoryRepository.update(dto, {
@@ -75,7 +86,7 @@ export class CategoriesService {
             model: Media,
             separate: true,
             attributes: {
-              exclude: ['createdAt', 'updatedAt', 'goodId', 'categoryId'],
+              exclude: ['createdAt', 'updatedAt', 'categoryId'],
             },
             order: [
               [Sequelize.col('Media.order'), 'desc'],
@@ -102,7 +113,7 @@ export class CategoriesService {
             }
           : {},
         limit,
-        ...(query?.page ? { offset: (query.page - 1) * limit } : {}),
+        ...(query?.page ? { offset: (Number(query.page) - 1) * limit } : {}),
         order: [
           [Sequelize.literal(`"order" IS NOT NULL`), 'desc'],
           ['order', 'desc'],
@@ -112,7 +123,7 @@ export class CategoriesService {
       .then((rows) => ({ count, rows }));
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const category = await this.categoryRepository.findOne({
       where: { id },
       include: [{ model: Media }],
@@ -123,7 +134,7 @@ export class CategoriesService {
     return await category.destroy();
   }
 
-  async getById(id: number) {
+  async getById(id: string) {
     const category = await this.categoryRepository.findOne({
       where: { id },
       attributes: {
@@ -135,7 +146,7 @@ export class CategoriesService {
           model: Media,
           as: 'media',
           attributes: {
-            exclude: ['updatedAt', 'createdAt', 'categoryId', 'goodId'],
+            exclude: ['updatedAt', 'createdAt', 'categoryId'],
           },
         },
         { model: CustomCategory, attributes: { exclude: ['id', 'categoryId'] } },
@@ -185,10 +196,15 @@ export class CategoriesService {
     }
   }
 
-  async updateOrder(dto: UpdateOrderCategoryDto) {
+  async updateOrder(dto: PatchOrderCategoryDto) {
     return await this.categoryRepository.update(
-      { order: dto.order },
-      { where: { id: dto.id }, returning: false },
+      {
+        order: dto.order,
+      },
+      {
+        where: { id: dto.id },
+        returning: false,
+      },
     );
   }
 }

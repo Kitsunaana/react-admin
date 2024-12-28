@@ -56,7 +56,7 @@ export const Sidebar = observer((props: SidebarProps) => {
 
   useKeyboard({
     key: "Escape",
-    callback: () => sidebarStore.onToggle,
+    callback: sidebarStore.onToggle,
   })
 
   return (

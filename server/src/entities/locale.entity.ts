@@ -3,8 +3,12 @@ import { Category } from './category.entity';
 
 @Table({ timestamps: false })
 export class Locale extends Model<Locale> {
-  @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
-  id: number;
+  @Column({
+    unique: true,
+    primaryKey: true,
+    type: DataType.STRING,
+  })
+  id: string;
 
   @Column({ unique: true })
   caption: string;
@@ -18,8 +22,12 @@ export class Locale extends Model<Locale> {
 
 @Table({ timestamps: false })
 export class AltNameCategory extends Model<AltNameCategory> {
-  @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
-  id: number;
+  @Column({
+    unique: true,
+    primaryKey: true,
+    type: DataType.STRING,
+  })
+  id: string;
 
   @Column
   caption: string;
@@ -29,14 +37,14 @@ export class AltNameCategory extends Model<AltNameCategory> {
 
   @ForeignKey(() => Locale)
   @Column
-  localeId: number;
+  localeId: string;
 
   @BelongsTo(() => Locale)
   locale: Locale;
 
   @ForeignKey(() => Category)
   @Column
-  categoryId: number;
+  categoryId: string;
 
   @BelongsTo(() => Category)
   category: Category;

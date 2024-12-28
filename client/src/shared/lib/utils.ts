@@ -59,12 +59,17 @@ export const readOfClipboard = async () => {
   }
 }
 
-export const getNumberOrNull = (value: unknown) => (typeof value === "number" ? value : null)
-
 export const isString = (value: unknown): value is string => typeof value === "string"
 export const isNumber = (value: unknown): value is number => typeof value === "number"
 export const isBoolean = (value: unknown): value is boolean => typeof value === "boolean"
 export const isEqual = (right: unknown, left: unknown) => right === left
+export const isObject = (value: unknown): value is object => {
+  const isArray = Array.isArray(value)
+  const isNull = value === null
+  const isObject = typeof value === "object"
+
+  return isObject && !isArray && !isNull
+}
 
 export const exclude = <T extends object, K extends keyof T>(data: T, keys: K[]) => {
   const entries = Object
@@ -74,7 +79,7 @@ export const exclude = <T extends object, K extends keyof T>(data: T, keys: K[])
       return [key, value]
     })
 
-  return Object.fromEntries(entries)
+  return Object.fromEntries(entries) as Omit<T, K>
 }
 
 export const include = <T extends object, K extends keyof T>(data: T, keys: readonly K[]) => {
@@ -87,3 +92,7 @@ export const include = <T extends object, K extends keyof T>(data: T, keys: read
 
   return Object.fromEntries(entries)
 }
+
+export const sleep = (ms: number) => new Promise((resolve) => {
+  setTimeout(resolve, ms)
+})

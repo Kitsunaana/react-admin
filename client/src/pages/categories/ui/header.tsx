@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
-import { useEvent } from "shared/hooks/use-event"
+import { useEvent } from "shared/hooks/context-menu/use-event"
 import { Box } from "shared/ui/box"
 import { Input } from "shared/ui/form/input"
 import { Text } from "shared/ui/text"

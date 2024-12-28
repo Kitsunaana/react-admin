@@ -3,21 +3,15 @@ import { nanoid } from "nanoid"
 import { openGallery } from "shared/events/open-gallery"
 import { eventBus } from "shared/lib/event-bus"
 import { Image, Media } from "shared/types/new_types/types"
-import { CategoryStore } from "../../model/category/category-store"
-
-type Action = "add" | "replace" | "none"
+import { PasteAction } from "../../domain/settings"
+import { RecordEvent } from "../../model/history/events"
 
 export class PhotosStore {
   images: Image[] = []
   media: Media[] = []
 
-  constructor(private parent: CategoryStore) {
-    makeAutoObservable(this, { applyActions: false }, { autoBind: true })
-  }
-
-  reset() {
-    this.images = []
-    this.media = []
+  constructor(private recordEvent: RecordEvent) {
+    makeAutoObservable(this, { }, { autoBind: true })
   }
 
   get photos() {
@@ -25,10 +19,7 @@ export class PhotosStore {
   }
 
   get filteredMedia() {
-    return this.media.filter((media) => {
-      if ("deleted" in media) return false
-      return true
-    })
+    return this.media.filter((media) => !media.delete)
   }
 
   openGallery(id: string) {
@@ -44,7 +35,7 @@ export class PhotosStore {
     this.media = this.media
       .map((media) => (media.id === id ? { ...media, order } : media))
 
-    this.parent.history.recordEvent({
+    this.recordEvent({
       id: nanoid(),
       type: "changeMediaOrder",
       value: { id, order },
@@ -56,7 +47,7 @@ export class PhotosStore {
     this.media = this.media
       .map((media) => (media.id === id ? { ...media, deleted: true } : media))
 
-    this.parent.history.recordEvent({
+    this.recordEvent({
       id: nanoid(),
       type: "removeMedia",
       mediaId: id,
@@ -67,7 +58,7 @@ export class PhotosStore {
   clearImage(id: string) {
     this.images = this.images.filter((image) => image.id !== id)
 
-    this.parent.history.recordEvent({
+    this.recordEvent({
       id: nanoid(),
       type: "removeImage",
       imageId: id,
@@ -75,18 +66,10 @@ export class PhotosStore {
     })
   }
 
-  createMedia(payload: Media[]) {
-    this.media = this.media
-      .concat(payload.map(({ id, ...other }) => ({
-        ...other,
-        id: nanoid(),
-      })))
-  }
-
   setUploadedFiles(files: Image[]) {
     this.images = [...this.images, ...files]
 
-    this.parent.history.recordEvent({
+    this.recordEvent({
       id: nanoid(),
       type: "addImages",
       images: files,
@@ -94,76 +77,51 @@ export class PhotosStore {
     })
   }
 
-  getFilteredData<T extends Media | Image>(data: Array<T>): Array<T> {
-    const captionImages = this.photos
-      .map((image) => {
-        if ("caption" in image) return image.caption
-        if ("originalName" in image) return image.originalName
-
-        return null
-      })
-      .filter((caption): caption is string => caption !== null)
-
-    return data.filter((image) => {
-      if ("caption" in image) return !captionImages.includes(image.caption)
-      if ("originalName" in image) return !captionImages.includes(image.originalName)
-
-      return null
-    })
+  getFilteredMedia(media: Media[]) {
+    const captionMedia = this.media.map((m) => m.originalName)
+    return media.filter((m) => !captionMedia.includes(m.originalName))
   }
 
-  setMedia(media: Media[]) { this.media = media }
-  setImages(images: Image[]) { this.images = images }
-
-  setCopiedPhotos(
-    action: Action,
-    payload: {
-      media: Media[],
-      images: Image[]
-    },
-  ) {
-    const actions = this.applyActions(action)
-
-    actions.images(payload.images)()
-    actions.media(payload.media)()
+  getFilteredImages(images: Image[]) {
+    const captionImages = this.images.map((m) => m.caption)
+    return images.filter((m) => !captionImages.includes(m.caption))
   }
 
-  imagesActions(images: Image[]) {
-    return {
-      none: () => { },
-      replace: () => { this.images = images },
-      add: () => {
-        const filteredImages = this.getFilteredData(images)
-        this.images = [...this.images, ...filteredImages]
-      },
-    }
-  }
-
-  mediaActions(media: Media[]) {
-    return {
-      none: () => { },
-      replace: () => {
-        this.media.forEach(({ id }) => this.clearMedia(id))
-        this.createMedia(media)
-      },
-      add: () => {
-        const filteredMedia = this.getFilteredData(media)
-        this.createMedia(filteredMedia)
-      },
-    }
-  }
-
-  applyActions(action: Action) {
-    return {
-      images: (payload: Image[]) => this.imagesActions(payload)[action],
-      media: (payload: Media[]) => this.mediaActions(payload)[action],
-    }
-  }
-
-  getData() {
+  get() {
     return {
       media: toJS(this.media),
       images: toJS(this.images),
+    }
+  }
+
+  setMedia(media: Media[]) {
+    this.media = media
+  }
+
+  setImages(images: Image[]) {
+    this.images = images
+  }
+
+  setCopiedImages(action: PasteAction, images: Image[]) {
+    if (action === "replace") {
+      this.images = images
+      return
+    }
+
+    if (action === "add") {
+      this.images = this.images.concat(this.getFilteredImages(images))
+    }
+  }
+
+  setCopiedMedia(action: PasteAction, media: Media[]) {
+    if (action === "replace") {
+      this.media.forEach((m) => this.clearMedia(m.id))
+      this.media = media
+      return
+    }
+
+    if (action === "add") {
+      this.media = this.media.concat(this.getFilteredMedia(media))
     }
   }
 }

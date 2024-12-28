@@ -19,7 +19,7 @@ const Menu = styled(Box)(({ theme }) => ({
 }))
 
 interface CategoryContextMenuProps {
-  id?: number
+  id?: string
   actionsList?: ReactNode
 }
 
@@ -33,11 +33,28 @@ export const ContextMenu = forwardRef<
       {actionsList}
       {id && (
         <Text
-          sx={{ fontSize: 12, textAlign: "center" }}
+          sx={{
+            fontSize: 12,
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           caption={(
             <>
               ID
-              <Mark style={{ marginLeft: 4 }}>{id}</Mark>
+              <Mark
+                style={{
+                  marginLeft: 4,
+                  maxWidth: 100,
+                  display: "block",
+                  textWrap: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {id}
+              </Mark>
             </>
           )}
         />

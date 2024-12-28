@@ -1,6 +1,8 @@
 export { default as icons } from "./assets/icons.json"
-export { openCreateTagDialog, openEditTagDialog } from "./model/event"
-export { TagsStore } from "./model/tag-store"
-export { Tag } from "./ui/tag"
-export { TagItem } from "./ui/tag-item"
-// export { TagsStoreImpl } from "./domain/tags.store"
+
+export { TagRow } from "./ui/root"
+export { TagView } from "./ui/tag-view"
+
+export { useGetAll as useGetAllTags } from "./queries/use-get-all"
+
+export { openCreateTagDialog, openEditTagDialog } from "./event"

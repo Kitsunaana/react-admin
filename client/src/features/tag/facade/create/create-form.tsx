@@ -1,6 +1,6 @@
 import { FormProvider } from "react-hook-form"
 import { useKeyboard } from "shared/lib/keyboard-manager"
-import { ctrlKey } from "shared/lib/keyboard-manager/middleware"
+import { ctrlKey } from "shared/lib/keyboard-manager/handlers"
 import { useGetAllTags } from "entities/tag"
 import { tagCreateStore } from "../../model/tag-create-store"
 import { DefaultFields } from "../../ui/default-fields"

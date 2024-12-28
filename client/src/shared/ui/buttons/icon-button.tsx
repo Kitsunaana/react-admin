@@ -24,7 +24,10 @@ const Badge = styled(MUIBadge)`
 
 export const IconButton = (props: ButtonProps) => {
   const {
-    help, isLoading, badge, ...other
+    help,
+    isLoading,
+    badge,
+    ...other
   } = props
 
   let iconButton = <BaseIconButton {...other} />

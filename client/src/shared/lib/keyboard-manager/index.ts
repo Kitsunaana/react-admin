@@ -1,2 +1,2 @@
 export { useKeyboard } from "./adapters/use-keyboard"
-export { altCtrlKey } from "./middleware"
+export { altCtrlKey } from "./handlers"

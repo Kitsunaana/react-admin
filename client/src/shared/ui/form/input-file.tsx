@@ -1,10 +1,10 @@
 import { styled } from "@mui/material/styles"
 import { nanoid } from "nanoid"
 import { ChangeEvent, memo, useRef } from "react"
-import { Common } from "shared/types/common"
 import { Box, BoxProps } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
+import { Image } from "shared/types/new_types/types"
 
 const InputFileContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -24,19 +24,15 @@ const InputFileContainer = styled(Box)(({ theme }) => ({
 
 interface InputFileProps extends BoxProps {
   accept: string
-  caption: string
   multiple: boolean
-  name: string
   disabled?: boolean
-  onFilesUpload: (files: Common.Image[]) => void
+  onFilesUpload: (files: Image[]) => void
 }
 
 export const InputFile = memo((props: InputFileProps) => {
   const {
     accept,
-    caption,
     multiple,
-    name,
     disabled,
     onFilesUpload,
     ...other
@@ -49,7 +45,7 @@ export const InputFile = memo((props: InputFileProps) => {
   }
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const files: Common.Image[] = []
+    const files: Image[] = []
 
     Array.prototype.forEach.call(event.target.files, (file: File) => {
       if (multiple) {
@@ -84,8 +80,7 @@ export const InputFile = memo((props: InputFileProps) => {
         sx={{ mr: 1 }}
       />
       <Text
-        name={name}
-        value={caption}
+        name={`forms.${multiple ? "images" : "image"}`}
         sx={{ width: 1 }}
       />
     </InputFileContainer>

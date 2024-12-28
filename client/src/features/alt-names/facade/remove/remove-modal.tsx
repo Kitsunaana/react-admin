@@ -1,5 +1,5 @@
 import { createRoute } from "shared/lib/event-bus"
-import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
+import { useEvent } from "shared/hooks/use-event"
 import { useStartRemove } from "./use-start-remove"
 import { AltName } from "../../domain/types"
 
@@ -9,7 +9,7 @@ const altNameRemoveEvent = createRoute("altName.remove.submit")
 export const RemoveModal = () => {
   const startRemove = useStartRemove()
 
-  useEventBusListen(altNameRemoveEvent, ({ payload }) => {
+  useEvent(altNameRemoveEvent, ({ payload }) => {
     startRemove(payload.data, payload.callback)
   })
 

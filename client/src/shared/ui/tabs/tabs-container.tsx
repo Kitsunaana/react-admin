@@ -1,34 +1,27 @@
 import { observer } from "mobx-react-lite"
 import { useMemo } from "react"
-import { useFormContext, useFormState } from "react-hook-form"
 import { useLang } from "shared/context/lang"
-import { DialogStore } from "shared/stores/dialog-store"
 import { Tab } from "shared/ui/tabs/tab"
 import { Tabs } from "shared/ui/tabs/tabs"
+import { useModalStore } from "shared/hooks/use-modal-store"
+import { DeepRequired, FieldErrorsImpl, FieldValues } from "react-hook-form"
 
-export interface ITab {
-  id: number
-  caption: string
-  icon?: string
-  content?: string[]
-}
-
-interface TabsProps {
-  tabs: ITab[]
-  requiredFields?: string[]
-  store: DialogStore
-  handleChangeTab?: (tab: number) => void
-}
-
-export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
-  const { getValues, control } = useFormContext()
-  const { errors } = useFormState({ control })
-
+export const useTabsWarning = <T extends FieldValues, >({
+  tabs,
+  errors,
+  requiredFields,
+  getValues,
+}: {
+  tabs: ITab[],
+  errors: Partial<FieldErrorsImpl<DeepRequired<T>>>
+  requiredFields: (keyof T)[],
+  getValues: () => T
+}) => {
   const requiredFieldsDeps = requiredFields.map((field) => errors[field])
 
   return useMemo(() => Object
     .keys(getValues())
-    .filter((property) => errors[property])
+    .filter((property) => errors[property as keyof T])
     .map((property) => {
       const findTabWithWarning = tabs.find((tab) => tab?.content?.includes(property))
 
@@ -36,14 +29,22 @@ export const useTabsWarning = (tabs: ITab[], requiredFields: string[]) => {
     }), [...requiredFieldsDeps, getValues])
 }
 
-export const TabsContainer = observer((props: TabsProps) => {
-  const {
-    tabs, store, handleChangeTab, requiredFields = [],
-  } = props
+export type ITab = {
+  id: number
+  caption: string
+  icon?: string
+  content?: string[]
+}
 
-  const langBase = useLang()
-  const tabsWithWarning = useTabsWarning(tabs, requiredFields)
-  const { tab, changeTab } = store
+export const TabsContainer = observer(({
+  tabs,
+  tabsWithWarning,
+}: {
+  tabs: ITab[]
+  tabsWithWarning: (number | undefined)[]
+}) => {
+  const modal = useModalStore()
+  const langBase = useLang("tabs")
 
   const memoizedTabsArray = useMemo(() => tabs.map((item) => {
     const isError = tabsWithWarning.includes(item.id)
@@ -55,20 +56,16 @@ export const TabsContainer = observer((props: TabsProps) => {
         caption={item.caption}
         icon={item.icon}
         isError={isError}
-        isActive={tab === item.id}
-        changeTab={(tab) => {
-          changeTab(tab)
-          handleChangeTab?.(tab)
-        }}
+        isActive={modal.tab === item.id}
+        changeTab={modal.changeTab}
         langBase={langBase}
       />
     )
-  }), [tabsWithWarning, tab])
+  }), [tabsWithWarning, modal.tab])
 
   return (
     <Tabs
-      tab={tab}
-      hasError={tabsWithWarning.includes(tab)}
+      tab={modal.tab}
       tabs={memoizedTabsArray}
     />
   )

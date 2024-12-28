@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CategoryCharacteristic } from '../entities/characteristic.entity';
-import { Common } from '../shared/types/common';
+import { Characteristic } from '../shared/types/types';
 import { CharacteristicRepository } from './repository/characteristic';
 import { UnitRepository } from './repository/unit';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CharacteristicsService {
@@ -12,22 +13,23 @@ export class CharacteristicsService {
     private categoryCharacteristicsRepository: typeof CategoryCharacteristic,
     private unitRepository: UnitRepository,
     private characteristicRepository: CharacteristicRepository,
-  ) {}
+  ) { }
 
-  async createCharacteristic(payload: Common.CharacteristicCreate, categoryId: number) {
+  async createCharacteristic(payload: Characteristic, categoryId: string) {
     const [unit] = await this.unitRepository.findOrCreate(payload.unit);
     const [characteristic] = await this.characteristicRepository.findOrCreate(payload.caption);
 
     await this.categoryCharacteristicsRepository.create({
+      id: uuidv4(),
       characteristicId: characteristic.id,
-      categoryId: categoryId,
+      categoryId,
       unitId: unit.id,
       value: payload.value,
       hideClient: payload.hideClient,
     });
   }
 
-  async updateCharacteristic(payload: Common.CharacteristicCreate, categoryId: number) {
+  async updateCharacteristic(payload: Characteristic, categoryId: string) {
     const [unit] = await this.unitRepository.findOrCreate(payload.unit);
     const [characteristic] = await this.characteristicRepository.findOrCreate(payload.caption);
 
@@ -46,18 +48,18 @@ export class CharacteristicsService {
     );
   }
 
-  async removeCharacteristic(data: Common.CharacteristicCreate) {
+  async removeCharacteristic(data: Characteristic) {
     await this.categoryCharacteristicsRepository.destroy({ where: { id: data.id } });
 
     await this.characteristicRepository.removeUnused();
     await this.unitRepository.removeUnused();
   }
 
-  async create(items: Common.CharacteristicCreate[], categoryId: number) {
+  async create(items: Characteristic[], categoryId: string) {
     await Promise.all(items.map(async (item) => this.createCharacteristic(item, categoryId)));
   }
 
-  async update(items: Common.CharacteristicCreate[], categoryId: number) {
+  async update(items: Characteristic[], categoryId: string) {
     const actions = {
       create: this.createCharacteristic,
       update: this.updateCharacteristic,
@@ -66,7 +68,7 @@ export class CharacteristicsService {
 
     await Promise.all(
       items.map(async (item) => {
-        await actions[item.action]?.bind(this)(item, categoryId);
+        await actions[item.status]?.bind(this)(item, categoryId);
       }),
     );
 
@@ -74,7 +76,7 @@ export class CharacteristicsService {
     await this.unitRepository.removeUnused();
   }
 
-  async remove(categoryId: number) {
+  async remove(categoryId: string) {
     await this.categoryCharacteristicsRepository.destroy({ where: { categoryId } });
   }
 }

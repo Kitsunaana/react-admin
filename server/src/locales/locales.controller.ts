@@ -1,10 +1,11 @@
 import { Controller, Get, Param } from '@nestjs/common';
+import { Locale } from '../shared/types/types';
 import { LocalesService } from './locales.service';
 import { translate } from './translate';
 
 @Controller('locales')
 export class LocalesController {
-  constructor(private localeService: LocalesService) { }
+  constructor(private localeService: LocalesService) {}
 
   @Get('/:lng')
   getLanguage(@Param() { lng }: { lng: string }) {
@@ -12,7 +13,7 @@ export class LocalesController {
   }
 
   @Get('')
-  getAll() {
+  getAll(): Promise<Locale[]> {
     return this.localeService.getAll();
   }
 }

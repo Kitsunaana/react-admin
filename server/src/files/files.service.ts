@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Media } from '../entities/media.entity';
-import { Common } from '../shared/types/common';
+import { Media as MediaEntity } from '../entities/media.entity';
+import { Media } from '../shared/types/types';
 
 @Injectable()
 export class FilesService {
-  constructor(@InjectModel(Media) private mediaRepository: typeof Media) {}
+  constructor(@InjectModel(MediaEntity) private mediaRepository: typeof MediaEntity) {}
 
-  async create(media: Common.Media[], categoryId: number) {
+  async create(media: Media[], categoryId: string) {
     await Promise.all(
       media.map(async (item) => {
         return await this.mediaRepository.findOrCreate({
@@ -27,7 +27,7 @@ export class FilesService {
     );
   }
 
-  async delete(media: Common.Media[]): Promise<void[]> {
+  async delete(media: Media[]): Promise<void[]> {
     return await Promise.all(
       media?.map(async ({ id }) => {
         await this.mediaRepository.destroy({ where: { id } });
@@ -35,7 +35,7 @@ export class FilesService {
     );
   }
 
-  async updateOrder(media: Common.Media[]) {
+  async updateOrder(media: Media[]) {
     return await Promise.all(
       media.map(async (file) => {
         return await this.mediaRepository.update(file, {
@@ -46,7 +46,7 @@ export class FilesService {
     );
   }
 
-  async update(media: Common.Media[]) {
+  async update(media: Media[]) {
     return await Promise.all(
       media.map(async (item) => {
         return await this.mediaRepository.update(
@@ -59,7 +59,12 @@ export class FilesService {
             path: item.path,
             order: item.order,
           },
-          { where: { id: item.id }, returning: false },
+          {
+            where: {
+              id: item.id,
+            },
+            returning: false,
+          },
         );
       }),
     );

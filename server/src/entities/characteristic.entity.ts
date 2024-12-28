@@ -12,8 +12,12 @@ import { Unit } from './units.entity';
 
 @Table({ timestamps: false })
 export class Characteristic extends Model<Characteristic> {
-  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
-  id: number;
+  @Column({
+    unique: true,
+    primaryKey: true,
+    type: DataType.STRING,
+  })
+  id: string;
 
   @Column({ type: DataType.STRING, unique: true })
   caption: string;
@@ -22,48 +26,32 @@ export class Characteristic extends Model<Characteristic> {
   categoryCharacteristics: CategoryCharacteristic[];
 }
 
-export class CategoryCharacteristicCreate {
-  characteristicId: number;
-  categoryId: number;
-  unitId: number;
-  value: string;
-  hideClient: boolean;
-}
-
-export class CategoryCharacteristicUpdate {
-  id: number;
-  characteristicId: number;
-  categoryId: number;
-  unitId: number;
-  value: string;
-  hideClient: boolean;
-}
-
 @Table({ timestamps: false })
-export class CategoryCharacteristic extends Model<
-  CategoryCharacteristic,
-  CategoryCharacteristicCreate
-> {
-  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
-  id: number;
+export class CategoryCharacteristic extends Model<CategoryCharacteristic> {
+  @Column({
+    unique: true,
+    primaryKey: true,
+    type: DataType.STRING,
+  })
+  id: string;
 
   @ForeignKey(() => Characteristic)
   @Column({ unique: false, allowNull: true })
-  characteristicId: number;
+  characteristicId: string;
 
   @BelongsTo(() => Characteristic)
   characteristic: Characteristic;
 
   @ForeignKey(() => Category)
   @Column({ unique: false, allowNull: true })
-  categoryId: number;
+  categoryId: string;
 
   @BelongsTo(() => Category)
   category: Category;
 
   @ForeignKey(() => Unit)
   @Column({ unique: false, allowNull: true })
-  unitId: number;
+  unitId: string;
 
   @BelongsTo(() => Unit)
   unit: Unit;

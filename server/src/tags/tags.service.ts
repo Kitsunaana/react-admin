@@ -1,103 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import sequelize, { Op } from 'sequelize';
-import { CategoryDto } from '../categories/types';
-import { CategoryTag } from '../entities/category-tag.entity';
-import { Tag, TagCreate } from '../entities/tag.entity';
-
-export class TagCreateDto extends TagCreate {
-  id: number;
-  action?: 'create' | 'update' | 'remove';
-}
+import { Inject, Injectable } from '@nestjs/common';
+import { Tag } from '../shared/types/types';
+import { TagStrategy } from './strategies/interface';
+import { TagRepository } from './tag.repository';
 
 @Injectable()
 export class TagsService {
+  private strategy: TagStrategy;
+
   constructor(
-    @InjectModel(Tag) private tagRepository: typeof Tag,
-    @InjectModel(CategoryTag) private categoryTagRepository: typeof CategoryTag,
-  ) {}
+    @Inject('TagStrategies') private strategies: TagStrategy[],
+    private tagRepository: TagRepository,
+  ) { }
 
-  async findOrCreateTag(caption: string) {
-    return await this.tagRepository.findOrCreate({
-      where: { caption },
-      defaults: { caption },
-    });
-  }
+  setStrategy(strategyName: string) {
+    this.strategy = this.strategies.find((strategy) => strategy.constructor.name === strategyName);
 
-  async createCategoryTag(payload: CategoryDto.TagCreate, categoryId: number) {
-    const [tag] = await this.findOrCreateTag(payload.caption);
-
-    return await this.categoryTagRepository.create({
-      tagId: tag.id,
-      icon: payload.icon,
-      tagColor: payload.color,
-      categoryId,
-    });
-  }
-
-  async create(tags: CategoryDto.TagCreate[], categoryId: number) {
-    await Promise.all(tags.map(async (item) => await this.createCategoryTag(item, categoryId)));
-  }
-
-  async removeUnusedTags() {
-    await this.tagRepository.destroy({
-      where: {
-        id: {
-          [Op.notIn]: sequelize.literal(`(
-            SELECT "tagId" FROM "CategoryTags"
-            GROUP BY "tagId"
-          )`),
-        },
-      },
-    });
-  }
-
-  async updateCategoryTag(payload: CategoryDto.TagCreate) {
-    const [tag] = await this.tagRepository.findOrCreate({
-      where: { caption: payload.caption },
-      defaults: { caption: payload.caption },
-    });
-
-    await this.categoryTagRepository.update(
-      {
-        icon: payload.icon,
-        tagColor: payload.color,
-        tagId: tag.id,
-      },
-      {
-        where: { id: payload.id },
-        returning: false,
-      },
-    );
-  }
-
-  async destroyCategoryTag({ id }: CategoryDto.TagCreate) {
-    await this.categoryTagRepository.destroy({ where: { id } });
-  }
-
-  async update(tags: CategoryDto.TagCreate[], categoryId: number) {
-    const actions = {
-      create: this.createCategoryTag,
-      update: this.updateCategoryTag,
-      remove: this.destroyCategoryTag,
-    };
-
-    await Promise.all(
-      tags.map(async (item) => actions[item.action]?.bind(this, item, categoryId)()),
-    );
-
-    await this.removeUnusedTags();
+    if (!this.strategy) throw new Error(`Strategy ${strategyName} not found`);
   }
 
   async getAll() {
-    return this.tagRepository
-      .findAll({ order: [['caption', 'asc']] })
-      .then((tags) => tags.map((tag) => tag.caption));
+    return this.tagRepository.getAll();
   }
 
-  async delete(categoryId: number) {
-    await this.categoryTagRepository.destroy({ where: { categoryId } });
+  async create(tags: Tag[], categoryId: string) {
+    await Promise.all(tags.map(async (item) => await this.strategy.create(item, categoryId)));
+  }
 
-    await this.removeUnusedTags();
+  async update(tags: Tag[], ownerId: string) {
+    const actions = {
+      create: this.strategy.create,
+      update: this.strategy.update,
+      remove: this.strategy.remove,
+    };
+
+    await Promise.all(tags.map(async (item) => actions[item.status]?.bind(this)(item, ownerId)));
+    await this.tagRepository.removeUnused();
+  }
+
+  async delete(ownerId: string) {
+    await this.strategy.delete(ownerId);
   }
 }

@@ -1,7 +1,7 @@
 import { Dialog } from "@mui/material"
 import { observer } from "mobx-react-lite"
-import { useEventBusListen } from "shared/hooks/use-event-bus-listen"
-import { openGallery } from "features/categories/dialog/domain/event"
+import { useEvent } from "shared/hooks/use-event"
+import { openGallery } from "shared/events/open-gallery"
 import { galleryStore } from "../model/gallery-store"
 import { GalleryActions } from "./gallery-actions/gallery-actions"
 import { Navigation } from "./navigation"
@@ -11,7 +11,7 @@ import { TransitionImage } from "./transition-image/transition-image"
 export const Gallery = observer(() => {
   const { open, images } = galleryStore
 
-  useEventBusListen(openGallery, ({ payload }) => galleryStore.openGallery(payload))
+  useEvent(openGallery, ({ payload }) => galleryStore.openGallery(payload))
 
   if (!images.length) return null
 

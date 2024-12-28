@@ -4,10 +4,17 @@ import { ToastContainer } from "react-toastify"
 import { LangContext } from "shared/context/lang"
 import { Gallery } from "widgets/gallery"
 import { Pages } from "pages/pages"
-import { useSettings, useShowErrors } from "features/settings"
+import { useSettings } from "features/settings"
 import { styled } from "@mui/material/styles"
 import { menu, menuBottom, Sidebar } from "widgets/sidebar"
-import { RootCategoryDialog } from "widgets/category-dialog/ui/dialog"
+import { CreateModalCategory } from "widgets/category-dialog"
+import {
+  CreateModalCharacteristic,
+  EditModalCharacteristic,
+  RemoveModalCharacteristic,
+} from "features/characteristics"
+import { CreateModalAltName, EditModalAltName, RemoveModalAltName } from "features/alt-names"
+import { CreateModalTag, EditModalTag, RemoveModalTag } from "features/tag"
 
 const Wrapper = styled("div")(() => ({
   height: "100vh",
@@ -25,8 +32,6 @@ const Inner = styled("div")(() => ({
 export const App = observer(() => {
   const { settings } = useSettings()
 
-  useShowErrors()
-
   return (
     <Wrapper>
       <CssBaseline />
@@ -40,7 +45,23 @@ export const App = observer(() => {
         <Pages />
       </Inner>
 
-      <RootCategoryDialog />
+      <CreateModalCategory
+        modals={(
+          <>
+            <CreateModalCharacteristic />
+            <EditModalCharacteristic />
+            <RemoveModalCharacteristic />
+
+            <CreateModalAltName />
+            <EditModalAltName />
+            <RemoveModalAltName />
+
+            <CreateModalTag />
+            <EditModalTag />
+            <RemoveModalTag />
+          </>
+        )}
+      />
 
       <ToastContainer
         autoClose={3000}

@@ -1,10 +1,10 @@
-import { ButtonProps } from "@mui/material"
+import { ButtonProps, Tooltip } from "@mui/material"
 import Button from "@mui/material/Button"
-import { memo } from "react"
+import { ButtonHTMLAttributes, memo } from "react"
 import { Text } from "shared/ui/text"
 
-interface SaveButtonProps extends ButtonProps {
-  onClick: () => void
+type SaveButtonProps = ButtonProps & ButtonHTMLAttributes<HTMLButtonElement> & {
+  onClick?: () => void
   langBase?: string
 }
 
@@ -12,14 +12,27 @@ export const SaveButton = memo((props: SaveButtonProps) => {
   const { onClick, langBase, ...other } = props
 
   return (
-    <Button
-      sx={{ borderRadius: 2 }}
-      onClick={onClick}
-      color="primary"
-      variant="contained"
-      {...other}
+    <Tooltip
+      arrow
+      placement="bottom"
+      title={(
+        <Text
+          fontSize={11}
+          sx={{ textTransform: "capitalize" }}
+          caption="Ctrl+Enter"
+        />
+      )}
     >
-      <Text sx={{ fontSize: 14 }} langBase={langBase || "global.dialog"} name="save" />
-    </Button>
+      <Button
+        sx={{ borderRadius: 2, display: "flex", gap: 1 }}
+        onClick={onClick}
+        color="primary"
+        variant="outlined"
+        type="submit"
+        {...other}
+      >
+        <Text fontSize={14} langBase={langBase || "global.dialog"} name="save" />
+      </Button>
+    </Tooltip>
   )
 })

@@ -1,5 +1,5 @@
-export { AltNamesStore } from "./model/alt-name-store"
-export { openCreateAltNameDialog, openEditAltNameDialog } from "./model/event"
-export { useLocales } from "./queries/use-get-locales"
-export { AltNameItem } from "./ui/alt-name-item"
-// export { AltNamesStoreImpl } from "./domain/interface.store"
+export { useLocales as useGetAllLocales } from "./queries/use-get-all"
+
+export { openCreateAltNameDialog, openEditAltNameDialog } from "./event"
+
+export { Root as AltNameRow } from "./ui/root"

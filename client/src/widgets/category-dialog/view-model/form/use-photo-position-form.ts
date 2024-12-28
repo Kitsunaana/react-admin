@@ -1,8 +1,8 @@
 import { useModalStore } from "shared/hooks/use-modal-store"
 import { ChangeEvent, FocusEvent } from "react"
-import { ControllerRenderProps, FieldValues } from "react-hook-form"
+import { ControllerRenderProps } from "react-hook-form"
 import { nanoid } from "nanoid"
-import { CaptionPosition } from "shared/types/new_types/types"
+import { CategoryFields } from "shared/types/new_types/types"
 import { useHistoryStore } from "../../model/history/use-history-store"
 
 export const usePhotoPositionForm = () => {
@@ -11,7 +11,7 @@ export const usePhotoPositionForm = () => {
 
   const handleIsShowWithGoodsChange = (
     event: ChangeEvent<HTMLInputElement>,
-    field: ControllerRenderProps<FieldValues, "isShowPhotoWithGoods">,
+    field: ControllerRenderProps<CategoryFields, "isShowPhotoWithGoods">,
   ) => {
     const checked = event.target.value === "true"
 
@@ -44,7 +44,7 @@ export const usePhotoPositionForm = () => {
 
   const handleBlurEffectChange = (
     event: Event,
-    field: ControllerRenderProps<FieldValues, "blur">,
+    field: ControllerRenderProps<CategoryFields, "blur">,
   ) => {
     if ("value" in event.target!) field.onChange(event.target.value)
   }
@@ -62,36 +62,11 @@ export const usePhotoPositionForm = () => {
     })
   }
 
-  const handleCaptionPositionChange = (
-    position: CaptionPosition,
-    onChange: (position: CaptionPosition) => void,
-  ) => {
-    onChange(position)
-
-    history.recordEvent({
-      tab,
-      id: nanoid(),
-      type: "changeCaptionPosition",
-      value: position,
-    })
-  }
-
-  const handlePhotoChange = (photoId: string | null) => {
-    history.recordEvent({
-      tab,
-      id: nanoid(),
-      type: "changeActiveImageId",
-      value: photoId,
-    })
-  }
-
   return {
     handleIsShowWithGoodsChange,
     handleBgColorBlur,
     handleColorBlur,
     handleBlurEffectChange,
     handleBlurEffectBlur,
-    handleCaptionPositionChange,
-    handlePhotoChange,
   }
 }

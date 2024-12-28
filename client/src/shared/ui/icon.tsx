@@ -75,6 +75,7 @@ const iconData = {
   history: "history_edu",
   help: "help",
   keyboard: "keyboard",
+  timelapse: "timelapse",
 }
 
 export type IconKeys = keyof typeof iconData

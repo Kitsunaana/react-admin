@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { AltNameCategory, Locale } from '../entities/locale.entity';
-import { Common } from '../shared/types/common';
+import { AltNameCategory, Locale as LocaleEntity } from '../entities/locale.entity';
+import { AltName } from '../shared/types/types';
 
 @Injectable()
 export class LocalesService {
   constructor(
-    @InjectModel(Locale) private localesRepository: typeof Locale,
+    @InjectModel(LocaleEntity) private localesRepository: typeof LocaleEntity,
     @InjectModel(AltNameCategory) private altNameCategoryRepository: typeof AltNameCategory,
   ) {}
 
@@ -14,17 +14,17 @@ export class LocalesService {
     return await this.localesRepository.findAll({ order: [['caption', 'asc']] });
   }
 
-  async delete(categoryId: number) {
+  async delete(categoryId: string) {
     return await this.altNameCategoryRepository.destroy({
       where: { categoryId: categoryId },
     });
   }
 
-  async destroyAltName(id: number) {
+  async destroyAltName(id: string) {
     return await this.altNameCategoryRepository.destroy({ where: { id } });
   }
 
-  async createAltName(data: Common.AltNameCreate, categoryId: number) {
+  async createAltName(data: AltName, categoryId: string) {
     return await this.altNameCategoryRepository.create({
       categoryId,
       caption: data.caption,
@@ -33,12 +33,12 @@ export class LocalesService {
     });
   }
 
-  async updateAltName(data: Common.AltNameCreate, categoryId: number) {
+  async updateAltName(data: AltName, categoryId: string) {
     return await this.altNameCategoryRepository.update(
       {
         categoryId,
         caption: data.caption,
-        description: data.description as string | null,
+        description: data.description,
         localeId: data.locale.id,
       },
       {
@@ -48,17 +48,17 @@ export class LocalesService {
     );
   }
 
-  async update(altNames: Common.AltNameCreate[], categoryId: number) {
+  async update(altNames: AltName[], categoryId: string) {
     await Promise.all(
       altNames.map(async (altName) => {
-        if (altName.action === 'update') return this.updateAltName(altName, categoryId);
-        if (altName.action === 'create') return this.createAltName(altName, categoryId);
-        if (altName.action === 'remove') return this.destroyAltName(altName.id as number);
+        if (altName.status === 'update') return this.updateAltName(altName, categoryId);
+        if (altName.status === 'create') return this.createAltName(altName, categoryId);
+        if (altName.status === 'remove') return this.destroyAltName(altName.id);
       }),
     );
   }
 
-  async create(altNames: Common.AltNameCreate[], categoryId: number) {
+  async create(altNames: AltName[], categoryId: string) {
     await Promise.all(
       altNames.map(async ({ locale, ...other }) => {
         return await this.altNameCategoryRepository.create({

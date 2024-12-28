@@ -1,25 +1,13 @@
 import { useEffect } from "react"
+import { eventBus, EventCreator, EventType } from "shared/lib/event-bus"
 
-export const useEvent = <Key extends keyof HTMLElementEventMap>(
-  name: Key,
-  handler: (event: HTMLElementEventMap[Key]) => void,
-  shouldHandle: (() => boolean) | boolean = true,
-  target: (() => EventTarget) | EventTarget = document,
+export const useEvent = <K extends string, V>(
+  eventCreator: EventCreator<K, V>,
+  event: (event: EventType<K, V>) => void,
 ) => {
   useEffect(() => {
-    const handle = shouldHandle instanceof Function ? shouldHandle() : shouldHandle
-    if (!handle) return () => { }
+    eventBus.on(eventCreator, event)
 
-    const node = target instanceof Function ? target() : target
-
-    const eventListener: EventListener = (event: Event) => {
-      handler(event as HTMLElementEventMap[Key])
-    }
-
-    if ("addEventListener" in node) {
-      node.addEventListener(name, eventListener)
-    }
-
-    return () => ("removeEventListener" in node ? node.removeEventListener(name, eventListener) : {})
-  }, [name, handler, shouldHandle, target])
+    return () => eventBus.off(eventCreator, event)
+  }, [])
 }

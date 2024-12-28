@@ -6,9 +6,8 @@ import { join } from 'path';
 import { CategoriesModule } from './categories/categories.module';
 import { CharacteristicsModule } from './characteristics/characteristics.module';
 import { FilesModule } from './files/files.module';
-import { GoodsModule } from './goods/goods.module';
 import { LocalesModule } from './locales/locales.module';
-import { SequelizeModule } from './sequelize/sequelize.module';
+import { SequelizeModule } from './shared/sequelize/sequelize.module';
 import { TagsModule } from './tags/tags.module';
 
 @Module({
@@ -27,7 +26,6 @@ import { TagsModule } from './tags/tags.module';
     SequelizeModule,
     CharacteristicsModule,
     TagsModule,
-    GoodsModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

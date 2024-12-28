@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx"
 
-type Id = null | string | number
+type Id = null | string
 
 export class DialogStore {
   id: Id = null
@@ -25,8 +25,6 @@ export class DialogStore {
   }
 
   closeDialog() {
-    console.log("close")
-
     this.id = null
     this.open = false
     this.tab = 0
@@ -37,10 +35,6 @@ export class DialogStore {
   }
 
   changeTab(tab: number) {
-    console.log(tab);
-
     this.tab = tab
   }
 }
-
-export const createDialogStore = () => new DialogStore()

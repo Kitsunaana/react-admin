@@ -1,16 +1,14 @@
 import { alpha } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { observer } from "mobx-react-lite"
-import { ReactNode } from "react"
-import { useTranslation } from "react-i18next"
-import { toast } from "react-toastify"
-import { useLang } from "shared/context/lang"
-import { DialogStore } from "shared/stores/dialog-store"
+import { Fragment, ReactNode } from "react"
+import { useKeyboard } from "shared/lib/keyboard-manager"
 import { Box } from "shared/ui/box"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { Vertical } from "shared/ui/divider"
 import { Mark } from "shared/ui/mark"
 import { Text } from "shared/ui/text"
+import { useModalStore } from "shared/hooks/use-modal-store"
 
 const HeaderContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -25,138 +23,93 @@ const HeaderContainer = styled("div")(({ theme }) => ({
   border: `1px solid ${alpha(theme.palette.grey["500"], 0.25)}`,
 }))
 
-interface DialogHeaderCaptionProps {
+export const DialogHeaderCaption = ({
+  name,
+  value: caption,
+}: {
   name: string
   value?: string
-}
+}) => (
+  <Text
+    name={`title.${name}`}
+    value={caption}
+    sx={{
+      textWrap: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      marginX: "auto",
+    }}
+    translateOptions={{
+      components: {
+        strong: <Mark />,
+      },
+    }}
+  />
+)
 
-export const DialogHeaderCaption = (props: DialogHeaderCaptionProps) => {
-  const { name, value } = props
-
-  return (
-    <Text
-      name={name}
-      value={value}
-      sx={{
-        textWrap: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        marginX: "auto",
-      }}
-      translateOptions={{
-        components: {
-          strong: <Mark />,
-        },
-      }}
-    />
-  )
-}
-
-export interface DialogHeaderProps {
+export const ModalHeader = observer(({
+  title,
+  right,
+  left,
+}: {
   title: string | ReactNode
-  showActions?: boolean
+  right?: {
+    separator?: boolean,
+    components: ReactNode[]
+  }
+  left?: {
+    separator?: boolean
+    components: ReactNode[]
+  }
+}) => {
+  const modalStore = useModalStore()
 
-  settings?: ReactNode
-
-  onCopyClick?: () => Promise<void>
-  onPasteClick?: () => Promise<void>
-  onClearClick?: () => void
-  store: DialogStore
-
-}
-
-export const DialogHeader = observer((props: DialogHeaderProps) => {
-  const {
-    title,
-    settings,
-    onCopyClick,
-    onPasteClick,
-    onClearClick,
-    showActions = false,
-    store,
-  } = props
-
-  const langBase = useLang()
-  const { t } = useTranslation("translation", { keyPrefix: langBase })
-
-  const fullscreenState = store.fullScreen
+  const fullscreenState = modalStore.fullscreen
     ? "fullscreenClose"
     : "fullscreenOpen"
 
-  const handleCopy = async () => {
-    if (!onCopyClick) return
-
-    await toast.promise(onCopyClick(), {
-      error: t("notify.copyError"),
-      success: t("notify.copySuccess"),
-    })
-  }
-
-  const handlePaste = async () => {
-    if (!onPasteClick) return
-
-    await toast.promise(onPasteClick(), {
-      error: t("notify.pasteError"),
-      success: t("notify.pasteSuccess"),
-    })
-  }
+  useKeyboard({
+    key: "f",
+    callback: ({ ctrlKey, altKey }) => {
+      if (ctrlKey && altKey) modalStore.onToggleFullscreen()
+    },
+  })
 
   return (
     <HeaderContainer>
-      {onClearClick && (
-        <IconButton
-          onClick={onClearClick}
-          name="delete"
-          color="error"
-          help={{
-            title: (
-              <Text
-                onlyText
-                langBase="global.dialog"
-                name="clear"
-              />
-            ),
-          }}
-        />
-      )}
+      {left?.components?.map((component, index) => {
+        if (left?.separator && index === 0) return component
+
+        if (left?.separator) {
+          return (
+            <Fragment key={index}>
+              <Vertical disableMargin />
+              {component}
+            </Fragment>
+          )
+        }
+
+        return component
+      })}
       {title}
       <Box flex row ai sx={{ mr: 0 }}>
-        {showActions && (
-          <>
-            <IconButton
-              onClick={handleCopy}
-              name="copy"
-              help={{
-                title: (
-                  <Text
-                    onlyText
-                    langBase="global.dialog"
-                    name="copy"
-                  />
-                ),
-              }}
-            />
-            <Vertical disableMargin />
-            <IconButton
-              onClick={handlePaste}
-              name="paste"
-              help={{
-                title: (
-                  <Text
-                    onlyText
-                    langBase="global.dialog"
-                    name="paste"
-                  />
-                ),
-              }}
-            />
-          </>
-        )}
-        {settings && <Vertical disableMargin />}
-        {settings}
+        {right?.components?.map((component, index) => {
+          if (right?.separator && index === 0) return component
+
+          if (right?.separator) {
+            return (
+              <Fragment key={index}>
+                <Vertical disableMargin />
+                {component}
+              </Fragment>
+            )
+          }
+
+          return component
+        })}
         <Vertical disableMargin />
         <IconButton
-          onClick={store.onToggleSizeScreen}
+          onClick={modalStore.onToggleFullscreen}
           name={fullscreenState}
           help={{
             title: (

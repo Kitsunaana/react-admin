@@ -1,5 +1,5 @@
 import { useKeyboard } from "shared/lib/keyboard-manager"
-import { ctrlKey } from "shared/lib/keyboard-manager/middleware"
+import { ctrlKey } from "shared/lib/keyboard-manager/handlers"
 import { FormProvider } from "react-hook-form"
 import { useGetAllLocales } from "entities/alt-name"
 import { altNameCreateStore } from "../../model/alt-name-create-store"

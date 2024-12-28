@@ -1,10 +1,9 @@
 import { Typography, TypographyProps } from "@mui/material"
-import { observer } from "mobx-react-lite"
-import { ReactNode } from "react"
+import { memo, ReactNode } from "react"
 import { Trans, TransProps, useTranslation } from "react-i18next"
 import { useLang } from "shared/context/lang"
 
-interface TextProps extends TypographyProps {
+export interface TextProps extends TypographyProps {
   name?: string
   caption?: string | ReactNode
   values?: {}
@@ -15,7 +14,7 @@ interface TextProps extends TypographyProps {
   fontSize?: number
 }
 
-export const Text = observer((props: TextProps) => {
+export const Text = memo((props: TextProps) => {
   const {
     name,
     caption,

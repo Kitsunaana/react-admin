@@ -3,20 +3,24 @@ import { Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-types
 import { CategoryTag } from './category-tag.entity';
 import { CategoryCharacteristic } from './characteristic.entity';
 import { CustomCategory } from './custom-category';
-import { Good } from './good.entity';
 import { AltNameCategory, Locale } from './locale.entity';
 import { Media } from './media.entity';
 
 interface CategoryCreationAttrs {
   caption: string;
   description: string;
-  order?: number;
+  order: number | null;
+  id: string;
 }
 
 @Table({ timestamps: true })
 export class Category extends Model<Category, CategoryCreationAttrs> {
-  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
-  id: number;
+  @Column({
+    unique: true,
+    primaryKey: true,
+    type: DataType.STRING,
+  })
+  id: string;
 
   @Column({ allowNull: true, type: DataTypes.TEXT })
   description: string;
@@ -24,8 +28,8 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
   @Column
   caption: string;
 
-  @Column({ defaultValue: -1, type: DataType.INTEGER })
-  order: number;
+  @Column({ allowNull: true })
+  order: number | null;
 
   @HasMany(() => Media, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   media: Media[];
@@ -41,7 +45,4 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
 
   @HasMany(() => CategoryTag)
   tags: CategoryTag[];
-
-  @HasMany(() => Good)
-  goods: Good[];
 }

@@ -1,17 +1,14 @@
-import { Column, HasOne, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasOne, Model, Table } from 'sequelize-typescript';
 import { CategoryTag } from './category-tag.entity';
-
-export class TagCreate {
-  tag: { caption: string; id?: number };
-  icon: string;
-  tagColor: string;
-  categoryId: number;
-}
 
 @Table({ timestamps: false })
 export class Tag extends Model<Tag> {
-  @Column({ unique: true, primaryKey: true, autoIncrement: true })
-  id: number;
+  @Column({
+    unique: true,
+    primaryKey: true,
+    type: DataType.STRING,
+  })
+  id: string;
 
   @Column({ unique: true })
   caption: string;
