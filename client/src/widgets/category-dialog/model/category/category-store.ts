@@ -68,7 +68,7 @@ export class CategoryStore {
   }
 
   setCopied(payload: CategoryRows & CategoryOtherFields, settings: SettingsRecord) {
-    this.characteristic.setCopied(settings.characteristics, payload.characteristics)
+    this.characteristic.setCopiedCharacteristics(settings.characteristics, payload.characteristics)
 
     this.photos.setCopiedMedia(settings.images, payload.media)
     this.photos.setCopiedImages(settings.images, payload.images)

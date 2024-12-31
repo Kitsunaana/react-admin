@@ -57,8 +57,8 @@ export const Layout = (props: LayoutProps) => {
         />
         <Box flex row ai>
           <Vertical />
-          <IconButtonEdit onClick={() => onEdit(tag)} />
-          <IconButtonDelete onClick={() => onRemove(tag)} />
+          <IconButtonEdit onClick={() => onEdit(tag)} langBase={langBase} />
+          <IconButtonDelete onClick={() => onRemove(tag)} langBase={langBase} />
         </Box>
       </StyledRowItem>
     </LangContext>

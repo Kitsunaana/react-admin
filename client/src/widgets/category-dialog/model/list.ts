@@ -1,24 +1,13 @@
 import { makeAutoObservable, toJS } from "mobx"
+import { nanoid } from "nanoid"
 
 type BaseItem = {
+  caption: string
   status: "remove" | "create" | "update" | "none"
   id: string
 }
 
-export interface ListMethods<T extends BaseItem> {
-  get array(): T[]
-  get count(): number
-  get isEmpty(): boolean
-
-  set: (data: T[]) => void
-  get: () => T[]
-
-  create: (payload: T) => void
-  edit: (payload: T) => void
-  remove: (id: string) => void
-}
-
-export class List<T extends BaseItem> implements ListMethods<T> {
+export class List<T extends BaseItem> {
   _array: T[] = []
 
   constructor(list: T[]) {
@@ -47,7 +36,11 @@ export class List<T extends BaseItem> implements ListMethods<T> {
     return toJS(this._array)
   }
 
-  create(payload: T) {
+  merge(list: T[]) {
+    this._array = [...this._array, ...list]
+  }
+
+  add(payload: T) {
     this._array.push(payload)
   }
 
@@ -75,5 +68,39 @@ export class List<T extends BaseItem> implements ListMethods<T> {
         return item
       })
       .filter((item): item is T => item !== null)
+  }
+
+  getIsAlreadyExists(data: T, list: T[]) {
+    return Boolean(
+      list.find((c) => c.caption === data.caption && c.id !== data.id),
+    )
+  }
+
+  getIsCreatedOrUpdated(data: T) {
+    return data.status === "create" || data.status === "update"
+  }
+
+  getCaptions(items: T[]) {
+    return items.map((item) => item.caption)
+  }
+
+  getFilteredItems(captions: string[], excludeItems: T[]) {
+    return excludeItems.filter((item) => !captions.includes(item.caption))
+  }
+
+  buildCreateItem(data: T): T {
+    return {
+      ...data,
+      status: "create",
+      id: nanoid(),
+    }
+  }
+
+  getCreatedItems(items: T[], create: (payload: T) => T) {
+    return items.map(create)
+  }
+
+  removeAllItems(items: T[], remove: (id: string) => void) {
+    items.forEach((item) => remove(item.id))
   }
 }

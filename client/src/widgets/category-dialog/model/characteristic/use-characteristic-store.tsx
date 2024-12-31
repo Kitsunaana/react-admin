@@ -1,4 +1,4 @@
-import { useCategoryStore } from "widgets/category-dialog/model/category/use-category-store"
+import { useCategoryStore } from "../../model/category/use-category-store"
 import { CharacteristicStore } from "./characteristic-store"
 
 export const useCharacteristicStore = <T = CharacteristicStore, >(

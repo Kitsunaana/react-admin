@@ -3,7 +3,7 @@ import { CategoryLocal } from "shared/types/new_types/types"
 import { CategoryEvent } from "./events"
 import { producer } from "./producer"
 
-export interface CategoryWithEvents {
+export type CategoryWithEvents = {
   newData: CategoryLocal
   lastData: CategoryLocal
   event: CategoryEvent
@@ -37,24 +37,24 @@ export class HistoryStore {
     return this._events
   }
 
-  moveToVersion = (index: number) => {
+  moveToVersion(index: number) {
     this._cursor = index
   }
 
-  undo = () => {
+  undo() {
     this._cursor -= 1
   }
 
-  redo = () => {
+  redo() {
     this._cursor = Math.min(this._events.length - 1, this._cursor + 1)
   }
 
-  reset = () => {
+  reset() {
     this._events = []
     this._cursor = -1
   }
 
-  recordEvent = (event: CategoryEvent) => {
+  recordEvent(event: CategoryEvent) {
     this._events = [...this._events.slice(0, this._cursor + 1), event]
 
     this._cursor = this._events.length - 1

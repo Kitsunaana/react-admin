@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
 import { Tag } from "shared/types/new_types/types"
 import { eventBus } from "shared/lib/event-bus"
-import { ListMethods } from "../list"
+import { List } from "../list"
 import { tagCreateEvent, tagRemoveEvent, tagEditEvent } from "./tag"
 import { PasteAction } from "../../domain/settings"
 import { RecordEvent } from "../../model/history/events"
@@ -10,7 +10,7 @@ import { RecordEvent } from "../../model/history/events"
 export class TagStore {
   constructor(
     private recordEvent: RecordEvent,
-    private list: ListMethods<Tag>,
+    private list: List<Tag>,
   ) {
     makeAutoObservable(this, {
       createTag: false,
@@ -64,7 +64,7 @@ export class TagStore {
   }
 
   create(payload: Tag) {
-    this.list.create(payload)
+    this.list.add(payload)
   }
 
   edit(payload: Tag) {

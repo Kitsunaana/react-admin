@@ -60,8 +60,8 @@ export const Root = memo((props: RootProps) => {
         <Box flex row ai sx={{ height: 1 }}>
           <Mark>{altName.locale.caption}</Mark>
           <Vertical />
-          <IconButtonEdit onClick={() => onEdit(altName)} />
-          <IconButtonDelete onClick={() => onRemove(altName)} />
+          <IconButtonEdit onClick={() => onEdit(altName)} langBase={langBase} />
+          <IconButtonDelete onClick={() => onRemove(altName)} langBase={langBase} />
         </Box>
       </StyledAltNameItem>
     </LangContext>

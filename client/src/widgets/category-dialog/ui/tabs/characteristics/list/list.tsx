@@ -4,9 +4,8 @@ import { EmptyList } from "shared/ui/empty-list"
 import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
 import { useState } from "react"
 import {
-  startCreateCharacteristic,
   startEditCharacteristic, startRemoveCharacteristic,
-} from "../../../../model/characteristic/characteristic"
+} from "../../../../model/characteristic/characteristic-events"
 import { useCharacteristicStore } from "../../../../model/characteristic/use-characteristic-store"
 import { CharacteristicsContainer } from "./styles"
 import { createSelectionItem } from "../../../../view-model/selection-item-store"
@@ -18,8 +17,7 @@ export const List = observer(() => {
   const isEmpty = useCharacteristicStore((store) => store.list.isEmpty)
   const count = useCharacteristicStore((store) => store.list.count)
 
-  const isAlreadyExists = useCharacteristicStore((store) => store.isAlreadyExists)
-  const isCreatedOrUpdated = useCharacteristicStore((store) => store.isCreatedOrUpdated)
+  const getState = useCharacteristicStore((store) => store.getState)
 
   useKeyboard({
     key: "ArrowDown",
@@ -36,11 +34,6 @@ export const List = observer(() => {
     callback: altCtrlKey(selectionItem.unselect),
   })
 
-  useKeyboard({
-    key: "a",
-    callback: altCtrlKey(startCreateCharacteristic),
-  })
-
   if (isEmpty) return <EmptyList />
 
   return (
@@ -52,8 +45,7 @@ export const List = observer(() => {
           onEdit={startEditCharacteristic}
           onRemove={startRemoveCharacteristic}
           active={selectionItem.isSelection(index)}
-          hasConflict={isAlreadyExists(characteristic)}
-          isCreatedOrUpdated={isCreatedOrUpdated(characteristic)}
+          state={getState(characteristic)}
         />
       ))}
     </CharacteristicsContainer>

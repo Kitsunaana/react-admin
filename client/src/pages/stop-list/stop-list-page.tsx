@@ -14,7 +14,6 @@ import { Pagination } from "shared/ui/pagination"
 import { RowItem } from "shared/ui/row-item"
 import { Icon } from "shared/ui/icon"
 import { Vertical } from "shared/ui/divider"
-import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
 
 export interface SearchForm {
   search: string
@@ -83,7 +82,7 @@ export const StopListItem = (props: StopListItemProps) => {
       <Box flex row ai>
         <Text fontSize={12} caption="02.09.2024 21:31:17" />
         <Vertical />
-        <IconButtonDelete />
+        {/* <IconButtonDelete /> */}
       </Box>
     </RowItem>
   )

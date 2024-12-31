@@ -18,12 +18,12 @@ export type AltName = AltNameFields & {
   status: "update" | "create" | "remove"
 }
 
-export interface TranslateBody {
+export type TranslateBody = {
   caption: string
   description: string
 }
 
-export interface FetchTranslateResponse {
+export type FetchTranslateResponse = {
   data: {
     trans: TranslateBody
   }

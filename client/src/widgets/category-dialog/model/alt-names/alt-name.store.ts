@@ -71,7 +71,7 @@ export class AltNameStore {
   }
 
   create(payload: AltName) {
-    this.altNamesList.create(payload)
+    this.altNamesList.add(payload)
   }
 
   edit(payload: AltName) {

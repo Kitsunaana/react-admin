@@ -1,9 +1,9 @@
 import { makeAutoObservable } from "mobx"
-import { Common } from "shared/types/common"
+import { Image, Media } from "shared/types/new_types/types"
 
 interface IData {
   index?: number
-  images: (Common.Image | Common.Media)[]
+  images: (Image | Media)[]
 }
 
 class GalleryStore {
@@ -15,7 +15,7 @@ class GalleryStore {
 
   open = false
   indexActiveImage = 0
-  images: (Common.Image | Common.Media)[] = []
+  images: (Image | Media)[] = []
 
   constructor() {
     makeAutoObservable(this, {}, {

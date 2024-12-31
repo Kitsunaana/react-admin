@@ -9,17 +9,15 @@ import { Actions } from "../actions"
 export const Root = memo(({
   data,
   active,
-  hasConflict,
-  isCreatedOrUpdated,
   onEdit,
   onRemove,
+  state,
 }: {
   data: Characteristic
-  hasConflict: boolean
-  isCreatedOrUpdated: boolean
   onRemove: (payload: Characteristic) => void
   onEdit: (payload: Characteristic) => void
   active?: boolean
+  state: "error" | "success" | "none"
 }) => {
   const langBase = useLang("rows")
 
@@ -41,9 +39,9 @@ export const Root = memo(({
   return (
     <LangContext lang={langBase}>
       <StyledRowItem
-        borderSuccess={isCreatedOrUpdated}
-        borderError={hasConflict}
-        bgError={hasConflict}
+        borderSuccess={state === "success"}
+        borderError={state === "error"}
+        bgError={state === "error"}
         onDoubleClick={handleEdit}
         active={Boolean(active)}
       >
