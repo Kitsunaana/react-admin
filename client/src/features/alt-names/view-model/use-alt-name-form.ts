@@ -1,11 +1,15 @@
 import { useForm } from "react-hook-form"
 import { FormEvent } from "react"
-import { AltNameFields, Locale } from "../domain/types"
+import { AltNameFields, Locale } from "../domain/alt-name-types"
 
 export type FormData = {
   caption: string
   description: string
   locale: Locale | null
+}
+
+export type FormLocales = Locale & {
+  disabled?: boolean
 }
 
 export const useAltNameForm = ({
@@ -27,19 +31,19 @@ export const useAltNameForm = ({
     }
   }
 
+  const handleSubmit = form.handleSubmit(onSubmit)
+
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    form.handleSubmit(onSubmit)()
+    handleSubmit()
   }
-
-  const handleKeyDownSubmit = () => form.handleSubmit(onSubmit)()
 
   const defaultValue = getDefaultValue()
 
   return {
+    handleKeyDownSubmit: handleSubmit,
     handleFormSubmit,
-    handleKeyDownSubmit,
     defaultValue,
     form,
   }

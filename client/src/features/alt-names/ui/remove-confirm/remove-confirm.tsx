@@ -1,29 +1,24 @@
 import { AltName } from "shared/types/new_types/types"
-import { Box } from "shared/ui/box"
 import { Mark } from "shared/ui/mark"
 import { RowItem } from "shared/ui/row-item"
 import { Text } from "shared/ui/text"
+import { Container } from "./styles"
 
-interface LayoutProps {
+export const RemoveConfirm = ({
+  altName,
+  langBase,
+}: {
   langBase: string
   altName: AltName
-}
-
-export const Layout = ({ altName, langBase }: LayoutProps) => (
-  <Box flex gap>
+}) => (
+  <Container>
     <Text
       langBase={langBase}
       name="description"
-      value={String(altName.id)}
-      translateOptions={{
-        components: {
-          strong: <Mark />,
-        },
-      }}
     />
     <RowItem>
       <Text caption={altName.caption} />
       <Mark>{altName.locale.caption}</Mark>
     </RowItem>
-  </Box>
+  </Container>
 )

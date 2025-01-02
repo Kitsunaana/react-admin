@@ -7,7 +7,7 @@ import { useAltNameForm } from "../../view-model/use-alt-name-form"
 import { RootForm } from "../../ui/root-form"
 import { DefaultFields } from "../../ui/default-fields"
 
-export const AltNameEditForm = ({ formId }: { formId: string }) => {
+export const EditAltNameForm = ({ formId }: { formId: string }) => {
   const editForm = useAltNameForm({
     defaultFields: altNameEditStore.altName,
     onSubmit: (data) => {
@@ -22,7 +22,7 @@ export const AltNameEditForm = ({ formId }: { formId: string }) => {
 
   useKeyboard({
     key: "Enter",
-    callback: ctrlKey(editForm.handleKeyDownSubmit),
+    callback: ctrlKey(() => editForm.handleKeyDownSubmit()),
   })
 
   return (
@@ -32,7 +32,6 @@ export const AltNameEditForm = ({ formId }: { formId: string }) => {
           locales={altNameEditStore.exclude(locales.data)}
           defaultValue={editForm.defaultValue}
         />
-
       </RootForm>
     </FormProvider>
   )

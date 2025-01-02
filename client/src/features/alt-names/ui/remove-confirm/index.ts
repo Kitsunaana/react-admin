@@ -1,1 +1,1 @@
-export { Layout as RemoveConfirm } from "./layout"
+export { RemoveConfirm } from "./remove-confirm"

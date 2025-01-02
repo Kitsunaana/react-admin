@@ -7,14 +7,14 @@ import { useAltNameForm } from "../../view-model/use-alt-name-form"
 import { RootForm } from "../../ui/root-form"
 import { DefaultFields } from "../../ui/default-fields"
 
-export const AltNameCreateForm = ({ formId }: { formId: string }) => {
+export const CreateAltNameForm = ({ formId }: { formId: string }) => {
   const createForm = useAltNameForm({ onSubmit: altNameCreateStore.submitCreate })
 
   const locales = useGetAllLocales()
 
   useKeyboard({
     key: "Enter",
-    callback: ctrlKey(createForm.handleKeyDownSubmit),
+    callback: ctrlKey(() => createForm.handleKeyDownSubmit()),
   })
 
   return (
@@ -24,7 +24,6 @@ export const AltNameCreateForm = ({ formId }: { formId: string }) => {
           locales={altNameCreateStore.exclude(locales.data)}
           defaultValue={createForm.defaultValue}
         />
-
       </RootForm>
     </FormProvider>
   )

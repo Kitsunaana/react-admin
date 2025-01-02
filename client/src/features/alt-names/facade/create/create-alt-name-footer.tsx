@@ -3,7 +3,7 @@ import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { useKeyboard } from "shared/lib/keyboard-manager"
 import { altNameCreateStore } from "../../model/alt-name-create-store"
 
-export const CreateFooter = ({ formId }: { formId: string }) => {
+export const CreateAltNameFooter = ({ formId }: { formId: string }) => {
   useKeyboard({
     key: "Escape",
     callback: altNameCreateStore.cancelCreate,

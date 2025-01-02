@@ -1,13 +1,9 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
-import { createRoute, eventBus } from "shared/lib/event-bus"
-import { AltNameFields, AltName, Locale } from "../domain/types"
-
-const openModalEvent = createRoute("altName.create.open")
-  .withParams<{ altNames: AltName[] }>()
-
-const submitEvent = createRoute("altName.create.submit")
-  .withParams<AltName>()
+import { eventBus } from "shared/lib/event-bus"
+import { AltNameFields, AltName, Locale } from "../domain/alt-name-types"
+import { openCreateAltNameModalEvent, submitCreateAltNameEvent } from "../domain/alt-names-events"
+import { FormLocales } from "../view-model/use-alt-name-form"
 
 class AltNameCreateStore {
   isCreating: boolean = false
@@ -16,23 +12,11 @@ class AltNameCreateStore {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(openModalEvent, ({ payload }) => {
-      this.altNames = payload.altNames
-      this.startCreate()
-    })
+    eventBus.on(openCreateAltNameModalEvent, ({ payload }) => this.startCreate(payload.altNames))
   }
 
-  exclude(locales: Locale[]) {
-    const usedLocaleCodes = this.altNames.map((item) => item.locale.code)
-
-    return locales.map((locale) => (
-      usedLocaleCodes.includes(locale.code)
-        ? { ...locale, disabled: true }
-        : locale
-    ))
-  }
-
-  startCreate() {
+  startCreate(altNames: AltName[]) {
+    this.altNames = altNames
     this.isCreating = true
   }
 
@@ -43,11 +27,21 @@ class AltNameCreateStore {
   submitCreate(payload: AltNameFields) {
     this.cancelCreate()
 
-    eventBus.emit(submitEvent({
+    eventBus.emit(submitCreateAltNameEvent({
       ...payload,
       status: "create",
       id: nanoid(),
     }))
+  }
+
+  exclude(locales: Locale[]): FormLocales[] {
+    const usedLocaleCodes = this.altNames.map((item) => item.locale.code)
+
+    return locales.map((locale) => (
+      usedLocaleCodes.includes(locale.code)
+        ? { ...locale, disabled: true }
+        : locale
+    ))
   }
 }
 
