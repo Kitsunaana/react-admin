@@ -4,7 +4,7 @@ import {
 import { CategoryLocal, Image } from "shared/types/new_types/types"
 import { toast } from "react-toastify"
 import { useTranslation } from "react-i18next"
-import { useSettingsStore } from "../model/settings/use-settings-store"
+import { useSettingsStore } from "widgets/category-dialog/model/setting/use-settings-store"
 import { useCategoryFormContext } from "./form/use-category-form"
 
 export const useCopyPaste = () => {

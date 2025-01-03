@@ -2,8 +2,8 @@ import { Checkbox, FormControlLabel } from "@mui/material"
 import { observer } from "mobx-react-lite"
 import { useMemo } from "react"
 import { useLang } from "shared/context/lang"
+import { useSettingsStore } from "widgets/category-dialog/model/setting/use-settings-store"
 import { KeysSettingsFields } from "../../../domain/settings"
-import { useSettingsStore } from "../../../model/settings/use-settings-store"
 import { Container, Caption } from "./styles"
 
 export const Fields = observer(() => {

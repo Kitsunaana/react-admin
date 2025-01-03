@@ -8,7 +8,7 @@ import {
 } from "../../../../model/characteristic/characteristic-events"
 import { useCharacteristicStore } from "../../../../model/characteristic/use-characteristic-store"
 import { CharacteristicsContainer } from "./styles"
-import { createSelectionItem } from "../../../../view-model/selection-item-store"
+import { createSelectionItem } from "../../../../view-model/selection-item/selection-item-store"
 
 export const List = observer(() => {
   const [selectionItem] = useState(createSelectionItem)

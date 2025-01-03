@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import { useModalStore } from "shared/hooks/use-modal-store"
 import { InputFile } from "shared/ui/form/input-file"
-import { usePhotosStore } from "../../../../model/photos/use-photos-store"
+import { usePhotosStore } from "widgets/category-dialog/model/photo/use-photos-store"
 import { Photo } from "../photo"
 import { Container, GridImage, GridImageContainer } from "./styles"
 

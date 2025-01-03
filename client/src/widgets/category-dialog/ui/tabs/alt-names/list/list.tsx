@@ -1,12 +1,11 @@
 import { AltNameRow } from "entities/alt-name"
 import { observer } from "mobx-react-lite"
-import { useListKeyboardEvents } from "shared/hooks/use-tab-keyboard-events"
-import { Skeleton } from "shared/ui/skeleton"
 import { EmptyList } from "shared/ui/empty-list"
 import { nanoid } from "nanoid"
-import { useAltNameStore } from "../../../../model/alt-names/use-alt-name-store"
-import { useAltNames } from "../../../../facade/use-alt-names"
-import { AltNamesContainer } from "./styles"
+import { useAltNameStore } from "../../../../model/alt-name/use-alt-name-store"
+import { startEditAltName, startRemoveAltName } from "../../../../model/alt-name/alt-name-events"
+import { AltNamesContainer, AltNameLoader } from "./styles"
+import { useSelectionItem } from "../../../../view-model/selection-item/use-selection-item"
 
 export const List = observer(({
   isLoading,
@@ -15,43 +14,31 @@ export const List = observer(({
   isLoading: boolean
   showSkeletonCount: number
 }) => {
-  const altNames = useAltNames()
-  const selected = useListKeyboardEvents()
-  const isEmpty = useAltNameStore((store) => store.isEmpty)
+  const count = useAltNameStore((store) => store.list.count)
+  const isEmpty = useAltNameStore((store) => store.list.isEmpty)
+  const altNames = useAltNameStore((store) => store.list.array)
 
-  if (isEmpty) return <EmptyList />
+  const selectionItem = useSelectionItem(count)
 
-  if (isLoading) {
-    return (
-      <AltNamesContainer>
-        {(
-          Array
-            .from({ length: showSkeletonCount }, () => nanoid())
-            .map((id) => (
-              <Skeleton
-                key={id}
-                height={40}
-                variant="rectangular"
-                sx={{ borderRadius: 2, mb: 0.5 }}
-              />
-            ))
-        )}
-      </AltNamesContainer>
-    )
-  }
+  if (isEmpty && !isLoading) return <EmptyList />
 
   return (
-    <AltNamesContainer ref={selected.refBox}>
-      {altNames.map((item, index) => (
+    <AltNamesContainer>
+      {altNames.map((altName, index) => (
         <AltNameRow
-          key={item.data.id}
-          altName={item.data}
-          onEdit={item.edit}
-          onRemove={item.remove}
+          key={altName.id}
+          altName={altName}
           disabled={isLoading}
-          active={(selected.index === index) && selected.show}
+          onEdit={(data) => startEditAltName(data, altNames)}
+          onRemove={(data) => startRemoveAltName(data)}
+          active={selectionItem.isSelection(index)}
         />
       ))}
+
+      {isLoading && (Array
+        .from({ length: showSkeletonCount }, () => nanoid())
+        .map((id) => <AltNameLoader key={id} variant="rectangular" />)
+      )}
     </AltNamesContainer>
   )
 })

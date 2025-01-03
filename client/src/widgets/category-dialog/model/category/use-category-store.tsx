@@ -3,11 +3,12 @@ import { useStrictContext } from "shared/lib/react"
 import { Characteristic, Tag } from "shared/types/new_types/types"
 import { CharacteristicStore } from "widgets/category-dialog/model/characteristic/characteristic-store"
 import { TagStore } from "widgets/category-dialog/model/tag/tag-store"
+import { AltNameStore } from "widgets/category-dialog/model/alt-name/alt-name.store"
+import { PhotosStore } from "widgets/category-dialog/model/photo/photos.store"
+import { AltName } from "widgets/category-dialog/domain/alt-name"
 import { CategoryStore } from "./category-store"
-import { AltNameStore } from "../alt-names/alt-name.store"
 import { HistoryStore } from "../history/history-store"
 import { PhotoPositionStore } from "../photo-position/photo-position.store"
-import { PhotosStore } from "../photos/photos.store"
 import { List } from "../list"
 
 export const CategoryStoreContext = createContext<CategoryStore | null>(null)
@@ -27,7 +28,7 @@ export const CategoryStoreProvider = ({ children }: { children: ReactNode }) => 
     getCharacteristics: (recordEvent) => (
       new CharacteristicStore(recordEvent, new List<Characteristic>([]))
     ),
-    getAltNames: (parent) => new AltNameStore(parent),
+    getAltNames: (recordEvent) => new AltNameStore(recordEvent, new List<AltName>([])),
     getTags: (recordEvent) => new TagStore(recordEvent, new List<Tag>([])),
   }))
 

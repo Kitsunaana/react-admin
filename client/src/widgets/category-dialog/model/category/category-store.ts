@@ -4,11 +4,11 @@ import { SettingsRecord } from "widgets/category-dialog/domain/settings"
 import { RecordEvent } from "widgets/category-dialog/model/history/events"
 import { CharacteristicStore } from "widgets/category-dialog/model/characteristic/characteristic-store"
 import { TagStore } from "widgets/category-dialog/model/tag/tag-store"
+import { PhotosStore } from "widgets/category-dialog/model/photo/photos.store"
+import { AltNameStore } from "widgets/category-dialog/model/alt-name/alt-name.store"
 import { HistoryStore } from "../history/history-store"
-import { PhotosStore } from "../photos/photos.store"
 import { getCategoryDefaultRows } from "../../domain/const"
 import { PhotoPositionStore } from "../photo-position/photo-position.store"
-import { AltNameStore } from "../alt-names/alt-name.store"
 
 export class CategoryStore {
   history!: HistoryStore
@@ -25,7 +25,7 @@ export class CategoryStore {
     getPhotos: (recordEvent: RecordEvent) => PhotosStore
     getPhotoPosition: (recordEvent: RecordEvent) => PhotoPositionStore
     getCharacteristics: (recordEvent: RecordEvent) => CharacteristicStore
-    getAltNames: (parent: CategoryStore) => AltNameStore
+    getAltNames: (recordEvent: RecordEvent) => AltNameStore
     getTags: (recordEvent: RecordEvent) => TagStore
   }) {
     this.history = stores.getHistory(this)
@@ -34,7 +34,7 @@ export class CategoryStore {
     this.photos = stores.getPhotos(recordEvent)
     this.photoPosition = stores.getPhotoPosition(recordEvent)
     this.characteristic = stores.getCharacteristics(recordEvent)
-    this.altNames = stores.getAltNames(this)
+    this.altNames = stores.getAltNames(recordEvent)
     this.tags = stores.getTags(recordEvent)
 
     makeAutoObservable(this, {}, { autoBind: true })
@@ -47,15 +47,16 @@ export class CategoryStore {
   get(): CategoryRows & CategoryOtherFields {
     return {
       characteristics: this.characteristic.list.get(),
+      altNames: this.altNames.list.get(),
       tags: this.tags.get(),
       ...this.photoPosition.get(),
       ...this.photos.get(),
-      ...this.altNames.getData(),
     }
   }
 
   set(payload: CategoryRows & CategoryOtherFields = this.defaultCategory) {
     this.characteristic.list.set(payload.characteristics)
+    this.altNames.list.set(payload.altNames)
 
     this.photos.setImages(payload.images)
     this.photos.setMedia(payload.media)
@@ -63,7 +64,6 @@ export class CategoryStore {
       activeImageId: payload.activeImageId,
       captionPosition: payload.captionPosition,
     })
-    this.altNames.setAltNames(payload.altNames)
     this.tags.set(payload.tags)
   }
 

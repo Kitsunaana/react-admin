@@ -30,8 +30,6 @@ export type FetchTranslateResponse = {
   locale: Locale
 }
 
-export type FetchTranslateData = Array<FetchTranslateResponse>
-
 export const translateSchema = z.object({
   trans: z.object({
     caption: z.string(),

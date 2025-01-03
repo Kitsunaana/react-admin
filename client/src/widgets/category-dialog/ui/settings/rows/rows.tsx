@@ -1,6 +1,6 @@
 import { ButtonGroup } from "shared/ui/buttons/toggle-button"
+import { useSettingsStore } from "widgets/category-dialog/model/setting/use-settings-store"
 import { KeysSettingsRows } from "../../../domain/settings"
-import { useSettingsStore } from "../../../model/settings/use-settings-store"
 import { Divider, Caption } from "./styles"
 
 const buttonGroups = ["images", "characteristics", "tags"] as const
