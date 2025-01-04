@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
 import { altNameApi } from "../api"
 
-export const useLocales = () => {
+export const useGetAllLocales = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["locales"],
-    queryFn: altNameApi.getAll,
-    placeholderData: [],
+    queryFn: altNameApi.getAllLocales,
   })
 
   return {

@@ -1,10 +1,10 @@
 import { z } from "zod"
 
 export const localeSchema = z.object({
+  id: z.string(),
   altName: z.string(),
   caption: z.string(),
   code: z.string(),
-  id: z.string(),
 })
 
-export const localesSchema = z.array(localeSchema)
+export const getAllLocalesResponseSchema = z.array(localeSchema)

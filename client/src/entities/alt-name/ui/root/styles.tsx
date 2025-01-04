@@ -1,14 +1,13 @@
 import { alpha, styled } from "@mui/material"
-import { RowItem, RowItemProps } from "shared/ui/row-item"
+import { StyledRowItem, StyledRowItemProps } from "shared/ui/row-item"
 
-interface StyledAltNameItemProps extends RowItemProps {
+type StyledAltNameItemProps = StyledRowItemProps & {
   disabled: boolean
-  active: boolean
 }
 
 export const StyledAltNameItem = styled(
-  ({ disabled, active, ...other }: StyledAltNameItemProps) => <RowItem {...other} />,
-)(({ theme: { palette }, disabled, active }) => ({
+  ({ disabled, active, ...other }: StyledAltNameItemProps) => <StyledRowItem {...other} />,
+)(({ theme: { palette }, disabled }) => ({
   ...(disabled ? {
     position: "relative",
     "&::after": {
@@ -23,10 +22,5 @@ export const StyledAltNameItem = styled(
         palette.mode === "light" ? "black" : "white"
       ], 0.15),
     },
-  } : {}),
-  ...(active ? {
-    border: (
-      `1px solid ${palette.mode === "light" ? palette.primary.light : palette.warning.dark}`
-    ),
   } : {}),
 }))
