@@ -1,1 +1,1 @@
-export { Layout as CategoryRow } from "./layout"
+export { Root as CategoryRow } from "./root"
