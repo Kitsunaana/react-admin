@@ -11,7 +11,11 @@ export const HiddenIndicator = ({
 
   return (
     <Root
-      help={{ title: <Text name="hiddenForClient" /> }}
+      help={{
+        title: (
+          <Text name="hiddenForClient" />
+        ),
+      }}
     >
       <Icon
         name="invisible"

@@ -1,10 +1,10 @@
 import { memo, useCallback } from "react"
-import { LangContext, useLang } from "shared/context/lang"
+import { useLang } from "shared/context/lang"
 import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
-import { Characteristic } from "shared/types/new_types/types"
-import { StyledRowItem } from "./styles"
 import { InfoView } from "../info-view"
 import { Actions } from "../actions"
+import { Layout } from "../layout"
+import { Characteristic } from "../../domain/types"
 
 export const Root = memo(({
   data,
@@ -16,8 +16,8 @@ export const Root = memo(({
   data: Characteristic
   onRemove: (payload: Characteristic) => void
   onEdit: (payload: Characteristic) => void
-  active?: boolean
-  state: "error" | "success" | "none"
+  active: boolean
+  state: string
 }) => {
   const langBase = useLang("rows")
 
@@ -27,37 +27,36 @@ export const Root = memo(({
   useKeyboard({
     key: "d",
     disabled: !active,
-    callback: altCtrlKey(() => onRemove(data)),
+    callback: altCtrlKey(handleRemove),
   })
 
   useKeyboard({
     key: "e",
     disabled: !active,
-    callback: altCtrlKey(() => onEdit(data)),
+    callback: altCtrlKey(handleEdit),
   })
 
   return (
-    <LangContext lang={langBase}>
-      <StyledRowItem
-        borderSuccess={state === "success"}
-        borderError={state === "error"}
-        bgError={state === "error"}
-        onDoubleClick={handleEdit}
-        active={Boolean(active)}
-      >
+    <Layout
+      state={state}
+      active={active}
+      langBase={langBase}
+      onDoubleClick={handleEdit}
+      infoView={(
         <InfoView
           caption={data.caption}
           unit={data.unit}
           value={data.value}
           hideClient={data.hideClient}
         />
-
+      )}
+      actions={(
         <Actions
           langBase={langBase}
           onRemove={handleRemove}
           onEdit={handleEdit}
         />
-      </StyledRowItem>
-    </LangContext>
+      )}
+    />
   )
 })

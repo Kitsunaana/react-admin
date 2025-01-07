@@ -3,19 +3,17 @@ import { validation } from "shared/lib/validation"
 import { getCharacteristicsResponse, getUnitsResponse } from "./domain/schemas"
 import { CharacteristicsResponse, UnitsResponse } from "./domain/types"
 
-const getAll = async (): Promise<CharacteristicsResponse> => {
-  const { data } = await $axios.get("/characteristics")
+const getAllCharacteristics = (): Promise<CharacteristicsResponse> => (
+  $axios.get("/characteristics")
+    .then((response) => validation(getCharacteristicsResponse, response.data))
+)
 
-  return validation(getCharacteristicsResponse, data)
-}
-
-const getAllUnits = async (): Promise<UnitsResponse> => {
-  const { data } = await $axios.get("/characteristics/units")
-
-  return validation(getUnitsResponse, data)
-}
+const getAllUnits = (): Promise<UnitsResponse> => (
+  $axios.get("/characteristics/units")
+    .then((response) => validation(getUnitsResponse, response.data))
+)
 
 export const characteristicsApi = {
-  getAll,
+  getAllCharacteristics,
   getAllUnits,
 }

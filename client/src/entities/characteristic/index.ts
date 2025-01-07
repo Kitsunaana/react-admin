@@ -1,4 +1,8 @@
-export { useGetAll as useGetAllCharacteristics } from "./queries/use-get-all"
-export { useGetUnits as useGetAllUnits } from "./queries/use-get-units"
+export { useGetAllCharacteristics } from "./queries/use-get-all-characteristics"
+export { useGetAllUnits } from "./queries/use-get-all-units"
 
 export { CharacteristicRow } from "./ui/root"
+
+export { characteristicsSchema, characteristicFieldsSchema } from "./domain/schemas"
+
+export type { Characteristic, CharacteristicFields } from "./domain/types"
