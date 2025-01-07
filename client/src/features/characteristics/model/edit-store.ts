@@ -1,32 +1,32 @@
 import { makeAutoObservable } from "mobx"
 import { eventBus } from "shared/lib/event-bus"
-import { Characteristic } from "../domain/types"
-import { openEditModalEvent, submitEditEvent } from "../domain/events"
+import { Characteristic } from "entities/characteristic"
+import { openModalEditCharacteristicEvent, submitEditCharacteristicEvent } from "../domain/events"
 
 class EditStore {
-  isEditing: boolean = false
-  characteristic: Characteristic | undefined = undefined
+  public isEditing: boolean = false
+  public characteristic: Characteristic | undefined = undefined
 
-  constructor() {
+  public constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(openEditModalEvent, ({ payload }) => this.startEdit(payload))
+    eventBus.on(openModalEditCharacteristicEvent, ({ payload }) => this.startEdit(payload))
   }
 
-  startEdit(characteristic: Characteristic) {
+  public startEdit(characteristic: Characteristic) {
     this.characteristic = characteristic
     this.isEditing = true
   }
 
-  cancelEdit() {
+  public cancelEdit() {
     this.characteristic = undefined
     this.isEditing = false
   }
 
-  submitEdit(payload: Characteristic) {
+  public submitEdit(payload: Characteristic) {
     this.cancelEdit()
 
-    eventBus.emit(submitEditEvent({
+    eventBus.emit(submitEditCharacteristicEvent({
       ...payload,
       status: payload.status === "create" ? "create" : "update",
     }))

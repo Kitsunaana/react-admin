@@ -17,12 +17,12 @@ export const CharacteristicCreateForm = ({ formId }: { formId: string }) => {
 
   useKeyboard({
     key: "Enter",
-    callback: ctrlKey(createForm.handleKeyDownSubmit),
+    callback: ctrlKey(() => createForm.handleSubmit()),
   })
 
   return (
     <FormProvider {...createForm.form}>
-      <RootForm id={formId} onSubmit={createForm.handleFormSubmit}>
+      <RootForm id={formId} onSubmit={createForm.handleSubmit}>
         <DefaultFields
           defaultValue={createForm.defaultValue}
           characteristics={characteristics.captions}

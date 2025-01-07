@@ -1,11 +1,10 @@
-import { observer } from "mobx-react-lite"
 import { useId } from "react"
 import { ModalContainer } from "shared/ui/dialog/upsert-dialog"
 import { DialogHeaderCaption, ModalHeader } from "shared/ui/dialog/dialog-header"
 import { CharacteristicCreateForm } from "./create-form"
 import { CreateFooter } from "./create-footer"
 
-export const CreateBody = observer(() => {
+export const CreateBody = () => {
   const formId = useId()
 
   return (
@@ -18,4 +17,4 @@ export const CreateBody = observer(() => {
       }}
     />
   )
-})
+}

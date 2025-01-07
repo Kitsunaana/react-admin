@@ -21,7 +21,10 @@ export const DefaultFields = ({
       defaultValue={defaultValue.caption}
       rules={{
         required: "requiredSelect",
-        minLength: { value: 3, message: "minLength" },
+        minLength: {
+          value: 3,
+          message: "minLength",
+        },
       }}
       render={({ field, fieldState }) => (
         <Autocomplete

@@ -1,19 +1,21 @@
 import { createRoute } from "shared/lib/event-bus"
-import { Characteristic } from "features/characteristics/domain/types"
+import { Characteristic } from "entities/characteristic"
 
-export const openCreateModalEvent = createRoute("characteristic.create.open")
-
-export const submitCreateEvent = createRoute("characteristic.create.submit")
+// submits
+export const submitCreateCharacteristicEvent = createRoute("characteristic.create.submit")
   .withParams<Characteristic>()
 
-export const openEditModalEvent = createRoute("characteristic.edit.open")
+export const submitEditCharacteristicEvent = createRoute("characteristic.edit.submit")
   .withParams<Characteristic>()
 
-export const submitEditEvent = createRoute("characteristic.edit.submit")
+export const submitRemoveCharacteristicEvent = createRoute("characteristic.remove.submit")
+  .withParams<string>()
+
+// open modals
+export const openModalCreateCharacteristicEvent = createRoute("characteristic.create.open")
+
+export const openModalEditCharacteristicEvent = createRoute("characteristic.edit.open")
   .withParams<Characteristic>()
 
-export const openRemoveModalEvent = createRoute("characteristic.remove.open")
+export const openModalRemoveCharacteristicEvent = createRoute("characteristic.remove.open")
   .withParams<Characteristic>()
-
-export const submitRemoveEvent = createRoute("characteristic.remove.submit")
-  .withParams<{ id: string }>()

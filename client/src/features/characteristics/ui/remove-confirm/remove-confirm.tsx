@@ -1,6 +1,6 @@
-import { Characteristic } from "shared/types/new_types/types"
 import { Mark } from "shared/ui/mark"
 import { Text } from "shared/ui/text"
+import { Characteristic } from "entities/characteristic"
 import { Row, Container } from "./styles"
 
 export const RemoveConfirm = ({

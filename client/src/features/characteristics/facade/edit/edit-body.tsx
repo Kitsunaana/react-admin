@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import { useId } from "react"
 import { ModalContainer } from "shared/ui/dialog/upsert-dialog"
 import { DialogHeaderCaption, ModalHeader } from "shared/ui/dialog/dialog-header"
@@ -6,7 +5,7 @@ import { editStore } from "../../model/edit-store"
 import { CharacteristicEditForm } from "./edit-form"
 import { EditFooter } from "./edit-footer"
 
-export const EditBody = observer(() => {
+export const EditBody = () => {
   const formId = useId()
 
   return (
@@ -28,4 +27,4 @@ export const EditBody = observer(() => {
       }}
     />
   )
-})
+}

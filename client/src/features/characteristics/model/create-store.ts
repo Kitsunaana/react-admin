@@ -1,30 +1,30 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
 import { eventBus } from "shared/lib/event-bus"
-import { CharacteristicFields } from "../domain/types"
-import { submitCreateEvent, openCreateModalEvent } from "../domain/events"
+import { CharacteristicFields } from "entities/characteristic"
+import { submitCreateCharacteristicEvent, openModalCreateCharacteristicEvent } from "../domain/events"
 
 class CreateStore {
-  isCreating: boolean = false
+  public isCreating: boolean = false
 
-  constructor() {
+  public constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(openCreateModalEvent, this.startCreate)
+    eventBus.on(openModalCreateCharacteristicEvent, this.startCreate)
   }
 
-  startCreate() {
+  public startCreate() {
     this.isCreating = true
   }
 
-  cancelCreate() {
+  public cancelCreate() {
     this.isCreating = false
   }
 
-  submitCreate(payload: CharacteristicFields) {
+  public submitCreate(payload: CharacteristicFields) {
     this.cancelCreate()
 
-    eventBus.emit(submitCreateEvent({
+    eventBus.emit(submitCreateCharacteristicEvent({
       ...payload,
       status: "create",
       id: nanoid(),

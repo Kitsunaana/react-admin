@@ -1,11 +1,19 @@
-import { useState } from "react"
+import { useEvent } from "shared/hooks/use-event"
+import { eventBus } from "shared/lib/event-bus"
+import {
+  openModalRemoveCharacteristicEvent,
+  submitRemoveCharacteristicEvent,
+} from "../../domain/events"
 import { useStartRemove } from "./use-start-remove"
-import { RemoveStore } from "../../model/remove-store"
 
 export const RemoveModal = () => {
   const startRemove = useStartRemove()
 
-  useState(new RemoveStore(startRemove))
+  useEvent(openModalRemoveCharacteristicEvent, ({ payload }) => {
+    startRemove(payload, (id) => {
+      eventBus.emit(submitRemoveCharacteristicEvent(id))
+    })
+  })
 
   return null
 }

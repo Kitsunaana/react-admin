@@ -23,12 +23,12 @@ export const CharacteristicEditForm = ({ formId }: { formId: string }) => {
 
   useKeyboard({
     key: "Enter",
-    callback: ctrlKey(editForm.handleKeyDownSubmit),
+    callback: ctrlKey(() => editForm.handleSubmit()),
   })
 
   return (
     <FormProvider {...editForm.form}>
-      <RootForm id={formId} onSubmit={editForm.handleFormSubmit}>
+      <RootForm id={formId} onSubmit={editForm.handleSubmit}>
         <DefaultFields
           characteristics={characteristics.captions}
           defaultValue={editForm.defaultValue}

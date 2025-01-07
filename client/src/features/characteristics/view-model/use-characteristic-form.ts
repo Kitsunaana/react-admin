@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form"
 import { FormEvent } from "react"
-import { CharacteristicFields } from "../domain/types"
+import { CharacteristicFields, characteristicFieldsSchema } from "entities/characteristic"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export type FormData = {
   caption: string | null
@@ -16,7 +17,9 @@ export const useCharacteristicForm = ({
   onSubmit: (data: CharacteristicFields) => void
   defaultFields?: FormData
 }) => {
-  const form = useForm<CharacteristicFields>()
+  const form = useForm<CharacteristicFields>({
+    resolver: zodResolver(characteristicFieldsSchema),
+  })
 
   const getDefaultValue = (): FormData => {
     if (defaultFields !== undefined) return defaultFields
@@ -29,19 +32,16 @@ export const useCharacteristicForm = ({
     }
   }
 
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const defaultValue = getDefaultValue()
+
+  const handleSubmit = (event?: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault()
 
     form.handleSubmit(onSubmit)()
   }
 
-  const handleKeyDownSubmit = () => form.handleSubmit(onSubmit)()
-
-  const defaultValue = getDefaultValue()
-
   return {
-    handleFormSubmit,
-    handleKeyDownSubmit,
+    handleSubmit,
     defaultValue,
     form,
   }

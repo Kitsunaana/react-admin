@@ -1,6 +1,6 @@
 import { useGetConfirmation } from "shared/lib/confirmation"
+import { Characteristic } from "entities/characteristic"
 import { RemoveConfirm } from "../../ui/remove-confirm"
-import { Characteristic } from "../../domain/types"
 
 export const useStartRemove = () => {
   const langBase = "characteristic.confirm.remove"
