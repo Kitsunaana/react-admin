@@ -1,4 +1,4 @@
-import { AltName } from "shared/types/new_types/types"
+import { AltName } from "entities/alt-name"
 
 export const findCaption = (altNames: AltName[], defaultValue: string = ""): string => {
   const readLocale = localStorage.getItem("lngAdmin")

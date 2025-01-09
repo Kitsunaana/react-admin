@@ -1,1 +1,1 @@
-export { CategoriesPageAsync as CategoriesPage } from "./categories-page.async"
+export { PageAsync as CategoriesPage } from "./page.async"
