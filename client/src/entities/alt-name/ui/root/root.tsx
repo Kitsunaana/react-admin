@@ -1,11 +1,11 @@
 import { memo } from "react"
-import { LangContext, useLang } from "shared/context/lang"
+import { useLang } from "shared/context/lang"
 import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
-import { AltName } from "shared/types/new_types/types"
 import { Mark } from "shared/ui/mark"
 import { Text } from "shared/ui/text"
-import { StyledAltNameItem } from "./styles"
 import { Actions } from "../actions"
+import { AltName } from "../../domain/types"
+import { Layout } from "../layout"
 
 export const Root = memo(({
   altName,
@@ -40,23 +40,24 @@ export const Root = memo(({
   })
 
   return (
-    <LangContext lang={langBase}>
-      <StyledAltNameItem
-        disabled={disabled}
-        active={active}
-        bgError={state === "error"}
-        borderError={state === "error"}
-        borderSuccess={state === "success"}
-      >
+    <Layout
+      langBase={langBase}
+      state={state}
+      active={active}
+      disabled={disabled}
+      caption={(
         <Text caption={altName.caption} />
-
+      )}
+      actions={(
         <Actions
           langBase={langBase}
           onEdit={handleEdit}
           onRemove={handleRemove}
-          beforeActions={<Mark>{altName.locale.caption}</Mark>}
+          beforeActions={(
+            <Mark>{altName.locale.caption}</Mark>
+          )}
         />
-      </StyledAltNameItem>
-    </LangContext>
+      )}
+    />
   )
 })

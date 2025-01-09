@@ -4,3 +4,14 @@ export type Locale = {
   caption: string
   code: string
 }
+
+export type AltNameFields = {
+  caption: string
+  description: string
+  locale: Locale
+}
+
+export type AltName = AltNameFields & {
+  id: string
+  status: "update" | "create" | "remove" | "none"
+}
