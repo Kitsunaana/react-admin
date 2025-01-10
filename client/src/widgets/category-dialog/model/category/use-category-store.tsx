@@ -1,13 +1,14 @@
 import { createContext, ReactNode, useState } from "react"
 import { useStrictContext } from "shared/lib/react"
-import { Characteristic, Tag } from "shared/types/new_types/types"
-import { CharacteristicStore } from "widgets/category-dialog/model/characteristic/characteristic-store"
-import { TagStore } from "widgets/category-dialog/model/tag/tag-store"
-import { AltNameStore } from "widgets/category-dialog/model/alt-name/alt-name.store"
-import { PhotosStore } from "widgets/category-dialog/model/photo/photos.store"
-import { AltName } from "widgets/category-dialog/domain/alt-name"
+import { Characteristic } from "entities/characteristic"
+import { AltName } from "entities/alt-name"
+import { Tag } from "entities/tag"
+import { CharacteristicStore } from "../characteristic/characteristic-store"
+import { TagStore } from "../tag/tag-store"
+import { AltNameStore } from "../alt-name/alt-name.store"
+import { PhotosStore } from "../photo/photos.store"
+import { HistoryStore } from "../../view-model/history/history-store"
 import { CategoryStore } from "./category-store"
-import { HistoryStore } from "../history/history-store"
 import { PhotoPositionStore } from "../photo-position/photo-position.store"
 import { List } from "../list"
 
@@ -25,9 +26,7 @@ export const CategoryStoreProvider = ({ children }: { children: ReactNode }) => 
     getHistory: () => new HistoryStore(),
     getPhotos: (recordEvent) => new PhotosStore(recordEvent),
     getPhotoPosition: (recordEvent) => new PhotoPositionStore(recordEvent),
-    getCharacteristics: (recordEvent) => (
-      new CharacteristicStore(recordEvent, new List<Characteristic>([]))
-    ),
+    getCharacteristics: (recordEvent) => (new CharacteristicStore(recordEvent, new List<Characteristic>([]))),
     getAltNames: (recordEvent) => new AltNameStore(recordEvent, new List<AltName>([])),
     getTags: (recordEvent) => new TagStore(recordEvent, new List<Tag>([])),
   }))

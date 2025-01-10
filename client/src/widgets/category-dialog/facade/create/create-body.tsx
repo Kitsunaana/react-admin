@@ -9,7 +9,7 @@ import { TabsContent } from "../../ui/tabs/root"
 import { CreateHeader } from "./create-header"
 import { ModalFooter } from "../common/modal-footer"
 import { categoryCreateStore } from "../../model/category/category-create-store"
-import { useCreateCategory } from "../../queries/use-create"
+import { useCreateCategory } from "../../queries/category/use-category-create"
 import { ModalTabs } from "../common/modal-tabs"
 
 export const CreateBody = observer(() => {
@@ -23,7 +23,7 @@ export const CreateBody = observer(() => {
         <ModalContainer
           isLoading={create.isLoading}
           header={<CreateHeader />}
-          body={<TabsContent formId={formId} />}
+          body={<TabsContent formId={formId} onCreate={create.onCreate} />}
           tabs={<ModalTabs />}
           footer={{
             left: <ModalFooter />,

@@ -70,36 +70,43 @@ export class List<T extends BaseItem> {
       .filter((item): item is T => item !== null)
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getIsAlreadyExists(data: T, list: T[]) {
     return Boolean(
       list.find((c) => c.caption === data.caption && c.id !== data.id),
     )
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getIsCreatedOrUpdated(data: T) {
     return data.status === "create" || data.status === "update"
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getCaptions(items: T[]) {
     return items.map((item) => item.caption)
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getFilteredItems(captions: string[], excludeItems: T[]) {
     return excludeItems.filter((item) => !captions.includes(item.caption))
   }
 
-  buildCreateItem(data: T): T {
+  // eslint-disable-next-line class-methods-use-this
+  buildCreateItem(data: Partial<T>): T {
     return {
       ...data,
       status: "create",
       id: nanoid(),
-    }
+    } as T
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getCreatedItems(items: T[], create: (payload: T) => T) {
     return items.map(create)
   }
 
+  // eslint-disable-next-line class-methods-use-this
   removeAllItems(items: T[], remove: (id: string) => void) {
     items.forEach((item) => remove(item.id))
   }

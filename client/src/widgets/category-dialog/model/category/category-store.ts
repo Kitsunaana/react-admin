@@ -1,14 +1,14 @@
 import { makeAutoObservable } from "mobx"
-import { CategoryOtherFields, CategoryRows } from "shared/types/new_types/types"
-import { SettingsRecord } from "widgets/category-dialog/domain/settings"
-import { RecordEvent } from "widgets/category-dialog/model/history/events"
-import { CharacteristicStore } from "widgets/category-dialog/model/characteristic/characteristic-store"
-import { TagStore } from "widgets/category-dialog/model/tag/tag-store"
-import { PhotosStore } from "widgets/category-dialog/model/photo/photos.store"
-import { AltNameStore } from "widgets/category-dialog/model/alt-name/alt-name.store"
-import { HistoryStore } from "../history/history-store"
-import { getCategoryDefaultRows } from "../../domain/const"
+import { HistoryStore } from "../../view-model/history/history-store"
+import { RecordEvent } from "../../view-model/history/events"
+import { SettingsRecord } from "../../view-model/setting/settings-types"
+import { CharacteristicStore } from "../../model/characteristic/characteristic-store"
+import { TagStore } from "../../model/tag/tag-store"
+import { PhotosStore } from "../../model/photo/photos.store"
+import { AltNameStore } from "../../model/alt-name/alt-name.store"
+import { getCategoryDefaultRows } from "../../view-model/const"
 import { PhotoPositionStore } from "../photo-position/photo-position.store"
+import { CategoryOtherFields, CategoryRows } from "../../domain/category/types"
 
 export class CategoryStore {
   history!: HistoryStore
@@ -48,7 +48,7 @@ export class CategoryStore {
     return {
       characteristics: this.characteristic.list.get(),
       altNames: this.altNames.list.get(),
-      tags: this.tags.get(),
+      tags: this.tags.list.get(),
       ...this.photoPosition.get(),
       ...this.photos.get(),
     }
@@ -64,15 +64,17 @@ export class CategoryStore {
       activeImageId: payload.activeImageId,
       captionPosition: payload.captionPosition,
     })
-    this.tags.set(payload.tags)
+    this.tags.list.set(payload.tags)
   }
 
   setCopied(payload: CategoryRows & CategoryOtherFields, settings: SettingsRecord) {
     this.characteristic.setCopiedCharacteristics(settings.characteristics, payload.characteristics)
 
+    this.tags.setCopiedTags(settings.tags, payload.tags)
+
     this.photos.setCopiedMedia(settings.images, payload.media)
     this.photos.setCopiedImages(settings.images, payload.images)
-    this.tags.setCopiedTags(settings.tags, payload.tags)
+
     this.photoPosition.setCopiedPhotoPosition(settings, {
       activeImageId: payload.activeImageId,
       captionPosition: payload.captionPosition,

@@ -1,8 +1,6 @@
 import { makeAutoObservable } from "mobx"
-import { createRoute, eventBus } from "shared/lib/event-bus"
-
-const openModalEvent = createRoute("category.create.open")
-  .withParams()
+import { eventBus } from "shared/lib/event-bus"
+import { openModalCreateCategoryEvent } from "./category-events"
 
 export class CategoryCreateStore {
   isCreating = false
@@ -10,7 +8,7 @@ export class CategoryCreateStore {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(openModalEvent, this.startCreate)
+    eventBus.on(openModalCreateCategoryEvent, this.startCreate)
   }
 
   startCreate() {

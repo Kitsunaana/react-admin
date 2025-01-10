@@ -1,8 +1,8 @@
 import { useFormState } from "react-hook-form"
 import { TabsContainer, useTabsWarning } from "shared/ui/tabs/tabs-container"
-import { CategoryFields } from "shared/types/new_types/types"
+import { CategoryFields } from "entities/category"
 import { useCategoryFormContext } from "../../view-model/form/use-category-form"
-import { TABS } from "../../domain/const"
+import { TABS } from "../../view-model/const"
 
 export const ModalTabs = () => {
   const categoryForm = useCategoryFormContext()

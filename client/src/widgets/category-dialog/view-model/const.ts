@@ -1,13 +1,8 @@
+import { CategoryFields } from "entities/category"
 import {
-  Category,
-  CategoryFields,
-  CategoryLocal,
-  CategoryOtherFields,
-  CategoryRows,
-} from "shared/types/new_types/types"
-import {
-  PasteAction, Tabs,
-} from "./settings"
+  CaptionPosition, CategoryLocal, CategoryOtherFields, CategoryRows,
+} from "../domain/category/types"
+import { KeysSettingsFields, KeysSettingsRows } from "./setting/settings-types"
 
 export const TABS = [
   {
@@ -30,13 +25,13 @@ export const TABS = [
   { id: 5, caption: "tags", icon: "tags" },
 ]
 
-type TPositionCheckbox = {
+type PositionCheckbox = {
   id: number
   content: string
-  position: Category["captionPosition"]
+  position: CaptionPosition
 }
 
-export const GRID_CHECKBOX: Array<{ id: number, data: Array<TPositionCheckbox> }> = [
+export const GRID_CHECKBOX: Array<{ id: number, data: Array<PositionCheckbox> }> = [
   {
     id: 0,
     data: [
@@ -63,13 +58,13 @@ export const GRID_CHECKBOX: Array<{ id: number, data: Array<TPositionCheckbox> }
   },
 ]
 
-export const initialSettingsRows: Record<Tabs, PasteAction> = {
+export const initialSettingsRows: KeysSettingsRows = {
   characteristics: "add",
   images: "add",
   tags: "add",
 }
 
-export const initialSettingsFields = {
+export const initialSettingsFields: KeysSettingsFields = {
   caption: true,
   description: false,
   blur: false,
