@@ -1,22 +1,22 @@
 import { createRoute, eventBus } from "shared/lib/event-bus"
-import { AltName } from "shared/types/new_types/types"
+import { AltName } from "entities/alt-name"
 
-// events
-export const submitCreateAltNameEvent = createRoute("altName.create.submit")
+// submits
+const submitCreateAltNameEvent = createRoute("altName.create.submit")
   .withParams<AltName>()
 
-export const submitEditAltNameEvent = createRoute("altName.edit.submit")
+const submitEditAltNameEvent = createRoute("altName.edit.submit")
   .withParams<AltName>()
 
-export const submitRemoveAltNameEvent = createRoute("altName.remove.submit")
+const submitRemoveAltNameEvent = createRoute("altName.remove.submit")
   .withParams<string>()
 
 // open modals
-const openModalEditAltNameEvent = createRoute("altName.edit.open")
-  .withParams<{ altName: AltName, altNames: AltName[] }>()
-
 const openModalCreateAltNameEvent = createRoute("altName.create.open")
   .withParams<{ altNames: AltName[] }>()
+
+const openModalEditAltNameEvent = createRoute("altName.edit.open")
+  .withParams<{ altName: AltName, altNames: AltName[] }>()
 
 const openModalRemoveAltNameEvent = createRoute("altName.remove.open")
   .withParams<AltName>()
@@ -43,6 +43,6 @@ export const startEditAltName = (payload: AltName, altNames: AltName[]) => (
   eventBus.emit(openModalEditAltNameEvent({ altName: payload, altNames }))
 )
 
-export const startRemoveAltName = (payload: AltName) => (
-  eventBus.emit(openModalRemoveAltNameEvent(payload))
+export const startRemoveAltName = (data: AltName) => (
+  eventBus.emit(openModalRemoveAltNameEvent(data))
 )

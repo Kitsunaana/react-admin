@@ -11,7 +11,7 @@ import { getApiTranslateAltName } from "../../../../queries/alt-name/get-api-tra
 
 export const Root = observer(() => {
   const locales = useGetAllLocales()
-  const unusedLocales = useAltNameStore((store) => store.getUnusedLocales(locales.data))
+  const unusedLocales = useAltNameStore((store) => store.getUnusedLocales(locales.data!))
 
   const translate = useGetAllTranslateAltName(getApiTranslateAltName({}))
 

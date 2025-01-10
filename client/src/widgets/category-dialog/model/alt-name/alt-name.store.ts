@@ -1,14 +1,22 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
-import { RecordEvent } from "../../model/history/events"
+import { AltName, Locale } from "entities/alt-name"
+import { RecordEvent } from "../../view-model/history/events"
 import {
-  AltName, Locale, FetchTranslateResponse,
+  FetchTranslateResponse,
 } from "../../domain/alt-name"
 import { List } from "../list"
 import {
-  subscribeSubmitCreateAltNameEvent, subscribeSubmitEditAltNameEvent, subscribeSubmitRemoveAltNameEvent,
+  subscribeSubmitCreateAltNameEvent,
+  subscribeSubmitEditAltNameEvent,
+  subscribeSubmitRemoveAltNameEvent,
 } from "./alt-name-events"
-import { filterByUnusedLocales, getUsedCodeLocales, filterLocales } from "./alt-name-core"
+import {
+  filterByUnusedLocales,
+  getUsedCodeLocales,
+  filterLocales,
+  getBuildCreateAltName,
+} from "./alt-name-core"
 
 export class AltNameStore {
   constructor(private recordEvent: RecordEvent, public list: List<AltName>) {
@@ -17,6 +25,27 @@ export class AltNameStore {
     subscribeSubmitCreateAltNameEvent(this.createAltNameEvent)
     subscribeSubmitEditAltNameEvent(this.editAltNameEvent)
     subscribeSubmitRemoveAltNameEvent(this.removeAltNameEvent)
+  }
+
+  public getState(data: AltName) {
+    if (this.list.getIsCreatedOrUpdated(data)) return "success"
+    return "none"
+  }
+
+  public getUnusedLocales(locales: Locale[]) {
+    const usedCodeLocales = getUsedCodeLocales(this.list.array)
+
+    return filterLocales(locales, (locale) => (
+      filterByUnusedLocales(locale, usedCodeLocales)
+    ))
+  }
+
+  public addTranslateAltNames(translates: Array<FetchTranslateResponse>) {
+    const createdAltNames = translates.map((translate) => (
+      this.list.buildCreateItem(getBuildCreateAltName(translate))
+    ))
+
+    this.list.merge(createdAltNames)
   }
 
   private createAltNameEvent(payload: AltName) {
@@ -50,22 +79,5 @@ export class AltNameStore {
       value: id,
       tab: 4,
     })
-  }
-
-  public getUnusedLocales(locales: Locale[]) {
-    const usedCodeLocales = getUsedCodeLocales(this.list.array)
-
-    return filterLocales(locales, (locale) => (
-      filterByUnusedLocales(locale, usedCodeLocales)
-    ))
-  }
-
-  public addTranslateAltNames(translates: Array<FetchTranslateResponse>) {
-    translates.map(({ data, locale }) => this.list.add({
-      ...data.trans,
-      locale,
-      id: nanoid(),
-      status: "create",
-    }))
   }
 }

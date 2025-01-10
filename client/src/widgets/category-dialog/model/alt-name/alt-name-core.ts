@@ -1,4 +1,5 @@
-import { AltName, Locale } from "../../domain/alt-name"
+import { AltName, Locale } from "entities/alt-name"
+import { FetchTranslateResponse } from "../../domain/alt-name"
 
 export const getUsedCodeLocales = (altNames: AltName[]) => (
   altNames.map((altName) => altName.locale.code)
@@ -13,3 +14,8 @@ export const filterLocales = (locales: Locale[], filter: (locale: Locale) => boo
 )
 
 export const getIsDisabledTranslate = (caption: string) => caption.length < 3
+
+export const getBuildCreateAltName = (translate: FetchTranslateResponse) => ({
+  ...translate.data.trans,
+  locale: translate.locale,
+})
