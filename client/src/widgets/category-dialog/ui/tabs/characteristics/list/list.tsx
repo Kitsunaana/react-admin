@@ -1,10 +1,11 @@
 import { CharacteristicRow } from "entities/characteristic"
 import { observer } from "mobx-react-lite"
 import { EmptyList } from "shared/ui/empty-list"
-import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
 import { useState } from "react"
+import { useSelectionItem } from "../../../../view-model/selection-item/use-selection-item"
 import {
-  startEditCharacteristic, startRemoveCharacteristic,
+  startEditCharacteristic,
+  startRemoveCharacteristic,
 } from "../../../../model/characteristic/characteristic-events"
 import { useCharacteristicStore } from "../../../../model/characteristic/use-characteristic-store"
 import { CharacteristicsContainer } from "./styles"
@@ -19,20 +20,7 @@ export const List = observer(() => {
 
   const getState = useCharacteristicStore((store) => store.getState)
 
-  useKeyboard({
-    key: "ArrowDown",
-    callback: () => selectionItem.nextItem(count),
-  })
-
-  useKeyboard({
-    key: "ArrowUp",
-    callback: () => selectionItem.prevItem(count),
-  })
-
-  useKeyboard({
-    key: "q",
-    callback: altCtrlKey(selectionItem.unselect),
-  })
+  useSelectionItem(count)
 
   if (isEmpty) return <EmptyList />
 
