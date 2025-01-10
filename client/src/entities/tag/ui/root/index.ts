@@ -1,1 +1,1 @@
-export { Layout as TagRow } from "./layout"
+export { Root as TagRow } from "./layout"

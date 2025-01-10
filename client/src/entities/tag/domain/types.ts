@@ -6,5 +6,5 @@ export type TagFields = {
 
 export type Tag = TagFields & {
   id: string
-  status: "update" | "create" | "remove"
+  status: "update" | "create" | "remove" | "none"
 }

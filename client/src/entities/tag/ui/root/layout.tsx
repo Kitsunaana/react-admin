@@ -1,66 +1,60 @@
-import { LangContext, useLang } from "shared/context/lang"
-import { useKeyboard } from "shared/lib/keyboard-manager"
+import { useLang } from "shared/context/lang"
+import { altCtrlKey, useKeyboard } from "shared/lib/keyboard-manager"
 import { Tag } from "shared/types/new_types/types"
-import { Box } from "shared/ui/box"
-import { IconButtonDelete } from "shared/ui/buttons/icon-button-delete"
-import { IconButtonEdit } from "shared/ui/buttons/icon-button-edit"
-import { Vertical } from "shared/ui/divider"
+import { useCallback } from "react"
+import { Layout } from "../layout"
+import { Actions } from "../actions"
 import { TagView } from "../tag-view"
-import { StyledRowItem } from "./components"
 
-interface LayoutProps {
+export const Root = ({
+  tag,
+  active,
+  state,
+  onEdit,
+  onRemove,
+}: {
   tag: Tag
-  onRemove: (data: Tag) => void
-  onEdit: (data: Tag) => void
-  isCreatedOrUpdated: boolean
   active: boolean
-}
+  state: string
+  onEdit: (data: Tag) => void
+  onRemove: (data: Tag) => void
+}) => {
+  const langBase = useLang("rows")
 
-export const Layout = (props: LayoutProps) => {
-  const {
-    tag,
-    active,
-    isCreatedOrUpdated,
-    onEdit,
-    onRemove,
-  } = props
-
-  const langBase = useLang()
-
-  useKeyboard({
-    key: "d",
-    disabled: !active,
-    callback: ({ altKey, ctrlKey }) => {
-      if (altKey && ctrlKey) onRemove(tag)
-    },
-  })
+  const handleEdit = useCallback(() => onEdit(tag), [tag])
+  const handleRemove = useCallback(() => onRemove(tag), [tag])
 
   useKeyboard({
     key: "e",
     disabled: !active,
-    callback: ({ altKey, ctrlKey }) => {
-      if (altKey && ctrlKey) onEdit(tag)
-    },
+    callback: altCtrlKey(handleEdit),
+  })
+
+  useKeyboard({
+    key: "d",
+    disabled: !active,
+    callback: altCtrlKey(handleRemove),
   })
 
   return (
-    <LangContext lang={`${langBase}.rows`}>
-      <StyledRowItem
-        active={active}
-        isCreatedOrUpdated={isCreatedOrUpdated}
-        color={isCreatedOrUpdated && "success"}
-      >
+    <Layout
+      langBase={langBase}
+      state={state}
+      active={active}
+      infoView={(
         <TagView
           caption={tag.caption}
           color={tag.color}
           icon={tag.icon}
         />
-        <Box flex row ai>
-          <Vertical />
-          <IconButtonEdit onClick={() => onEdit(tag)} langBase={langBase} />
-          <IconButtonDelete onClick={() => onRemove(tag)} langBase={langBase} />
-        </Box>
-      </StyledRowItem>
-    </LangContext>
+      )}
+      actions={(
+        <Actions
+          langBase={langBase}
+          onEdit={handleEdit}
+          onRemove={handleRemove}
+        />
+      )}
+    />
   )
 }
