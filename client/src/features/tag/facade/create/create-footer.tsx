@@ -1,7 +1,7 @@
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { useKeyboard } from "shared/lib/keyboard-manager"
-import { tagCreateStore } from "../../model/tag-create-store"
+import { tagCreateStore } from "../../model/create-store"
 
 export const CreateFooter = ({ formId }: { formId: string }) => {
   useKeyboard({

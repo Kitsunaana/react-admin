@@ -1,20 +1,16 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
-import { createRoute, eventBus } from "shared/lib/event-bus"
-import { Tag, TagFields } from "../domain/types"
+import { eventBus } from "shared/lib/event-bus"
+import { TagFields } from "entities/tag"
+import { openModalCreateTagEvent, submitCreateTagEvent } from "../domain/events"
 
-const openModalEvent = createRoute("tag.create.open")
-
-const submitEvent = createRoute("tag.create.submit")
-  .withParams<Tag>()
-
-class TagCreateStore {
+class CreateStore {
   isCreating: boolean = false
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(openModalEvent, this.startCreate)
+    eventBus.on(openModalCreateTagEvent, this.startCreate)
   }
 
   startCreate() {
@@ -28,7 +24,7 @@ class TagCreateStore {
   submitCreate(payload: TagFields) {
     this.cancelCreate()
 
-    eventBus.emit(submitEvent({
+    eventBus.emit(submitCreateTagEvent({
       ...payload,
       status: "create",
       id: nanoid(),
@@ -36,4 +32,4 @@ class TagCreateStore {
   }
 }
 
-export const tagCreateStore = new TagCreateStore()
+export const tagCreateStore = new CreateStore()

@@ -1,16 +1,13 @@
-import { createRoute } from "shared/lib/event-bus"
+import { eventBus } from "shared/lib/event-bus"
 import { useEvent } from "shared/hooks/use-event"
 import { useStartRemove } from "./use-start-remove"
-import { Tag } from "../../domain/types"
-
-const tagRemoveEvent = createRoute("tag.remove.submit")
-  .withParams<{ data: Tag, callback:(id: string) => void }>()
+import { openModalRemoveTagEvent, submitRemoveTagEvent } from "../../domain/events"
 
 export const RemoveModal = () => {
   const startRemove = useStartRemove()
 
-  useEvent(tagRemoveEvent, ({ payload }) => {
-    startRemove(payload.data, payload.callback)
+  useEvent(openModalRemoveTagEvent, ({ payload }) => {
+    startRemove(payload, (id) => eventBus.emit(submitRemoveTagEvent(id)))
   })
 
   return null

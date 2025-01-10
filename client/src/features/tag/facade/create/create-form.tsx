@@ -2,7 +2,7 @@ import { FormProvider } from "react-hook-form"
 import { useKeyboard } from "shared/lib/keyboard-manager"
 import { ctrlKey } from "shared/lib/keyboard-manager/handlers"
 import { useGetAllTags } from "entities/tag"
-import { tagCreateStore } from "../../model/tag-create-store"
+import { tagCreateStore } from "../../model/create-store"
 import { DefaultFields } from "../../ui/default-fields"
 import { RootForm } from "../../ui/root-form"
 import { useTagForm } from "../../view-model/use-tag-form"
@@ -17,7 +17,7 @@ export const TagCreateForm = ({ formId }: { formId: string }) => {
 
   useKeyboard({
     key: "Enter",
-    callback: ctrlKey(createForm.handleKeyDownSubmit),
+    callback: ctrlKey(() => createForm.handleKeyDownSubmit()),
   })
 
   return (

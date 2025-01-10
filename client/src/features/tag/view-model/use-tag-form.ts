@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form"
 import { FormEvent } from "react"
-import { TagFields } from "../domain/types"
+import { TagFields, tagFieldsSchema } from "entities/tag"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export type FormData = {
-  caption: string
+  caption: null
   color: string
   icon: string | null
 }
@@ -15,32 +16,32 @@ export const useTagForm = ({
   onSubmit: (data: TagFields) => void
   defaultFields?: FormData
 }) => {
-  const form = useForm<TagFields>()
+  const form = useForm<TagFields>({
+    resolver: zodResolver(tagFieldsSchema),
+  })
 
   const getDefaultValue = (): FormData => {
     if (defaultFields !== undefined) return defaultFields
 
     return {
-      caption: "",
+      caption: null,
       color: "#000",
       icon: null,
     }
   }
 
+  const handleSubmit = form.handleSubmit(onSubmit)
+
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    form.handleSubmit(onSubmit)()
+    handleSubmit()
   }
 
-  const handleKeyDownSubmit = () => form.handleSubmit(onSubmit)()
-
-  const defaultValue = getDefaultValue()
-
   return {
+    defaultValue: getDefaultValue(),
+    handleKeyDownSubmit: handleSubmit,
     handleFormSubmit,
-    handleKeyDownSubmit,
-    defaultValue,
     form,
   }
 }

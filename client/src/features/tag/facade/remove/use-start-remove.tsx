@@ -1,5 +1,5 @@
 import { useGetConfirmation } from "shared/lib/confirmation"
-import { Tag } from "shared/types/new_types/types"
+import { Tag } from "entities/tag"
 import { RemoveConfirm } from "../../ui/remove-confirm"
 
 export const useStartRemove = () => {

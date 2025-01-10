@@ -1,21 +1,16 @@
 import { makeAutoObservable } from "mobx"
-import { createRoute, eventBus } from "shared/lib/event-bus"
-import { Tag } from "../domain/types"
+import { eventBus } from "shared/lib/event-bus"
+import { Tag } from "entities/tag"
+import { openModalEditTagEvent, submitEditTagEvent } from "../domain/events"
 
-const openModalEvent = createRoute("tag.edit.open")
-  .withParams<Tag>()
-
-const submitEvent = createRoute("tag.edit.submit")
-  .withParams<Tag>()
-
-class TagEditStore {
+class EditStore {
   isEditing: boolean = false
   tag: Tag | undefined = undefined
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(openModalEvent, ({ payload }) => this.startEdit(payload))
+    eventBus.on(openModalEditTagEvent, ({ payload }) => this.startEdit(payload))
   }
 
   startEdit(tag: Tag) {
@@ -30,11 +25,11 @@ class TagEditStore {
   submitEdit(payload: Tag) {
     this.cancelEdit()
 
-    eventBus.emit(submitEvent({
+    eventBus.emit(submitEditTagEvent({
       ...payload,
       status: payload.status === "create" ? "create" : "update",
     }))
   }
 }
 
-export const tagEditStore = new TagEditStore()
+export const tagEditStore = new EditStore()

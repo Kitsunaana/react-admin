@@ -1,5 +1,4 @@
 import { Autocomplete } from "@mui/material"
-import { icons } from "entities/tag"
 import { ReactNode } from "react"
 import { Controller } from "react-hook-form"
 import { Input } from "shared/ui/form/input"
@@ -10,6 +9,7 @@ import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import { FormData } from "../../view-model/use-tag-form"
 import { FormBottom, IconSelect } from "./styles"
+import icons from "../../model/icons.json"
 
 export const DefaultFields = ({
   tags,
@@ -24,13 +24,6 @@ export const DefaultFields = ({
     <Controller
       name="caption"
       defaultValue={defaultValue.caption}
-      rules={{
-        required: "requiredSelect",
-        minLength: {
-          message: "minLength",
-          value: 3,
-        },
-      }}
       render={({ field, fieldState }) => (
         <Autocomplete
           freeSolo
@@ -53,6 +46,7 @@ export const DefaultFields = ({
               helperText={{
                 name: fieldState.error?.message ?? "requiredSelect",
                 langBase: "validate",
+                values: { value: 3 },
               }}
             />
           )}
