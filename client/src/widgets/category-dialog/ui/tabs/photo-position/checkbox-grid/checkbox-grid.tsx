@@ -1,6 +1,6 @@
 import { Checkbox } from "@mui/material"
 import { observer } from "mobx-react-lite"
-import { GRID_CHECKBOX } from "../../../../domain/const"
+import { GRID_CHECKBOX } from "../../../../view-model/const"
 import { usePhotoPositionStore } from "../../../../model/photo-position/use-photo-position-store"
 import { Caption } from "../caption"
 import { CheckboxInner, CheckboxWrapper } from "./styles"

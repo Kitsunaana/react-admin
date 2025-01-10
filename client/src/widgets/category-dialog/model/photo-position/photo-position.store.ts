@@ -1,39 +1,32 @@
 import { makeAutoObservable } from "mobx"
-import { CaptionPosition, Image, Media } from "shared/types/new_types/types"
-import { nanoid } from "nanoid"
-import { RecordEvent } from "../../model/history/events"
-
-type Photo = Media | Image
-
-type CopiedPhotoPositionActions = {
-  activeImageId: boolean
-  captionPosition: boolean
-}
-
-type CopiedPhotoPositionData = {
-  activeImageId: string | null
-  captionPosition: CaptionPosition
-}
+import { RecordEvent } from "../../view-model/history/events"
+import {
+  CopiedPhotoPositionData,
+  CopiedPhotoPositionActions,
+  PhotoPositionData,
+} from "./photo-position-types"
+import {
+  findIndexPhoto,
+  recordChangeCaptionPosition,
+  recordChangeActiveImage,
+  getPrevImage,
+  getNextImage,
+  getActiveImage,
+} from "./photo-position-core"
+import { CaptionPosition } from "../../domain/category/types"
+import { Photo } from "../../domain/photo"
 
 export class PhotoPositionStore {
-  captionPosition: CaptionPosition = "center-center"
-  activeImageId: null | string = null
+  public captionPosition: CaptionPosition = "center-center"
 
-  indexActiveImage = 0
+  private activeImageId: null | string = null
+  private indexActiveImage = 0
 
-  constructor(private recordEvent: RecordEvent) {
+  public constructor(private recordEvent: RecordEvent) {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  getActiveImage(photos: Photo[]) {
-    return photos[this.getIndexActiveImage(photos)]
-  }
-
-  getIndexActiveImage(photos: Photo[]) {
-    return photos[this.indexActiveImage] ? this.indexActiveImage : 0
-  }
-
-  setCopiedPhotoPosition(
+  public setCopiedPhotoPosition(
     actions: CopiedPhotoPositionActions,
     data: CopiedPhotoPositionData,
     photos: Photo[],
@@ -42,80 +35,61 @@ export class PhotoPositionStore {
     if (actions.captionPosition) this.changeCaptionPosition(data.captionPosition)
   }
 
-  // TODO
-  setPhotoPosition(photos: Photo[], data: {
-    activeImageId: string | null
-    captionPosition: CaptionPosition
-  }) {
+  public get() {
+    return {
+      captionPosition: this.captionPosition,
+      activeImageId: this.activeImageId,
+    }
+  }
+
+  public getActiveImage(photos: Photo[]) {
+    return photos[this.getIndexActiveImage(photos)]
+  }
+
+  public setPhotoPosition(photos: Photo[], data: PhotoPositionData) {
     this.activeImageId = data.activeImageId
     this.captionPosition = data.captionPosition
 
     if (!data.activeImageId) return
 
-    this.indexActiveImage = photos
-      .findIndex((photo) => photo.id === data.activeImageId)
+    this.indexActiveImage = findIndexPhoto(data.activeImageId, photos)
   }
 
-  setActiveImageId(id: string | null, photos: Photo[]) {
+  public setNextImage(photos: Photo[]) {
+    this.indexActiveImage = getNextImage(photos, this.getIndexActiveImage(photos))
+
+    this.changeActiveImageId(photos)
+  }
+
+  public setPrevImage(photos: Photo[]) {
+    this.indexActiveImage = getPrevImage(photos, this.getIndexActiveImage(photos))
+
+    this.changeActiveImageId(photos)
+  }
+
+  public changeCaptionPosition(captionPosition: CaptionPosition) {
+    this.captionPosition = captionPosition
+
+    recordChangeCaptionPosition(this.captionPosition, this.recordEvent)
+  }
+
+  private setActiveImageId(id: string | null, photos: Photo[]) {
     if (id === null) return
 
-    const findIndex = photos.findIndex((photo) => photo.id === id)
+    const findIndex = findIndexPhoto(id, photos)
 
     if (findIndex !== -1) this.indexActiveImage = findIndex
   }
 
-  changeCaptionPosition(captionPosition: CaptionPosition) {
-    this.captionPosition = captionPosition
-
-    this.recordEvent({
-      id: nanoid(),
-      type: "changeCaptionPosition",
-      value: this.captionPosition,
-      tab: 2,
-    })
+  private getIndexActiveImage(photos: Photo[]) {
+    return photos[this.indexActiveImage] ? this.indexActiveImage : 0
   }
 
-  changeActiveImageId(photos: Photo[]) {
-    const findImage = photos[this.indexActiveImage]
+  private changeActiveImageId(photos: Photo[]) {
+    const findPhoto = photos[this.indexActiveImage]
 
-    this.activeImageId = findImage
-      ? findImage.id
-      : photos.length > 0
-        ? photos[0].id
-        : null
+    this.activeImageId = getActiveImage(findPhoto, photos)
 
-    this.recordEvent({
-      id: nanoid(),
-      type: "changeActiveImageId",
-      value: this.activeImageId,
-      tab: 2,
-    })
-  }
-
-  setNextImage(photos: Photo[]) {
-    const indexActiveImage = this.getIndexActiveImage(photos)
-
-    this.indexActiveImage = photos[indexActiveImage + 1]
-      ? indexActiveImage + 1
-      : 0
-
-    this.changeActiveImageId(photos)
-  }
-
-  setPrevImage(photos: Photo[]) {
-    const indexActiveImage = this.getIndexActiveImage(photos)
-
-    this.indexActiveImage = photos[indexActiveImage - 1]
-      ? indexActiveImage - 1
-      : photos.length - 1
-
-    this.changeActiveImageId(photos)
-  }
-
-  get() {
-    return {
-      captionPosition: this.captionPosition,
-      activeImageId: this.activeImageId,
-    }
+    recordChangeActiveImage(this.activeImageId, this.recordEvent)
   }
 }

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import { IconButton } from "shared/ui/buttons/icon-button"
-import { usePhotosStore } from "widgets/category-dialog/model/photo/use-photos-store"
+import { usePhotosStore } from "../../../../model/photo/use-photos-store"
 import { convertMediaToImage } from "../../../../domain/photo"
 import { usePhotoPositionStore } from "../../../../model/photo-position/use-photo-position-store"
 import { CheckboxGrid } from "../checkbox-grid"

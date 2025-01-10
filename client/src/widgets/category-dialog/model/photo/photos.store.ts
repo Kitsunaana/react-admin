@@ -1,127 +1,145 @@
 import { makeAutoObservable, toJS } from "mobx"
-import { nanoid } from "nanoid"
-import { openGallery } from "shared/events/open-gallery"
-import { eventBus } from "shared/lib/event-bus"
-import { Image, Media } from "shared/types/new_types/types"
-import { PasteAction } from "../../domain/settings"
-import { RecordEvent } from "../../model/history/events"
+import { RecordEvent } from "../../view-model/history/events"
+import { PasteAction } from "../../view-model/setting/settings-types"
+import {
+  getCaptions,
+  getMergePhotos,
+  getImagesWithoutRemoved,
+  getMediaWithRemoved,
+  changeMediaOrder,
+  filterByUnusedPhoto,
+  filterPhotos,
+  filterByDelete,
+  recordChangeOrderEvent,
+  recordClearImageEvent,
+  recordClearMediaEvent,
+  recordUploadFiles, findIndexPhoto,
+} from "./photo-core"
+import { Image, Media, Photo } from "../../domain/photo"
 
 export class PhotosStore {
-  images: Image[] = []
-  media: Media[] = []
+  public images: Image[] = []
+  public media: Media[] = []
 
-  constructor(private recordEvent: RecordEvent) {
+  public constructor(private recordEvent: RecordEvent) {
     makeAutoObservable(this, { }, { autoBind: true })
   }
 
-  get photos() {
-    return [...this.filteredMedia, ...this.images]
+  public get photos() {
+    return getMergePhotos(this.filteredMedia, this.images)
   }
 
-  get filteredMedia() {
-    return this.media.filter((media) => !media.delete)
+  private get filteredMedia() {
+    return filterPhotos(this.media, filterByDelete)
   }
 
-  openGallery(id: string) {
-    const findIndex = this.photos.findIndex((image) => image.id === id)
-
-    eventBus.emit(openGallery({
-      index: findIndex,
-      images: this.photos,
-    }))
+  public changeMediaOrder(order: number, id: string) {
+    this.media = changeMediaOrder(id, order, this.media)
+    recordChangeOrderEvent({ id, order }, this.recordEvent)
   }
 
-  updateOrder(order: number, id: string) {
-    this.media = this.media
-      .map((media) => (media.id === id ? { ...media, order } : media))
+  public clearMedia(id: string) {
+    this.media = getMediaWithRemoved(id, this.media)
+    recordClearMediaEvent(id, this.recordEvent)
+  }
 
-    this.recordEvent({
-      id: nanoid(),
-      type: "changeMediaOrder",
-      value: { id, order },
-      tab: 1,
+  public clearImage(id: string) {
+    this.images = getImagesWithoutRemoved(id, this.images)
+    recordClearImageEvent(id, this.recordEvent)
+  }
+
+  public uploadFiles(files: Image[]) {
+    this.images = this.images.concat(files)
+    recordUploadFiles(files, this.recordEvent)
+  }
+
+  public openGallery(id: string, callback: (params: { index: number, photos: Photo[] }) => void) {
+    const index = findIndexPhoto(id, this.photos)
+
+    callback({
+      index: index === -1 ? 0 : index,
+      photos: this.photos,
     })
   }
 
-  clearMedia(id: string) {
-    this.media = this.media
-      .map((media) => (media.id === id ? { ...media, deleted: true } : media))
+  private getFilteredMedia(media: Media[]) {
+    const captionMedia = getCaptions(this.media, "originalName")
 
-    this.recordEvent({
-      id: nanoid(),
-      type: "removeMedia",
-      mediaId: id,
-      tab: 1,
-    })
+    return filterPhotos(media, (photo) => (
+      filterByUnusedPhoto(photo, "originalName", captionMedia)
+    ))
   }
 
-  clearImage(id: string) {
-    this.images = this.images.filter((image) => image.id !== id)
+  private getFilteredImages(images: Image[]) {
+    const captionImages = getCaptions(this.images, "caption")
 
-    this.recordEvent({
-      id: nanoid(),
-      type: "removeImage",
-      imageId: id,
-      tab: 1,
-    })
+    return filterPhotos(images, (photo) => (
+      filterByUnusedPhoto(photo, "caption", captionImages)
+    ))
   }
 
-  setUploadedFiles(files: Image[]) {
-    this.images = [...this.images, ...files]
+  public setCopiedImages(action: PasteAction, images: Image[]) {
+    if (action === "replace") return this.replaceCopiedImages(images)
 
-    this.recordEvent({
-      id: nanoid(),
-      type: "addImages",
-      images: files,
-      tab: 1,
-    })
+    if (action === "add") return this.addCopiedImages(images)
   }
 
-  getFilteredMedia(media: Media[]) {
-    const captionMedia = this.media.map((m) => m.originalName)
-    return media.filter((m) => !captionMedia.includes(m.originalName))
+  public setCopiedMedia(action: PasteAction, media: Media[]) {
+    if (action === "replace") return this.replaceCopiedMedia(media)
+
+    if (action === "add") return this.addCopiedMedia(media)
   }
 
-  getFilteredImages(images: Image[]) {
-    const captionImages = this.images.map((m) => m.caption)
-    return images.filter((m) => !captionImages.includes(m.caption))
+  public setMedia(media: Media[]) {
+    this.media = media
   }
 
-  get() {
+  public setImages(images: Image[]) {
+    this.images = images
+  }
+
+  public get() {
     return {
       media: toJS(this.media),
       images: toJS(this.images),
     }
   }
 
-  setMedia(media: Media[]) {
-    this.media = media
+  private removeAllImages() {
+    this.images.forEach((image) => this.clearImage(image.id))
   }
 
-  setImages(images: Image[]) {
-    this.images = images
+  private removeAllMedia() {
+    this.media.forEach((media) => this.clearMedia(media.id))
   }
 
-  setCopiedImages(action: PasteAction, images: Image[]) {
-    if (action === "replace") {
-      this.images = images
-      return
-    }
-
-    if (action === "add") {
-      this.images = this.images.concat(this.getFilteredImages(images))
-    }
+  private mergeImages(images: Image[]) {
+    this.images = this.images.concat(images)
   }
 
-  setCopiedMedia(action: PasteAction, media: Media[]) {
-    if (action === "replace") {
-      this.media.forEach((m) => this.clearMedia(m.id))
-      this.media = media
-      return
-    }
+  private mergeMedia(media: Media[]) {
+    this.media = this.media.concat(media)
+  }
 
-    if (action === "add") {
-      this.media = this.media.concat(this.getFilteredMedia(media))
-    }
+  private replaceCopiedImages(replaceImages: Image[]) {
+    this.removeAllImages()
+    this.mergeImages(replaceImages)
+  }
+
+  private replaceCopiedMedia(replaceMedia: Media[]) {
+    this.removeAllMedia()
+    this.mergeMedia(replaceMedia)
+  }
+
+  private addCopiedImages(addedImages: Image[]) {
+    this.mergeImages(
+      this.getFilteredImages(addedImages),
+    )
+  }
+
+  private addCopiedMedia(addedMedia: Media[]) {
+    this.mergeMedia(
+      this.getFilteredMedia(addedMedia),
+    )
   }
 }

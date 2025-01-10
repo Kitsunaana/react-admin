@@ -1,6 +1,24 @@
-import { CategoryLocal, Image, Media } from "shared/types/new_types/types"
+export type Image = {
+  id: string
+  caption: string
+  data: File
+  type: string
+}
 
-export const convertMediaToImage = (photo: Media | Image) => {
+export type Media = {
+  filename: string;
+  id: string;
+  mimetype: string;
+  originalName: string;
+  path: string;
+  size: number;
+  order: number | null
+  delete?: boolean
+}
+
+export type Photo = Image | Media
+
+export const convertMediaToImage = (photo: Photo) => {
   if ("caption" in photo) return photo
 
   return {
@@ -11,11 +29,10 @@ export const convertMediaToImage = (photo: Media | Image) => {
   }
 }
 
-export const getOriginalName = (category: CategoryLocal): string | null => {
-  if (category.activeImageId === null) return null
+export const getOriginalName = (activeImageId: null | string, photos: Photo[]): string | null => {
+  if (activeImageId === null) return null
 
-  const findImage = [...category.images, ...category.media]
-    .find((image) => image.id === category.activeImageId)
+  const findImage = photos.find((image) => image.id === activeImageId)
 
   return findImage
     ? (

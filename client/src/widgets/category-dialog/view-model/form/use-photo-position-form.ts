@@ -2,8 +2,8 @@ import { useModalStore } from "shared/hooks/use-modal-store"
 import { ChangeEvent, FocusEvent } from "react"
 import { ControllerRenderProps } from "react-hook-form"
 import { nanoid } from "nanoid"
-import { CategoryFields } from "shared/types/new_types/types"
-import { useHistoryStore } from "../../model/history/use-history-store"
+import { useHistoryStore } from "widgets/category-dialog/view-model/history/use-history-store"
+import { CategoryFields } from "entities/category"
 
 export const usePhotoPositionForm = () => {
   const tab = useModalStore((store) => store.tab)
