@@ -2,17 +2,17 @@ import { observer } from "mobx-react-lite"
 import { useId } from "react"
 import { ModalContainer } from "shared/ui/dialog/upsert-dialog"
 import { DialogHeaderCaption, ModalHeader } from "shared/ui/dialog/dialog-header"
-import { EditAltNameForm } from "./edit-alt-name-form"
-import { EditAltNameFooter } from "./edit-alt-name-footer"
-import { altNameEditStore } from "../../model/alt-name-edit-store"
+import { EditForm } from "./edit-form"
+import { EditFooter } from "./edit-footer"
+import { altNameEditStore } from "../../model/edit-store"
 
-export const EditAltNameBody = observer(() => {
+export const EditBody = observer(() => {
   const formId = useId()
 
   return (
     <ModalContainer
       height="auto"
-      body={<EditAltNameForm formId={formId} />}
+      body={<EditForm formId={formId} />}
       header={(
         <ModalHeader
           title={(
@@ -24,7 +24,7 @@ export const EditAltNameBody = observer(() => {
         />
       )}
       footer={{
-        right: <EditAltNameFooter formId={formId} />,
+        right: <EditFooter formId={formId} />,
       }}
     />
   )

@@ -2,12 +2,12 @@ import { useKeyboard } from "shared/lib/keyboard-manager"
 import { ctrlKey } from "shared/lib/keyboard-manager/handlers"
 import { FormProvider } from "react-hook-form"
 import { useGetAllLocales } from "entities/alt-name"
-import { altNameEditStore } from "../../model/alt-name-edit-store"
+import { altNameEditStore } from "../../model/edit-store"
 import { useAltNameForm } from "../../view-model/use-alt-name-form"
 import { RootForm } from "../../ui/root-form"
 import { DefaultFields } from "../../ui/default-fields"
 
-export const EditAltNameForm = ({ formId }: { formId: string }) => {
+export const EditForm = ({ formId }: { formId: string }) => {
   const editForm = useAltNameForm({
     defaultFields: altNameEditStore.altName,
     onSubmit: (data) => {
@@ -29,7 +29,7 @@ export const EditAltNameForm = ({ formId }: { formId: string }) => {
     <FormProvider {...editForm.form}>
       <RootForm id={formId} onSubmit={editForm.handleFormSubmit}>
         <DefaultFields
-          locales={altNameEditStore.exclude(locales.data)}
+          locales={altNameEditStore.exclude(locales.data!)}
           defaultValue={editForm.defaultValue}
         />
       </RootForm>

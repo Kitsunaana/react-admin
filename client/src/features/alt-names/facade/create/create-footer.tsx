@@ -1,18 +1,18 @@
 import { SaveButton } from "shared/ui/dialog/save-button"
 import { CancelButton } from "shared/ui/dialog/cancel-button"
 import { useKeyboard } from "shared/lib/keyboard-manager"
-import { altNameEditStore } from "../../model/alt-name-edit-store"
+import { altNameCreateStore } from "../../model/create-store"
 
-export const EditAltNameFooter = ({ formId }: { formId: string }) => {
+export const CreateFooter = ({ formId }: { formId: string }) => {
   useKeyboard({
     key: "Escape",
-    callback: altNameEditStore.cancelEdit,
+    callback: altNameCreateStore.cancelCreate,
   })
 
   return (
     <>
       <SaveButton form={formId} />
-      <CancelButton onClick={altNameEditStore.cancelEdit} />
+      <CancelButton onClick={altNameCreateStore.cancelCreate} />
     </>
   )
 }

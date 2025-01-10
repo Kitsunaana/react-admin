@@ -18,9 +18,6 @@ export const DefaultFields = ({
     <Controller
       name="locale"
       defaultValue={defaultValue.locale}
-      rules={{
-        required: "requiredSelect",
-      }}
       render={({ field, fieldState }) => (
         <Autocomplete<FormLocales>
           size="small"
@@ -53,13 +50,6 @@ export const DefaultFields = ({
     <Controller
       name="caption"
       defaultValue={defaultValue.caption}
-      rules={{
-        required: "required",
-        minLength: {
-          value: 3,
-          message: "minLength",
-        },
-      }}
       render={({ field, fieldState }) => (
         <Input
           size="small"

@@ -2,19 +2,19 @@ import { observer } from "mobx-react-lite"
 import { useId } from "react"
 import { ModalContainer } from "shared/ui/dialog/upsert-dialog"
 import { DialogHeaderCaption, ModalHeader } from "shared/ui/dialog/dialog-header"
-import { CreateAltNameForm } from "./create-alt-name-form"
-import { CreateAltNameFooter } from "./create-alt-name-footer"
+import { CreateForm } from "./create-form"
+import { CreateFooter } from "./create-footer"
 
-export const CreateAltNameBody = observer(() => {
+export const CreateBody = observer(() => {
   const formId = useId()
 
   return (
     <ModalContainer
       height="auto"
-      body={<CreateAltNameForm formId={formId} />}
+      body={<CreateForm formId={formId} />}
       header={<ModalHeader title={<DialogHeaderCaption name="create" />} />}
       footer={{
-        right: <CreateAltNameFooter formId={formId} />,
+        right: <CreateFooter formId={formId} />,
       }}
     />
   )

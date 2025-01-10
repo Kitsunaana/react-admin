@@ -1,18 +1,18 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
 import { eventBus } from "shared/lib/event-bus"
-import { AltNameFields, AltName, Locale } from "../domain/alt-name-types"
-import { openCreateAltNameModalEvent, submitCreateAltNameEvent } from "../domain/alt-names-events"
+import { AltName, AltNameFields, Locale } from "entities/alt-name"
+import { openModalCreateAltNameEvent, submitAltNameCreateEvent } from "../domain/events"
 import { FormLocales } from "../view-model/use-alt-name-form"
 
-class AltNameCreateStore {
+class CreateStore {
   isCreating: boolean = false
   altNames: AltName[] = []
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(openCreateAltNameModalEvent, ({ payload }) => this.startCreate(payload.altNames))
+    eventBus.on(openModalCreateAltNameEvent, ({ payload }) => this.startCreate(payload.altNames))
   }
 
   startCreate(altNames: AltName[]) {
@@ -27,7 +27,7 @@ class AltNameCreateStore {
   submitCreate(payload: AltNameFields) {
     this.cancelCreate()
 
-    eventBus.emit(submitCreateAltNameEvent({
+    eventBus.emit(submitAltNameCreateEvent({
       ...payload,
       status: "create",
       id: nanoid(),
@@ -45,4 +45,4 @@ class AltNameCreateStore {
   }
 }
 
-export const altNameCreateStore = new AltNameCreateStore()
+export const altNameCreateStore = new CreateStore()

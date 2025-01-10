@@ -2,17 +2,17 @@ import { observer } from "mobx-react-lite"
 import { LangContext } from "shared/context/lang"
 import { ModalStoreProvider } from "shared/hooks/use-modal-store"
 import { ModalWrapper } from "shared/ui/dialog/upsert-dialog"
-import { altNameCreateStore } from "../../model/alt-name-create-store"
-import { CreateAltNameBody } from "./create-alt-name-body"
+import { altNameEditStore } from "../../model/edit-store"
+import { EditBody } from "./edit-body"
 
-export const CreateAltNameModal = observer(() => (
+export const EditModal = observer(() => (
   <LangContext lang="altNames.dialog">
     <ModalStoreProvider>
       <ModalWrapper
         nesting={2}
-        open={altNameCreateStore.isCreating}
+        open={altNameEditStore.isEditing}
       >
-        <CreateAltNameBody />
+        <EditBody />
       </ModalWrapper>
     </ModalStoreProvider>
   </LangContext>

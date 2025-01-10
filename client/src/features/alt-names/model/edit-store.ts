@@ -1,10 +1,10 @@
 import { makeAutoObservable } from "mobx"
 import { eventBus } from "shared/lib/event-bus"
-import { AltName, Locale } from "../domain/alt-name-types"
-import { openEditAltNameModalEvent, submitEditAltNameEvent } from "../domain/alt-names-events"
+import { AltName, Locale } from "entities/alt-name"
+import { openModalEditAltNameEvent, submitAltNameEditEvent } from "../domain/events"
 import { FormLocales } from "../view-model/use-alt-name-form"
 
-class AltNameEditStore {
+class EditStore {
   isEditing: boolean = false
 
   altName: AltName | undefined = undefined
@@ -13,7 +13,7 @@ class AltNameEditStore {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(openEditAltNameModalEvent, ({ payload }) => (
+    eventBus.on(openModalEditAltNameEvent, ({ payload }) => (
       this.startEdit(payload.altName, payload.altNames)
     ))
   }
@@ -33,7 +33,7 @@ class AltNameEditStore {
   submitEdit(payload: AltName) {
     this.cancelEdit()
 
-    eventBus.emit(submitEditAltNameEvent({
+    eventBus.emit(submitAltNameEditEvent({
       ...payload,
       status: payload.status === "create" ? "create" : "update",
     }))
@@ -54,4 +54,4 @@ class AltNameEditStore {
   }
 }
 
-export const altNameEditStore = new AltNameEditStore()
+export const altNameEditStore = new EditStore()

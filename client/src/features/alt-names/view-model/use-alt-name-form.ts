@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form"
 import { FormEvent } from "react"
-import { AltNameFields, Locale } from "../domain/alt-name-types"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { AltNameFields, altNameFieldsSchema, Locale } from "entities/alt-name"
 
 export type FormData = {
   caption: string
@@ -19,7 +20,9 @@ export const useAltNameForm = ({
   onSubmit: (data: AltNameFields) => void
   defaultFields?: FormData
 }) => {
-  const form = useForm<AltNameFields>()
+  const form = useForm<AltNameFields>({
+    resolver: zodResolver(altNameFieldsSchema),
+  })
 
   const getDefaultValue = (): FormData => {
     if (defaultFields !== undefined) return defaultFields
@@ -39,12 +42,10 @@ export const useAltNameForm = ({
     handleSubmit()
   }
 
-  const defaultValue = getDefaultValue()
-
   return {
+    defaultValue: getDefaultValue(),
     handleKeyDownSubmit: handleSubmit,
     handleFormSubmit,
-    defaultValue,
     form,
   }
 }
