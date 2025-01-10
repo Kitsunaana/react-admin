@@ -1,4 +1,3 @@
-import { CategoryFields, CategoryLocal } from "shared/types/new_types/types"
 import { useForm, UseFormReturn } from "react-hook-form"
 import {
   createContext, ReactNode, useCallback, useMemo,
@@ -6,11 +5,12 @@ import {
 import { useStrictContext } from "shared/lib/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { exclude, include } from "shared/lib/utils"
-import { useHistoryStore } from "../../model/history/use-history-store"
+import { CategoryFields, categoryFieldsSchema } from "entities/category"
+import { useHistoryStore } from "../history/use-history-store"
 import { useCategoryStore } from "../../model/category/use-category-store"
-import { getCategoryDefaultFields } from "../../domain/const"
-import { validationCategorySchema } from "../../domain/category"
-import { SettingsRecord } from "../../domain/settings"
+import { getCategoryDefaultFields } from "../const"
+import { SettingsRecord } from "../setting/settings-types"
+import { CategoryLocal } from "../../domain/category/types"
 
 type UseCategoryFormMethods = Omit<UseFormReturn<CategoryFields>, "handleSubmit"> & {
   clear: () => void
@@ -26,7 +26,7 @@ export const CategoryFormContext = createContext<UseCategoryFormMethods | null>(
 export const CategoryFormProvider = ({ children }: { children: ReactNode }) => {
   const form = useForm<CategoryFields>({
     defaultValues: getCategoryDefaultFields(),
-    resolver: zodResolver(validationCategorySchema),
+    resolver: zodResolver(categoryFieldsSchema),
   })
 
   const getRows = useCategoryStore((store) => store.get)

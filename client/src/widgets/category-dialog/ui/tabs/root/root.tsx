@@ -1,15 +1,22 @@
 import { observer } from "mobx-react-lite"
 import { LangContext } from "shared/context/lang"
 import { useModalStore } from "shared/hooks/use-modal-store"
-import { useCategoryFormContext } from "widgets/category-dialog/view-model/form/use-category-form"
+import { useCategoryFormContext } from "../../../view-model/form/use-category-form"
 import { TabAltNames } from "../alt-names/root"
 import { TabCharacteristics } from "../characteristics/root"
 import { TabCommon } from "../common"
 import { TabPhotoPosition } from "../photo-position/root"
 import { TabPhotos } from "../photos/root"
 import { TabTags } from "../tags/root"
+import { CreateCategoryBody } from "../../../domain/category/requests"
 
-export const Root = observer(({ formId }: { formId: string }) => {
+export const Root = observer(({
+  formId,
+  onCreate,
+}: {
+  formId: string
+  onCreate: (payload: CreateCategoryBody) => void
+}) => {
   const tab = useModalStore((store) => store.tab)
 
   const categoryForm = useCategoryFormContext()
@@ -21,7 +28,7 @@ export const Root = observer(({ formId }: { formId: string }) => {
         onSubmit={(event) => {
           event.preventDefault()
 
-          categoryForm.submit(console.log)
+          categoryForm.submit(onCreate)
         }}
       />
 

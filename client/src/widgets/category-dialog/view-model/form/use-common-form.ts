@@ -1,8 +1,8 @@
 import { useModalStore } from "shared/hooks/use-modal-store"
 import React from "react"
 import { nanoid } from "nanoid"
+import { useHistoryStore } from "widgets/category-dialog/view-model/history/use-history-store"
 import { useCategoryFormContext } from "./use-category-form"
-import { useHistoryStore } from "../../model/history/use-history-store"
 
 export const useCommonForm = () => {
   const modal = useModalStore()
