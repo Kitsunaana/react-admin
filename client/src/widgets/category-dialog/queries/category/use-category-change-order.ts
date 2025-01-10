@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query"
 import { queryClient } from "app/providers/query-client"
 import { useGetCategorySearchParams } from "entities/category"
-import { CategoryView, GetAllCategoriesResponse } from "shared/types/new_types/types"
-import { categoryApi } from "../category-api"
+import { categoryApi } from "../../category-api"
+import { GetAllCategoriesResponse } from "../../domain/category/requests"
 
-const changeItemOrder = (categories: CategoryView[], data: { order: number, id: string }) => (
+const changeItemOrder = <T extends { order: number, id: string }>(categories: T[], data: T) => (
   categories.map((category) => (
     category.id !== data.id
       ? category
@@ -15,7 +15,7 @@ const changeItemOrder = (categories: CategoryView[], data: { order: number, id: 
   ))
 )
 
-const sortByOrder = (categories: CategoryView[]) => categories
+const sortByOrder = <T extends { order: number, id: string }>(categories: T[]) => categories
   .sort((prev, next) => {
     const prevOrder = prev.order ?? 0
     const nextOrder = next.order ?? 0
@@ -42,7 +42,7 @@ export const useChangeCategoryOrder = () => {
   })
 
   return {
-    onChangeOrder: mutate,
     isLoading: isPending,
+    mutate,
   }
 }

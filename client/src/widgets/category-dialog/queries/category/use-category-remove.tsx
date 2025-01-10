@@ -1,24 +1,29 @@
 import { useMutation } from "@tanstack/react-query"
 import { queryClient } from "app/providers/query-client"
-import { useGetParams } from "entities/category/model/use-get-params"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 import { useGetConfirmation } from "shared/lib/confirmation"
-import { CategoryView, GetAllCategoriesResponse } from "shared/types/new_types/types"
-import { categoryApi } from "../category-api"
-import { RemoveConfirm } from "../ui/remove-confirm"
+import { useGetCategorySearchParams } from "entities/category"
+import { categoryApi } from "../../category-api"
+import { RemoveConfirm } from "../../ui/remove-confirm"
+import { GetAllCategoriesResponse } from "../../domain/category/requests"
 
 export const useRemoveCategoryMutation = () => {
   const { t } = useTranslation("translation", { keyPrefix: "catalog.dialog.remove" })
 
-  const { search, page } = useGetParams()
+  const { search, page } = useGetCategorySearchParams()
 
-  const { mutate } = useMutation({
+  const mutation = useMutation({
     mutationKey: ["category"],
-    mutationFn: (id: string) => toast.promise(categoryApi.remove(id), {
-      error: t("error"),
-      success: { type: "info", render: t("success") },
-    }),
+    mutationFn: (id: string) => (
+      toast.promise(categoryApi.remove(id), {
+        error: t("error"),
+        success: {
+          type: "info",
+          render: t("success"),
+        },
+      })
+    ),
     onSuccess: (_, variables) => {
       queryClient.setQueryData(
         ["categories", search, page],
@@ -31,7 +36,7 @@ export const useRemoveCategoryMutation = () => {
   })
 
   return {
-    onRemove: mutate,
+    onRemove: mutation.mutate,
   }
 }
 
@@ -41,7 +46,7 @@ export const useRemoveCategory = () => {
   const getConfirmation = useGetConfirmation()
   const { onRemove } = useRemoveCategoryMutation()
 
-  return async (category: CategoryView) => {
+  return async <T extends { id: string, caption: string }>(category: T) => {
     const confirmation = await getConfirmation({
       langBase,
       confirmText: "confirm",
