@@ -1,5 +1,5 @@
 import { Mark } from "shared/ui/mark"
-import { AddImagesEvent } from "../../../model/history/events"
+import { AddImagesEvent } from "../../../view-model/history/events"
 import { TemplateEvent, TemplateEventProps } from "../base"
 import { ImageEventContainer, ImageEventsBox, TemplateEventText } from "./styles"
 

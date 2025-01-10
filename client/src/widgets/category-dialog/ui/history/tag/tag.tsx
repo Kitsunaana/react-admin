@@ -1,7 +1,7 @@
-import { CategoryLocal } from "shared/types/new_types/types"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import { AddTagEvent, RemoveTagEvent, UpdateTagEvent } from "../../../model/history/events"
+import { CategoryLocal } from "../../../domain/category/types"
+import { AddTagEvent, RemoveTagEvent, UpdateTagEvent } from "../../../view-model/history/events"
 import { MarkEvent, TemplateEvent, TemplateEventProps } from "../base"
 import { TagEventContainer, TagEventsBox } from "./styles"
 

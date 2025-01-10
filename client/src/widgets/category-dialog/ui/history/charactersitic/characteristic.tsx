@@ -1,11 +1,11 @@
-import { CategoryLocal } from "shared/types/new_types/types"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
+import { CategoryLocal } from "../../../domain/category/types"
 import {
   AddCharacteristicEvent,
   RemoveCharacteristicEvent,
   UpdateCharacteristicEvent,
-} from "../../../model/history/events"
+} from "../../../view-model/history/events"
 import { MarkEvent, TemplateEvent, TemplateEventProps } from "../base"
 import { CharacteristicEventsBox, CharacteristicEventContainer } from "./styles"
 

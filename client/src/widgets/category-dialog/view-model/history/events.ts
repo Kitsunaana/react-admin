@@ -1,6 +1,8 @@
-import {
-  AltName, Category, Characteristic, Image, Tag,
-} from "shared/types/new_types/types"
+import { AltName } from "entities/alt-name"
+import { Characteristic } from "entities/characteristic"
+import { Tag } from "entities/tag"
+import { CaptionPosition, CategoryLocal } from "../../domain/category/types"
+import { Image } from "../../domain/photo"
 
 export type ChangeIsShowPhotoWithGoodsEvent = {
   id: string
@@ -41,7 +43,7 @@ export type ChangeCaptionPositionEvent = {
   id: string
   tab: number
   type: "changeCaptionPosition"
-  value: Category["captionPosition"]
+  value: CaptionPosition
 }
 
 export type ChangeCaptionEvent = {
@@ -128,7 +130,7 @@ export type RemoveAltNameEvent = {
   id: string
   tab: number
   type: "removeAltName"
-  value: number | string
+  value: string
 }
 
 export type AddTagEvent = {
@@ -149,7 +151,14 @@ export type RemoveTagEvent = {
   id: string
   tab: number
   type: "removeTag"
-  value: number | string
+  value: string
+}
+
+export type PasteCategoryData = {
+  id: string
+  tab: undefined
+  type: "pasteCategoryData"
+  value: CategoryLocal
 }
 
 export type CategoryEvent =
@@ -174,5 +183,6 @@ export type CategoryEvent =
   | AddTagEvent
   | UpdateTagEvent
   | RemoveTagEvent
+  | PasteCategoryData
 
 export type RecordEvent = (event: CategoryEvent) => void

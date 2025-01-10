@@ -1,5 +1,5 @@
 import { HistoryStore } from "./history-store"
-import { useCategoryStore } from "../category/use-category-store"
+import { useCategoryStore } from "../../model/category/use-category-store"
 
 export const useHistoryStore = <T = HistoryStore, >(getState?: (store: HistoryStore) => T): T => {
   const store = useCategoryStore((store) => store.history)

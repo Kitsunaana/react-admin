@@ -1,12 +1,10 @@
 import { produce } from "immer"
 import { toJS } from "mobx"
 import { isEqual } from "shared/lib/utils"
-import {
-  AltName,
-  CategoryLocal,
-  Characteristic,
-  Tag,
-} from "shared/types/new_types/types"
+import { Characteristic } from "entities/characteristic"
+import { AltName } from "entities/alt-name"
+import { Tag } from "entities/tag"
+import { CategoryLocal } from "../../domain/category/types"
 import { CategoryEvent } from "./events"
 
 export const producer = (rootState: CategoryLocal, event: CategoryEvent) => (
@@ -179,6 +177,9 @@ export const producer = (rootState: CategoryLocal, event: CategoryEvent) => (
             }))
         break
       }
+
+      case "pasteCategoryData":
+        return toJS(event.value)
 
       default:
         return state

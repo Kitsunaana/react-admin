@@ -1,7 +1,6 @@
 import { Box } from "shared/ui/box"
 import { MarkProps } from "shared/ui/mark"
-import { CategoryWithEvents } from "widgets/category-dialog/model/history/history-store"
-import { findImage, findMedia, getOriginalName } from "widgets/category-dialog/domain/photo"
+import { findImage, findMedia, getOriginalName } from "../../domain/photo"
 import { PrevCurrentValueProperty } from "./base"
 import {
   TagAddEvent,
@@ -19,6 +18,7 @@ import {
   CharacteristicUpdateEvent,
 } from "./charactersitic"
 import { ImagesAddEvent } from "./image"
+import { CategoryWithEvents } from "../../view-model/history/history-core"
 
 interface ShowEventsProps {
   events: CategoryWithEvents[]
@@ -44,10 +44,15 @@ export const EventList = (props: ShowEventsProps) => {
         }
 
         switch (event.type) {
+          case "pasteCategoryData": {
+            caption = "Вставлены скопированные данные"
+            break
+          }
+
           case "changeActiveImageId": {
             caption = "Изображение"
-            prevValue = getOriginalName(lastData)
-            currentValue = getOriginalName(newData)
+            prevValue = getOriginalName(lastData.activeImageId, [...lastData.media, ...lastData.images])
+            currentValue = getOriginalName(newData.activeImageId, [...newData.media, ...newData.images])
             break
           }
 

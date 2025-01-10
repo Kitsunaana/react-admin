@@ -1,7 +1,11 @@
-import { CategoryLocal } from "shared/types/new_types/types"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
-import { AddAltNameEvent, RemoveAltNameEvent, UpdateAltNameEvent } from "../../../model/history/events"
+import { CategoryLocal } from "../../../domain/category/types"
+import {
+  AddAltNameEvent,
+  RemoveAltNameEvent,
+  UpdateAltNameEvent,
+} from "../../../view-model/history/events"
 import { MarkEvent, TemplateEvent, TemplateEventProps } from "../base"
 import { AltNameEventContainer, AltNameEventsBox } from "./styles"
 

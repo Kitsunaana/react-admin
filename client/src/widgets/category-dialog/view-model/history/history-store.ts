@@ -1,72 +1,75 @@
 import { makeAutoObservable } from "mobx"
-import { CategoryLocal } from "shared/types/new_types/types"
+import { CategoryLocal } from "../../domain/category/types"
 import { CategoryEvent } from "./events"
 import { producer } from "./producer"
-
-export type CategoryWithEvents = {
-  newData: CategoryLocal
-  lastData: CategoryLocal
-  event: CategoryEvent
-}
+import { CategoryWithEvents } from "./history-core"
 
 export class HistoryStore {
-  _events: CategoryEvent[] = []
-  _cursor = -1
+  private _events: CategoryEvent[] = []
+  private _cursor = -1
 
-  constructor() {
+  public constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  get events() {
+  public get cursor() {
+    return this._cursor
+  }
+
+  public get events() {
     return this._events.slice(0, this._cursor + 1)
   }
 
-  get currentVersion() {
+  public get noOneEvent() {
+    return this._events.length === 0
+  }
+
+  public get currentVersion() {
     return this._events[this._cursor]
   }
 
-  get canUndo() {
+  public get canUndo() {
     return this._cursor >= 0
   }
 
-  get canRedo() {
+  public get canRedo() {
     return this._cursor < this._events.length - 1
   }
 
-  get allEvents() {
+  public get allEvents() {
     return this._events
   }
 
-  moveToVersion(index: number) {
+  public moveToVersion(index: number) {
     this._cursor = index
   }
 
-  undo() {
+  public undo() {
     this._cursor -= 1
   }
 
-  redo() {
+  public redo() {
     this._cursor = Math.min(this._events.length - 1, this._cursor + 1)
   }
 
-  reset() {
+  public reset() {
     this._events = []
     this._cursor = -1
   }
 
-  recordEvent(event: CategoryEvent) {
+  public recordEvent(event: CategoryEvent) {
     this._events = [...this._events.slice(0, this._cursor + 1), event]
 
     this._cursor = this._events.length - 1
   }
 
-  getCategory(first: CategoryLocal): CategoryLocal {
+  public getCategory(first: CategoryLocal): CategoryLocal {
     if (this.events.length === 0) return first
 
     return this.events.reduce(producer, first)
   }
 
-  getCategoryWithEvents(first: CategoryLocal): CategoryWithEvents[] {
+  public getCategoryWithEvents(first: CategoryLocal): CategoryWithEvents[] {
     const result: CategoryWithEvents[] = []
 
     let lastData = first
