@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { Text } from "shared/ui/text"
-import { startCreateTag } from "../../../../model/tag/tag"
+import { startCreateTag } from "../../../../model/tag/tag-events"
 import { Layout } from "../layout"
 import { List } from "../list"
 

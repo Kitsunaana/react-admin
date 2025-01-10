@@ -1,130 +1,89 @@
 import { makeAutoObservable } from "mobx"
 import { nanoid } from "nanoid"
-import { Tag } from "shared/types/new_types/types"
-import { eventBus } from "shared/lib/event-bus"
+import { Tag } from "entities/tag"
+import { RecordEvent } from "../../view-model/history/events"
 import { List } from "../list"
-import { tagCreateEvent, tagRemoveEvent, tagEditEvent } from "./tag"
-import { PasteAction } from "../../domain/settings"
-import { RecordEvent } from "../../model/history/events"
+import {
+  subscribeSubmitCreateTagEvent,
+  subscribeSubmitEditTagEvent,
+  subscribeSubmitRemoveTagEvent,
+} from "./tag-events"
+import { PasteAction } from "../../view-model/setting/settings-types"
 
 export class TagStore {
   constructor(
     private recordEvent: RecordEvent,
-    private list: List<Tag>,
+    public list: List<Tag>,
   ) {
-    makeAutoObservable(this, {
-      createTag: false,
-      getTagCaptions: false,
-      getFilteredTags: false,
-      addTags: false,
-      replaceTags: false,
-    }, { autoBind: true })
+    makeAutoObservable(this, {}, { autoBind: true })
 
-    eventBus.on(tagCreateEvent, ({ payload }) => {
-      this.create(payload)
-
-      this.recordEvent({
-        id: nanoid(),
-        type: "addTag",
-        value: payload,
-        tab: 5,
-      })
-    })
-
-    eventBus.on(tagEditEvent, ({ payload }) => {
-      this.edit(payload)
-
-      this.recordEvent({
-        id: nanoid(),
-        type: "updateTag",
-        value: payload,
-        tab: 5,
-      })
-    })
+    subscribeSubmitCreateTagEvent(this.createTagEvent)
+    subscribeSubmitEditTagEvent(this.editTagEvent)
+    subscribeSubmitRemoveTagEvent(this.removeTagEvent)
   }
 
-  get array() {
-    return this.list.array
+  public getState(data: Tag) {
+    if (this.list.getIsAlreadyExists(data, this.list.array)) return "error"
+    if (this.list.getIsCreatedOrUpdated(data)) return "success"
+
+    return "none"
   }
 
-  get count() {
-    return this.list.count
+  public setCopiedTags(action: PasteAction, tags: Tag[]) {
+    if (action === "add") this.addCopiedTags(tags)
+
+    if (action === "replace") return this.replaceCopiedTags(tags)
   }
 
-  get isEmpty() {
-    return this.list.isEmpty
+  private addCopiedTags(addedTags: Tag[]) {
+    const tagsCaption = this.list.getCaptions(this.list.array)
+    const filteredTags = this.list.getFilteredItems(tagsCaption, addedTags)
+
+    const createdTags = this.list
+      .getCreatedItems(filteredTags, this.list.buildCreateItem)
+
+    this.list.merge(createdTags)
   }
 
-  get() {
-    return this.list.get()
+  private replaceCopiedTags(replacedTags: Tag[]) {
+    this.list.removeAllItems(this.list.array, this.list.remove)
+
+    const createdItems = this.list
+      .getCreatedItems(replacedTags, this.list.buildCreateItem)
+
+    this.list.merge(createdItems)
   }
 
-  set(data: Tag[]) {
-    this.list.set(data)
-  }
-
-  create(payload: Tag) {
+  private createTagEvent(payload: Tag) {
     this.list.add(payload)
+
+    this.recordEvent({
+      id: nanoid(),
+      type: "addTag",
+      value: payload,
+      tab: 5,
+    })
   }
 
-  edit(payload: Tag) {
+  private editTagEvent(payload: Tag) {
     this.list.edit(payload)
+
+    this.recordEvent({
+      id: nanoid(),
+      type: "updateTag",
+      value: payload,
+      tab: 5,
+    })
   }
 
-  removeAll() {
-    this.array.forEach((t) => this.list.remove(t.id))
-  }
+  private removeTagEvent(id: string) {
+    this.list.remove(id)
 
-  remove(data: Tag) {
-    eventBus.emit(tagRemoveEvent({
-      data,
-      callback: (id: string) => {
-        this.list.remove(id)
-
-        this.recordEvent({
-          id: nanoid(),
-          type: "removeTag",
-          value: id,
-          tab: 5,
-        })
-      },
-    }))
-  }
-
-  createTag(data: Tag) {
-    // console.log(this)
-    this.create({ ...data, status: "create", id: nanoid() })
-  }
-
-  getTagCaptions(tags: Tag[]) {
-    return tags.map((t) => t.caption)
-  }
-
-  getFilteredTags(tags: Tag[], tagsExclude: Tag[]) {
-    const tagCaptions = this.getTagCaptions(tags)
-
-    return tagsExclude.filter((tag) => !tagCaptions.includes(tag.caption))
-  }
-
-  addTags(tags: Tag[]) {
-    this
-      .getFilteredTags(this.array, tags)
-      .forEach(this.createTag.bind(this))
-  }
-
-  replaceTags(tags: Tag[]) {
-    this.removeAll()
-
-    tags.forEach(this.createTag)
-  }
-
-  setCopiedTags(action: PasteAction, tags: Tag[]) {
-    console.log(tags)
-    if (action === "add") this.addTags(tags)
-    if (action === "replace") return this.replaceTags(tags)
-  }
-
-  isCreatedOrUpdated(tag: Tag) {
-    return tag.status === "create" || tag.status === "update"
+    this.recordEvent({
+      id: nanoid(),
+      type: "removeTag",
+      value: id,
+      tab: 5,
+    })
   }
 }
