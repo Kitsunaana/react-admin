@@ -6,12 +6,14 @@ export const Layout = memo(({
   caption,
   actions,
   contextMenu,
+  contextButton,
   isOpen,
   open,
 }: {
   caption: ReactNode
   actions: ReactNode
   contextMenu: ReactNode
+  contextButton: ReactNode
   isOpen: boolean
   open: (event: React.MouseEvent<Element, MouseEvent>) => void
 }) => {
@@ -30,6 +32,7 @@ export const Layout = memo(({
       )}
       <ContainerActions>
         {actions}
+        {contextButton}
       </ContainerActions>
     </CustomRowItem>
   )

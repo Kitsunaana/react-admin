@@ -1,53 +1,50 @@
 import { useContextMenu } from "shared/hooks/context-menu/use-context-menu"
-import { CategoryView, Media } from "shared/types/new_types/types"
 import { Text } from "shared/ui/text"
 import { memo, useCallback } from "react"
-import { OpenGalleryData } from "shared/events/open-gallery"
 import { useProductsNavigate } from "../../model/use-products-navigate"
 import { ContextMenu } from "../context-menu"
 import { Actions } from "../actions"
 import { Layout } from "../layout"
+import { Media } from "../../domain/types"
+import { IconActionsButton } from "./styles"
 
 export const Root = memo(({
   id,
   caption,
-  images,
+  media,
   order,
   isLoading,
-  category,
-  onOpenGallery,
+  onEdit,
+  onRemove,
   onChangeOrder,
-  onRemoveCategory,
-  onOpenEditDialog,
+  onOpenGallery,
 }: {
   id: string
   caption: string
-  images: Media[]
+  media: Media[]
   order: number | null
   isLoading: boolean
-  onOpenGallery: (data: OpenGalleryData) => void
-  onRemoveCategory: (payload: CategoryView) => Promise<void>
-  onChangeOrder: (payload: { id: string, order: number }) => void
-  onOpenEditDialog: (id: string) => void
-  category: CategoryView
+  onEdit: (id: string) => void
+  onRemove: (id: string, caption: string) => Promise<void>
+  onChangeOrder: (id: string, order: number) => void
+  onOpenGallery: (index: number, media: Media[]) => void
 }) => {
   const productsNavigate = useProductsNavigate(caption)
   const menu = useContextMenu()
 
   const handleOnEdit = () => {
     menu.close()
-    onOpenEditDialog(id)
+    onEdit(id)
   }
 
   const handleOnDelete = () => {
     menu.close()
-    onRemoveCategory(category)
+    onRemove(id, caption)
   }
 
-  const handleChangeOrder = useCallback(
-    (order: number) => onChangeOrder({ id, order }),
-    [id],
-  )
+  const handleChangeOrder = useCallback((order: number) => onChangeOrder(id, order), [id])
+
+  const handleOpenGallery = useCallback((index: number) => onOpenGallery(index, media), [media])
 
   return (
     <Layout
@@ -58,11 +55,25 @@ export const Root = memo(({
         <Actions
           caption={caption}
           order={order}
-          images={images}
+          media={media}
           isLoading={isLoading}
-          onOpenGallery={onOpenGallery}
+          onOpenGallery={handleOpenGallery}
           onChangeOrder={handleChangeOrder}
-          onOpenActions={menu.open}
+        />
+      )}
+      contextButton={(
+        <IconActionsButton
+          color="primary"
+          name="actions"
+          onClick={menu.open}
+          help={{
+            title: (
+              <Text
+                onlyText
+                name="actions"
+              />
+            ),
+          }}
         />
       )}
       contextMenu={(

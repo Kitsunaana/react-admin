@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom"
 import { validation } from "shared/lib/validation"
 import { categorySearchParamsSchema } from "../domain/schemas"
 
-export const useGetCategorySearchParams = () => {
+export const useGetSearchParams = () => {
   const [searchParams] = useSearchParams()
 
   const page = searchParams.get("page")
