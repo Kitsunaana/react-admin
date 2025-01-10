@@ -1,9 +1,8 @@
 import { $axios } from "shared/config/axios"
 import { validation } from "shared/lib/validation"
-import { Locale } from "shared/types/new_types/types"
+import { Locale } from "entities/alt-name"
 import { translateSchema, FetchTranslateResponse, TranslateBody } from "./domain/alt-name"
 
-export const URL = "/locales"
 export const URL_TRANSLATE = "https://google-translate113.p.rapidapi.com/api/v1/translator/json"
 export const HOST = "google-translate113.p.rapidapi.com"
 export const KEY = "96f8c6e5a6msh97a27abce15673ap184725jsn5eb78c1312cd"
@@ -38,13 +37,13 @@ const translate = async (
   const { data } = await $axios.post<{ trans: TranslateBody }>(URL_TRANSLATE, payload, config)
 
   return {
+    locale,
     data: validation(translateSchema, {
       trans: {
         ...data.trans,
         description: data.trans.description ?? "",
       },
     }),
-    locale,
   }
 }
 

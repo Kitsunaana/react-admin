@@ -1,42 +1,66 @@
 import { $axios } from "shared/config/axios"
+import { validation } from "shared/lib/validation"
 import {
-  Category,
-  CategoryCreated,
-  CategoryView,
-} from "shared/types/new_types/types"
+  getAllCategoriesResponse,
+  getByIdCategorySchema,
+  patchCategoryBodySchema,
+  patchCategoryResponseSchema,
+  patchChangeOrderResponse,
+  postCategoryBodySchema,
+  postCategoryResponseSchema,
+} from "./domain/category/requests-schemas"
+import {
+  CreateCategoryBody,
+  CreateCategoryResponse,
+  GetAllCategoriesResponse,
+  GetByIdCategoryResponse,
+  PatchCategoryBody,
+  PatchCategoryResponse,
+  PatchChangeOrderBody,
+  PatchChangeOrderResponse,
+} from "./domain/category/requests"
 
-const remove = async (id: string) => $axios
-  .delete(`/categories/${id}`).then(({ data }) => data)
+const remove = (id: string) => $axios.delete(`/categories/${id}`)
 
-const create = async (payload: Omit<CategoryCreated, "id" | "order">): Promise<CategoryView> => {
-  const { data } = await $axios.post("/categories", payload)
+const create = (payload: CreateCategoryBody): Promise<CreateCategoryResponse> => (
+  $axios.post("/categories", validation(postCategoryBodySchema, payload))
+    .then((response) => validation(postCategoryResponseSchema, response.data))
+)
 
-  return data as CategoryView
+const update = (payload: PatchCategoryBody): Promise<PatchCategoryResponse> => (
+  $axios.patch(`/categories/${payload.id}`, validation(patchCategoryBodySchema, payload))
+    .then((response) => validation(patchCategoryResponseSchema, response.data))
+)
+
+const changeOrder = (payload: PatchChangeOrderBody): Promise<PatchChangeOrderResponse> => (
+  $axios.patch("/categories/order", payload)
+    .then((response) => validation(patchChangeOrderResponse, response.data))
+)
+
+export type GetAllQueryParams = {
+  search?: string | null
+  page?: number | null
 }
 
-export type PatchCategoryBody = Category
+const getAll = (query: GetAllQueryParams): Promise<GetAllCategoriesResponse> => (
+  $axios.get("/categories", { params: query })
+    .then((response) => (
+      validation(getAllCategoriesResponse, response.data)
+    ))
+)
 
-const update = async (payload: PatchCategoryBody): Promise<CategoryView> => {
-  const { data } = await $axios.patch(`/categories/${payload.id}`, payload)
-
-  return data
-}
-
-interface ChangeOrderBody {
-  id: string
-  order: number
-}
-
-const changeOrder = async (payload: ChangeOrderBody): Promise<number[]> => {
-  const { data } = await $axios
-    .patch<number[]>("/categories/order", payload)
-
-  return data
-}
+const getById = (id: string): Promise<GetByIdCategoryResponse> => (
+  $axios.get(`/categories/${id}`)
+    .then((response) => (
+      validation(getByIdCategorySchema, response.data)
+    ))
+)
 
 export const categoryApi = {
   remove,
   create,
   update,
+  getAll,
+  getById,
   changeOrder,
 }

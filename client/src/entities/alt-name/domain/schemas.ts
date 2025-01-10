@@ -5,6 +5,8 @@ export const localeSchema = z.object({
   altName: z.string(),
   caption: z.string(),
   code: z.string(),
+}, {
+  message: "requiredSelect",
 })
 
 export const getAllLocalesResponseSchema = z.array(localeSchema)
@@ -15,11 +17,7 @@ export const altNameFieldsSchema = z.object({
     .nonempty({ message: "required" })
     .min(3, { message: "minLength" }),
   description: z.string(),
-  locale: localeSchema
-    .nullable()
-    .refine((locale) => locale !== null, {
-      message: "requiredSelect",
-    }),
+  locale: localeSchema,
 })
 
 export const altNameSchema = altNameFieldsSchema.extend({
