@@ -1,32 +1,32 @@
 import { makeAutoObservable } from "mobx"
 import { getDefaultValue } from "shared/lib/local-storage"
-import { initialSettingsFields, initialSettingsRows } from "../../domain/const"
+import { initialSettingsFields, initialSettingsRows } from "../const"
 import {
   PasteAction,
   KeysSettingsFields,
   KeysSettingsRows,
   settingFieldsSchema,
   settingsRowsSchema,
-} from "../../domain/settings"
+} from "./settings-types"
 
 export class SettingsStore {
-  settingsFields = initialSettingsFields
-  settingsRows = initialSettingsRows
+  public settingsFields: KeysSettingsFields = initialSettingsFields
+  public settingsRows: KeysSettingsRows = initialSettingsRows
 
-  constructor() {
-    getDefaultValue<typeof this.settingsRows>({
+  public constructor() {
+    getDefaultValue<KeysSettingsRows>({
       key: "settingsRows",
-      schema: settingsRowsSchema,
       parse: true,
+      schema: settingsRowsSchema,
       onSuccess: (settings) => {
         this.settingsRows = settings
       },
     })
 
-    getDefaultValue<typeof this.settingsFields>({
+    getDefaultValue<KeysSettingsFields>({
       key: "settingsFields",
-      schema: settingFieldsSchema,
       parse: true,
+      schema: settingFieldsSchema,
       onSuccess: (settings) => {
         this.settingsFields = settings
       },
@@ -35,19 +35,19 @@ export class SettingsStore {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  get settings() {
+  public get settings() {
     return {
       ...this.settingsFields,
       ...this.settingsRows,
     }
   }
 
-  changeFields = (name: KeysSettingsFields, value: boolean) => {
+  public changeFields = (name: keyof KeysSettingsFields, value: boolean) => {
     this.settingsFields[name] = value
     localStorage.setItem("settingsFields", JSON.stringify(this.settingsFields))
   }
 
-  changeRows = (name: KeysSettingsRows, value: PasteAction) => {
+  public changeRows = (name: keyof KeysSettingsRows, value: PasteAction) => {
     this.settingsRows[name] = value
     localStorage.setItem("settingsRows", JSON.stringify(this.settingsRows))
   }
