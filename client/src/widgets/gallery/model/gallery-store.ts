@@ -1,89 +1,97 @@
 import { makeAutoObservable } from "mobx"
-import { Image, Media } from "shared/types/new_types/types"
+import { sleep } from "shared/lib/utils"
+import { Photo, OpenGalleryData, subscribeOpenGallery } from "./types"
 
-interface IData {
-  index?: number
-  images: (Image | Media)[]
-}
+export class GalleryStore {
+  public scale = 1
+  public maxScale = 3
+  public minScale = 0.4
 
-class GalleryStore {
-  scale = 1
-  maxScale = 3
-  minScale = 0.4
+  public rotate = 0
 
-  rotate = 0
+  public open = false
+  public indexActiveImage = 0
+  public photos: Photo[] = []
 
-  open = false
-  indexActiveImage = 0
-  images: (Image | Media)[] = []
-
-  constructor() {
+  public constructor() {
     makeAutoObservable(this, {}, {
       autoBind: true,
     })
+
+    subscribeOpenGallery(this.openGallery)
   }
 
-  openGallery(data: IData) {
+  public openGallery(data: OpenGalleryData, callback?: (index: number) => void) {
     this.open = true
-    this.images = data.images
+    this.photos = data.photos
     this.indexActiveImage = data.index ?? 0
+
+    sleep(1)
+      .then(() => callback?.(this.indexActiveImage))
   }
 
-  closeGallery() {
+  public closeGallery() {
     this.open = false
   }
 
-  get prevImage() {
-    return this.images[this.indexActiveImage - 1]
+  public get prevImage() {
+    return this.photos[this.indexActiveImage - 1]
   }
 
-  get nextImage() {
-    return this.images[this.indexActiveImage + 1]
+  public get nextImage() {
+    return this.photos[this.indexActiveImage + 1]
   }
 
-  setNextIndexActiveImage() {
+  public setNextIndexActiveImage() {
     this.indexActiveImage += 1
+    return this.indexActiveImage
   }
 
-  setPrevIndexActiveImage() {
+  public setPrevIndexActiveImage() {
     this.indexActiveImage -= 1
+    return this.indexActiveImage
   }
 
-  setIndexActiveImage(index: number) {
+  public setIndexActiveImage(index: number) {
     this.indexActiveImage = index
+    return this.indexActiveImage
   }
 
-  zoomInScale() {
+  public zoomInScale() {
     this.scale += 0.2
   }
 
-  zoomOutScale() {
+  public zoomOutScale() {
     this.scale += -0.2
   }
 
-  get canZoomInScale() {
+  public get canZoomInScale() {
     return this.scale >= this.maxScale
   }
 
-  get canZoomOutScale() {
+  public get canZoomOutScale() {
     return this.scale <= this.minScale
   }
 
-  get disabledPrev() {
+  public get disabledPrev() {
     return !this.prevImage
   }
 
-  get disabledNext() {
+  public get disabledNext() {
     return !this.nextImage
   }
 
-  updateRotate = (direction: "right" | "left") => {
+  public updateRotate = (direction: "right" | "left") => {
     this.rotate += direction === "right" ? 90 : -90
   }
 
-  setDefaultParameters = () => {
+  public setDefaultParameters = () => {
     this.scale = 1
     this.rotate = 0
+  }
+
+  public get counterImage() {
+    return `${this.indexActiveImage + 1}/${this.photos.length}`
   }
 }
 

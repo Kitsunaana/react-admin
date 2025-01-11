@@ -1,1 +1,1 @@
-export { Gallery } from "./ui/gallery"
+export { Gallery } from "./facade/gallery-modal"
