@@ -2,9 +2,10 @@ import { Text } from "shared/ui/text"
 import { Mark } from "shared/ui/mark"
 import { Pagination } from "shared/ui/pagination"
 import { LangContext, useLang } from "shared/context/lang"
+import { memo } from "react"
 import { Container } from "./styles"
 
-export const Footer = ({
+export const Footer = memo(({
   count,
 }: {
   count: number
@@ -27,4 +28,4 @@ export const Footer = ({
       </Container>
     </LangContext>
   )
-}
+})

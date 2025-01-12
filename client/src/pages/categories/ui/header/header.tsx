@@ -1,12 +1,13 @@
-import { ReactNode } from "react"
+import { memo, ReactNode } from "react"
 import { Controller } from "react-hook-form"
 import { Input } from "shared/ui/form/input"
 import { Text } from "shared/ui/text"
 import { LangContext, useLang } from "shared/context/lang"
+import { shallowEqual } from "shared/lib/utils"
 import { Container, Actions } from "./styles"
 import { useHeaderForm } from "../../view-model/use-header-form"
 
-export const Header = ({
+export const Header = memo(({
   actions,
 }: {
   actions: ReactNode
@@ -39,4 +40,4 @@ export const Header = ({
       </Container>
     </LangContext>
   )
-}
+}, shallowEqual)

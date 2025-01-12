@@ -1,57 +1,29 @@
-import { observer } from "mobx-react-lite"
-import { useCategoryStartCreate, useGetAllCategories } from "widgets/category-dialog"
+import { useGetAllCategories } from "widgets/category-dialog"
 import { Table } from "shared/ui/table"
-import { RefetchButton } from "shared/ui/buttons/refresh-button"
-import { IconButton } from "shared/ui/buttons/icon-button"
-import { Text } from "shared/ui/text"
-import { BackButton } from "shared/ui/buttons/back-button"
+import { useMemo } from "react"
 import { List } from "../ui/list"
 import { Footer } from "../ui/footer"
-import { Header } from "../ui/header"
+import { Header } from "../ui/header/root"
 
-const CategoriesPage = observer(() => {
+const CategoriesPage = () => {
   const getAllCategories = useGetAllCategories()
-  const categoryStartCreate = useCategoryStartCreate()
+
+  const headerDeps = [getAllCategories.refetch]
+  const contentDeps = [getAllCategories.categories.rows, getAllCategories.isLoading]
+  const bottomDeps = [getAllCategories.categories.count]
 
   return (
     <Table
-      header={(
-        <Header
-          actions={(
-            <>
-              <RefetchButton onRefetch={getAllCategories.refetch} />
-              <IconButton
-                name="add"
-                color="success"
-                fontSize={20}
-                onClick={categoryStartCreate}
-                help={{
-                  title: (
-                    <Text
-                      onlyText
-                      name="add"
-                    />
-                  ),
-                }}
-              />
-              <BackButton />
-            </>
-          )}
-        />
-      )}
-      content={(
+      header={useMemo(() => <Header onRefetch={getAllCategories.refetch} />, headerDeps)}
+      bottom={useMemo(() => <Footer count={getAllCategories.categories.count} />, bottomDeps)}
+      content={useMemo(() => (
         <List
           categories={getAllCategories.categories.rows}
           isLoading={getAllCategories.isLoading}
         />
-      )}
-      bottom={(
-        <Footer
-          count={getAllCategories.categories.count}
-        />
-      )}
+      ), contentDeps)}
     />
   )
-})
+}
 
 export default CategoriesPage

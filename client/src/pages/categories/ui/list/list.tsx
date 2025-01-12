@@ -21,9 +21,7 @@ export const List = memo(({
 
   return (
     <LangContext lang={langBase}>
-      {list.map((category) => (
-        <CategoryRow key={category.id} {...category} />
-      ))}
+      {list.map((category) => <CategoryRow key={category.id} {...category} />)}
     </LangContext>
   )
 })
