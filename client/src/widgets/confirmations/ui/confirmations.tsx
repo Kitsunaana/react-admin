@@ -1,6 +1,8 @@
-import { FC, PropsWithChildren, useState } from "react"
+import {
+  FC, PropsWithChildren, useMemo, useState,
+} from "react"
 import { confirmationContext, ConfirmationParams } from "shared/lib/confirmation"
-import { defaultConfirmationParams } from "../constants"
+import { defaultConfirmationParams } from "../const"
 import { ConfirmationModalParams } from "../model/types"
 import { ConfirmationModal } from "./confirmation-modal"
 
@@ -27,19 +29,16 @@ export const Confirmations: FC<PropsWithChildren> = (props) => {
     })
   })
 
+  const confirmationContextValue = useMemo(() => ({
+    getConfirmation,
+    closeConfirmation,
+  }), [])
+
   return (
-    <confirmationContext.Provider
-      // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{
-        getConfirmation,
-        closeConfirmation,
-      }}
-    >
+    <confirmationContext.Provider value={confirmationContextValue}>
       {children}
 
-      {modalParams && (
-        <ConfirmationModal params={modalParams} />
-      )}
+      {modalParams && <ConfirmationModal params={modalParams} />}
     </confirmationContext.Provider>
   )
 }

@@ -22,7 +22,7 @@ export const Root = memo(({
   id: string
   caption: string
   media: Media[]
-  order: number | null
+  order: number
   isLoading: boolean
   onEdit: (id: string) => void
   onRemove: (id: string, caption: string) => Promise<void>
@@ -32,19 +32,19 @@ export const Root = memo(({
   const productsNavigate = useProductsNavigate(caption)
   const menu = useContextMenu()
 
-  const handleOnEdit = () => {
+  const handleOnEdit = useCallback(() => {
     menu.close()
     onEdit(id)
-  }
+  }, [])
 
-  const handleOnDelete = () => {
+  const handleOnDelete = useCallback(() => {
     menu.close()
     onRemove(id, caption)
-  }
+  }, [])
 
   const handleChangeOrder = useCallback((order: number) => onChangeOrder(id, order), [id])
 
-  const handleOpenGallery = useCallback((index: number) => onOpenGallery(index, media), [media])
+  const handleOpenGallery = useCallback((index: number) => onOpenGallery(index, media), [])
 
   return (
     <Layout

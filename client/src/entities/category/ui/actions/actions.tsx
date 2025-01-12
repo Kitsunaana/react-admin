@@ -16,7 +16,7 @@ export const Actions = memo(({
   onChangeOrder,
 }: {
   caption: string
-  order: number | null
+  order: number
   media: Media[]
   isLoading: boolean
   onOpenGallery: (index: number) => void

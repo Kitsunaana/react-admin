@@ -4,7 +4,7 @@ import { isString } from "shared/lib/utils"
 import { Mark } from "shared/ui/mark"
 import { Modal } from "shared/ui/modal"
 import { Text } from "shared/ui/text"
-import { defaultConfirmationParams } from "../constants"
+import { defaultConfirmationParams } from "../const"
 import { ConfirmationModalParams } from "../model/types"
 
 interface ConfirmationModalProps {
