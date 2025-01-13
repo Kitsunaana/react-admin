@@ -1,4 +1,4 @@
-import { useCategoryStore } from "widgets/category-dialog/model/category/use-category-store"
+import { useCategoryStore } from "../category/use-category-store"
 import { PhotoPositionStore } from "./photo-position.store"
 
 export const usePhotoPositionStore = <T = PhotoPositionStore, >(

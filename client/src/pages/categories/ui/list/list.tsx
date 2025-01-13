@@ -1,7 +1,7 @@
 import { EmptyList } from "shared/ui/empty-list"
 import { CategoryRow } from "entities/category"
 import { memo } from "react"
-import { CategoryView, useCategoryList } from "widgets/category-dialog"
+import { CategoryView, useCategoryList } from "features/category"
 import { LangContext, useLang } from "shared/context/lang"
 import { Loader } from "../loader"
 

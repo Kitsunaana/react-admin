@@ -1,4 +1,4 @@
-import { Media } from "widgets/category-dialog"
+import { Media } from "features/category"
 import { AltName } from "entities/alt-name"
 import { CategoryFields } from "entities/category"
 import {

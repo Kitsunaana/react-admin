@@ -1,4 +1,4 @@
-import { useGetAllCategories } from "widgets/category-dialog"
+import { useGetAllCategories } from "features/category"
 import { Table } from "shared/ui/table"
 import { useMemo } from "react"
 import { observer } from "mobx-react-lite"

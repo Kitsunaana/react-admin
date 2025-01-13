@@ -6,13 +6,13 @@ import { Pages } from "pages/pages"
 import { useSettings } from "features/settings"
 import { styled } from "@mui/material/styles"
 import { menu, menuBottom, Sidebar } from "widgets/sidebar"
-import { CreateModalCategory } from "widgets/category-dialog"
+import { CreateModalCategory } from "features/category"
 import {
   CreateModalCharacteristic,
   EditModalCharacteristic,
   RemoveModalCharacteristic,
-} from "features/characteristics"
-import { CreateModalAltName, EditModalAltName, RemoveModalAltName } from "features/alt-names"
+} from "features/characteristic"
+import { CreateModalAltName, EditModalAltName, RemoveModalAltName } from "features/alt-name"
 import { CreateModalTag, EditModalTag, RemoveModalTag } from "features/tag"
 
 const Wrapper = styled("div")(() => ({
