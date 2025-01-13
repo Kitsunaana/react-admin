@@ -1,10 +1,10 @@
 import { LangContext, useLang } from "shared/context/lang"
 import { MenuPopup } from "shared/ui/menu-popup"
 import { observer } from "mobx-react-lite"
-import { Rows } from "widgets/category-dialog/ui/settings/rows"
-import { Fields } from "widgets/category-dialog/ui/settings/fields"
 import { useState } from "react"
 import { Header } from "../header"
+import { Rows } from "../rows"
+import { Fields } from "../fields"
 
 export const Root = observer(() => {
   const [tab, setTab] = useState(0)

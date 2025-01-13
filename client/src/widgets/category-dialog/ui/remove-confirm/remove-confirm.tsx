@@ -1,4 +1,3 @@
-import { CategoryView } from "shared/types/new_types/types"
 import { Box } from "shared/ui/box"
 import { Mark } from "shared/ui/mark"
 import { RowItem } from "shared/ui/row-item"
@@ -9,7 +8,10 @@ export const RemoveConfirm = ({
   category,
 }: {
   langBase: string
-  category: CategoryView
+  category: {
+    id: string
+    caption: string
+  }
 }) => (
   <Box flex gap>
     <Text

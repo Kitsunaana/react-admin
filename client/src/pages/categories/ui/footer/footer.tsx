@@ -5,11 +5,7 @@ import { LangContext, useLang } from "shared/context/lang"
 import { memo } from "react"
 import { Container } from "./styles"
 
-export const Footer = memo(({
-  count,
-}: {
-  count: number
-}) => {
+export const Footer = memo(({ count }: { count: number }) => {
   const langBase = useLang("bottom")
 
   return (

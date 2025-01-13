@@ -2,7 +2,6 @@ import { CssBaseline } from "@mui/material"
 import { observer } from "mobx-react-lite"
 import { ToastContainer } from "react-toastify"
 import { LangContext } from "shared/context/lang"
-import { Gallery } from "widgets/gallery"
 import { Pages } from "pages/pages"
 import { useSettings } from "features/settings"
 import { styled } from "@mui/material/styles"
@@ -40,8 +39,6 @@ export const App = observer(() => {
         <LangContext lang="sidebar">
           <Sidebar menu={menu} menuBottom={menuBottom} />
         </LangContext>
-
-        <Gallery />
         <Pages />
       </Inner>
 

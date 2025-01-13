@@ -2,10 +2,8 @@ import { useMutation } from "@tanstack/react-query"
 import { queryClient } from "app/providers/query-client"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
-import { useGetConfirmation } from "shared/lib/confirmation"
 import { useGetCategorySearchParams } from "entities/category"
 import { categoryApi } from "../../category-api"
-import { RemoveConfirm } from "../../ui/remove-confirm"
 import { GetAllCategoriesResponse } from "../../domain/category/requests"
 
 export const useRemoveCategoryMutation = () => {
@@ -37,27 +35,5 @@ export const useRemoveCategoryMutation = () => {
 
   return {
     onRemove: mutation.mutate,
-  }
-}
-
-export const useRemoveCategory = () => {
-  const langBase = "catalog.confirm.remove"
-
-  const getConfirmation = useGetConfirmation()
-  const { onRemove } = useRemoveCategoryMutation()
-
-  return async <T extends { id: string, caption: string }>(category: T) => {
-    const confirmation = await getConfirmation({
-      langBase,
-      confirmText: "confirm",
-      description: (
-        <RemoveConfirm
-          langBase={langBase}
-          category={category}
-        />
-      ),
-    })
-
-    if (confirmation) onRemove(category.id)
   }
 }

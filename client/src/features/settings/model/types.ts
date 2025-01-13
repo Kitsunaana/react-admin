@@ -7,14 +7,6 @@ export type IconSettings = {
   fillIcon: number
 }
 
-export interface Messages {
-  errorMessage: string
-  notFound: string
-  errorParsed: string
-}
-
-export type Settings = "icon" | "theme" | "language"
-
 export interface DefaultSettings {
   language: Languages,
   theme: Themes,

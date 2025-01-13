@@ -44,7 +44,7 @@ export const Root = memo(({
 
   const handleChangeOrder = useCallback((order: number) => onChangeOrder(id, order), [id])
 
-  const handleOpenGallery = useCallback((index: number) => onOpenGallery(index, media), [])
+  const handleOpenGallery = useCallback((index: number) => onOpenGallery(index, []), [])
 
   return (
     <Layout

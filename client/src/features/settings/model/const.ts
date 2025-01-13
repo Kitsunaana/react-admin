@@ -7,7 +7,7 @@ export const defaultIconSettings = {
   fillIcon: 0,
 }
 
-export const defautlSettings: DefaultSettings = {
+export const defaultSettings: DefaultSettings = {
   language: defaultLanguage,
   theme: defaultTheme,
   iconSettings: defaultIconSettings,

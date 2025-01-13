@@ -2,8 +2,8 @@ import { Checkbox, FormControlLabel } from "@mui/material"
 import { observer } from "mobx-react-lite"
 import { useMemo } from "react"
 import { useLang } from "shared/context/lang"
-import { useSettingsStore } from "widgets/category-dialog/model/setting/use-settings-store"
-import { KeysSettingsFields } from "../../../domain/settings"
+import { useSettingsStore } from "../../../view-model/setting/use-settings-store"
+import { KeysSettingsFields } from "../../../view-model/setting/settings-types"
 import { Container, Caption } from "./styles"
 
 export const Fields = observer(() => {
@@ -28,7 +28,7 @@ export const Fields = observer(() => {
               <Checkbox
                 size="small"
                 checked={value}
-                onChange={(_, checked) => onChange(key as KeysSettingsFields, checked)}
+                onChange={(_, checked) => onChange(key as keyof KeysSettingsFields, checked)}
               />
             )}
           />

@@ -1,6 +1,6 @@
 import { ButtonGroup } from "shared/ui/buttons/toggle-button"
-import { useSettingsStore } from "widgets/category-dialog/model/setting/use-settings-store"
-import { KeysSettingsRows } from "../../../domain/settings"
+import { useSettingsStore } from "../../../view-model/setting/use-settings-store"
+import { KeysSettingsRows } from "../../../view-model/setting/settings-types"
 import { Divider, Caption } from "./styles"
 
 const buttonGroups = ["images", "characteristics", "tags"] as const
@@ -21,7 +21,7 @@ export const Rows = () => {
             name={groups}
             options={actions}
             defaultValue={settings[groups]}
-            onChange={(name, value) => onChange(name as KeysSettingsRows, value)}
+            onChange={(name, value) => onChange(name as keyof KeysSettingsRows, value)}
           />
         </div>
       ))}

@@ -9,21 +9,25 @@ import { BrowserRouter } from "react-router-dom"
 import "react-toastify/dist/ReactToastify.css"
 import "shared/config/translate"
 import { Confirmations } from "widgets/confirmations"
+import { Gallery } from "widgets/gallery"
 
 const container = document.getElementById("root")
 const root = createRoot(container as HTMLElement)
 root.render(
-  <ErrorBoundary>
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
+  <QueryClientProvider client={queryClient}>
+
+    <ErrorBoundary>
+      <BrowserRouter>
         <SettingsContextProvider>
           <ThemeProvider>
             <Confirmations>
-              <App />
+              <Gallery>
+                <App />
+              </Gallery>
             </Confirmations>
           </ThemeProvider>
         </SettingsContextProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
-  </ErrorBoundary>,
+      </BrowserRouter>
+    </ErrorBoundary>
+  </QueryClientProvider>,
 )

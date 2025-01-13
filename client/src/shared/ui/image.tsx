@@ -1,9 +1,8 @@
 import { alpha, CircularProgress } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import {
-  DetailedHTMLProps, ImgHTMLAttributes, useState,
-} from "react"
+import { ImgHTMLAttributes, useState } from "react"
 import { Box } from "shared/ui/box"
+import { useImage } from "shared/hooks/use-image"
 
 const ImageLoader = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -16,17 +15,25 @@ const ImageLoader = styled(Box)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.common.black, 0.1),
 }))
 
-interface ImageProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>{
-  src: string
+export type ImageProps = ImgHTMLAttributes<HTMLImageElement> & {
+  src?: string
+  data?: string | File
   className?: string
 }
 
-export const Image = (props: ImageProps) => {
-  const { src, className, ...other } = props
-
+export const Image = ({
+  src,
+  data,
+  className,
+  ...other
+}: ImageProps) => {
   const [loading, setLoading] = useState(true)
 
+  const path = useImage(data ?? src)
+
   const handleImageLoad = () => setLoading(false)
+
+  if (!path) return null
 
   return (
     <>
@@ -38,7 +45,7 @@ export const Image = (props: ImageProps) => {
       <img
         onLoad={handleImageLoad}
         className={className}
-        src={src}
+        src={path}
         alt=""
         {...other}
       />

@@ -1,11 +1,10 @@
-import { SxProps, Theme } from "@mui/material"
-import { memo, useEffect, useState } from "react"
-import { useLang } from "shared/context/lang"
+import { memo } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { IconButtonBase } from "shared/ui/buttons/icon-button-base"
 import { Icon } from "shared/ui/icon"
 import { Text } from "shared/ui/text"
 import styled from "styled-components"
+import { useToggle } from "shared/hooks/use-toggle"
 
 interface ContainerProps extends BoxProps {
   width: number
@@ -50,57 +49,36 @@ const Container = styled((props: ContainerProps) => <Box flex ai row gap jc {...
   min-width: ${({ open, width }) => (open ? `${width * 10 + 60}px` : "24px")};
 `
 
-interface PositionProps {
-  order: number | null
-  sx?: SxProps<Theme>
-  id: string
-  onUpdate: (payload: { id: string, order: number }) => void
+export const Position = memo(({
+  order,
+  isLoading, onUpdate,
+}: {
+  order: number
   isLoading: boolean
-}
-
-export const Position = memo((props: PositionProps) => {
-  const {
-    id,
-    sx,
-    isLoading,
-    onUpdate,
-    order: orderProps,
-  } = props
-
-  const [open, setOpen] = useState(false)
-  const [order, setOrder] = useState(orderProps ?? 0)
-  const langBase = useLang()
-
-  useEffect(() => { setOrder(orderProps ?? 0) }, [orderProps])
-
-  const onToggle = () => setOpen((prevState) => !prevState)
+  onUpdate: (order: number) => void
+}) => {
+  const [open, onToggle] = useToggle()
 
   const width = order === 0 ? 1.75 : String(order).split("").length
 
-  const renderIconButton = (direction: number) => (
-    <IconButtonBase
-      disabled={isLoading}
-      name="expand"
-      color="primary"
-      fontSize={20}
-      onClick={() => onUpdate({ id, order: order + direction })}
-    />
-  )
+  const handleMoveUp = () => onUpdate(order + 1)
+  const handleMoveDown = () => onUpdate(order - 1)
 
   return (
-    <Container width={width} open={open} sx={sx}>
+    <Container width={width} open={open}>
       <ArrowUpButton
         open={open}
         help={{
-          title: (
-            <Text
-              langBase={langBase}
-              name="moveUp"
-            />
-          ),
+          title: <Text name="moveUp" />,
         }}
       >
-        {renderIconButton(1)}
+        <IconButtonBase
+          disabled={isLoading}
+          name="expand"
+          color="primary"
+          fontSize={20}
+          onClick={handleMoveUp}
+        />
       </ArrowUpButton>
       {
         order === 0
@@ -110,15 +88,16 @@ export const Position = memo((props: PositionProps) => {
       <ArrowDownButton
         open={open}
         help={{
-          title: (
-            <Text
-              langBase={langBase}
-              name="moveDown"
-            />
-          ),
+          title: <Text name="moveDown" />,
         }}
       >
-        {renderIconButton(-1)}
+        <IconButtonBase
+          disabled={isLoading}
+          name="expand"
+          color="primary"
+          fontSize={20}
+          onClick={handleMoveDown}
+        />
       </ArrowDownButton>
     </Container>
   )

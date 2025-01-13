@@ -24,7 +24,10 @@ export const useHeaderForm = () => {
       if (event.code === "Enter" && search !== null && isFocused) {
         setSearchParams((prev) => {
           if (search === "") prev.delete("search")
-          else prev.set("search", search)
+          else {
+            prev.set("search", search)
+            prev.delete("page")
+          }
 
           return prev
         })

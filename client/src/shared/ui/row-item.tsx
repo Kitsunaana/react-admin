@@ -1,4 +1,4 @@
-import { AlertColor, alpha } from "@mui/material"
+import { AlertColor, alpha, Theme } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { isString } from "shared/lib/utils"
 import { Box, BoxProps } from "shared/ui/box"
@@ -72,5 +72,63 @@ export const RowItem = styled((props: RowItemProps) => {
     "&:hover": {
       backgroundColor: palette.grey[palette.mode === "dark" ? 800 : 100],
     },
+  }
+})
+
+const getThemeColor = (theme: Theme, colorType: "success" | "error" | "primary" | "warning") => {
+  const { palette } = theme
+
+  return palette.mode === "light" ? palette[colorType].light : palette[colorType].dark
+}
+
+const getBorderStyle = (color: string, width = 5) => `${width}px solid ${color}`
+
+export type StyledRowItemProps = RowItemProps & {
+  active?: boolean
+  borderSuccess?: boolean
+  borderError?: boolean
+  bgError?: boolean
+}
+
+export const StyledRowItem = styled(({
+  active,
+  borderError,
+  borderSuccess,
+  bgError,
+  ...props
+}: StyledRowItemProps) => (
+  <RowItem {...props} />
+))(({
+  theme, active, bgError, borderSuccess, borderError,
+}) => {
+  const successColor = getThemeColor(theme, "success")
+  const errorColor = getThemeColor(theme, "error")
+  const activeColor = getThemeColor(theme, active ? "primary" : "warning")
+
+  return {
+    ...(borderSuccess && {
+      borderLeft: getBorderStyle(successColor),
+    }),
+
+    ...(borderError && {
+      borderLeft: getBorderStyle(errorColor),
+    }),
+
+    ...(bgError && {
+      background: theme.background.hatch.error,
+      backgroundSize: "6px 6px",
+    }),
+
+    ...(active && {
+      border: `1px solid ${activeColor}`,
+      ...(borderSuccess && {
+        borderLeft: `${getBorderStyle(activeColor)} !important`,
+      }),
+
+      ...(bgError && {
+        border: `${getBorderStyle(getThemeColor(theme, "error"), 1)}`,
+        borderLeft: `${getBorderStyle(getThemeColor(theme, "error"))} !important`,
+      }),
+    }),
   }
 })

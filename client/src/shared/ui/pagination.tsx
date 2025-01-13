@@ -1,17 +1,19 @@
 import { Pagination as MUIPagination, PaginationProps as MUIPaginationProps } from "@mui/material"
 import { useSearchParams } from "react-router-dom"
 
-interface PaginationProps extends MUIPaginationProps {}
-
-export const Pagination = (props: PaginationProps) => {
-  const { count, onChange, ...other } = props
-
+export const Pagination = ({
+  count,
+  onChange,
+  ...other
+}: MUIPaginationProps & {
+  count: number
+}) => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   return (
     <MUIPagination
       page={Number(searchParams.get("page")) || 1}
-      count={Math.ceil((count ?? 0) / 25)}
+      count={Math.ceil((count) / 25)}
       variant="outlined"
       shape="rounded"
       onChange={(event, page) => {

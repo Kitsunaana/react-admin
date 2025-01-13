@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles"
 import { memo, useState } from "react"
 import { Box, BoxProps } from "shared/ui/box"
 import { Icon } from "shared/ui/icon"
-import { Media, Image as TypeImage } from "shared/types/new_types/types"
 
 export const Image = styled("img")`
   width: 110px;
@@ -32,22 +31,24 @@ export const Badge = styled(MUIBadge)(({ theme }) => ({
   },
 }))
 
-interface TooltipImageViewProps {
-  images?: Media[]
-  onOpenGallery: (data: {
-    index: number,
-    images: (Media | TypeImage)[]
-  }) => void
+type Media = {
+  id: string
+  originalName: string
+  path: string
 }
 
-export const TooltipImageView = memo((props: TooltipImageViewProps) => {
-  const { images, onOpenGallery } = props
-
+export const TooltipImageView = memo(({
+  media,
+  onOpenGallery,
+}: {
+  media?: Media[]
+  onOpenGallery: (index: number) => void
+}) => {
   const [open, setOpen] = useState(false)
 
-  if (!images || images.length === 0) return null
+  if (!media || media.length === 0) return null
 
-  const newImages = images.length >= 14 ? [...images].splice(0, 14) : images
+  const newImages = media.length >= 14 ? [...media].splice(0, 14) : media
 
   return (
     <Tooltip
@@ -57,7 +58,7 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       title={(
-        <ImageContainer noOne={images.length > 1}>
+        <ImageContainer noOne={media.length > 1}>
           {newImages.map((image, index) => (
             <Image
               alt={image.originalName}
@@ -65,7 +66,7 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
               src={image.path}
               onClick={() => {
                 setOpen(false)
-                onOpenGallery({ images, index })
+                onOpenGallery(index)
               }}
             />
           ))}
@@ -73,8 +74,8 @@ export const TooltipImageView = memo((props: TooltipImageViewProps) => {
       )}
     >
       <Badge
-        invisible={images.length < 2}
-        badgeContent={images.length}
+        invisible={media.length < 2}
+        badgeContent={media.length}
       >
         <Icon
           color="secondary"

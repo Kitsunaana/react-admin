@@ -4,6 +4,8 @@ import { Vertical } from "shared/ui/divider"
 import { IconButton } from "shared/ui/buttons/icon-button"
 import { Text } from "shared/ui/text"
 import { Position } from "shared/ui/position-counter"
+import { shallowEqual } from "shared/lib/utils"
+import { isEqual } from "lodash"
 import { useProductsNavigate } from "../../model/use-products-navigate"
 import { Media } from "../../domain/types"
 
@@ -70,4 +72,9 @@ export const Actions = memo(({
       <Vertical />
     </>
   )
+}, (prev, next) => {
+  const { media: prevMedia, ...prevOther } = prev
+  const { media: nextMedia, ...nextOther } = next
+
+  return (shallowEqual(prevOther, nextOther) && isEqual(prevMedia, nextMedia))
 })

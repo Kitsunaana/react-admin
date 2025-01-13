@@ -1,6 +1,5 @@
 import { memo, ReactNode } from "react"
 import { LangContext, useLang } from "shared/context/lang"
-import { shallowEqual } from "shared/lib/utils"
 import { Container, Actions } from "./styles"
 
 export const Layout = memo(({
@@ -20,4 +19,4 @@ export const Layout = memo(({
       </Container>
     </LangContext>
   )
-}, shallowEqual)
+})

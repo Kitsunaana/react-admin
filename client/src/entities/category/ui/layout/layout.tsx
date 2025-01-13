@@ -17,7 +17,8 @@ export const Layout = memo(({
   isOpen: boolean
   open: (event: React.MouseEvent<Element, MouseEvent>) => void
 }) => {
-  const langBase = useLang("menuActions")
+  // const langBase = useLang("menuActions")
+  const langBase = "catalog.rows.menuActions"
 
   return (
     <CustomRowItem

@@ -15,8 +15,4 @@ export class ModalStore {
   changeTab(tab: number) {
     this.tab = tab
   }
-
-  start(defaultValue: number = 0) {
-    this.changeTab(defaultValue)
-  }
 }

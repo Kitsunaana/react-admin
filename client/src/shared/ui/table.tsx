@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles"
-import { ReactNode } from "react"
+import { memo, ReactNode } from "react"
 import { Box } from "shared/ui/box"
 
 const Container = styled(Box)`
@@ -40,7 +40,7 @@ interface TableProps {
   bottom?: ReactNode
 }
 
-export const Table = (props: TableProps) => {
+export const Table = memo((props: TableProps) => {
   const { header, bottom, content } = props
 
   return (
@@ -50,4 +50,4 @@ export const Table = (props: TableProps) => {
       <Bottom>{bottom}</Bottom>
     </Container>
   )
-}
+})
