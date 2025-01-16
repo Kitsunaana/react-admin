@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { AltNameService } from './alt-name.service';
 import { translate } from './assets/translate';
-import { getTranslatesInput } from './inputs/translate.input';
+import { getTranslatesInput, IGetTranslateInput } from './inputs/translate.input';
 import { validation } from '../shared/validations/zod.validation';
 import { Locale } from './domain/locale.entity';
 
@@ -10,7 +10,7 @@ export class AltNameController {
   public constructor(private localeService: AltNameService) {}
 
   @Get('/:lng')
-  public translates(@Param('lng') lng: string) {
+  public translates(@Param('lng') lng: IGetTranslateInput) {
     return translate[validation(getTranslatesInput, lng)];
   }
 

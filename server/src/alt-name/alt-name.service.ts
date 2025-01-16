@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { AltNameStrategyImpl } from './interfaces/alt-name.strategy.interface';
+import { IAltNameStrategyImpl } from './interfaces/alt-name.strategy.interface';
 import { Model } from 'sequelize-typescript';
 import { LocaleRepository } from './repositories/locale.repository';
 import { StrategyException } from '../shared/exceptions/strategy.exception';
-import { AltName } from './domain/types';
+import { IAltName } from './domain/types';
 import { Locale } from './domain/locale.entity';
 
 @Injectable()
 export class AltNameService<Create extends Model = Model> {
-  private strategy: AltNameStrategyImpl<Create> | undefined;
+  private strategy: IAltNameStrategyImpl<Create> | undefined;
 
   public constructor(private readonly localeRepository: LocaleRepository) {}
 
-  public setStrategy(strategy: AltNameStrategyImpl<Create>) {
+  public setStrategy(strategy: IAltNameStrategyImpl<Create>) {
     this.strategy = strategy;
   }
 
   private checkExistStrategy(
-    strategy: AltNameStrategyImpl<Create> | undefined,
-  ): strategy is AltNameStrategyImpl<Create> {
+    strategy: IAltNameStrategyImpl<Create> | undefined,
+  ): strategy is IAltNameStrategyImpl<Create> {
     if (strategy === undefined) throw new StrategyException('Alt name strategy is not defined');
 
     return true;
@@ -28,7 +28,7 @@ export class AltNameService<Create extends Model = Model> {
     return this.localeRepository.getAll();
   }
 
-  private async handleCreate(payload: AltName, ownerId: string): Promise<Create> {
+  private async handleCreate(payload: IAltName, ownerId: string): Promise<Create> {
     this.checkExistStrategy(this.strategy);
 
     return await this.strategy!.create({
@@ -40,7 +40,7 @@ export class AltNameService<Create extends Model = Model> {
     });
   }
 
-  private async handleUpdate(payload: AltName, ownerId: string): Promise<[number, Create[]]> {
+  private async handleUpdate(payload: IAltName, ownerId: string): Promise<[number, Create[]]> {
     this.checkExistStrategy(this.strategy);
 
     return await this.strategy!.update({
@@ -64,7 +64,7 @@ export class AltNameService<Create extends Model = Model> {
     return await this.strategy!.removeByOwnerId(ownerId);
   }
 
-  public async createCollect(altNames: AltName[], ownerId: string): Promise<Create[]> {
+  public async createCollect(altNames: IAltName[], ownerId: string): Promise<Create[]> {
     return await Promise.all(
       altNames.map((altName) =>
         this.handleCreate(altName, ownerId).then((altName) => altName.dataValues),
@@ -72,7 +72,7 @@ export class AltNameService<Create extends Model = Model> {
     );
   }
 
-  public async updateCollect(altNames: AltName[], ownerId: string): Promise<void> {
+  public async updateCollect(altNames: IAltName[], ownerId: string): Promise<void> {
     await Promise.all<Promise<Create> | Promise<[number, Create[]]> | Promise<number> | undefined>(
       altNames.map((altName) => {
         if (altName.status === 'create') return this.handleCreate(altName, ownerId);

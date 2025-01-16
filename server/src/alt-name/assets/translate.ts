@@ -1,4 +1,6 @@
-export const translate = {
+import { ILanguageTranslate } from './types';
+
+export const translate: ILanguageTranslate = {
   en: {
     sidebar: {
       catalog: 'Catalog',
@@ -21,13 +23,6 @@ export const translate = {
       expandRoutes: 'Expand',
     },
     settings: {
-      notify: {
-        errorValidate:
-          'The <strong>{{value}}</strong> settings in localStorage are incorrectly specified',
-        infoNotFound:
-          'Settings for <strong>{{value}}</strong> were not found, default settings are used',
-        errorParsed: 'The <strong>{{value}}</strong> data for parsing is corrupted',
-      },
       changeLanguage: 'Select language',
       changeTheme: 'Color theme',
       themes: {
@@ -40,6 +35,7 @@ export const translate = {
       iconSettings: 'Icon settings',
     },
     global: {
+      listEmpty: 'List empty',
       confirm: {
         title: 'Confirm action',
         description: 'Are you sure you want to continue?',
@@ -47,14 +43,13 @@ export const translate = {
         closeText: 'Cancel',
       },
       forms: {
+        clear: 'Clear',
         validate: {
           required: 'Required field',
           minLength: 'Minimum number of characters {{value}}',
           requiredSelect: 'Value must be selected',
         },
-        clear: 'Clear',
       },
-      listEmpty: 'List empty',
       dialog: {
         copy: 'Copy data for transfer',
         paste: 'Load copied data',
@@ -64,6 +59,22 @@ export const translate = {
         save: 'Save',
         cancel: 'Cancel',
         clear: 'Clear form',
+        confirm: {
+          close: {
+            close: 'Close',
+            cancel: 'Cancel',
+            descriptionClose: 'Are you sure you want to close the dialog modal?',
+          },
+          save: {
+            save: 'Сохранить',
+            cancel: 'Отменить',
+            descriptionSave: 'Сохрнаить все заполненные данные?',
+          },
+          keyboard: {
+            ok: 'Ок',
+            close: 'Закрыть',
+          },
+        },
       },
     },
     tag: {
@@ -92,7 +103,7 @@ export const translate = {
         },
       },
     },
-    altNames: {
+    altName: {
       confirm: {
         remove: {
           confirm: 'Yes, delete',
@@ -155,6 +166,9 @@ export const translate = {
         },
       },
       dialog: {
+        history: 'History',
+        undo: 'Undo',
+        redo: 'Redo',
         notify: {
           copyError: 'An error occurred while copying data',
           copySuccess: 'Data for transfer copied',
@@ -284,13 +298,6 @@ export const translate = {
       expandRoutes: 'Развернуть',
     },
     settings: {
-      notify: {
-        errorValidate: 'Не правильно указаны настройки <strong>{{value}}</strong> в localStorage',
-        infoNotFound:
-          'Настройки для <strong>{{value}}</strong> не найдены, ' +
-          'используется параметры по умолчанию',
-        errorParsed: 'Данные <strong>{{value}}</strong> для парсинга повреждены',
-      },
       changeLanguage: 'Выбирете язык',
       changeTheme: 'Цветовая тема',
       themes: {
@@ -342,7 +349,6 @@ export const translate = {
           keyboard: {
             ok: 'Ок',
             close: 'Закрыть',
-            keyboardControl: 'Управление клавишами',
           },
         },
       },
@@ -373,7 +379,7 @@ export const translate = {
         },
       },
     },
-    altNames: {
+    altName: {
       confirm: {
         remove: {
           confirm: 'Да, удалить',
@@ -521,13 +527,6 @@ export const translate = {
           description: 'Вы действительно хотите удалить характиристику <strong>{{value}}</strong>',
           confirm: 'Да, удалить',
         },
-        keyboard: {
-          selectNext: 'Выбрать следующую характеристику',
-          selectPrev: 'Выбрать предыдущую характеристику',
-          createCharacteristic: 'Создать характеристику',
-          editCharacteristic: 'Редактировать характеристику, если она выбрана',
-          removeCharacteristic: 'Удалить характеристику, если она выбрана',
-        },
       },
       rows: {
         forCategory: 'Для категории',
@@ -537,7 +536,6 @@ export const translate = {
       },
       actions: {
         add: 'Создать',
-        keyboard: 'Управление клавишами',
       },
       dialog: {
         title: {

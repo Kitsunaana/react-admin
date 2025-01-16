@@ -1,6 +1,6 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-export interface LocaleCreationAttrs {
+export interface ILocaleCreationAttrs {
   id: string;
   caption: string;
   code: string;
@@ -8,7 +8,7 @@ export interface LocaleCreationAttrs {
 }
 
 @Table({ timestamps: false })
-export class Locale extends Model<Locale, LocaleCreationAttrs> {
+export class Locale extends Model<Locale, ILocaleCreationAttrs> {
   @Column({
     unique: true,
     primaryKey: true,

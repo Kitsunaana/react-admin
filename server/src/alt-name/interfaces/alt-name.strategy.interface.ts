@@ -1,6 +1,6 @@
 import { Model } from 'sequelize-typescript';
 
-export interface CreateAltNamePayload {
+export interface ICreateAltNamePayload {
   id: string;
   ownerId: string;
   caption: string;
@@ -8,7 +8,7 @@ export interface CreateAltNamePayload {
   localeId: string;
 }
 
-export interface UpdateAltNamePayload {
+export interface IUpdateAltNamePayload {
   id: string;
   ownerId: string;
   caption: string;
@@ -16,9 +16,9 @@ export interface UpdateAltNamePayload {
   localeId: string;
 }
 
-export interface AltNameStrategyImpl<Create extends Model = Model, Update extends Model = Create> {
-  create(payload: CreateAltNamePayload): Promise<Create>;
-  update(payload: UpdateAltNamePayload): Promise<[number, Update[]]>;
+export interface IAltNameStrategyImpl<Create extends Model = Model, Update extends Model = Create> {
+  create(payload: ICreateAltNamePayload): Promise<Create>;
+  update(payload: IUpdateAltNamePayload): Promise<[number, Update[]]>;
   removeById(id: string): Promise<number>;
   removeByOwnerId(ownerId: string): Promise<number>;
 }
