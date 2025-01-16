@@ -3,7 +3,7 @@ import { IAltNameStrategyImpl } from './interfaces/alt-name.strategy.interface';
 import { Model } from 'sequelize-typescript';
 import { LocaleRepository } from './repositories/locale.repository';
 import { StrategyException } from '../shared/exceptions/strategy.exception';
-import { IAltName } from './domain/types';
+import { IAltName, ILocale } from './domain/alt-name.type';
 import { Locale } from './domain/locale.entity';
 
 @Injectable()
@@ -26,6 +26,10 @@ export class AltNameService<Create extends Model = Model> {
 
   public async getAll(): Promise<Locale[]> {
     return this.localeRepository.getAll();
+  }
+
+  public async createLocaleCollect(locales: ILocale[]) {
+    return await Promise.all(locales.map((locale) => this.localeRepository.createLocale(locale)));
   }
 
   private async handleCreate(payload: IAltName, ownerId: string): Promise<Create> {
