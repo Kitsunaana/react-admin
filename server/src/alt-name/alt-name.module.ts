@@ -6,7 +6,14 @@ import { LocaleRepository } from './repositories/locale.repository';
 import { Locale } from './domain/locale.entity';
 
 @Module({
-  providers: [AltNameService, LocaleRepository],
+  providers: [
+    LocaleRepository,
+    {
+      provide: AltNameService,
+      inject: [LocaleRepository],
+      useFactory: (localeRepository: LocaleRepository) => new AltNameService(localeRepository),
+    },
+  ],
   controllers: [AltNameController],
   exports: [AltNameService],
   imports: [SequelizeModule.forFeature([Locale])],

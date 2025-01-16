@@ -1,27 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { IAltNameStrategyImpl } from './interfaces/alt-name.strategy.interface';
 import { Model } from 'sequelize-typescript';
-import { LocaleRepository } from './repositories/locale.repository';
-import { StrategyException } from '../shared/exceptions/strategy.exception';
 import { IAltName, ILocale } from './domain/alt-name.type';
 import { Locale } from './domain/locale.entity';
+import { ILocaleRepositoryImpl } from './interfaces/locale.strategy.interface';
+import { StrategyContext } from '../shared/utils/strategy-context.util';
 
 @Injectable()
-export class AltNameService<Create extends Model = Model> {
-  private strategy: IAltNameStrategyImpl<Create> | undefined;
-
-  public constructor(private readonly localeRepository: LocaleRepository) {}
-
-  public setStrategy(strategy: IAltNameStrategyImpl<Create>) {
-    this.strategy = strategy;
-  }
-
-  private checkExistStrategy(
-    strategy: IAltNameStrategyImpl<Create> | undefined,
-  ): strategy is IAltNameStrategyImpl<Create> {
-    if (strategy === undefined) throw new StrategyException('Alt name strategy is not defined');
-
-    return true;
+export class AltNameService<Create extends Model = Model> extends StrategyContext<
+  IAltNameStrategyImpl<Create>
+> {
+  public constructor(private readonly localeRepository: ILocaleRepositoryImpl) {
+    super();
   }
 
   public async getAll(): Promise<Locale[]> {

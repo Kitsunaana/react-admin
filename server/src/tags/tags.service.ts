@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ITagStrategyImpl } from './interfaces/tag-strategy.interface';
+import { ITagStrategyImpl } from './interfaces/tag.strategy.interface';
 import { Model } from 'sequelize-typescript';
 import { ITag } from './domain/tag.type';
 import { IPatchTagInput } from './inputs/patch-tag.input';
