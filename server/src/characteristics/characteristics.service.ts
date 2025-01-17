@@ -1,82 +1,87 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { CategoryCharacteristic } from '../entities/characteristic.entity';
-import { Characteristic } from '../shared/types/types';
-import { CharacteristicRepository } from './repository/characteristic';
-import { UnitRepository } from './repository/unit';
-import { v4 as uuidv4 } from 'uuid';
+import { Model } from 'sequelize-typescript';
+import { ICharacteristic } from './domain/characteristic.type';
+import { CharacteristicStrategyImpl } from './interfaces/characteristic.strategy.interface';
+import { IUnitRepositoryImpl } from './interfaces/unit.repository.interface';
+import { ICharacteristicRepositoryImpl } from './interfaces/characteristic.repository.interface';
+import { StrategyContext } from '../shared/utils/strategy-context.util';
 
 @Injectable()
-export class CharacteristicsService {
-  constructor(
-    @InjectModel(CategoryCharacteristic)
-    private categoryCharacteristicsRepository: typeof CategoryCharacteristic,
-    private unitRepository: UnitRepository,
-    private characteristicRepository: CharacteristicRepository,
-  ) { }
+export class CharacteristicsService<Create extends Model> extends StrategyContext<
+  CharacteristicStrategyImpl<Create>
+> {
+  public constructor(
+    private characteristicRepository: ICharacteristicRepositoryImpl,
+    private unitRepository: IUnitRepositoryImpl,
+  ) {
+    super();
+  }
 
-  async createCharacteristic(payload: Characteristic, categoryId: string) {
-    const [unit] = await this.unitRepository.findOrCreate(payload.unit);
-    const [characteristic] = await this.characteristicRepository.findOrCreate(payload.caption);
+  private async handleCreate(payload: ICharacteristic, ownerId: string): Promise<Create> {
+    this.checkExistStrategy(this.strategy);
 
-    await this.categoryCharacteristicsRepository.create({
-      id: uuidv4(),
-      characteristicId: characteristic.id,
-      categoryId,
+    const unit = await this.unitRepository.findOrCreate(payload.unit);
+    const characteristic = await this.characteristicRepository.findOrCreate(payload.caption);
+
+    return await this.strategy!.create({
+      ownerId,
       unitId: unit.id,
-      value: payload.value,
+      characteristicId: characteristic.id,
       hideClient: payload.hideClient,
+      value: payload.value,
+    }).then((characteristic) => characteristic.get({ plain: true }));
+  }
+
+  private async handleUpdate(
+    payload: ICharacteristic,
+    ownerId: string,
+  ): Promise<[number, Create[]]> {
+    this.checkExistStrategy(this.strategy);
+
+    const unit = await this.unitRepository.findOrCreate(payload.unit);
+    const characteristic = await this.characteristicRepository.findOrCreate(payload.caption);
+
+    return await this.strategy!.update({
+      ownerId,
+      id: payload.id,
+      unitId: unit.id,
+      characteristicId: characteristic.id,
+      hideClient: payload.hideClient,
+      value: payload.value,
     });
   }
 
-  async updateCharacteristic(payload: Characteristic, categoryId: string) {
-    const [unit] = await this.unitRepository.findOrCreate(payload.unit);
-    const [characteristic] = await this.characteristicRepository.findOrCreate(payload.caption);
+  private async handleRemoveById(data: ICharacteristic): Promise<number> {
+    this.checkExistStrategy(this.strategy);
 
-    await this.categoryCharacteristicsRepository.update(
-      {
-        value: payload.value,
-        hideClient: payload.hideClient,
-        characteristicId: characteristic.id,
-        unitId: unit.id,
-        categoryId: categoryId,
-      },
-      {
-        where: { id: payload.id },
-        returning: false,
-      },
-    );
+    await this.characteristicRepository.removeById(data.id);
+    return await this.strategy!.removeById(data.id);
   }
 
-  async removeCharacteristic(data: Characteristic) {
-    await this.categoryCharacteristicsRepository.destroy({ where: { id: data.id } });
+  private async handleRemoveByOwnerId(ownerId: string): Promise<number> {
+    this.checkExistStrategy(this.strategy);
 
-    await this.characteristicRepository.removeUnused();
-    await this.unitRepository.removeUnused();
+    return this.strategy!.removeByOwnerId(ownerId);
   }
 
-  async create(items: Characteristic[], categoryId: string) {
-    await Promise.all(items.map(async (item) => this.createCharacteristic(item, categoryId)));
+  public async createCollect(items: ICharacteristic[], ownerId: string): Promise<Create[]> {
+    return await Promise.all(items.map((item) => this.handleCreate(item, ownerId)));
   }
 
-  async update(items: Characteristic[], categoryId: string) {
-    const actions = {
-      create: this.createCharacteristic,
-      update: this.updateCharacteristic,
-      remove: this.removeCharacteristic,
-    };
-
-    await Promise.all(
-      items.map(async (item) => {
-        await actions[item.status]?.bind(this)(item, categoryId);
+  public async updateCollect(items: ICharacteristic[], categoryId: string): Promise<void> {
+    Promise.all<Promise<Create> | Promise<[number, Create[]]> | Promise<number> | undefined>(
+      items.map((item) => {
+        if (item.status === 'create') return this.handleCreate(item, categoryId);
+        if (item.status === 'update') return this.handleUpdate(item, categoryId);
+        if (item.status === 'remove') return this.handleRemoveById(item);
       }),
-    );
-
-    await this.characteristicRepository.removeUnused();
-    await this.unitRepository.removeUnused();
+    ).then(() => {
+      this.characteristicRepository.removeUnused();
+      this.unitRepository.removeUnused();
+    });
   }
 
-  async remove(categoryId: string) {
-    await this.categoryCharacteristicsRepository.destroy({ where: { categoryId } });
+  public async removeCollect(ownerId: string): Promise<void> {
+    await this.handleRemoveByOwnerId(ownerId);
   }
 }

@@ -1,21 +1,23 @@
+import { Characteristic } from './domain/characteristic.entity';
 import { Controller, Get } from '@nestjs/common';
-import { CharacteristicRepository } from './repository/characteristic';
-import { UnitRepository } from './repository/unit';
+import { CharacteristicRepository } from './repositories/characteristic.repository';
+import { UnitRepository } from './repositories/unit.repository';
+import { Unit } from './domain/units.entity';
 
 @Controller('characteristics')
 export class CharacteristicsController {
-  constructor(
+  public constructor(
     private unitRepository: UnitRepository,
     private characteristicRepository: CharacteristicRepository,
-  ) {}
+  ) { }
 
   @Get('')
-  getAllCharacteristics() {
+  public getAllCharacteristics(): Promise<Characteristic[]> {
     return this.characteristicRepository.getAll();
   }
 
   @Get('units')
-  getAllUnits() {
+  public getAllUnits(): Promise<Unit[]> {
     return this.unitRepository.getAll();
   }
 }

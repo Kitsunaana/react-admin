@@ -1,14 +1,26 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { CategoryCharacteristic, Characteristic } from '../entities/characteristic.entity';
-import { Unit } from '../entities/units.entity';
+import { Characteristic } from './domain/characteristic.entity';
+import { Unit } from './domain/units.entity';
 import { CharacteristicsController } from './characteristcs.controller';
 import { CharacteristicsService } from './characteristics.service';
-import { CharacteristicRepository } from './repository/characteristic';
-import { UnitRepository } from './repository/unit';
+import { CharacteristicRepository } from './repositories/characteristic.repository';
+import { UnitRepository } from './repositories/unit.repository';
+import { CategoryCharacteristic } from '../entities/category-characteristic.entity';
+import { ICharacteristicRepositoryImpl } from './interfaces/characteristic.repository.interface';
+import { IUnitRepositoryImpl } from './interfaces/unit.repository.interface';
 
 @Module({
-  providers: [CharacteristicsService, UnitRepository, CharacteristicRepository],
+  providers: [
+    CharacteristicRepository,
+    UnitRepository,
+    {
+      provide: CharacteristicsService,
+      inject: [CharacteristicRepository, UnitRepository],
+      useFactory: (...args: [ICharacteristicRepositoryImpl, IUnitRepositoryImpl]) =>
+        new CharacteristicsService(...args),
+    },
+  ],
   exports: [CharacteristicsService],
   imports: [SequelizeModule.forFeature([Characteristic, Unit, CategoryCharacteristic])],
   controllers: [CharacteristicsController],
