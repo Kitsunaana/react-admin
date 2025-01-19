@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import * as process from 'process';
-import { AppModule } from './app.module';
+import { CoreModule } from './core/core.module';
 
 async function start() {
   const PORT = process.env.PORT || 5000;
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(CoreModule, { cors: true });
 
   app.enableCors();
 
