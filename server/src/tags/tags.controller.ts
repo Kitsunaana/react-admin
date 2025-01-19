@@ -4,7 +4,7 @@ import { Tag } from 'src/tags/domain/tag.entity';
 
 @Controller('tags')
 export class TagsController {
-  constructor(private tagsService: TagsService<Tag>) { }
+  constructor(private tagsService: TagsService<Tag>) {}
 
   @Get()
   async getAll(): Promise<string[]> {

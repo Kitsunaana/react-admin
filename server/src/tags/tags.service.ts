@@ -14,30 +14,37 @@ export class TagsService<Create extends Model> extends StrategyContext<ITagStrat
   }
 
   public async getAll(): Promise<string[]> {
-    const tags = await this.tagRepository.getAll();
-
-    return tags.map((tag) => tag.caption);
+    return await this.tagRepository.getAll().then((tags) => tags.map((tag) => tag.caption));
   }
 
   private async handleCreate(payload: IPostTagInput, ownerId: string): Promise<Create> {
     this.checkExistStrategy(this.strategy);
 
-    const [tag] = await this.tagRepository.upsert(payload);
-    return await this.strategy!.create(
-      {
-        icon: payload.icon,
-        color: payload.color,
-        id: tag.id,
-      },
+    const tag = await this.tagRepository.upsert(payload.caption);
+
+    return await this.strategy!.create({
       ownerId,
-    );
+      tagId: tag.id,
+      icon: payload.icon,
+      color: payload.color,
+    });
   }
 
-  private async handleUpdate(payload: IPatchTagInput): Promise<[number, Create[]]> {
+  private async handleUpdate(
+    payload: IPatchTagInput,
+    ownerId: string,
+  ): Promise<[number, Create[]]> {
     this.checkExistStrategy(this.strategy);
 
-    await this.tagRepository.upsert(payload);
-    return this.strategy!.update(payload);
+    const tag = await this.tagRepository.upsert(payload.caption);
+
+    return this.strategy!.update({
+      ownerId,
+      tagId: tag.id,
+      id: payload.id,
+      color: payload.color,
+      icon: payload.icon,
+    });
   }
 
   private async handleRemoveById(id: string): Promise<number> {
@@ -52,7 +59,7 @@ export class TagsService<Create extends Model> extends StrategyContext<ITagStrat
     return await this.strategy!.removeByOwnerId(ownerId);
   }
 
-  public async createCollect(tags: ITag[], ownerId: string) {
+  public async createCollect(tags: ITag[], ownerId: string): Promise<Create[]> {
     return Promise.all(tags.map((item) => this.handleCreate(item, ownerId)));
   }
 
@@ -60,13 +67,17 @@ export class TagsService<Create extends Model> extends StrategyContext<ITagStrat
     await Promise.all<Promise<Create> | Promise<[number, Create[]]> | Promise<number> | undefined>(
       tags.map((item) => {
         if (item.status === 'create') return this.handleCreate(item, ownerId);
-        if (item.status === 'update') return this.handleUpdate(item);
+        if (item.status === 'update') return this.handleUpdate(item, ownerId);
         if (item.status === 'remove') return this.handleRemoveById(item.id);
       }),
-    ).then(() => this.tagRepository.removeUnused());
+    );
+
+    await this.tagRepository.removeUnused();
   }
 
-  public async removeCollect(ownerId: string): Promise<number> {
-    return await this.handleRemoveByOwnerId(ownerId);
+  public async removeCollect(ownerId: string): Promise<void> {
+    await this.handleRemoveByOwnerId(ownerId);
+
+    await this.tagRepository.removeUnused();
   }
 }
