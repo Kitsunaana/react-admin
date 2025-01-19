@@ -11,11 +11,13 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
+    "skipLibCheck": false, // Проверка типов в библиотеках
+    "strict": true, // Включает все строгие проверки
+    "strictNullChecks": true, // Проверка на null и undefined
+    "noImplicitAny": true, // Запрет неявного типа any
+    "strictBindCallApply": true, // Проверка типов для методов bind, call и apply
+    "noFallthroughCasesInSwitch": true, // Запрет на падение в switch
+    "noUncheckedIndexedAccess": true, // Проверка на доступ к индексам
+    "exactOptionalPropertyTypes": true // Точные типы для необязательных свойств
   }
 }

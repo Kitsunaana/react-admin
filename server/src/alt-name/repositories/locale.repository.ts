@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/sequelize';
 import { Locale } from '../domain/locale.entity';
-import { ILocale } from '../domain/alt-name.type';
 import { ILocaleRepositoryImpl } from '../interfaces/locale.repository.interface';
+import { ILocale } from '../domain/locale.type';
 
 export class LocaleRepository implements ILocaleRepositoryImpl {
   constructor(@InjectModel(Locale) private localeModel: typeof Locale) {}

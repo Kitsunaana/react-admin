@@ -19,7 +19,7 @@ export type CharacteristicUpdatePayload = {
 
 export interface CharacteristicStrategyImpl<Create extends Model = Model, Update = Create> {
   create(payload: CharacteristicCreatePayload): Promise<Create>;
-  update(payload: CharacteristicUpdatePayload): Promise<[number, Update[]]>;
+  update(payload: CharacteristicUpdatePayload): Promise<Update[]>;
   removeById(id: string): Promise<number>;
   removeByOwnerId(ownerId: string): Promise<number>;
 }

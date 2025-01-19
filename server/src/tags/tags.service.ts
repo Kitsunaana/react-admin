@@ -30,10 +30,7 @@ export class TagsService<Create extends Model> extends StrategyContext<ITagStrat
     });
   }
 
-  private async handleUpdate(
-    payload: IPatchTagInput,
-    ownerId: string,
-  ): Promise<[number, Create[]]> {
+  private async handleUpdate(payload: IPatchTagInput, ownerId: string): Promise<Create[]> {
     this.checkExistStrategy(this.strategy);
 
     const tag = await this.tagRepository.upsert(payload.caption);
@@ -64,7 +61,7 @@ export class TagsService<Create extends Model> extends StrategyContext<ITagStrat
   }
 
   public async updateCollect(tags: ITag[], ownerId: string): Promise<void> {
-    await Promise.all<Promise<Create> | Promise<[number, Create[]]> | Promise<number> | undefined>(
+    await Promise.all<Promise<Create> | Promise<Create[]> | Promise<number> | undefined>(
       tags.map((item) => {
         if (item.status === 'create') return this.handleCreate(item, ownerId);
         if (item.status === 'update') return this.handleUpdate(item, ownerId);

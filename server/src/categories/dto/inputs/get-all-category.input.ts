@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-export type GetCategoryDto = {
+export type IGetAllCategoryInput = {
   search?: string;
   page?: string;
 };
 
-export const getCategorySchema = z.object({
+export const getAllCategoryInput = z.object({
   search: z.string().optional(),
   page: z.string().optional(),
 });

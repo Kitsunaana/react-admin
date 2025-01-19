@@ -32,10 +32,7 @@ export class CharacteristicsService<Create extends Model> extends StrategyContex
     }).then((characteristic) => characteristic.get({ plain: true }));
   }
 
-  private async handleUpdate(
-    payload: ICharacteristic,
-    ownerId: string,
-  ): Promise<[number, Create[]]> {
+  private async handleUpdate(payload: ICharacteristic, ownerId: string): Promise<Create[]> {
     this.checkExistStrategy(this.strategy);
 
     const unit = await this.unitRepository.findOrCreate(payload.unit);
@@ -69,7 +66,7 @@ export class CharacteristicsService<Create extends Model> extends StrategyContex
   }
 
   public async updateCollect(items: ICharacteristic[], categoryId: string): Promise<void> {
-    await Promise.all<Promise<Create> | Promise<[number, Create[]]> | Promise<number> | undefined>(
+    await Promise.all<Promise<Create> | Promise<Create[]> | Promise<number> | undefined>(
       items.map((item) => {
         if (item.status === 'create') return this.handleCreate(item, categoryId);
         if (item.status === 'update') return this.handleUpdate(item, categoryId);

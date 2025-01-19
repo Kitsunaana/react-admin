@@ -1,29 +1,26 @@
 import { Module } from '@nestjs/common';
-import { SequelizeModule as SequelizeModulePackage } from '@nestjs/sequelize';
+import {
+  SequelizeModule as SequelizeModulePackage,
+  SequelizeModuleOptions,
+} from '@nestjs/sequelize';
 import { Models } from '../../entities';
+import { ModelCtor } from 'sequelize-typescript';
 
 @Module({
   imports: [
     SequelizeModulePackage.forRootAsync({
-      imports: undefined,
-      useFactory: () => {
-        console.log({
-          username: process.env.DATABASE_USERNAME,
-          password: process.env.DATABASE_PASSWORD,
-          database: process.env.DATABASE_NAME,
-          host: process.env.DATABASE_HOST,
-        });
+      useFactory: (): SequelizeModuleOptions => {
         return {
-          username: process.env.DATABASE_USERNAME,
-          password: process.env.DATABASE_PASSWORD,
-          database: process.env.DATABASE_NAME,
-          host: process.env.DATABASE_HOST,
-          dialect: 'postgres',
-          port: Number(process.env.DATABASE_PORT),
-          models: Models,
+          username: process.env.DATABASE_USERNAME as string,
+          password: process.env.DATABASE_PASSWORD as string,
+          database: process.env.DATABASE_NAME as string,
+          host: process.env.DATABASE_HOST as string,
+          dialect: 'postgres' as const,
+          port: Number(process.env.DATABASE_PORT) as number,
+          models: Models as ModelCtor[],
           autoLoadModels: true,
           synchronize: true,
-          logging: console.log,
+          logging: false,
           sync: {
             alter: true,
             // force: true,

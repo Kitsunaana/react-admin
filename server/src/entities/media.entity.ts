@@ -1,37 +1,48 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Category } from './category.entity';
 
+export interface MediaCreationAttrs {
+  id: string;
+  caption: string;
+  originalName: string;
+  size: number;
+  mimetype: string;
+  path: string;
+  order: number;
+  categoryId: string;
+}
+
 @Table
-export class Media extends Model<Media> {
+export class Media extends Model<Media, MediaCreationAttrs> {
   @Column({
     unique: true,
     primaryKey: true,
     type: DataType.STRING,
   })
-  id: string;
+  id!: string;
 
   @Column
-  filename: string;
+  caption!: string;
 
   @Column
-  originalName: string;
+  originalName!: string;
 
   @Column
-  size: number;
+  size!: number;
 
   @Column
-  mimetype: string;
+  mimetype!: string;
 
   @Column
-  path: string;
+  path!: string;
 
-  @Column({ defaultValue: null, allowNull: true })
-  order: number | null;
+  @Column({ defaultValue: 0 })
+  order!: number;
 
   @Column
   @ForeignKey(() => Category)
-  categoryId: string;
+  categoryId!: string;
 
   @BelongsTo(() => Category, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  category: Category;
+  category!: Category;
 }

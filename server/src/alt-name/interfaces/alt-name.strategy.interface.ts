@@ -18,7 +18,7 @@ export interface IUpdateAltNamePayload {
 
 export interface IAltNameStrategyImpl<Create extends Model = Model, Update extends Model = Create> {
   create(payload: ICreateAltNamePayload): Promise<Create>;
-  update(payload: IUpdateAltNamePayload): Promise<[number, Update[]]>;
+  update(payload: IUpdateAltNamePayload): Promise<Update[]>;
   removeById(id: string): Promise<number>;
   removeByOwnerId(ownerId: string): Promise<number>;
 }

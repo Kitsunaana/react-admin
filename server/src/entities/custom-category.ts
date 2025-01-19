@@ -1,5 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Category } from './category.entity';
+import { DataTypes } from 'sequelize';
 
 export type Position =
   | 'top-left'
@@ -12,17 +13,28 @@ export type Position =
   | 'bottom-center'
   | 'bottom-right';
 
+export interface CustomCategoryCreationAttrs {
+  id: string;
+  isShowPhotoWithGoods: boolean;
+  captionPosition: Position;
+  color: string;
+  bgColor: string;
+  blur: number;
+  activeImageId: string | null;
+  categoryId: string;
+}
+
 @Table({ timestamps: false })
-export class CustomCategory extends Model<CustomCategory> {
+export class CustomCategory extends Model<CustomCategory, CustomCategoryCreationAttrs> {
   @Column({
     unique: true,
     primaryKey: true,
     type: DataType.STRING,
   })
-  id: string;
+  id!: string;
 
   @Column({ type: DataType.BOOLEAN })
-  isShowPhotoWithGoods: boolean;
+  isShowPhotoWithGoods!: boolean;
 
   @Column({
     type: DataType.ENUM(
@@ -37,24 +49,24 @@ export class CustomCategory extends Model<CustomCategory> {
       'bottom-right',
     ),
   })
-  captionPosition: Position;
+  captionPosition!: Position;
 
   @Column
-  color: string;
+  color!: string;
 
   @Column
-  bgColor: string;
+  bgColor!: string;
 
   @Column
-  blur: number;
+  blur!: number;
 
-  @Column({ allowNull: true })
-  activeImageId: string | null;
+  @Column({ allowNull: true, type: DataTypes.STRING })
+  activeImageId!: string | null;
 
   @Column
   @ForeignKey(() => Category)
-  categoryId: string;
+  categoryId!: string;
 
   @BelongsTo(() => Category)
-  category: Category;
+  category!: Category;
 }

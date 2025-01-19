@@ -13,7 +13,7 @@ export class FilesService {
         return await this.mediaRepository.findOrCreate({
           where: { id: item.id, categoryId },
           defaults: {
-            filename: item.filename,
+            caption: item.caption,
             originalName: item.originalName,
             size: item.size,
             mimetype: item.mimetype,
@@ -22,6 +22,7 @@ export class FilesService {
             id: item.id,
             categoryId,
           },
+          returning: false,
         });
       }),
     );
@@ -52,7 +53,7 @@ export class FilesService {
         return await this.mediaRepository.update(
           {
             id: item.id,
-            filename: item.filename,
+            caption: item.caption,
             originalName: item.originalName,
             size: item.size,
             mimetype: item.mimetype,
@@ -60,10 +61,10 @@ export class FilesService {
             order: item.order,
           },
           {
+            returning: false,
             where: {
               id: item.id,
             },
-            returning: false,
           },
         );
       }),

@@ -1,5 +1,5 @@
-import { ILocale } from '../domain/alt-name.type';
 import { z } from 'zod';
+import { ILocale } from '../domain/locale.type';
 
 export type ICreateLocaleInput = ILocale[];
 

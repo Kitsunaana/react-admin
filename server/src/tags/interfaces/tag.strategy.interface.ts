@@ -17,7 +17,7 @@ export interface IUpdateTagPayload {
 
 export interface ITagStrategyImpl<Create extends Model = Model, Update = Create> {
   create(payload: ICreateTagPayload): Promise<Create>;
-  update(payload: IUpdateTagPayload): Promise<[number, Update[]]>;
+  update(payload: IUpdateTagPayload): Promise<Update[]>;
   removeById(tagId: string): Promise<number>;
   removeByOwnerId(ownerId: string): Promise<number>;
 }

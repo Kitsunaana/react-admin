@@ -1,5 +1,5 @@
-import { ILocale } from '../domain/alt-name.type';
 import { Locale } from '../domain/locale.entity';
+import { ILocale } from '../domain/locale.type';
 
 export interface ILocaleRepositoryImpl {
   createLocale(payload: ILocale): Promise<Locale>;

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { IAltNameStrategyImpl } from './interfaces/alt-name.strategy.interface';
 import { Model } from 'sequelize-typescript';
-import { IAltName, ILocale } from './domain/alt-name.type';
+import { IAltName } from './domain/alt-name.type';
 import { Locale } from './domain/locale.entity';
 import { ILocaleRepositoryImpl } from './interfaces/locale.repository.interface';
 import { StrategyContext } from '../shared/utils/strategy-context.util';
+import { ILocale } from './domain/locale.type';
 
 @Injectable()
 export class AltNameService<Create extends Model = Model> extends StrategyContext<
@@ -34,7 +35,7 @@ export class AltNameService<Create extends Model = Model> extends StrategyContex
     });
   }
 
-  private async handleUpdate(payload: IAltName, ownerId: string): Promise<[number, Create[]]> {
+  private async handleUpdate(payload: IAltName, ownerId: string): Promise<Create[]> {
     this.checkExistStrategy(this.strategy);
 
     return await this.strategy!.update({
@@ -67,7 +68,7 @@ export class AltNameService<Create extends Model = Model> extends StrategyContex
   }
 
   public async updateCollect(altNames: IAltName[], ownerId: string): Promise<void> {
-    await Promise.all<Promise<Create> | Promise<[number, Create[]]> | Promise<number> | undefined>(
+    await Promise.all<Promise<Create> | Promise<Create[]> | Promise<number> | undefined>(
       altNames.map((altName) => {
         if (altName.status === 'create') return this.handleCreate(altName, ownerId);
         if (altName.status === 'update') return this.handleUpdate(altName, ownerId);

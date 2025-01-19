@@ -6,7 +6,7 @@ import { join } from 'path';
 import { CategoriesModule } from './categories/categories.module';
 import { CharacteristicsModule } from './characteristics/characteristics.module';
 import { FilesModule } from './files/files.module';
-import { LocalesModule } from './locales/locales.module';
+import { AltNameModule } from './alt-name/alt-name.module';
 import { SequelizeModule } from './shared/sequelize/sequelize.module';
 import { TagsModule } from './tags/tags.module';
 
@@ -22,7 +22,7 @@ import { TagsModule } from './tags/tags.module';
     ConfigModule.forRoot(),
     FilesModule,
     CategoriesModule,
-    LocalesModule,
+    AltNameModule,
     SequelizeModule,
     CharacteristicsModule,
     TagsModule,

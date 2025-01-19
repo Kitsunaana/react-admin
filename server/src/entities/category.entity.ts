@@ -1,12 +1,13 @@
 import { DataTypes } from 'sequelize';
 import { Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript';
 import { CategoryTag } from './category-tag.entity';
-import { CategoryCharacteristic } from './characteristic.entity';
 import { CustomCategory } from './custom-category';
-import { AltNameCategory, Locale } from './locale.entity';
+import { CategoryAltName } from './category-alt-name.entity';
 import { Media } from './media.entity';
+import { Locale } from '../alt-name/domain/locale.entity';
+import { CategoryCharacteristic } from './category-characteristic.entity';
 
-interface CategoryCreationAttrs {
+export interface CategoryCreationAttrs {
   caption: string;
   description: string;
   order: number | null;
@@ -20,29 +21,29 @@ export class Category extends Model<Category, CategoryCreationAttrs> {
     primaryKey: true,
     type: DataType.STRING,
   })
-  id: string;
+  id!: string;
 
   @Column({ allowNull: true, type: DataTypes.TEXT })
-  description: string;
+  description!: string;
 
   @Column
-  caption: string;
+  caption!: string;
 
-  @Column({ allowNull: true })
-  order: number | null;
+  @Column({ type: DataTypes.INTEGER })
+  order!: number;
 
   @HasMany(() => Media, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  media: Media[];
+  media!: Media[];
 
   @HasOne(() => CustomCategory)
-  custom: CustomCategory;
+  custom!: CustomCategory;
 
   @HasMany(() => CategoryCharacteristic, { foreignKeyConstraint: false, constraints: false })
-  categoryCharacteristics: CategoryCharacteristic[];
+  categoryCharacteristics!: CategoryCharacteristic[];
 
-  @HasMany(() => AltNameCategory)
-  altNames: Locale;
+  @HasMany(() => CategoryAltName)
+  altNames!: CategoryAltName[];
 
   @HasMany(() => CategoryTag)
-  tags: CategoryTag[];
+  tags!: CategoryTag[];
 }
