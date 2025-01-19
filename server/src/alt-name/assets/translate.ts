@@ -190,7 +190,7 @@ export const translate: ILanguageTranslate = {
           imageError: 'An error occurred while loading images',
         },
         remove: {
-          remove: 'An error occurred while deleting the category',
+          error: 'An error occurred while deleting the category',
           success: 'The category was deleted successfully',
         },
         settings: {
@@ -466,7 +466,7 @@ export const translate: ILanguageTranslate = {
           imageError: 'При загрузке изображений произошла ошибка',
         },
         remove: {
-          remove: 'При удаление категории произошла ошибка',
+          error: 'При удаление категории произошла ошибка',
           success: 'Категория успешно удалена',
         },
         settings: {

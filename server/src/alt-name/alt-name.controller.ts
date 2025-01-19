@@ -17,14 +17,12 @@ export class AltNameController {
   }
 
   @Get()
-  public async getAll(): Promise<Locale[]> {
-    return await this.localeService.getAll();
+  public getAll(): Promise<Locale[]> {
+    return this.localeService.getAll();
   }
 
   @Post()
-  public async createLocale(
-    @Body(new ZodValidationPipe(createLocaleInput)) input: ICreateLocaleInput,
-  ) {
-    return await this.localeService.createLocaleCollect(input);
+  public createLocale(@Body(new ZodValidationPipe(createLocaleInput)) input: ICreateLocaleInput) {
+    return this.localeService.createLocaleCollect(input);
   }
 }

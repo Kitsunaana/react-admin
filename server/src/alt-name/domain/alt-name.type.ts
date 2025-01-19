@@ -1,9 +1,4 @@
-export type ILocale = {
-  id: string;
-  altName: string;
-  caption: string;
-  code: string;
-};
+import { ILocale } from './locale.type';
 
 export type IAltName = {
   id: string;

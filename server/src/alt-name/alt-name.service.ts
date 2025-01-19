@@ -3,7 +3,7 @@ import { IAltNameStrategyImpl } from './interfaces/alt-name.strategy.interface';
 import { Model } from 'sequelize-typescript';
 import { IAltName, ILocale } from './domain/alt-name.type';
 import { Locale } from './domain/locale.entity';
-import { ILocaleRepositoryImpl } from './interfaces/locale.strategy.interface';
+import { ILocaleRepositoryImpl } from './interfaces/locale.repository.interface';
 import { StrategyContext } from '../shared/utils/strategy-context.util';
 
 @Injectable()

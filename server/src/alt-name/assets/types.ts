@@ -198,7 +198,7 @@ interface ICatalogDialogNotifyEdit {
 }
 
 interface ICatalogDialogNotifyRemove {
-  remove: string;
+  error: string;
   success: string;
 }
 
