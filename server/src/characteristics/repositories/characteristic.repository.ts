@@ -9,7 +9,7 @@ import { ICharacteristicRepositoryImpl } from '../interfaces/characteristic.repo
 export class CharacteristicRepository implements ICharacteristicRepositoryImpl {
   public constructor(
     @InjectModel(Characteristic) private characteristicsRepository: typeof Characteristic,
-  ) {}
+  ) { }
 
   public async getAll(): Promise<Characteristic[]> {
     return await this.characteristicsRepository.findAll({

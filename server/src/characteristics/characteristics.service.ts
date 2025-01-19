@@ -69,19 +69,22 @@ export class CharacteristicsService<Create extends Model> extends StrategyContex
   }
 
   public async updateCollect(items: ICharacteristic[], categoryId: string): Promise<void> {
-    Promise.all<Promise<Create> | Promise<[number, Create[]]> | Promise<number> | undefined>(
+    await Promise.all<Promise<Create> | Promise<[number, Create[]]> | Promise<number> | undefined>(
       items.map((item) => {
         if (item.status === 'create') return this.handleCreate(item, categoryId);
         if (item.status === 'update') return this.handleUpdate(item, categoryId);
         if (item.status === 'remove') return this.handleRemoveById(item);
       }),
-    ).then(() => {
-      this.characteristicRepository.removeUnused();
-      this.unitRepository.removeUnused();
-    });
+    );
+
+    await this.characteristicRepository.removeUnused();
+    await this.unitRepository.removeUnused();
   }
 
   public async removeCollect(ownerId: string): Promise<void> {
     await this.handleRemoveByOwnerId(ownerId);
+
+    await this.characteristicRepository.removeUnused();
+    await this.unitRepository.removeUnused();
   }
 }
